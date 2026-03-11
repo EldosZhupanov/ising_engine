@@ -1,0 +1,230 @@
+use rand::Rng;
+use rayon::prelude::*;
+use serde::Deserialize;
+use std::f64::consts::E;
+use std::fs;
+
+// ТУМБЛЕР РИСКА: Минимальная скорость транзакций для входа в сделку
+// 0.5 = Институциональный (Безопасно) | 0.1 = Скальпер (Агрессивно)
+const MIN_TX_PER_MIN: f64 = 0.1; 
+
+#[derive(Deserialize, Debug)]
+struct TokenFlow {
+    symbol: String,
+    buy_volume_eth: f64,
+    sell_volume_eth: f64,
+    delta: f64,
+    tx_count: u32,
+    smart_money_hits: u32,
+}
+
+#[derive(Deserialize, Debug)]
+struct MarketState {
+    timestamp: u64,
+    session_duration_minutes: u64,
+    top_tokens: Vec<TokenFlow>,
+}
+
+#[derive(Debug)]
+pub struct CsrMatrix {
+    pub values: Vec<f64>,
+    pub col_indices: Vec<usize>,
+    pub row_offsets: Vec<usize>,
+}
+
+impl CsrMatrix {
+    pub fn get_row(&self, row: usize) -> impl Iterator<Item = (usize, f64)> + '_ {
+        let start = self.row_offsets[row];
+        let end = self.row_offsets[row + 1];
+        self.col_indices[start..end]
+            .iter()
+            .copied()
+            .zip(self.values[start..end].iter().copied())
+    }
+    pub fn empty(num_vars: usize) -> Self {
+        Self { values: vec![], col_indices: vec![], row_offsets: vec![0; num_vars + 1] }
+    }
+}
+
+pub struct QuboModel {
+    pub num_vars: usize,
+    pub linear: Vec<f64>,
+    pub quadratic: CsrMatrix,
+}
+
+impl QuboModel {
+    pub fn calculate_total_energy(&self, state: &[i8]) -> f64 {
+        let mut energy = 0.0;
+        for i in 0..self.num_vars {
+            if state[i] == 1 {
+                energy += self.linear[i];
+                for (j, weight) in self.quadratic.get_row(i) {
+                    if state[j] == 1 { energy += weight * 0.5; }
+                }
+            }
+        }
+        energy
+    }
+}
+
+#[derive(Clone)]
+struct Replica {
+    state: Vec<i8>,
+    temp: f64,
+    energy: f64,
+}
+
+pub struct ParallelTemperingSolver {
+    pub num_replicas: usize,
+    pub temp_max: f64,
+    pub temp_min: f64,
+    pub sweeps_per_exchange: usize,
+    pub total_exchanges: usize,
+}
+
+impl ParallelTemperingSolver {
+    fn calculate_delta_e(model: &QuboModel, state: &[i8], var_idx: usize) -> f64 {
+        let current_val = state[var_idx] as f64;
+        let flip_multiplier = 1.0 - 2.0 * current_val;
+        let mut sum_j = 0.0;
+        for (col, weight) in model.quadratic.get_row(var_idx) {
+            sum_j += weight * (state[col] as f64);
+        }
+        flip_multiplier * (model.linear[var_idx] + sum_j)
+    }
+
+    pub fn solve(&self, model: &QuboModel) -> Vec<i8> {
+        let mut rng = rand::thread_rng();
+        let mut replicas: Vec<Replica> = (0..self.num_replicas).map(|i| {
+            let state: Vec<i8> = (0..model.num_vars).map(|_| rng.gen_range(0..=1)).collect();
+            let fraction = i as f64 / (self.num_replicas - 1).max(1) as f64;
+            let temp = self.temp_max * (self.temp_min / self.temp_max).powf(fraction);
+            let energy = model.calculate_total_energy(&state);
+            Replica { state, temp, energy }
+        }).collect();
+
+        for _ in 0..self.total_exchanges {
+            replicas.par_iter_mut().for_each(|replica| {
+                let mut local_rng = rand::thread_rng(); 
+                for _ in 0..self.sweeps_per_exchange {
+                    let var_idx = local_rng.gen_range(0..model.num_vars);
+                    let delta_e = Self::calculate_delta_e(model, &replica.state, var_idx);
+                    if delta_e < 0.0 {
+                        replica.state[var_idx] = 1 - replica.state[var_idx];
+                    } else if replica.temp > 1e-8 {
+                        let exponent = -delta_e / replica.temp;
+                        if exponent > -20.0 && local_rng.gen_range(0.0..1.0) < E.powf(exponent) {
+                            replica.state[var_idx] = 1 - replica.state[var_idx];
+                        }
+                    }
+                }
+                replica.energy = model.calculate_total_energy(&replica.state);
+            });
+
+            for i in 0..(self.num_replicas - 1) {
+                let beta_i = 1.0 / replicas[i].temp;
+                let beta_j = 1.0 / replicas[i+1].temp;
+                let swap_prob = ((beta_i - beta_j) * (replicas[i].energy - replicas[i+1].energy)).exp();
+                if swap_prob >= 1.0 || rng.gen_range(0.0..1.0) < swap_prob {
+                    let temp_state = replicas[i].state.clone();
+                    replicas[i].state = replicas[i+1].state.clone();
+                    replicas[i+1].state = temp_state;
+                    let temp_energy = replicas[i].energy;
+                    replicas[i].energy = replicas[i+1].energy;
+                    replicas[i+1].energy = temp_energy;
+                }
+            }
+        }
+        replicas.into_iter().min_by(|a, b| a.energy.partial_cmp(&b.energy).unwrap()).unwrap().state
+    }
+}
+
+fn main() {
+    println!("===============================================================");
+    println!("СИНДИКАТ V19.1: РЕЖИМ 'АГРЕССИВНЫЙ СКАЛЬПИНГ'");
+    println!("===============================================================");
+
+    let data = match fs::read_to_string("market_state.json") {
+        Ok(d) => d,
+        Err(_) => return,
+    };
+
+    let market: MarketState = match serde_json::from_str(&data) {
+        Ok(m) => m,
+        Err(_) => return,
+    };
+
+    let num_vars = market.top_tokens.len();
+    if num_vars == 0 { return; }
+
+    let duration_mins = market.session_duration_minutes.max(1) as f64;
+
+    let mut linear_weights = Vec::with_capacity(num_vars);
+    for token in &market.top_tokens {
+        let mut score = token.delta; 
+        let tx_per_min = token.tx_count as f64 / duration_mins;
+
+        if tx_per_min > 2.0 { 
+            score *= 2.0; 
+        } else if token.tx_count < 3 && token.delta > 0.05 { 
+            score *= 0.05; // Смягчили СКАМ-фильтр для тестов
+        }
+
+        if token.smart_money_hits > 0 { score += (token.smart_money_hits as f64) * 5.0; } 
+        linear_weights.push(-score); 
+    }
+
+    let model = QuboModel {
+        num_vars,
+        linear: linear_weights,
+        quadratic: CsrMatrix::empty(num_vars), 
+    };
+
+    let solver = ParallelTemperingSolver {
+        num_replicas: 16, 
+        temp_max: 50.0,
+        temp_min: 0.01,
+        sweeps_per_exchange: 500, 
+        total_exchanges: 100,
+    };
+
+    let result = solver.solve(&model);
+
+    println!("\nТОРГОВЫЕ РЕКОМЕНДАЦИИ:");
+    let mut found_trade = false;
+
+    for (i, &action) in result.iter().enumerate() {
+        if action == 1 { 
+            let token = &market.top_tokens[i];
+            let tx_per_min = token.tx_count as f64 / duration_mins;
+            
+            // НОВЫЙ ФИЛЬТР: Использует константу MIN_TX_PER_MIN
+            if token.delta <= 0.01 || (tx_per_min < MIN_TX_PER_MIN && token.smart_money_hits == 0) { continue; } 
+            
+            found_trade = true;
+            let mut confidence = 45; 
+            
+            if tx_per_min > 0.5 { confidence += 20; }
+            if tx_per_min > 1.5 { confidence += 15; }
+            if token.smart_money_hits > 0 { confidence += 14; }
+
+            println!("------------------------------------------------");
+            println!("LONG: {}", token.symbol);
+            println!("   Объем: +{:.4} ETH | Скорость: {:.2} tx/min", token.delta, tx_per_min);
+            println!("   VIP Подтверждения: {}", token.smart_money_hits);
+            println!("   Уверенность ИИ: {}%", confidence.min(99));
+            if confidence >= 80 {
+                println!("   Плечо: 10x - ВХОД ПО РЫНКУ!");
+            } else if confidence >= 60 {
+                println!("   Плечо: 3x - 5x - Умеренный риск.");
+            } else {
+                println!("   Плечо: Без плеча (Спот).");
+            }
+        }
+    }
+
+    if !found_trade {
+        println!("РЫНОК МЕРТВ. Ожидаем вливания ликвидности.");
+    }
+    println!("------------------------------------------------");
+}

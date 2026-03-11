@@ -1,0 +1,24 @@
+# Build artifacts
+/target/
+out/
+
+# Environment secrets
+.env
+
+# Runtime data files
+market_state.json
+crypto_stress.txt
+arbitrage_task.txt
+
+# Cache
+cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

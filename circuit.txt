@@ -1,0 +1,13 @@
+# Схема обратимого вентиля (Toffoli: Cout = Cin XOR (A AND B))
+# Синтаксис: GATE <TYPE> <IN1> <IN2> <OUT> [ANCILLA]
+
+GATE AND A B Anc_AND
+GATE XOR Cin Anc_AND Cout Anc_XOR
+
+# Фиксируем выходы (Clamp). 1 = Истина, -1 = Ложь
+CLAMP Cout 1
+CLAMP Cin -1
+
+# Запрашиваем вывод результатов для конкретных узлов
+TARGET A
+TARGET B
