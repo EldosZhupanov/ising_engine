@@ -34,7 +34,7 @@ impl ParallelTemperingSolver {
 
     /// Solves the QUBO problem with clamped (fixed) variables.
     pub fn solve(&self, model: &QuboModel, clamped: &[(usize, i8)]) -> Vec<i8> {
-        let base_seed = self.seed.unwrap_or_else(|| rand::random());
+        let base_seed = self.seed.unwrap_or_else(rand::random);
         let mut engine_rng = ChaCha8Rng::seed_from_u64(base_seed + self.num_replicas as u64);
         
         let mut replica_rngs: Vec<ChaCha8Rng> = (0..self.num_replicas)

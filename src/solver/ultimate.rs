@@ -34,7 +34,7 @@ impl UltimateSolver {
 
     pub fn solve(&self, model: &QuboModel, clamped: &[(usize, i8)]) -> Vec<i8> {
         let n = model.num_vars;
-        let base_seed = self.seed.unwrap_or_else(|| rand::random());
+        let base_seed = self.seed.unwrap_or_else(rand::random);
         let mut rng = ChaCha8Rng::seed_from_u64(base_seed);
 
         let mut is_clamped = vec![false; n];
