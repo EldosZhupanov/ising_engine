@@ -17,7 +17,7 @@ impl AnlsPreconditioner {
 
     /// Factorize a dense N x N matrix Q into W (N x K) and H (K x N)
     /// Using Multiplicative Update Rules for NMF
-    pub fn factorize(&self, q: &Vec<Vec<f64>>) -> (Vec<Vec<f64>>, Vec<Vec<f64>>) {
+    pub fn factorize(&self, q: &[Vec<f64>]) -> (Vec<Vec<f64>>, Vec<Vec<f64>>) {
         let n = q.len();
         let k = self.target_rank;
         let mut rng = rand::thread_rng();
@@ -79,7 +79,7 @@ impl AnlsPreconditioner {
         (w, h)
     }
 
-    fn multiply(a: &Vec<Vec<f64>>, b: &Vec<Vec<f64>>, rows_a: usize, cols_b: usize) -> Vec<Vec<f64>> {
+    fn multiply(a: &[Vec<f64>], b: &[Vec<f64>], rows_a: usize, cols_b: usize) -> Vec<Vec<f64>> {
         let cols_a = a[0].len();
         let mut res = vec![vec![0.0; cols_b]; rows_a];
         for i in 0..rows_a {
@@ -92,7 +92,7 @@ impl AnlsPreconditioner {
         res
     }
 
-    fn multiply_transpose_w(w: &Vec<Vec<f64>>, v: &Vec<Vec<f64>>, n: usize, k: usize) -> Vec<Vec<f64>> {
+    fn multiply_transpose_w(w: &[Vec<f64>], v: &[Vec<f64>], n: usize, k: usize) -> Vec<Vec<f64>> {
         let mut res = vec![vec![0.0; n]; k];
         for i in 0..k {
             for j in 0..n {
@@ -104,7 +104,7 @@ impl AnlsPreconditioner {
         res
     }
 
-    fn multiply_transpose_w_w(w: &Vec<Vec<f64>>, n: usize, k: usize) -> Vec<Vec<f64>> {
+    fn multiply_transpose_w_w(w: &[Vec<f64>], n: usize, k: usize) -> Vec<Vec<f64>> {
         let mut res = vec![vec![0.0; k]; k];
         for i in 0..k {
             for j in 0..k {
@@ -116,7 +116,7 @@ impl AnlsPreconditioner {
         res
     }
 
-    fn multiply_h_transpose(v: &Vec<Vec<f64>>, h: &Vec<Vec<f64>>, n: usize, k: usize) -> Vec<Vec<f64>> {
+    fn multiply_h_transpose(v: &[Vec<f64>], h: &[Vec<f64>], n: usize, k: usize) -> Vec<Vec<f64>> {
         let mut res = vec![vec![0.0; k]; n];
         for i in 0..n {
             for j in 0..k {
@@ -128,7 +128,7 @@ impl AnlsPreconditioner {
         res
     }
 
-    fn multiply_h_ht(h: &Vec<Vec<f64>>, k: usize, n: usize) -> Vec<Vec<f64>> {
+    fn multiply_h_ht(h: &[Vec<f64>], k: usize, n: usize) -> Vec<Vec<f64>> {
         let mut res = vec![vec![0.0; k]; k];
         for i in 0..k {
             for j in 0..k {
