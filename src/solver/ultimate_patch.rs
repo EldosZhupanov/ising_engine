@@ -1,6 +1,7 @@
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 use crate::core::QuboModel;
+use std::f64::consts::E;
 
 pub struct UltimateSolver {
     pub num_replicas: usize,
