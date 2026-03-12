@@ -9,3 +9,4 @@ pub use cluster::ClusterSolver;
 pub use parallel_tempering::ParallelTemperingSolver;
 pub use replica::{build_clamped_set, Replica};
 pub use ultimate::UltimateSolver;
+pub mod autopilot;
