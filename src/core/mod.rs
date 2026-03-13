@@ -1,7 +1,7 @@
 mod csr_matrix;
-mod qubo_model;
+pub mod hubo;
 
 pub use csr_matrix::CsrMatrix;
-pub use qubo_model::QuboModel;
+pub use hubo::QuboModel;
 pub mod simd_utils;
 pub mod anls;

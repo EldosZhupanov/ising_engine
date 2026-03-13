@@ -4,6 +4,7 @@ use std::arch::x86_64::*;
 /// A theoretical implementation demonstrating how SIMD AVX-256 can flip 4 f64 energy states simultaneously.
 /// This acts as a foundation for replacing the serial iteration in `ultimate.rs`.
 #[cfg(target_arch = "x86_64")]
+#[allow(clippy::missing_safety_doc)]
 pub unsafe fn compute_delta_energy_avx(
     _linear: &[f64],
     states: &[i8],

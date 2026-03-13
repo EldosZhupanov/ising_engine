@@ -14,6 +14,7 @@ pub struct LogicBuilder {
 }
 
 impl LogicBuilder {
+    #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
         Self { num_vars: 0, linear: Vec::new(), quadratic: Vec::new() }
     }

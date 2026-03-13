@@ -43,7 +43,7 @@ impl AnlsPreconditioner {
         let shift = if min_val < 0.0 { min_val.abs() + 1e-5 } else { 0.0 };
 
         let mut v = vec![vec![0.0; n]; n];
-        for row in w.iter_mut().take(n) {
+        for i in 0..n {
             for j in 0..n {
                 v[i][j] = q[i][j] + shift;
             }
@@ -54,7 +54,7 @@ impl AnlsPreconditioner {
             // Update H
             let wt_v = Self::multiply_transpose_w(&w, &v, n, k);
             let wt_w_h = Self::multiply(&Self::multiply_transpose_w_w(&w, n, k), &h, k, n);
-            for row in h.iter_mut().take(k) {
+            for i in 0..k {
                 for j in 0..n {
                     if wt_w_h[i][j] > 1e-9 {
                         h[i][j] *= wt_v[i][j] / wt_w_h[i][j];
@@ -65,7 +65,7 @@ impl AnlsPreconditioner {
             // Update W
             let v_ht = Self::multiply_h_transpose(&v, &h, n, k);
             let w_h_ht = Self::multiply(&w, &Self::multiply_h_ht(&h, k, n), n, k);
-            for row in w.iter_mut().take(n) {
+            for i in 0..n {
                 for j in 0..k {
                     if w_h_ht[i][j] > 1e-9 {
                         w[i][j] *= v_ht[i][j] / w_h_ht[i][j];
@@ -94,7 +94,7 @@ impl AnlsPreconditioner {
 
     fn multiply_transpose_w(w: &[Vec<f64>], v: &[Vec<f64>], n: usize, k: usize) -> Vec<Vec<f64>> {
         let mut res = vec![vec![0.0; n]; k];
-        for row in h.iter_mut().take(k) {
+        for i in 0..k {
             for j in 0..n {
                 let mut sum = 0.0;
                 for l in 0..n { sum += w[l][i] * v[l][j]; }
@@ -106,7 +106,7 @@ impl AnlsPreconditioner {
 
     fn multiply_transpose_w_w(w: &[Vec<f64>], n: usize, k: usize) -> Vec<Vec<f64>> {
         let mut res = vec![vec![0.0; k]; k];
-        for row in h.iter_mut().take(k) {
+        for i in 0..k {
             for j in 0..k {
                 let mut sum = 0.0;
                 for l in 0..n { sum += w[l][i] * w[l][j]; }
@@ -118,7 +118,7 @@ impl AnlsPreconditioner {
 
     fn multiply_h_transpose(v: &[Vec<f64>], h: &[Vec<f64>], n: usize, k: usize) -> Vec<Vec<f64>> {
         let mut res = vec![vec![0.0; k]; n];
-        for row in w.iter_mut().take(n) {
+        for i in 0..n {
             for j in 0..k {
                 let mut sum = 0.0;
                 for l in 0..n { sum += v[i][l] * h[j][l]; }
@@ -130,7 +130,7 @@ impl AnlsPreconditioner {
 
     fn multiply_h_ht(h: &[Vec<f64>], k: usize, n: usize) -> Vec<Vec<f64>> {
         let mut res = vec![vec![0.0; k]; k];
-        for row in h.iter_mut().take(k) {
+        for i in 0..k {
             for j in 0..k {
                 let mut sum = 0.0;
                 for l in 0..n { sum += h[i][l] * h[j][l]; }

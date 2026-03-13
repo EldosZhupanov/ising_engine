@@ -3,6 +3,8 @@ pub mod cluster;
 pub mod parallel_tempering;
 pub mod replica;
 pub mod ultimate;
+pub mod types;
+pub mod engine;
 
 pub use adaptive::AdaptiveTemperingSolver;
 pub use cluster::ClusterSolver;
