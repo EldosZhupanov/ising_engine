@@ -120,7 +120,7 @@ impl UltimateSolver {
         // Extract best replica result (simplification: extracting replica 0 of temp 0, pop 0, slice 0)
         let mut final_state = vec![0i8; n];
         for (i, item) in final_state.iter_mut().enumerate().take(n) {
-            final_state[i] = (field.get(i, 0, 0, 0) & 1) as i8;
+            *item = (field.get(i, 0, 0, 0) & 1) as i8;
         }
         final_state
     }

@@ -11,12 +11,14 @@ pub struct LogicBuilder {
     pub num_vars: usize,
     pub linear: Vec<f64>,
     pub quadratic: Vec<(usize, usize, f64)>,
+    pub cubic: Vec<(usize, usize, usize, f64)>,
+    pub quartic: Vec<(usize, usize, usize, usize, f64)>,
 }
 
 impl LogicBuilder {
     #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
-        Self { num_vars: 0, linear: Vec::new(), quadratic: Vec::new() }
+        Self { num_vars: 0, linear: Vec::new(), quadratic: Vec::new(), cubic: Vec::new(), quartic: Vec::new() }
     }
 
     pub fn add_var(&mut self) -> usize {
@@ -32,6 +34,14 @@ impl LogicBuilder {
             let (min, max) = if u < v { (u, v) } else { (v, u) };
             self.quadratic.push((min, max, w));
         }
+    }
+
+    pub fn add_edge3(&mut self, u: usize, v: usize, x: usize, w: f64) {
+        self.cubic.push((u, v, x, w));
+    }
+
+    pub fn add_edge4(&mut self, u: usize, v: usize, x: usize, y: usize, w: f64) {
+        self.quartic.push((u, v, x, y, w));
     }
 
     pub fn add_not_gate(&mut self, x: usize, y: usize) {
@@ -150,5 +160,30 @@ impl LogicBuilder {
             linear: self.linear,
             quadratic: CsrMatrix { values, col_indices, row_offsets },
         }
+    }
+
+    pub fn build_hubo(self) -> crate::core::hubo::HuboModel {
+        let mut model = crate::core::hubo::HuboModel::new(self.num_vars);
+        model.linear = self.linear;
+
+        for (u, v, w) in self.quadratic {
+            model.edges2[u].push(crate::core::hubo::Edge2 { j: v, weight: w });
+            model.edges2[v].push(crate::core::hubo::Edge2 { j: u, weight: w });
+        }
+
+        for (u, v, x, w) in self.cubic {
+            model.edges3[u].push(crate::core::hubo::Edge3 { j: v, k: x, weight: w });
+            model.edges3[v].push(crate::core::hubo::Edge3 { j: u, k: x, weight: w });
+            model.edges3[x].push(crate::core::hubo::Edge3 { j: u, k: v, weight: w });
+        }
+
+        for (u, v, x, y, w) in self.quartic {
+            model.edges4[u].push(crate::core::hubo::Edge4 { j: v, k: x, l: y, weight: w });
+            model.edges4[v].push(crate::core::hubo::Edge4 { j: u, k: x, l: y, weight: w });
+            model.edges4[x].push(crate::core::hubo::Edge4 { j: u, k: v, l: y, weight: w });
+            model.edges4[y].push(crate::core::hubo::Edge4 { j: u, k: v, l: x, weight: w });
+        }
+
+        model
     }
 }
