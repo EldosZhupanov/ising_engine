@@ -1,0 +1,19 @@
+[target.x86_64-unknown-linux-gnu]
+rustflags = [
+"-Ctarget-cpu=native",
+"-Ctarget-feature=+avx2,+fma",
+"-Copt-level=3"
+]
+
+[target.x86_64-pc-windows-msvc]
+rustflags = [
+"-Ctarget-cpu=native",
+"-Ctarget-feature=+avx2,+fma",
+"-Copt-level=3"
+]
+
+[alias]
+verify = "test --release"
+bins = "build --release --bins"
+lint = "clippy --release -- -D warnings"
+benchall = "bench"

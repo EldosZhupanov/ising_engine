@@ -41,7 +41,10 @@ fn main() {
     );
 
     if result[c_in] == 1 {
-        println!("✅ Cin = 1 recovered. Reverse Toffoli solved in {:?}!", duration);
+        println!(
+            "✅ Cin = 1 recovered. Reverse Toffoli solved in {:?}!",
+            duration
+        );
     } else {
         println!("❌ Local minimum reached in {:?}.", duration);
     }

@@ -1,6 +1,5 @@
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
-use std::f64::consts::E;
 
 use super::replica::{build_clamped_set, Replica};
 use crate::core::QuboModel;
@@ -36,7 +35,7 @@ impl ParallelTemperingSolver {
     pub fn solve(&self, model: &QuboModel, clamped: &[(usize, i8)]) -> Vec<i8> {
         let base_seed = self.seed.unwrap_or_else(rand::random);
         let mut engine_rng = ChaCha8Rng::seed_from_u64(base_seed + self.num_replicas as u64);
-        
+
         let mut replica_rngs: Vec<ChaCha8Rng> = (0..self.num_replicas)
             .map(|i| ChaCha8Rng::seed_from_u64(base_seed + i as u64))
             .collect();
@@ -48,8 +47,9 @@ impl ParallelTemperingSolver {
             .iter_mut()
             .enumerate()
             .map(|(i, local_rng)| {
-                let mut state: Vec<i8> =
-                    (0..model.num_vars).map(|_| local_rng.gen_range(0..=1)).collect();
+                let mut state: Vec<i8> = (0..model.num_vars)
+                    .map(|_| local_rng.gen_range(0..=1))
+                    .collect();
                 for &(idx, val) in clamped {
                     state[idx] = val;
                 }
@@ -79,7 +79,7 @@ impl ParallelTemperingSolver {
                     if delta_e < 0.0
                         || (replica.temp > 1e-8
                             && exponent > -20.0
-                            && local_rng.gen_range(0.0..1.0) < E.powf(exponent))
+                            && local_rng.gen_range(0.0..1.0) < exponent.exp())
                     {
                         replica.state[var_idx] = 1 - replica.state[var_idx];
                     }

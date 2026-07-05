@@ -10,10 +10,14 @@ fn test_not_gate() {
     let model = builder.build();
 
     let solver = ParallelTemperingSolver {
-        num_replicas: 16, temp_max: 100.0, temp_min: 0.1,
-        sweeps_per_exchange: 1000, total_exchanges: 100, seed: None,
+        num_replicas: 16,
+        temp_max: 100.0,
+        temp_min: 0.1,
+        sweeps_per_exchange: 1000,
+        total_exchanges: 100,
+        seed: None,
     };
-    
+
     let res1 = solver.solve(&model, &[(x, 1)]);
     assert_eq!(res1[y], 0);
 
@@ -31,7 +35,12 @@ fn test_or_gate() {
     let model = builder.build();
 
     let solver = ParallelTemperingSolver {
-        num_replicas: 16, temp_max: 100.0, temp_min: 0.1, sweeps_per_exchange: 500, total_exchanges: 50, seed: None,
+        num_replicas: 16,
+        temp_max: 100.0,
+        temp_min: 0.1,
+        sweeps_per_exchange: 500,
+        total_exchanges: 50,
+        seed: None,
     };
 
     assert_eq!(solver.solve(&model, &[(a, 0), (b, 0)])[z], 0);
@@ -43,20 +52,25 @@ fn test_or_gate() {
 #[test]
 fn test_mux_gate() {
     let mut builder = LogicBuilder::new();
-    let s = builder.add_var(); 
-    let a = builder.add_var(); 
-    let b = builder.add_var(); 
-    let z = builder.add_var(); 
+    let s = builder.add_var();
+    let a = builder.add_var();
+    let b = builder.add_var();
+    let z = builder.add_var();
     builder.add_mux_gate(s, a, b, z);
     let model = builder.build();
 
     let solver = ParallelTemperingSolver {
-        num_replicas: 16, temp_max: 100.0, temp_min: 0.1, sweeps_per_exchange: 500, total_exchanges: 50, seed: None,
+        num_replicas: 16,
+        temp_max: 100.0,
+        temp_min: 0.1,
+        sweeps_per_exchange: 500,
+        total_exchanges: 50,
+        seed: None,
     };
 
     assert_eq!(solver.solve(&model, &[(s, 1), (a, 1), (b, 0)])[z], 1);
     assert_eq!(solver.solve(&model, &[(s, 1), (a, 0), (b, 1)])[z], 0);
-    
+
     assert_eq!(solver.solve(&model, &[(s, 0), (a, 1), (b, 0)])[z], 0);
     assert_eq!(solver.solve(&model, &[(s, 0), (a, 0), (b, 1)])[z], 1);
 }
@@ -71,7 +85,12 @@ fn test_comparator_equal() {
     let model = builder.build();
 
     let solver = ParallelTemperingSolver {
-        num_replicas: 16, temp_max: 100.0, temp_min: 0.1, sweeps_per_exchange: 500, total_exchanges: 50, seed: None,
+        num_replicas: 16,
+        temp_max: 100.0,
+        temp_min: 0.1,
+        sweeps_per_exchange: 500,
+        total_exchanges: 50,
+        seed: None,
     };
 
     assert_eq!(solver.solve(&model, &[(a, 0), (b, 0)])[eq], 1);

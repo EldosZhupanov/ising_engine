@@ -132,5 +132,8 @@ fn test_reproducibility() {
     let res1 = solver1.solve(&model, &clamped);
     let res2 = solver2.solve(&model, &clamped);
 
-    assert_eq!(res1, res2, "Deterministic solvers strictly returned differing states!");
+    assert_eq!(
+        res1, res2,
+        "Deterministic solvers strictly returned differing states!"
+    );
 }

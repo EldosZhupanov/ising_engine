@@ -10,10 +10,10 @@ use std::time::Instant;
 fn generate_mock_gset_g1() -> QuboModel {
     let n = 800; // G1 has 800 nodes
     let density = 19176.0 / (800.0 * 799.0 / 2.0); // Edge density of G1 (~6%)
-    
+
     let mut rng = rand::thread_rng();
     use rand::Rng;
-    
+
     let mut linear = vec![0.0; n];
     let mut quadratic = vec![];
 
@@ -52,7 +52,11 @@ fn generate_mock_gset_g1() -> QuboModel {
     QuboModel {
         num_vars: n,
         linear,
-        quadratic: CsrMatrix { values, col_indices, row_offsets },
+        quadratic: CsrMatrix {
+            values,
+            col_indices,
+            row_offsets,
+        },
     }
 }
 
@@ -81,33 +85,39 @@ fn main() {
     println!("------------------------------------------------------------------------\n");
 
     let model = generate_mock_gset_g1();
-    
+
     // We use ANLS + GNN hybrid settings (represented by our fast sweep config)
     let solver = UltimateSolver::new(
-        1000.0, 
-        0.01, 
+        1000.0,
+        0.01,
         500, // Sweeps
         100, // Exchanges
-        Some(1337)
+        Some(1337),
     );
 
     println!("⚡ Initializing O(1) Branchless Annealing (Multi-Spin Coding)...");
-    
+
     let start = Instant::now();
     let state = solver.solve(&model, &[]);
     let duration = start.elapsed();
-    
+
     let cut_value = calculate_cut(&model, &state);
-    
+
     // Calculate metric vs known Gurobi performance on G1
     let gurobi_time = 45.0; // Typical Gurobi time in seconds to reach ~11600 on G1
     let speedup = gurobi_time / duration.as_secs_f64();
 
     println!("⏱️  Execution Time: {:?}", duration);
-    println!("🎯 Cut Value Found: {:.0} (Extremely close to theoretical max 11624)", cut_value);
+    println!(
+        "🎯 Cut Value Found: {:.0} (Extremely close to theoretical max 11624)",
+        cut_value
+    );
     println!("\n📊 INDUSTRY COMPARISON:");
     println!("   - IBM CPLEX / Gurobi Time: ~45.0 seconds");
-    println!("   - ZeroClaw Ising Time:     {:.5} seconds", duration.as_secs_f64());
+    println!(
+        "   - ZeroClaw Ising Time:     {:.5} seconds",
+        duration.as_secs_f64()
+    );
     println!("   - SPEED MULTIPLIER:        {:.0}x FASTER", speedup);
     println!("\n========================================================================");
     println!("✅ READY FOR SLIDEDECK. The engine solves standard academic benchmarks orders of magnitude faster than commercial linear solvers.");

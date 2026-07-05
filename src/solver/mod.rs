@@ -1,10 +1,10 @@
 pub mod adaptive;
 pub mod cluster;
+pub mod engine;
 pub mod parallel_tempering;
 pub mod replica;
-pub mod ultimate;
 pub mod types;
-pub mod engine;
+pub mod ultimate;
 
 pub use adaptive::AdaptiveTemperingSolver;
 pub use cluster::ClusterSolver;

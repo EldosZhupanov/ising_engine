@@ -1,7 +1,6 @@
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 use rayon::prelude::*;
-use std::f64::consts::E;
 
 use super::replica::{build_clamped_set, Replica};
 use crate::core::QuboModel;
@@ -45,8 +44,9 @@ impl AdaptiveTemperingSolver {
             .iter_mut()
             .enumerate()
             .map(|(i, local_rng)| {
-                let mut state: Vec<i8> =
-                    (0..model.num_vars).map(|_| local_rng.gen_range(0..=1)).collect();
+                let mut state: Vec<i8> = (0..model.num_vars)
+                    .map(|_| local_rng.gen_range(0..=1))
+                    .collect();
                 for &(idx, val) in clamped {
                     state[idx] = val;
                 }
@@ -66,25 +66,28 @@ impl AdaptiveTemperingSolver {
 
         for exchange_step in 0..self.total_exchanges {
             // Parallel Metropolis sweep (rayon)
-            replicas.par_iter_mut().zip(replica_rngs.par_iter_mut()).for_each(|(replica, local_rng)| {
-                for _ in 0..self.sweeps_per_exchange {
-                    let var_idx = local_rng.gen_range(0..model.num_vars);
-                    if clamped_set[var_idx] {
-                        continue;
-                    }
+            replicas
+                .par_iter_mut()
+                .zip(replica_rngs.par_iter_mut())
+                .for_each(|(replica, local_rng)| {
+                    for _ in 0..self.sweeps_per_exchange {
+                        let var_idx = local_rng.gen_range(0..model.num_vars);
+                        if clamped_set[var_idx] {
+                            continue;
+                        }
 
-                    let delta_e = Self::calculate_delta_e(model, &replica.state, var_idx);
-                    let exponent = -delta_e / replica.temp;
-                    if delta_e < 0.0
-                        || (replica.temp > 1e-8
-                            && exponent > -20.0
-                            && local_rng.gen_range(0.0..1.0) < E.powf(exponent))
-                    {
-                        replica.state[var_idx] = 1 - replica.state[var_idx];
+                        let delta_e = Self::calculate_delta_e(model, &replica.state, var_idx);
+                        let exponent = -delta_e / replica.temp;
+                        if delta_e < 0.0
+                            || (replica.temp > 1e-8
+                                && exponent > -20.0
+                                && local_rng.gen_range(0.0..1.0) < exponent.exp())
+                        {
+                            replica.state[var_idx] = 1 - replica.state[var_idx];
+                        }
                     }
-                }
-                replica.energy = model.calculate_total_energy(&replica.state);
-            });
+                    replica.energy = model.calculate_total_energy(&replica.state);
+                });
 
             // Replica exchange with statistics tracking
             for i in 0..(self.num_replicas - 1) {

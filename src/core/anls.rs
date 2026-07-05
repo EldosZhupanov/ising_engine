@@ -27,20 +27,30 @@ impl AnlsPreconditioner {
         let mut h = vec![vec![0.0; n]; k];
 
         for row in w.iter_mut().take(n) {
-            for val in row.iter_mut().take(k) { *val = rng.gen_range(0.1..1.0); }
+            for val in row.iter_mut().take(k) {
+                *val = rng.gen_range(0.1..1.0);
+            }
         }
         for row in h.iter_mut().take(k) {
-            for val in row.iter_mut().take(n) { *val = rng.gen_range(0.1..1.0); }
+            for val in row.iter_mut().take(n) {
+                *val = rng.gen_range(0.1..1.0);
+            }
         }
 
         // Shift Q to be non-negative if necessary (NMF requirement)
         let mut min_val = 0.0;
         for r in q.iter() {
             for &val in r.iter() {
-                if val < min_val { min_val = val; }
+                if val < min_val {
+                    min_val = val;
+                }
             }
         }
-        let shift = if min_val < 0.0 { min_val.abs() + 1e-5 } else { 0.0 };
+        let shift = if min_val < 0.0 {
+            min_val.abs() + 1e-5
+        } else {
+            0.0
+        };
 
         let mut v = vec![vec![0.0; n]; n];
         for i in 0..n {
@@ -85,7 +95,9 @@ impl AnlsPreconditioner {
         for i in 0..rows_a {
             for j in 0..cols_b {
                 let mut sum = 0.0;
-                for l in 0..cols_a { sum += a[i][l] * b[l][j]; }
+                for l in 0..cols_a {
+                    sum += a[i][l] * b[l][j];
+                }
                 res[i][j] = sum;
             }
         }
@@ -97,7 +109,9 @@ impl AnlsPreconditioner {
         for i in 0..k {
             for j in 0..n {
                 let mut sum = 0.0;
-                for l in 0..n { sum += w[l][i] * v[l][j]; }
+                for l in 0..n {
+                    sum += w[l][i] * v[l][j];
+                }
                 res[i][j] = sum;
             }
         }
@@ -109,7 +123,9 @@ impl AnlsPreconditioner {
         for i in 0..k {
             for j in 0..k {
                 let mut sum = 0.0;
-                for l in 0..n { sum += w[l][i] * w[l][j]; }
+                for row in w.iter().take(n) {
+                    sum += row[i] * row[j];
+                }
                 res[i][j] = sum;
             }
         }
@@ -121,7 +137,9 @@ impl AnlsPreconditioner {
         for i in 0..n {
             for j in 0..k {
                 let mut sum = 0.0;
-                for l in 0..n { sum += v[i][l] * h[j][l]; }
+                for l in 0..n {
+                    sum += v[i][l] * h[j][l];
+                }
                 res[i][j] = sum;
             }
         }
@@ -133,7 +151,9 @@ impl AnlsPreconditioner {
         for i in 0..k {
             for j in 0..k {
                 let mut sum = 0.0;
-                for l in 0..n { sum += h[i][l] * h[j][l]; }
+                for (&val_i, &val_j) in h[i].iter().zip(h[j].iter()).take(n) {
+                    sum += val_i * val_j;
+                }
                 res[i][j] = sum;
             }
         }

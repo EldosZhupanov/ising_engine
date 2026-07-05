@@ -1,24 +1,41 @@
-# Build artifacts
-/target/
-out/
-
-# Environment secrets
-.env
-
-# Runtime data files
-market_state.json
-crypto_stress.txt
-arbitrage_task.txt
-
-# Cache
-cache/
-
-# IDE
-.idea/
+target/
 .vscode/
-*.swp
-*.swo
+.idea/
 
-# OS files
+*.log
+*.tmp
+
+
+.claude/cache/
+.claude/history/
+
 .DS_Store
 Thumbs.db
+
+# Rust
+target/
+rustc-ice-*
+*.out
+*.profraw
+*.profdata
+
+# Coverage
+coverage/
+
+# Environment
+.env
+.env.*
+
+# Backup
+*.bak
+*.old
+*.orig
+
+# Cache
+.cache/
+.claude/cache/
+.claude/history/
+
+# Claude generated context
+.claude/context/
+.claude/index/

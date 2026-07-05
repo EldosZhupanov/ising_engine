@@ -1,7 +1,7 @@
 use ising_engine::core::{CsrMatrix, QuboModel};
 use ising_engine::solver::UltimateSolver;
-use std::time::Instant;
 use rand::Rng;
+use std::time::Instant;
 
 fn generate_dense_qubo(n: usize, density: f64) -> QuboModel {
     let mut rng = rand::thread_rng();
@@ -40,7 +40,11 @@ fn generate_dense_qubo(n: usize, density: f64) -> QuboModel {
     QuboModel {
         num_vars: n,
         linear,
-        quadratic: CsrMatrix { values, col_indices, row_offsets },
+        quadratic: CsrMatrix {
+            values,
+            col_indices,
+            row_offsets,
+        },
     }
 }
 
@@ -62,7 +66,7 @@ fn calculate_energy(model: &QuboModel, state: &[i8]) -> f64 {
 fn main() {
     println!("🔥 ISING ENGINE: ENTERPRISE STRESS TEST SUITE 🔥");
     println!("============================================================");
-    
+
     // We will test various sizes: from MEV scale (N=50) to Logistics scale (N=1000)
     let tests = vec![
         ("MEV Arbitrage Matrix", 50, 0.8, 100, 50),
@@ -72,30 +76,38 @@ fn main() {
     ];
 
     for (name, n, density, sweeps, exchanges) in tests {
-        println!("\n▶️ TEST: {} (Variables: {}, Density: {:.0}%)", name, n, density * 100.0);
+        println!(
+            "\n▶️ TEST: {} (Variables: {}, Density: {:.0}%)",
+            name,
+            n,
+            density * 100.0
+        );
         let model = generate_dense_qubo(n, density);
-        
+
         let solver = UltimateSolver::new(
-            1000.0, 
-            0.01, 
-            sweeps, 
-            exchanges, 
-            Some(42) // Fixed seed for reproducibility in tests
+            1000.0,
+            0.01,
+            sweeps,
+            exchanges,
+            Some(42), // Fixed seed for reproducibility in tests
         );
 
         let start = Instant::now();
         let state = solver.solve(&model, &[]);
         let duration = start.elapsed();
-        
+
         let final_energy = calculate_energy(&model, &state);
 
         println!("   ⏱️ Execution Time: {:?}", duration);
         println!("   ⚡ Ground State Energy: {:.2}", final_energy);
-        
+
         // Calculate throughput
         let total_flips = (n as u128) * (sweeps as u128) * (exchanges as u128) * 64; // 64 replicas in MSC
         let flips_per_sec = (total_flips as f64) / duration.as_secs_f64();
-        println!("   🚀 Throughput: {:.2} Million Flips/sec", flips_per_sec / 1_000_000.0);
+        println!(
+            "   🚀 Throughput: {:.2} Million Flips/sec",
+            flips_per_sec / 1_000_000.0
+        );
     }
     println!("\n============================================================");
     println!("✅ STRESS TEST COMPLETE.");

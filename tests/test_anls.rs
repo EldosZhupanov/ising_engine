@@ -10,7 +10,7 @@ fn test_anls_factorization() {
     ];
 
     let preconditioner = AnlsPreconditioner::new(2, 500, 1e-4);
-    
+
     let (w, h) = preconditioner.factorize(&q_matrix);
 
     assert_eq!(w.len(), 4);
@@ -34,9 +34,9 @@ fn test_anls_factorization() {
             error += diff * diff;
         }
     }
-    
+
     let frobenius_norm = error.sqrt();
     println!("Frobenius Norm Error (K=2): {}", frobenius_norm);
-    
+
     assert!(frobenius_norm < 15.0, "Factorization error too high!");
 }

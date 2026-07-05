@@ -1,7 +1,6 @@
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 use rayon::prelude::*;
-use std::f64::consts::E;
 
 use super::replica::{build_clamped_set, Replica};
 use crate::core::QuboModel;
@@ -75,7 +74,7 @@ impl ClusterSolver {
         let delta_e = e_new - e_old;
 
         if delta_e > 0.0
-            && (replica.temp <= 1e-8 || rng.gen_range(0.0..1.0) >= E.powf(-delta_e / replica.temp))
+            && (replica.temp <= 1e-8 || rng.gen_range(0.0..1.0) >= (-delta_e / replica.temp).exp())
         {
             // Reject: revert
             for &idx in &cluster {
@@ -98,8 +97,9 @@ impl ClusterSolver {
             .iter_mut()
             .enumerate()
             .map(|(i, local_rng)| {
-                let mut state: Vec<i8> =
-                    (0..model.num_vars).map(|_| local_rng.gen_range(0..=1)).collect();
+                let mut state: Vec<i8> = (0..model.num_vars)
+                    .map(|_| local_rng.gen_range(0..=1))
+                    .collect();
                 for &(idx, val) in clamped {
                     state[idx] = val;
                 }
@@ -117,26 +117,30 @@ impl ClusterSolver {
         let mut swap_accepts = vec![0; self.num_replicas - 1];
 
         for exchange_step in 0..self.total_exchanges {
-            replicas.par_iter_mut().zip(replica_rngs.par_iter_mut()).for_each(|(replica, local_rng)| {
-                for step in 0..self.sweeps_per_exchange {
-                    if step % 10 == 0 {
-                        Self::try_cluster_flip(model, replica, &clamped_set, local_rng);
-                    } else {
-                        let var_idx = local_rng.gen_range(0..model.num_vars);
-                        if clamped_set[var_idx] {
-                            continue;
-                        }
-                        let delta_e = Self::calculate_delta_e(model, &replica.state, var_idx);
-                        if delta_e < 0.0
-                            || (replica.temp > 1e-8
-                                && local_rng.gen_range(0.0..1.0) < E.powf(-delta_e / replica.temp))
-                        {
-                            replica.state[var_idx] = 1 - replica.state[var_idx];
+            replicas
+                .par_iter_mut()
+                .zip(replica_rngs.par_iter_mut())
+                .for_each(|(replica, local_rng)| {
+                    for step in 0..self.sweeps_per_exchange {
+                        if step % 10 == 0 {
+                            Self::try_cluster_flip(model, replica, &clamped_set, local_rng);
+                        } else {
+                            let var_idx = local_rng.gen_range(0..model.num_vars);
+                            if clamped_set[var_idx] {
+                                continue;
+                            }
+                            let delta_e = Self::calculate_delta_e(model, &replica.state, var_idx);
+                            if delta_e < 0.0
+                                || (replica.temp > 1e-8
+                                    && local_rng.gen_range(0.0..1.0)
+                                        < (-delta_e / replica.temp).exp())
+                            {
+                                replica.state[var_idx] = 1 - replica.state[var_idx];
+                            }
                         }
                     }
-                }
-                replica.energy = model.calculate_total_energy(&replica.state);
-            });
+                    replica.energy = model.calculate_total_energy(&replica.state);
+                });
 
             for i in 0..(self.num_replicas - 1) {
                 let delta_beta = (1.0 / replicas[i].temp) - (1.0 / replicas[i + 1].temp);
