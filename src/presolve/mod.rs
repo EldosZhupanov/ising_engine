@@ -23,6 +23,8 @@
 
 use crate::core::{CsrMatrix, QuboModel};
 
+pub mod qpbo;
+
 /// Derives provably-safe variable fixings via first-order persistency,
 /// iterated to a fixpoint.
 ///
@@ -264,5 +266,116 @@ pub fn extract_component(
             energy_offset: 0.0,
         },
         comp.to_vec(),
+    )
+}
+
+/// Integrated production presolve: roof-duality/QPBO strong persistencies
+/// unioned with exact probing weak persistencies, respecting user clamps.
+///
+/// Optimum-preservation of the union: QPBO fixings hold in EVERY global
+/// optimum (strong persistency; Hammer-Hansen-Simeone 1984); probing fixings
+/// hold in SOME global optimum (weak persistency). Any optimum consistent
+/// with the probing fixings also satisfies all QPBO fixings (they hold in
+/// all optima), so the union is jointly satisfiable by that optimum — hence
+/// optimum-preserving. QPBO and probing never conflict (a strong "x_i=1" and
+/// a weak "x_i=0" would require an optimum with x_i=0 that contradicts
+/// x_i=1 in all optima). Deterministic.
+pub fn full_presolve(model: &QuboModel, clamped: &[(usize, i8)]) -> Vec<(usize, i8)> {
+    let n = model.num_vars;
+    let mut user_clamped = vec![false; n];
+    for &(idx, _) in clamped {
+        user_clamped[idx] = true;
+    }
+
+    // QPBO strong persistencies. QPBO's guarantee is over the UNCLAMPED
+    // optima, which differ from the clamped optima; so when clamps exist we
+    // run QPBO on the clamp-reduced model (clamped-1 contributions folded
+    // into free linear terms) and map fixings back to global indices.
+    let mut assumptions: Vec<(usize, i8)> = clamped.to_vec();
+    let (reduced, free_map) = reduce_by_clamps(model, clamped);
+    for (li, v) in qpbo::roof_duality_persistencies(&reduced)
+        .into_iter()
+        .enumerate()
+        .filter_map(|(li, v)| v.map(|x| (li, x)))
+    {
+        let gi = free_map[li];
+        if !user_clamped[gi] && !assumptions.iter().any(|&(k, _)| k == gi) {
+            assumptions.push((gi, v));
+        }
+    }
+
+    // Probing on top of the QPBO fixings (as assumptions) captures any
+    // additional weak persistencies the strong labeling missed.
+    let probed = fix_persistent_variables_probing(model, &assumptions);
+
+    // Union, excluding user clamps.
+    for (i, v) in probed {
+        if !user_clamped[i] && !assumptions.iter().any(|&(k, _)| k == i) {
+            assumptions.push((i, v));
+        }
+    }
+    assumptions
+        .into_iter()
+        .filter(|&(i, _)| !user_clamped[i])
+        .collect()
+}
+
+/// Reduces `model` by substituting `clamped` assignments: returns a QUBO over
+/// the FREE variables (clamped-1 neighbor contributions folded into linear
+/// terms; couplings among free vars preserved) and the free→global index map.
+/// The reduced model's optima correspond exactly to the clamped optima of the
+/// original, so persistencies derived on it are valid under the clamps.
+fn reduce_by_clamps(model: &QuboModel, clamped: &[(usize, i8)]) -> (QuboModel, Vec<usize>) {
+    let n = model.num_vars;
+    let mut clamp_val: Vec<Option<i8>> = vec![None; n];
+    for &(i, v) in clamped {
+        clamp_val[i] = Some(v);
+    }
+    let free: Vec<usize> = (0..n).filter(|&i| clamp_val[i].is_none()).collect();
+    let mut g2l = vec![usize::MAX; n];
+    for (li, &gi) in free.iter().enumerate() {
+        g2l[gi] = li;
+    }
+    let m = free.len();
+    let mut linear = vec![0.0f64; m];
+    let mut rows: Vec<Vec<(usize, f64)>> = vec![Vec::new(); m];
+    for (li, &gi) in free.iter().enumerate() {
+        let mut h = model.linear[gi];
+        for (j, w) in model.quadratic.get_row(gi) {
+            match clamp_val[j] {
+                None => {
+                    if g2l[j] != usize::MAX {
+                        rows[li].push((g2l[j], w));
+                    }
+                }
+                Some(1) => h += w, // clamped-1 neighbor contributes w·x_gi
+                Some(_) => {}      // clamped-0 neighbor contributes nothing
+            }
+        }
+        linear[li] = h;
+    }
+    let mut values = Vec::new();
+    let mut col_indices = Vec::new();
+    let mut row_offsets = vec![0];
+    for row in &mut rows {
+        row.sort_by_key(|&(j, _)| j);
+        for &(j, w) in row.iter() {
+            col_indices.push(j);
+            values.push(w);
+        }
+        row_offsets.push(col_indices.len());
+    }
+    (
+        QuboModel {
+            num_vars: m,
+            linear,
+            quadratic: CsrMatrix {
+                values,
+                col_indices,
+                row_offsets,
+            },
+            energy_offset: 0.0,
+        },
+        free,
     )
 }

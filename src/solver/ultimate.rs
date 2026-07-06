@@ -149,10 +149,10 @@ impl UltimateSolver {
             clamped_val[idx] = val;
         }
 
-        // Presolve: exact probing persistency (strictly dominates
-        // first-order; provably preserves a global optimum; never touches
-        // user-clamped indices). See crate::presolve.
-        let derived = crate::presolve::fix_persistent_variables_probing(model, clamped);
+        // Presolve: roof-duality/QPBO strong persistencies unioned with
+        // exact probing weak persistencies (crate::presolve::full_presolve).
+        // Provably optimum-preserving; never touches user-clamped indices.
+        let derived = crate::presolve::full_presolve(model, clamped);
         for &(idx, val) in &derived {
             is_clamped[idx] = true;
             clamped_val[idx] = val;
