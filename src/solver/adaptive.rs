@@ -123,10 +123,20 @@ impl AdaptiveTemperingSolver {
                     let adjustment = (target_rate - rate) * 0.05; // Learning rate
                     let mut new_temp = replicas[i].temp * (1.0 - adjustment);
 
-                    // Guard: temperature must stay between neighbors
+                    // Guard: temperature must stay between neighbors.
+                    // On ladders where adjacent temperatures lie within
+                    // 0.002, the padded bounds invert and f64::clamp would
+                    // panic — fall back to the neighbors' midpoint, which
+                    // keeps strict monotonicity without a panic path.
                     let temp_hotter = replicas[i - 1].temp;
                     let temp_colder = replicas[i + 1].temp;
-                    new_temp = new_temp.clamp(temp_colder + 0.001, temp_hotter - 0.001);
+                    let lo = temp_colder + 0.001;
+                    let hi = temp_hotter - 0.001;
+                    new_temp = if lo <= hi {
+                        new_temp.clamp(lo, hi)
+                    } else {
+                        0.5 * (temp_colder + temp_hotter)
+                    };
 
                     replicas[i].temp = new_temp;
                     swap_accepts[i] = 0;

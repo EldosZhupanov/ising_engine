@@ -8,8 +8,8 @@ fn main() {
 
     // We create a simple QUBO matrix (e.g. 10 variables)
     let n = 10;
-    let mut linear = vec![0.0; n];
-    let mut quadratic: Vec<(usize, usize, f64)> = vec![];
+    let linear = vec![0.0; n];
+    let _quadratic: Vec<(usize, usize, f64)> = vec![];
 
     // Let's assume the GNN analyzed this matrix and output a probability
     // that certain nodes MUST be 1.
@@ -20,8 +20,9 @@ fn main() {
     ];
 
     // Build dummy CSR matrix
-    let mut row_offsets = vec![0; n + 1];
+    let row_offsets = vec![0; n + 1];
     let model = QuboModel {
+        energy_offset: 0.0,
         num_vars: n,
         linear,
         quadratic: CsrMatrix {

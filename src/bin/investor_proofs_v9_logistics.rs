@@ -1,3 +1,6 @@
+// Demo binary: index-based loops over generated matrices are clearer here.
+#![allow(clippy::needless_range_loop)]
+
 use rand::Rng;
 use rayon::prelude::*;
 use std::f64::consts::E;
@@ -339,7 +342,7 @@ fn main() {
         "🌐 Generating random map with {} cities (Search Space: 479M+ routes)...",
         n
     );
-    let (model, cities, dist) = generate_tsp_qubo(n);
+    let (model, _cities, dist) = generate_tsp_qubo(n);
 
     let solver = HybridSolver {
         num_replicas: 128,

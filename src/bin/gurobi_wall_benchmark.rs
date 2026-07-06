@@ -1,3 +1,6 @@
+// Demo binary: index-based loops over generated matrices are clearer here.
+#![allow(clippy::needless_range_loop)]
+
 use rand::Rng;
 use rayon::prelude::*;
 use std::f64::consts::E;
@@ -120,7 +123,8 @@ pub fn exact_max_cut_solver(n: usize, weights: &[Vec<f64>]) -> f64 {
     let num_combinations = 1u64 << n; // 2^N комбинаций
 
     // Используем всю мощь процессора (Rayon), чтобы перебрать все
-    let max_cut = (0..num_combinations)
+
+    (0..num_combinations)
         .into_par_iter()
         .map(|state| {
             let mut cut = 0.0;
@@ -136,9 +140,7 @@ pub fn exact_max_cut_solver(n: usize, weights: &[Vec<f64>]) -> f64 {
             cut
         })
         .max_by(|a, b| a.partial_cmp(b).unwrap())
-        .unwrap();
-
-    max_cut
+        .unwrap()
 }
 
 // ==========================================

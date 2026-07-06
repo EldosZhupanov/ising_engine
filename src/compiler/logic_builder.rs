@@ -9,6 +9,8 @@ pub struct Multiplier2x2 {
 
 pub struct LogicBuilder {
     pub num_vars: usize,
+    /// Accumulated constant of the penalty polynomial (e.g. +1 per NOT).
+    pub constant: f64,
     pub linear: Vec<f64>,
     pub quadratic: Vec<(usize, usize, f64)>,
     pub cubic: Vec<(usize, usize, usize, f64)>,
@@ -20,6 +22,7 @@ impl LogicBuilder {
     pub fn new() -> Self {
         Self {
             num_vars: 0,
+            constant: 0.0,
             linear: Vec::new(),
             quadratic: Vec::new(),
             cubic: Vec::new(),
@@ -52,9 +55,12 @@ impl LogicBuilder {
     }
 
     pub fn add_not_gate(&mut self, x: usize, y: usize) {
+        // Penalty 2xy − x − y + 1 ≥ 0, equality iff y = ¬x (Boros-Hammer
+        // form). The +1 keeps the satisfied-state energy at exactly zero.
         self.add_quad(x, y, 2.0);
         self.linear[x] -= 1.0;
         self.linear[y] -= 1.0;
+        self.constant += 1.0;
     }
 
     pub fn add_or_gate(&mut self, a: usize, b: usize, z: usize) {
@@ -180,6 +186,7 @@ impl LogicBuilder {
                 col_indices,
                 row_offsets,
             },
+            energy_offset: self.constant,
         }
     }
 

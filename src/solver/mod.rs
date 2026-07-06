@@ -1,8 +1,14 @@
 pub mod adaptive;
 pub mod cluster;
+pub mod elite;
 pub mod engine;
+pub mod icm;
+pub mod local_search;
 pub mod parallel_tempering;
+pub mod population_annealing;
 pub mod replica;
+pub mod schedule;
+pub mod tts;
 pub mod types;
 pub mod ultimate;
 

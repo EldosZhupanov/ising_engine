@@ -28,6 +28,7 @@ fn incremental_delta_e(model: &QuboModel, state: &[i8], var_idx: usize) -> f64 {
 #[test]
 fn test_empty_model_energy() {
     let model = QuboModel {
+        energy_offset: 0.0,
         num_vars: 3,
         linear: vec![0.0; 3],
         quadratic: CsrMatrix::empty(3),
@@ -39,6 +40,7 @@ fn test_empty_model_energy() {
 #[test]
 fn test_linear_only_energy() {
     let model = QuboModel {
+        energy_offset: 0.0,
         num_vars: 3,
         linear: vec![2.0, -3.0, 5.0],
         quadratic: CsrMatrix::empty(3),
@@ -122,7 +124,7 @@ fn test_delta_e_matches_bruteforce_xor_gate() {
     // Test all 16 states
     for bits in 0..16u8 {
         let state = vec![
-            ((bits >> 0) & 1) as i8,
+            (bits & 1) as i8,
             ((bits >> 1) & 1) as i8,
             ((bits >> 2) & 1) as i8,
             ((bits >> 3) & 1) as i8,

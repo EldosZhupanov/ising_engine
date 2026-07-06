@@ -1,7 +1,7 @@
 use ising_engine::compiler::LogicBuilder;
-use ising_engine::core::hubo::{Edge3, Edge4, FlatHuboModel, HuboModel};
+use ising_engine::core::hubo::FlatHuboModel;
 use ising_engine::solver::engine;
-use ising_engine::solver::types::{QuantumField, NUM_REPLICAS};
+use ising_engine::solver::types::QuantumField;
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 
@@ -59,11 +59,21 @@ fn test_qpa_resampling_logic() {
     let temps = vec![1.0];
     let mut rng = ChaCha8Rng::seed_from_u64(42);
 
-    // Run 1 step of the engine (should trigger resampling at the end)
-    engine::step(&mut field, &flat_model, &temps, 0.0, &mut rng);
+    // Run 1 step of the engine over a multi-population field. Population
+    // resampling no longer happens inside step() — it is driven by the
+    // Population Annealing driver (see solver::population_annealing) — so
+    // this only checks that multi-population sweeps remain well-formed.
+    let mut scratch = engine::StepScratch::for_field(&field);
+    engine::step(
+        &mut field,
+        &flat_model,
+        &temps,
+        0.0,
+        &[false],
+        &mut scratch,
+        &mut rng,
+    );
 
-    // After resampling, Pop 0's spin should become 0 (inherited from the better Pop 1)
-    // Note: Due to the Monte Carlo step running *before* resampling, it might have naturally flipped.
     let spin_val = field.get_replica(x, 0, 0, 0, 0);
     assert!(spin_val == 0 || spin_val == 1);
 }

@@ -60,6 +60,83 @@ impl Xoshiro256PlusPlus {
     }
 }
 
+/// 8-lane interleaved Xoshiro256++ for vectorizable batch RNG generation.
+///
+/// Eight independent streams in structure-of-arrays layout: the update uses
+/// only add/xor/shift/rotate on u64 lanes (no multiplies), so the 8-wide
+/// inner loops compile to packed 64-bit AVX2 ops — and even without packed
+/// codegen, eight independent dependency chains pipeline out-of-order,
+/// unlike the strictly serial single-stream generator.
+///
+/// Seeding: per-lane state words drawn from a SplitMix64 sequence, following
+/// the generator authors' recommendation (Blackman & Vigna, "Scrambled
+/// Linear Pseudorandom Number Generators", ACM TOMS 2021). Distinct
+/// SplitMix-derived states give independent streams (overlap probability is
+/// negligible in a 2^256 state space).
+///
+/// Uniform output uses the mantissa bit-trick: set exponent to 1.0's,
+/// fill the 52 mantissa bits with random bits, subtract 1.0 → [0, 1).
+/// The bitcast is free and the whole conversion vectorizes on AVX2
+/// (the plain u64→f64 cast has no packed AVX2 form).
+pub struct Xoshiro256PlusPlusX8 {
+    /// s[word][lane]: four xoshiro state words × eight lanes.
+    s: [[u64; 8]; 4],
+}
+
+impl Xoshiro256PlusPlusX8 {
+    pub fn new(seed: u64) -> Self {
+        let mut state = seed;
+        let mut next_u64 = || {
+            state = state.wrapping_add(0x9e3779b97f4a7c15);
+            let mut z = state;
+            z = (z ^ (z >> 30)).wrapping_mul(0xbf58476d1ce4e5b9);
+            z = (z ^ (z >> 27)).wrapping_mul(0x94d049bb133111eb);
+            z ^ (z >> 31)
+        };
+        let mut s = [[0u64; 8]; 4];
+        for lane in 0..8 {
+            for word in s.iter_mut() {
+                word[lane] = next_u64();
+            }
+        }
+        Self { s }
+    }
+
+    /// Advances all 8 lanes once and returns 8 uniform doubles in [0, 1).
+    #[inline(always)]
+    fn next_f64x8(&mut self) -> [f64; 8] {
+        let mut out = [0.0f64; 8];
+        for (l, slot) in out.iter_mut().enumerate() {
+            let result = (self.s[0][l].wrapping_add(self.s[3][l]))
+                .rotate_left(23)
+                .wrapping_add(self.s[0][l]);
+            *slot = f64::from_bits(0x3FF0000000000000 | (result >> 12)) - 1.0;
+        }
+        for l in 0..8 {
+            let t = self.s[1][l] << 17;
+            self.s[2][l] ^= self.s[0][l];
+            self.s[3][l] ^= self.s[1][l];
+            self.s[1][l] ^= self.s[2][l];
+            self.s[0][l] ^= self.s[3][l];
+            self.s[2][l] ^= t;
+            self.s[3][l] = self.s[3][l].rotate_left(45);
+        }
+        out
+    }
+
+    pub fn fill_f64(&mut self, dest: &mut [f64]) {
+        let mut chunks = dest.chunks_exact_mut(8);
+        for chunk in &mut chunks {
+            chunk.copy_from_slice(&self.next_f64x8());
+        }
+        let rem = chunks.into_remainder();
+        if !rem.is_empty() {
+            let vals = self.next_f64x8();
+            rem.copy_from_slice(&vals[..rem.len()]);
+        }
+    }
+}
+
 /// Fast exponential approximation using 6th-order Taylor polynomial.
 /// Pure f64 arithmetic — no integer casts, no bitcasts, fully SIMD-vectorizable.
 /// For x in [-20, 0], accuracy is sufficient for Metropolis acceptance.
@@ -78,7 +155,10 @@ fn fast_exp(x: f64) -> f64 {
     // exp(r) ≈ 1 + r + r²/2 + r³/6 + r⁴/24 + r⁵/120 + r⁶/720
     let r2 = r * r;
     let r3 = r2 * r;
-    let p = 1.0 + r + 0.5 * r2 + (1.0 / 6.0) * r3
+    let p = 1.0
+        + r
+        + 0.5 * r2
+        + (1.0 / 6.0) * r3
         + (1.0 / 24.0) * r2 * r2
         + (1.0 / 120.0) * r2 * r3
         + (1.0 / 720.0) * r3 * r3;
@@ -121,15 +201,15 @@ pub fn calculate_delta_e_local(
     }
 
     // --- Edge2 terms (CSR traversal) ---
-    // Each edge: load spin_j[r], XOR with spin_v[r], convert, FMA
-    // Inner loop is pure contiguous arithmetic — vectorizable.
+    // Product basis: Δ(w·x_v·x_j) for flipping x_v is w·x_j·(1 − 2·x_v).
+    // Inner loop is pure contiguous i8 arithmetic + one convert — vectorizable.
     for idx in model.edge2_offsets[v]..model.edge2_offsets[v + 1] {
         let j = model.edge2_targets[idx];
         let w = model.edge2_weights[idx];
         let base_j = (j + num_vars * s) * NUM_REPLICAS;
         for r in 0..NUM_REPLICAS {
-            let parity = (spins[base_v + r] ^ spins[base_j + r]) as f64;
-            delta[r] += w * (2.0 * parity - 1.0);
+            let t = spins[base_j + r] * (1 - 2 * spins[base_v + r]);
+            delta[r] += w * (t as f64);
         }
     }
 
@@ -141,8 +221,9 @@ pub fn calculate_delta_e_local(
         let base_j = (j + num_vars * s) * NUM_REPLICAS;
         let base_k = (k + num_vars * s) * NUM_REPLICAS;
         for r in 0..NUM_REPLICAS {
-            let parity = (spins[base_v + r] ^ spins[base_j + r] ^ spins[base_k + r]) as f64;
-            delta[r] += w * (2.0 * parity - 1.0);
+            // Δ(w·x_v·x_j·x_k) = w·x_j·x_k·(1 − 2·x_v)
+            let t = (spins[base_j + r] & spins[base_k + r]) * (1 - 2 * spins[base_v + r]);
+            delta[r] += w * (t as f64);
         }
     }
 
@@ -156,10 +237,10 @@ pub fn calculate_delta_e_local(
         let base_k = (k + num_vars * s) * NUM_REPLICAS;
         let base_l = (l + num_vars * s) * NUM_REPLICAS;
         for r in 0..NUM_REPLICAS {
-            let parity =
-                (spins[base_v + r] ^ spins[base_j + r] ^ spins[base_k + r] ^ spins[base_l + r])
-                    as f64;
-            delta[r] += w * (2.0 * parity - 1.0);
+            // Δ(w·x_v·x_j·x_k·x_l) = w·x_j·x_k·x_l·(1 − 2·x_v)
+            let t = (spins[base_j + r] & spins[base_k + r] & spins[base_l + r])
+                * (1 - 2 * spins[base_v + r]);
+            delta[r] += w * (t as f64);
         }
     }
 
@@ -198,6 +279,10 @@ pub fn calculate_replica_energies_local(
     num_slices: usize,
     j_tau: f64,
 ) -> [f64; NUM_REPLICAS] {
+    // Suzuki–Trotter coupling acts on a ring of L slices; at L = 1 the ring
+    // degenerates to a self-coupling (a constant), which must not enter the
+    // Hamiltonian at all.
+    let j_tau = if num_slices > 1 { j_tau } else { 0.0 };
     let mut energies = [0.0f64; NUM_REPLICAS];
 
     for s in 0..num_slices {
@@ -217,8 +302,9 @@ pub fn calculate_replica_energies_local(
                     let w = model.edge2_weights[idx];
                     let base_j = (j + num_vars * s) * NUM_REPLICAS;
                     for r in 0..NUM_REPLICAS {
-                        let parity = (spins[base_v + r] ^ spins[base_j + r]) as f64;
-                        energies[r] += w * (1.0 - parity);
+                        // Product basis: w·x_v·x_j
+                        let t = (spins[base_v + r] & spins[base_j + r]) as f64;
+                        energies[r] += w * t;
                     }
                 }
             }
@@ -232,9 +318,9 @@ pub fn calculate_replica_energies_local(
                     let base_j = (j + num_vars * s) * NUM_REPLICAS;
                     let base_k = (k + num_vars * s) * NUM_REPLICAS;
                     for r in 0..NUM_REPLICAS {
-                        let parity =
-                            (spins[base_v + r] ^ spins[base_j + r] ^ spins[base_k + r]) as f64;
-                        energies[r] += w * (1.0 - parity);
+                        // Product basis: w·x_v·x_j·x_k
+                        let t = (spins[base_v + r] & spins[base_j + r] & spins[base_k + r]) as f64;
+                        energies[r] += w * t;
                     }
                 }
             }
@@ -250,11 +336,12 @@ pub fn calculate_replica_energies_local(
                     let base_k = (k + num_vars * s) * NUM_REPLICAS;
                     let base_l = (l + num_vars * s) * NUM_REPLICAS;
                     for r in 0..NUM_REPLICAS {
-                        let parity = (spins[base_v + r]
-                            ^ spins[base_j + r]
-                            ^ spins[base_k + r]
-                            ^ spins[base_l + r]) as f64;
-                        energies[r] += w * (1.0 - parity);
+                        // Product basis: w·x_v·x_j·x_k·x_l
+                        let t = (spins[base_v + r]
+                            & spins[base_j + r]
+                            & spins[base_k + r]
+                            & spins[base_l + r]) as f64;
+                        energies[r] += w * t;
                     }
                 }
             }
@@ -298,6 +385,122 @@ pub fn calculate_replica_energies(
 // MONTE CARLO STEP — SIMD-FIRST DESIGN
 // ============================================================================
 
+/// Reusable scratch for `step()`, allocated once per solve.
+///
+/// Eliminates the per-step heap allocations in the hot path (per-cell RNG
+/// buffers). Every region is fully overwritten before it is read within a
+/// step, so reuse is numerically identical to fresh buffers.
+pub struct StepScratch {
+    /// One RNG region per (temperature, population) cell,
+    /// each `num_vars × num_slices × NUM_REPLICAS` long.
+    rng_buf: Vec<f64>,
+    /// PT swap attempts per adjacent temperature pair (aggregated over
+    /// populations and steps since the last reset). Purely observational:
+    /// counting does not alter RNG consumption or swap decisions.
+    swap_attempts: Vec<u64>,
+    /// PT swap acceptances per adjacent temperature pair.
+    swap_accepts: Vec<u64>,
+    /// Statistics collection flag — off by default; enabled for ladder
+    /// tuning via `enable_swap_stats`.
+    collect_swap_stats: bool,
+    /// DEO phase: alternates every step between even pairs (0,1),(2,3),…
+    /// and odd pairs (1,2),(3,4),… — the non-reversible deterministic
+    /// even-odd replica-exchange scheme (Okabe et al., Chem. Phys. Lett.
+    /// 335, 435 (2001)), proven to dominate reversible sweeps in round-trip
+    /// rate (Syed, Bouchard-Côté, Deligiannidis & Doucet, JRSS-B 84, 321
+    /// (2022)).
+    deo_odd_phase: bool,
+    /// Round-trip tracking (opt-in, for feedback-ladder tuning). Each replica
+    /// carries a direction label that follows its configuration through the
+    /// physical swaps: -1 = last touched the hot end, +1 = last touched the
+    /// cold end, 0 = neither yet. This gives persistent replica identity for
+    /// flow estimation WITHOUT logical label-swapping (see the round-trip
+    /// method group). Off by default → zero hot-path cost.
+    track_roundtrips: bool,
+    /// Per-cell direction labels (same index layout as `energies`).
+    labels: Vec<[i8; NUM_REPLICAS]>,
+    /// Accumulated up/down occupancy per temperature (for flow f(T)).
+    rt_n_up: Vec<u64>,
+    rt_n_down: Vec<u64>,
+    /// Completed round trips (a cold-labeled replica returning to the hot end).
+    rt_count: u64,
+}
+
+impl StepScratch {
+    pub fn for_field(field: &QuantumField) -> Self {
+        let per_cell = field.num_vars * field.num_slices * NUM_REPLICAS;
+        let num_cells = field.num_temps * field.num_pops;
+        let num_pairs = field.num_temps.saturating_sub(1);
+        Self {
+            rng_buf: vec![0.0; per_cell * num_cells],
+            swap_attempts: vec![0; num_pairs],
+            swap_accepts: vec![0; num_pairs],
+            collect_swap_stats: false,
+            deo_odd_phase: false,
+            track_roundtrips: false,
+            labels: vec![[0i8; NUM_REPLICAS]; field.num_temps * field.num_pops],
+            rt_n_up: vec![0; field.num_temps],
+            rt_n_down: vec![0; field.num_temps],
+            rt_count: 0,
+        }
+    }
+
+    /// Enables round-trip / replica-flow tracking (feedback-ladder tuning).
+    pub fn enable_roundtrip_tracking(&mut self) {
+        self.track_roundtrips = true;
+    }
+
+    /// Fraction of up-labeled replicas per temperature, f(T) = n_up/(n_up+n_down)
+    /// (Katzgraber, Trebst, Huse & Troyer, JSTAT P03018 (2006)).
+    pub fn roundtrip_flow(&self) -> Vec<f64> {
+        self.rt_n_up
+            .iter()
+            .zip(&self.rt_n_down)
+            .map(|(&u, &d)| {
+                if u + d == 0 {
+                    0.0
+                } else {
+                    u as f64 / (u + d) as f64
+                }
+            })
+            .collect()
+    }
+
+    /// Number of completed round trips since the last reset.
+    pub fn roundtrip_count(&self) -> u64 {
+        self.rt_count
+    }
+
+    pub fn reset_roundtrip_stats(&mut self) {
+        self.rt_n_up.iter_mut().for_each(|x| *x = 0);
+        self.rt_n_down.iter_mut().for_each(|x| *x = 0);
+        self.rt_count = 0;
+        for l in self.labels.iter_mut() {
+            *l = [0i8; NUM_REPLICAS];
+        }
+    }
+
+    /// Enables per-pair swap-statistics collection (used by ladder tuning).
+    pub fn enable_swap_stats(&mut self) {
+        self.collect_swap_stats = true;
+    }
+
+    /// Swap-acceptance rate per adjacent temperature pair, aggregated over
+    /// populations and over all steps since the last `reset_swap_stats`.
+    pub fn swap_acceptance_rates(&self) -> Vec<f64> {
+        self.swap_accepts
+            .iter()
+            .zip(&self.swap_attempts)
+            .map(|(&a, &n)| if n == 0 { 0.0 } else { a as f64 / n as f64 })
+            .collect()
+    }
+
+    pub fn reset_swap_stats(&mut self) {
+        self.swap_attempts.iter_mut().for_each(|x| *x = 0);
+        self.swap_accepts.iter_mut().for_each(|x| *x = 0);
+    }
+}
+
 /// 5D Interaction Kernel: Single Monte Carlo Step
 ///
 /// Architecture:
@@ -305,21 +508,44 @@ pub fn calculate_replica_energies(
 /// 2. Delta energy computation uses contiguous memory layout (vectorizable)
 /// 3. Metropolis acceptance uses branchless mask computation (vectorizable)
 /// 4. Parallel Tempering uses byte-level swap (no bit manipulation)
+///
+/// `is_clamped` (length = num_vars) marks conditioned variables: Metropolis
+/// proposals never touch them, which is the exact treatment of conditional
+/// sampling π(x_free | x_clamped). Clamped spins must be initialized to the
+/// same value in every slice/temperature/population cell; PT swaps then
+/// preserve them automatically.
 #[allow(clippy::needless_range_loop)]
 pub fn step<R: Rng>(
     field: &mut QuantumField,
     model: &FlatHuboModel,
     temps: &[f64],
     j_tau: f64,
+    is_clamped: &[bool],
+    scratch: &mut StepScratch,
     rng: &mut R,
 ) {
     let num_vars = field.num_vars;
     let num_slices = field.num_slices;
     let num_temps = field.num_temps;
     let num_pops = field.num_pops;
+    // At L = 1 the Trotter ring degenerates to a constant self-coupling whose
+    // flip-delta is exactly zero; a nonzero j_tau here would inject a phantom
+    // -2·j_tau into every Metropolis acceptance (see test_trotter_correctness).
+    let j_tau = if num_slices > 1 { j_tau } else { 0.0 };
+    assert_eq!(
+        is_clamped.len(),
+        num_vars,
+        "is_clamped must have one entry per variable"
+    );
 
     let base_seed = rng.gen::<u64>();
     let chunk_size = num_vars * num_slices * NUM_REPLICAS;
+    assert_eq!(
+        scratch.rng_buf.len(),
+        chunk_size * num_temps * num_pops,
+        "scratch was built for a different field geometry"
+    );
+    assert_eq!(scratch.swap_attempts.len(), num_temps.saturating_sub(1));
 
     // ========================================================================
     // PHASE 1: Parallel Classical + Trotter Sweeps
@@ -328,20 +554,27 @@ pub fn step<R: Rng>(
         .spins
         .par_chunks_mut(chunk_size)
         .zip(field.energies.par_chunks_mut(1))
+        .zip(scratch.rng_buf.par_chunks_mut(chunk_size))
         .enumerate()
-        .for_each(|(cell_idx, (spins_chunk, energy_slot))| {
+        .for_each(|(cell_idx, ((spins_chunk, energy_slot), rng_buf))| {
             let t = cell_idx % num_temps;
             let beta = 1.0 / temps[t];
-            let mut cell_rng = Xoshiro256PlusPlus::new(base_seed.wrapping_add(cell_idx as u64));
+            let mut cell_rng = Xoshiro256PlusPlusX8::new(base_seed.wrapping_add(cell_idx as u64));
 
-            // Pre-generate ALL random values for entire sweep.
+            // Pre-generate ALL random values for entire sweep into the
+            // caller-owned scratch region (fully overwritten every step).
             // Hot loop only LOADS from this buffer — no RNG calls inside.
-            let rng_total = num_vars * num_slices * NUM_REPLICAS;
-            let mut rng_buf = vec![0.0f64; rng_total];
-            cell_rng.fill_f64(&mut rng_buf);
+            cell_rng.fill_f64(rng_buf);
 
             for s in 0..num_slices {
                 for v in 0..num_vars {
+                    // Conditioned variables are excluded from proposals.
+                    // Branch is per-variable, outside the replica lanes —
+                    // the vectorized inner loops are unaffected.
+                    if is_clamped[v] {
+                        continue;
+                    }
+
                     // --- Compute classical delta energy (VECTORIZED) ---
                     let delta_classical =
                         calculate_delta_e_local(model, spins_chunk, num_vars, v, s);
@@ -367,8 +600,7 @@ pub fn step<R: Rng>(
                         // accept = (delta <= 0) OR (rand < exp(-delta * beta))
                         // Compiles to: vcmppd + vcmppd + vorpd
                         let exp_val = fast_exp(-total_delta * beta);
-                        let accept =
-                            (total_delta <= 0.0) | (rng_buf[rng_offset + r] < exp_val);
+                        let accept = (total_delta <= 0.0) | (rng_buf[rng_offset + r] < exp_val);
 
                         // Branchless spin flip: XOR with 0 (no flip) or 1 (flip)
                         let flip = accept as i8;
@@ -384,8 +616,14 @@ pub fn step<R: Rng>(
     // ========================================================================
     // PHASE 2: Parallel Tempering — Replica Exchange
     // ========================================================================
+    // Non-reversible DEO: even pairs on one step, odd pairs on the next.
+    // Within a phase the pairs are disjoint, so the exchange is a valid
+    // deterministic alternation (Syed et al. 2022); it replaces the previous
+    // sequential same-order sweep, whose reversible dynamics diffuse
+    // replicas through the ladder ~T times slower.
+    let parity_start = usize::from(scratch.deo_odd_phase);
     for p in 0..num_pops {
-        for t in 0..(num_temps - 1) {
+        for t in (parity_start..num_temps.saturating_sub(1)).step_by(2) {
             let e1 = field.energies[t + num_temps * p];
             let e2 = field.energies[(t + 1) + num_temps * p];
             let beta1 = 1.0 / temps[t];
@@ -399,13 +637,19 @@ pub fn step<R: Rng>(
                 let exponent = delta_beta * delta_e;
                 swap_mask[r] = exponent >= 0.0 || rng.gen::<f64>() < exponent.exp();
             }
-
             // Apply swaps using byte-level operations (no bit manipulation)
             let any_swap = swap_mask.iter().any(|&s| s);
+            // Swap statistics are opt-in (ladder tuning only): the default
+            // path pays one untaken, predictable branch per pair and keeps
+            // the original scan byte-for-byte.
+            if scratch.collect_swap_stats {
+                let accepted = swap_mask.iter().filter(|&&s| s).count() as u64;
+                scratch.swap_attempts[t] += NUM_REPLICAS as u64;
+                scratch.swap_accepts[t] += accepted;
+            }
             if any_swap {
                 let base1_cell = (t + num_temps * p) * num_vars * num_slices * NUM_REPLICAS;
-                let base2_cell =
-                    ((t + 1) + num_temps * p) * num_vars * num_slices * NUM_REPLICAS;
+                let base2_cell = ((t + 1) + num_temps * p) * num_vars * num_slices * NUM_REPLICAS;
 
                 for s in 0..num_slices {
                     for v in 0..num_vars {
@@ -420,7 +664,8 @@ pub fn step<R: Rng>(
                     }
                 }
 
-                // Swap tracked energy values
+                // Swap tracked energy values (and direction labels, if
+                // tracking) so replica identity follows its configuration.
                 let idx1 = t + num_temps * p;
                 let idx2 = (t + 1) + num_temps * p;
                 for r in 0..NUM_REPLICAS {
@@ -428,70 +673,43 @@ pub fn step<R: Rng>(
                         let tmp = field.energies[idx1][r];
                         field.energies[idx1][r] = field.energies[idx2][r];
                         field.energies[idx2][r] = tmp;
-                    }
-                }
-            }
-        }
-    }
-
-    // ========================================================================
-    // PHASE 3: Population Resampling
-    // ========================================================================
-    if num_pops > 1 {
-        let t_target = 0;
-        let mut min_e = [f64::MAX; NUM_REPLICAS];
-        let mut max_e = [f64::MIN; NUM_REPLICAS];
-        let mut best_p = [0usize; NUM_REPLICAS];
-        let mut worst_p = [0usize; NUM_REPLICAS];
-
-        for p in 0..num_pops {
-            let energies = field.energies[t_target + num_temps * p];
-            for r in 0..NUM_REPLICAS {
-                if energies[r] < min_e[r] {
-                    min_e[r] = energies[r];
-                    best_p[r] = p;
-                }
-                if energies[r] > max_e[r] {
-                    max_e[r] = energies[r];
-                    worst_p[r] = p;
-                }
-            }
-        }
-
-        // Determine which replicas need overwriting in each population
-        let mut overwrite_mask = vec![[false; NUM_REPLICAS]; num_pops];
-        for r in 0..NUM_REPLICAS {
-            let wp = worst_p[r];
-            let bp = best_p[r];
-            if wp != bp {
-                overwrite_mask[wp][r] = true;
-            }
-        }
-
-        // Flat traversal: copy best population's replica values to worst
-        let stride = num_vars * num_slices * num_temps * NUM_REPLICAS;
-        let var_stride = NUM_REPLICAS;
-        for s in 0..num_slices {
-            for v in 0..num_vars {
-                let offset = (v + num_vars * s) * var_stride;
-                // Gather best state for each replica
-                let mut best_state = [0i8; NUM_REPLICAS];
-                for r in 0..NUM_REPLICAS {
-                    let bp = best_p[r];
-                    let src_base = bp * stride + (t_target * num_vars * num_slices * NUM_REPLICAS);
-                    best_state[r] = field.spins[src_base + offset + r];
-                }
-
-                // Overwrite worst populations
-                for p in 0..num_pops {
-                    let dst_base = p * stride + (t_target * num_vars * num_slices * NUM_REPLICAS);
-                    for r in 0..NUM_REPLICAS {
-                        if overwrite_mask[p][r] {
-                            field.spins[dst_base + offset + r] = best_state[r];
+                        if scratch.track_roundtrips {
+                            let lt = scratch.labels[idx1][r];
+                            scratch.labels[idx1][r] = scratch.labels[idx2][r];
+                            scratch.labels[idx2][r] = lt;
                         }
                     }
                 }
             }
         }
     }
+
+    // Round-trip bookkeeping: relabel the extremes for the CURRENT
+    // occupancy, count completed round trips (a cold-labeled replica arriving
+    // back at the hot end), and accumulate the up/down occupancy histogram.
+    if scratch.track_roundtrips && num_temps >= 2 {
+        for p in 0..num_pops {
+            let hot = num_temps * p; // t = 0 (T_max)
+            let cold = (num_temps - 1) + num_temps * p; // t = nt-1 (T_min)
+            for r in 0..NUM_REPLICAS {
+                if scratch.labels[hot][r] == 1 {
+                    scratch.rt_count += 1; // up replica returned to hot end
+                }
+                scratch.labels[hot][r] = -1; // now heading down
+                scratch.labels[cold][r] = 1; // cold end: heading up
+            }
+            for t in 0..num_temps {
+                let cell = t + num_temps * p;
+                for r in 0..NUM_REPLICAS {
+                    match scratch.labels[cell][r] {
+                        1 => scratch.rt_n_up[t] += 1,
+                        -1 => scratch.rt_n_down[t] += 1,
+                        _ => {}
+                    }
+                }
+            }
+        }
+    }
+
+    scratch.deo_odd_phase = !scratch.deo_odd_phase;
 }

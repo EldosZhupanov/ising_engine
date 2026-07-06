@@ -22,6 +22,7 @@
 //!     num_vars,
 //!     linear: vec![1.0; num_vars],
 //!     quadratic: CsrMatrix::empty(num_vars),
+//!     energy_offset: 0.0,
 //! };
 //!
 //! let solver = ParallelTemperingSolver {
@@ -40,4 +41,5 @@
 #![deny(clippy::all)]
 pub mod compiler;
 pub mod core;
+pub mod presolve;
 pub mod solver;

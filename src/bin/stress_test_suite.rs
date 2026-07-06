@@ -1,3 +1,6 @@
+// Demo binary: index-based loops over generated matrices are clearer here.
+#![allow(clippy::needless_range_loop)]
+
 use ising_engine::core::{CsrMatrix, QuboModel};
 use ising_engine::solver::UltimateSolver;
 use rand::Rng;
@@ -38,6 +41,7 @@ fn generate_dense_qubo(n: usize, density: f64) -> QuboModel {
     }
 
     QuboModel {
+        energy_offset: 0.0,
         num_vars: n,
         linear,
         quadratic: CsrMatrix {

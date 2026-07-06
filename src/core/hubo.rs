@@ -166,11 +166,15 @@ pub struct QuboModel {
     pub num_vars: usize,
     pub linear: Vec<f64>,
     pub quadratic: CsrMatrix,
+    /// Constant term of the objective. Irrelevant for argmin, required for
+    /// the "E = 0 iff satisfied" contract of logic-gate penalties (the NOT
+    /// penalty 2xy − x − y + 1 has a +1 constant; Boros & Hammer 2002).
+    pub energy_offset: f64,
 }
 
 impl QuboModel {
     pub fn calculate_total_energy(&self, state: &[i8]) -> f64 {
-        let mut energy = 0.0;
+        let mut energy = self.energy_offset;
         for i in 0..self.num_vars {
             if state[i] == 1 {
                 energy += self.linear[i];

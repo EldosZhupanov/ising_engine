@@ -164,8 +164,18 @@ impl ClusterSolver {
                 for i in 1..(self.num_replicas - 1) {
                     let rate = swap_accepts[i] as f64 / self.adaptation_interval as f64;
                     let mut new_temp = replicas[i].temp * (1.0 - (0.23 - rate) * 0.05);
-                    new_temp =
-                        new_temp.clamp(replicas[i + 1].temp + 0.001, replicas[i - 1].temp - 0.001);
+                    // Same neighbor guard as AdaptiveTemperingSolver: padded
+                    // bounds invert on tight ladders and f64::clamp would
+                    // panic — fall back to the neighbors' midpoint.
+                    let temp_colder = replicas[i + 1].temp;
+                    let temp_hotter = replicas[i - 1].temp;
+                    let lo = temp_colder + 0.001;
+                    let hi = temp_hotter - 0.001;
+                    new_temp = if lo <= hi {
+                        new_temp.clamp(lo, hi)
+                    } else {
+                        0.5 * (temp_colder + temp_hotter)
+                    };
                     replicas[i].temp = new_temp;
                     swap_accepts[i] = 0;
                 }

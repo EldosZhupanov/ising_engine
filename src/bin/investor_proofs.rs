@@ -1,3 +1,6 @@
+// Demo binary: index-based loops over generated matrices are clearer here.
+#![allow(clippy::needless_range_loop)]
+
 use rand::Rng;
 use rayon::prelude::*;
 use std::f64::consts::E;

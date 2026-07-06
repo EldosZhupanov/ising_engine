@@ -1,3 +1,6 @@
+// Demo binary: index-based loops over generated matrices are clearer here.
+#![allow(clippy::needless_range_loop)]
+
 use ising_engine::core::{CsrMatrix, QuboModel};
 use ising_engine::solver::UltimateSolver;
 use std::time::Instant;
@@ -50,6 +53,7 @@ fn generate_mock_gset_g1() -> QuboModel {
     }
 
     QuboModel {
+        energy_offset: 0.0,
         num_vars: n,
         linear,
         quadratic: CsrMatrix {
@@ -67,10 +71,8 @@ fn calculate_cut(model: &QuboModel, state: &[i8]) -> f64 {
     // Iterate through upper triangle to count edges cut
     for i in 0..model.num_vars {
         for (j, w) in model.quadratic.get_row(i) {
-            if i < j {
-                if state[i] != state[j] {
-                    cut += w / 2.0; // reverse QUBO scaling
-                }
+            if i < j && state[i] != state[j] {
+                cut += w / 2.0; // reverse QUBO scaling
             }
         }
     }

@@ -1,3 +1,9 @@
+// Demo binary: token tickers are domain-standard names; index-based matrix
+// loops are clearer than iterator chains in display/setup code.
+#![allow(clippy::upper_case_acronyms)]
+#![allow(clippy::needless_range_loop)]
+#![allow(clippy::format_in_format_args)]
+
 use ethers::prelude::*;
 use futures::StreamExt;
 use std::collections::HashMap;
@@ -361,6 +367,7 @@ fn compile_qubo(
     };
 
     let model = QuboModel {
+        energy_offset: 0.0,
         num_vars: m,
         linear,
         quadratic,
