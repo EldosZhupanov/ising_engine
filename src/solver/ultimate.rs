@@ -325,23 +325,32 @@ impl UltimateSolver {
             );
         }
 
-        // Extract best replica — direct byte read (no bit extraction!)
+        // Extract best replica. The old per-replica gather read each
+        // (v, s, t, p) lane block 64 times at stride 64 (one useful byte per
+        // cache line, 64× the traffic); one sequential pass now de-interleaves
+        // all 64 replicas of a slice into per-replica buffers, then evaluates
+        // them in the ORIGINAL (p, t, s, r) order with the same energy
+        // function and the same strict `<`, so the selected state is
+        // identical by construction.
         let mut best_state = vec![0i8; n];
         let mut best_energy = f64::INFINITY;
-        let mut state_buf = vec![0i8; n];
+        let mut replica_bufs = vec![0i8; NUM_REPLICAS * n];
 
         for p in 0..self.num_pops {
             for t in 0..self.num_temps {
                 for s in 0..self.num_slices {
-                    for r in 0..NUM_REPLICAS {
-                        for (v, slot) in state_buf.iter_mut().enumerate() {
-                            // Direct byte read — no shifting, no masking
-                            *slot = field.get_replica(v, s, t, p, r);
+                    for v in 0..n {
+                        let base = field.var_base(v, s, t, p);
+                        for r in 0..NUM_REPLICAS {
+                            replica_bufs[r * n + v] = field.spins[base + r];
                         }
-                        let energy = model.calculate_total_energy(&state_buf);
+                    }
+                    for r in 0..NUM_REPLICAS {
+                        let state_buf = &replica_bufs[r * n..(r + 1) * n];
+                        let energy = model.calculate_total_energy(state_buf);
                         if energy < best_energy {
                             best_energy = energy;
-                            best_state.copy_from_slice(&state_buf);
+                            best_state.copy_from_slice(state_buf);
                         }
                     }
                 }
