@@ -149,6 +149,26 @@ impl Xoshiro256PlusPlusX8 {
         }
         out
     }
+
+    /// Advances the stream past one replica-block WITHOUT producing output —
+    /// the state transition of `next_f64x64` minus the u64→f64 conversions
+    /// and stores. Used for clamped variables, whose draws are positionally
+    /// required (stream alignment) but never consumed: every subsequent
+    /// value is bit-identical to the producing path's.
+    #[inline(always)]
+    pub fn skip_f64x64(&mut self) {
+        for _ in 0..8 {
+            for l in 0..8 {
+                let t = self.s[1][l] << 17;
+                self.s[2][l] ^= self.s[0][l];
+                self.s[3][l] ^= self.s[1][l];
+                self.s[1][l] ^= self.s[2][l];
+                self.s[0][l] ^= self.s[3][l];
+                self.s[2][l] ^= t;
+                self.s[3][l] = self.s[3][l].rotate_left(45);
+            }
+        }
+    }
 }
 
 /// Fast exponential approximation using 6th-order Taylor polynomial.
@@ -205,20 +225,33 @@ pub fn calculate_delta_e_local(
     let mut delta = [0.0f64; NUM_REPLICAS];
     let base_v = (v + num_vars * s) * NUM_REPLICAS;
 
-    // Hoist x_v's flip sign (1 − 2·x_v ∈ {+1, −1}) out of every edge loop
-    // (Fix D, Rank 3 cleanup): the old code reloaded spins[base_v + r] and
-    // recomputed the sign per EDGE per lane. x_v is not modified during
-    // delta evaluation, so caching it once per variable is value-identical;
-    // it removes one 64-byte load and 64 integer ops from every edge
-    // iteration.
+    // Fixed-size block view: ONE length check per block instead of a
+    // bounds-checked index per lane. `base + 64 <= len` holds by the field
+    // layout (every (v, s) block is NUM_REPLICAS long), so the conversion
+    // cannot fail; loads, values, and order are unchanged.
+    let lane_block = |base: usize| -> &[i8; NUM_REPLICAS] {
+        spins[base..base + NUM_REPLICAS].try_into().unwrap()
+    };
+    let xv = lane_block(base_v);
+
+    // Hoist x_v out of every edge loop (Fix D): x_v is not modified during
+    // delta evaluation, so one cached copy serves the linear and all edge
+    // terms.
+    //
+    // The signed product t = x_j·(1 − 2·x_v) ∈ {−1, 0, +1} is computed as
+    // (x_j ^ x_v) − x_v — the SAME integer for all four {0,1}×{0,1} inputs
+    // (x_v=0 → t=x_j; x_v=1 → t=(1−x_j)−1=−x_j). Release asm showed LLVM
+    // lowering the i8 multiply as a widen–multiply–repack chain
+    // (vpmovzxbw+vpmullw+vpshufb, 8 lanes/iteration); the XOR−SUB form is
+    // two full-width byte ops (vpxor+vpsubb, 32 lanes/iteration). Values,
+    // conversions, and sums are bit-identical.
     let mut sign_v = [0i8; NUM_REPLICAS];
     for r in 0..NUM_REPLICAS {
-        sign_v[r] = 1 - 2 * spins[base_v + r];
+        sign_v[r] = 1 - 2 * xv[r];
     }
 
     // --- Linear term ---
     // delta[r] = w_lin * (1.0 - 2.0 * spin_v[r]) = w_lin * sign_v[r]
-    // Compiles to: vmovd + vpmovsxbd + vcvtdq2pd + vfmadd231pd
     let w_lin = model.linear[v];
     for r in 0..NUM_REPLICAS {
         delta[r] = w_lin * (sign_v[r] as f64);
@@ -230,9 +263,9 @@ pub fn calculate_delta_e_local(
     for idx in model.edge2_offsets[v]..model.edge2_offsets[v + 1] {
         let j = model.edge2_targets[idx];
         let w = model.edge2_weights[idx];
-        let base_j = (j + num_vars * s) * NUM_REPLICAS;
+        let xj = lane_block((j + num_vars * s) * NUM_REPLICAS);
         for r in 0..NUM_REPLICAS {
-            let t = spins[base_j + r] * sign_v[r];
+            let t = (xj[r] ^ xv[r]) - xv[r];
             delta[r] += w * (t as f64);
         }
     }
@@ -242,11 +275,12 @@ pub fn calculate_delta_e_local(
         let j = model.edge3_j[idx];
         let k = model.edge3_k[idx];
         let w = model.edge3_weights[idx];
-        let base_j = (j + num_vars * s) * NUM_REPLICAS;
-        let base_k = (k + num_vars * s) * NUM_REPLICAS;
+        let xj = lane_block((j + num_vars * s) * NUM_REPLICAS);
+        let xk = lane_block((k + num_vars * s) * NUM_REPLICAS);
         for r in 0..NUM_REPLICAS {
-            // Δ(w·x_v·x_j·x_k) = w·x_j·x_k·(1 − 2·x_v)
-            let t = (spins[base_j + r] & spins[base_k + r]) * sign_v[r];
+            // Δ(w·x_v·x_j·x_k) = w·x_j·x_k·(1 − 2·x_v), via XOR−SUB (see above).
+            let m = xj[r] & xk[r];
+            let t = (m ^ xv[r]) - xv[r];
             delta[r] += w * (t as f64);
         }
     }
@@ -257,12 +291,13 @@ pub fn calculate_delta_e_local(
         let k = model.edge4_k[idx];
         let l = model.edge4_l[idx];
         let w = model.edge4_weights[idx];
-        let base_j = (j + num_vars * s) * NUM_REPLICAS;
-        let base_k = (k + num_vars * s) * NUM_REPLICAS;
-        let base_l = (l + num_vars * s) * NUM_REPLICAS;
+        let xj = lane_block((j + num_vars * s) * NUM_REPLICAS);
+        let xk = lane_block((k + num_vars * s) * NUM_REPLICAS);
+        let xl = lane_block((l + num_vars * s) * NUM_REPLICAS);
         for r in 0..NUM_REPLICAS {
-            // Δ(w·x_v·x_j·x_k·x_l) = w·x_j·x_k·x_l·(1 − 2·x_v)
-            let t = (spins[base_j + r] & spins[base_k + r] & spins[base_l + r]) * sign_v[r];
+            // Δ(w·x_v·x_j·x_k·x_l) = w·x_j·x_k·x_l·(1 − 2·x_v), via XOR−SUB.
+            let m = xj[r] & xk[r] & xl[r];
+            let t = (m ^ xv[r]) - xv[r];
             delta[r] += w * (t as f64);
         }
     }
@@ -587,14 +622,16 @@ pub fn step<R: Rng>(
             // consumed value is identical to the buffered design's.
             for s in 0..num_slices {
                 for v in 0..num_vars {
-                    let lane_rng = cell_rng.next_f64x64();
-
                     // Conditioned variables are excluded from proposals.
-                    // Branch is per-variable, outside the replica lanes —
-                    // the vectorized inner loops are unaffected.
+                    // Their draws are positionally required (stream
+                    // alignment) but never read, so advance the generator
+                    // state without converting/storing the outputs — every
+                    // consumed value downstream is bit-identical.
                     if is_clamped[v] {
+                        cell_rng.skip_f64x64();
                         continue;
                     }
+                    let lane_rng = cell_rng.next_f64x64();
 
                     // --- Compute classical delta energy (VECTORIZED) ---
                     let delta_classical =
@@ -602,6 +639,10 @@ pub fn step<R: Rng>(
 
                     // --- Acceptance (VECTORIZED) ---
                     let base_v = (v + num_vars * s) * NUM_REPLICAS;
+                    // Fixed-size views: one length check per block instead
+                    // of a bounds check per lane store (layout guarantees
+                    // base_v + 64 <= len, so the conversion cannot fail).
+                    let es: &mut [f64; NUM_REPLICAS] = &mut energy_slot[0];
 
                     if j_tau == 0.0 {
                         // FAST PATH (production default: num_slices == 1 forces
@@ -615,13 +656,17 @@ pub fn step<R: Rng>(
                         // for the accept test, the PT swap test, and the
                         // energy accumulation alike, so no decision or tracked
                         // value can differ (golden regression enforces this).
+                        let xv: &mut [i8; NUM_REPLICAS] = (&mut spins_chunk
+                            [base_v..base_v + NUM_REPLICAS])
+                            .try_into()
+                            .unwrap();
                         for r in 0..NUM_REPLICAS {
                             let total_delta = delta_classical[r];
                             let exp_val = fast_exp(-total_delta * beta);
                             let accept = (total_delta <= 0.0) | (lane_rng[r] < exp_val);
                             let flip = accept as i8;
-                            spins_chunk[base_v + r] ^= flip;
-                            energy_slot[0][r] += total_delta * (flip as f64);
+                            xv[r] ^= flip;
+                            es[r] += total_delta * (flip as f64);
                         }
                     } else {
                         // Trotter path (num_slices > 1): original loop.
