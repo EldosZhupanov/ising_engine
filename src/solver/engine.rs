@@ -205,13 +205,23 @@ pub fn calculate_delta_e_local(
     let mut delta = [0.0f64; NUM_REPLICAS];
     let base_v = (v + num_vars * s) * NUM_REPLICAS;
 
+    // Hoist x_v's flip sign (1 − 2·x_v ∈ {+1, −1}) out of every edge loop
+    // (Fix D, Rank 3 cleanup): the old code reloaded spins[base_v + r] and
+    // recomputed the sign per EDGE per lane. x_v is not modified during
+    // delta evaluation, so caching it once per variable is value-identical;
+    // it removes one 64-byte load and 64 integer ops from every edge
+    // iteration.
+    let mut sign_v = [0i8; NUM_REPLICAS];
+    for r in 0..NUM_REPLICAS {
+        sign_v[r] = 1 - 2 * spins[base_v + r];
+    }
+
     // --- Linear term ---
-    // delta[r] = w_lin * (1.0 - 2.0 * spin_v[r])
+    // delta[r] = w_lin * (1.0 - 2.0 * spin_v[r]) = w_lin * sign_v[r]
     // Compiles to: vmovd + vpmovsxbd + vcvtdq2pd + vfmadd231pd
     let w_lin = model.linear[v];
     for r in 0..NUM_REPLICAS {
-        let state = spins[base_v + r] as f64;
-        delta[r] = w_lin * (1.0 - 2.0 * state);
+        delta[r] = w_lin * (sign_v[r] as f64);
     }
 
     // --- Edge2 terms (CSR traversal) ---
@@ -222,7 +232,7 @@ pub fn calculate_delta_e_local(
         let w = model.edge2_weights[idx];
         let base_j = (j + num_vars * s) * NUM_REPLICAS;
         for r in 0..NUM_REPLICAS {
-            let t = spins[base_j + r] * (1 - 2 * spins[base_v + r]);
+            let t = spins[base_j + r] * sign_v[r];
             delta[r] += w * (t as f64);
         }
     }
@@ -236,7 +246,7 @@ pub fn calculate_delta_e_local(
         let base_k = (k + num_vars * s) * NUM_REPLICAS;
         for r in 0..NUM_REPLICAS {
             // Δ(w·x_v·x_j·x_k) = w·x_j·x_k·(1 − 2·x_v)
-            let t = (spins[base_j + r] & spins[base_k + r]) * (1 - 2 * spins[base_v + r]);
+            let t = (spins[base_j + r] & spins[base_k + r]) * sign_v[r];
             delta[r] += w * (t as f64);
         }
     }
@@ -252,8 +262,7 @@ pub fn calculate_delta_e_local(
         let base_l = (l + num_vars * s) * NUM_REPLICAS;
         for r in 0..NUM_REPLICAS {
             // Δ(w·x_v·x_j·x_k·x_l) = w·x_j·x_k·x_l·(1 − 2·x_v)
-            let t = (spins[base_j + r] & spins[base_k + r] & spins[base_l + r])
-                * (1 - 2 * spins[base_v + r]);
+            let t = (spins[base_j + r] & spins[base_k + r] & spins[base_l + r]) * sign_v[r];
             delta[r] += w * (t as f64);
         }
     }
