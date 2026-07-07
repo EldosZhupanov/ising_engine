@@ -315,6 +315,24 @@ hyperfine
 
 cargo bench
 
+ab_engine_compare.py (identical-seed A/B, asserts bit-identical energies)
+
+---
+
+# Performance-Change Safety
+
+Optimizations must be bit-identical (same trajectories, same energies)
+or explicitly approved as behavior-changing.
+
+Golden regression (tests/test_regression_golden.rs) must pass unchanged.
+
+Keep the previous release binary; A/B with identical seeds.
+
+Keep only measured >1% wins. Revert regressions immediately.
+
+FP contraction (mul_add), reduced-precision RNG compares, and reordered
+float sums CHANGE trajectories — rejected by default.
+
 ---
 
 # Diagnostics

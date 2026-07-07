@@ -1,6 +1,28 @@
 {
   "hooks": {
-    "preTask": ".claude/hooks/pre-task.sh",
-    "postTask": ".claude/hooks/post-task.sh"
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | { read -r f; case \"$f\" in *.rs) rustfmt --edition 2021 \"$f\" 2>/dev/null || true;; esac; }",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /home/eldos/ising_engine 2>/dev/null && s=$(git status --short | head -8) && if [ -n \"$s\" ]; then printf '[post-task] uncommitted changes:\\n%s\\n' \"$s\"; fi; true",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }
