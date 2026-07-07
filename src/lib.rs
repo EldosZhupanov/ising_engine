@@ -39,6 +39,7 @@
 
 #![deny(warnings)]
 #![deny(clippy::all)]
+pub mod benchmark;
 pub mod compiler;
 pub mod core;
 pub mod presolve;

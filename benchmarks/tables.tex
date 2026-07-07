@@ -1,0 +1,47 @@
+% Requires \usepackage{booktabs}
+\begin{table}[t]
+  \centering
+  \caption{Solver comparison: success probability, mean optimality gap (with 95\% bootstrap CI), and TTS(0.99).}
+  \begin{tabular}{llrrrr}
+    \toprule
+    Family & Solver & $p_\mathrm{succ}$ & Gap & Gap CI$_{95}$ & TTS$_{0.99}$ \\
+    \midrule
+    chimera & PT & 0.94 & 0.0019 & [0.0000,0.0054] & 0.4518 \\
+    chimera & SA & 0.88 & 0.0046 & [0.0004,0.0094] & 0.3063 \\
+    chimera & Ultimate & 1.00 & 0.0000 & [0.0000,0.0000] & 232.9817 \\
+    dense & PT & 0.03 & 0.0888 & [0.0614,0.1141] & 888.9663 \\
+    dense & SA & 0.62 & 0.0020 & [0.0008,0.0037] & 13.4767 \\
+    dense & Ultimate & 1.00 & 0.0000 & [0.0000,0.0000] & 373.1322 \\
+    random & PT & 0.00 & 0.0877 & [0.0629,0.1116] & inf \\
+    random & SA & 0.34 & 0.0019 & [0.0006,0.0034] & 14.5749 \\
+    random & Ultimate & 1.00 & 0.0000 & [0.0000,0.0000] & 296.3227 \\
+    sk & PT & 0.00 & 0.0965 & [0.0686,0.1228] & inf \\
+    sk & SA & 0.53 & 0.0016 & [0.0006,0.0031] & 16.6794 \\
+    sk & Ultimate & 1.00 & 0.0000 & [0.0000,0.0000] & 377.6393 \\
+    sparse & PT & 0.00 & 0.0801 & [0.0597,0.1008] & inf \\
+    sparse & SA & 0.34 & 0.0022 & [0.0010,0.0037] & 8.4272 \\
+    sparse & Ultimate & 1.00 & 0.0000 & [0.0000,0.0000] & 257.3920 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{Paired significance of Ultimate vs.\ each baseline (per family): Wilcoxon signed-rank and paired $t$-test $p$-values on per-instance mean objective.}
+  \begin{tabular}{lllrrr}
+    \toprule
+    Family & A & B & Wilcoxon $p$ & $t$-test $p$ & A better \\
+    \midrule
+    chimera & Ultimate & PT & 1.0000 & 0.3910 & yes \\
+    chimera & Ultimate & SA & 0.3711 & 0.1931 & yes \\
+    dense & Ultimate & PT & 0.1003 & 0.1602 & yes \\
+    dense & Ultimate & SA & 0.1003 & 0.1434 & yes \\
+    random & Ultimate & PT & 0.1003 & 0.1560 & yes \\
+    random & Ultimate & SA & 0.1003 & 0.3229 & yes \\
+    sk & Ultimate & PT & 0.1003 & 0.1530 & yes \\
+    sk & Ultimate & SA & 0.1003 & 0.1026 & yes \\
+    sparse & Ultimate & PT & 0.1003 & 0.1282 & yes \\
+    sparse & Ultimate & SA & 0.1003 & 0.0918 & yes \\
+    \bottomrule
+  \end{tabular}
+\end{table}

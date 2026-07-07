@@ -1,46 +1,48 @@
-# TTS Benchmark Report
+# Benchmark Report
 
-In-repo solvers on identical instances, seeds, budgets, and hardware. TTS(0.99) in per-run wall-clock ms with 95% bootstrap CIs. Reference optimum = best energy found by any solver/seed (best-known). 
+Solvers run on identical instances, seeds, and computational budget. Gap is the mean per-run optimality gap vs. the per-instance reference (verified best-known when supplied in `best_known.csv`, else the best objective found by any solver). TTS(0.99) is in per-run wall-clock ms with 95% bootstrap CIs.
 
-**External baselines (OpenJij, dwave-neal): not run — unavailable in this environment (no pip/network). The CSV schema is ready to merge their output.**
+**Skipped (unavailable in this environment):** OpenJij, dwave-neal. Their Python bridge scripts are in `benchmarks/adapters/`; install the libraries and rerun to include them.
 
-`pegasus_like` is a documented higher-degree structured-sparse surrogate, NOT the exact D-Wave Pegasus P16 topology.
+## Summary
 
-| family | n | solver | p_success | TTS(0.99) ms | CI95 | mean E | best E | gap | mean ms | mem KB |
-|---|---|---|---|---|---|---|---|---|---|---|
-| sk | 64 | SA | 0.33 | 0.8 | [0.4,3.6] | -81.80 | -99.84 | 0.0157 | 0.07 | 48 |
-| sk | 64 | PT | 0.00 | ∞ | [inf,inf] | -73.39 | -92.97 | 0.1152 | 0.99 | 48 |
-| sk | 64 | Ultimate | 1.00 | 147.6 | [147.6,147.6] | -82.86 | -99.84 | 0.0000 | 147.61 | 48 |
-| sk | 128 | SA | 0.25 | 5.7 | [2.4,inf] | -243.84 | -267.55 | 0.0126 | 0.36 | 96 |
-| sk | 128 | PT | 0.00 | ∞ | [inf,inf] | -162.71 | -192.59 | 0.3409 | 3.84 | 96 |
-| sk | 128 | Ultimate | 1.00 | 243.6 | [243.6,243.6] | -246.89 | -267.55 | 0.0000 | 243.56 | 96 |
-| random | 64 | SA | 0.42 | 0.4 | [0.2,1.3] | -75.65 | -91.28 | 0.0242 | 0.05 | 48 |
-| random | 64 | PT | 0.00 | ∞ | [inf,inf] | -67.88 | -86.21 | 0.1268 | 0.51 | 48 |
-| random | 64 | Ultimate | 1.00 | 137.1 | [137.1,137.1] | -77.31 | -91.28 | 0.0000 | 137.07 | 48 |
-| random | 128 | SA | 0.00 | ∞ | [inf,inf] | -250.07 | -279.58 | 0.0194 | 0.12 | 96 |
-| random | 128 | PT | 0.00 | ∞ | [inf,inf] | -170.04 | -201.31 | 0.3339 | 1.60 | 96 |
-| random | 128 | Ultimate | 1.00 | 161.6 | [161.6,161.6] | -254.91 | -279.69 | 0.0000 | 161.61 | 96 |
-| dense | 64 | SA | 0.17 | 1.6 | [0.6,inf] | -154.01 | -157.25 | 0.0078 | 0.06 | 48 |
-| dense | 64 | PT | 0.00 | ∞ | [inf,inf] | -141.25 | -146.64 | 0.0902 | 1.20 | 48 |
-| dense | 64 | Ultimate | 1.00 | 148.5 | [148.5,148.5] | -155.23 | -157.52 | 0.0000 | 148.47 | 48 |
-| dense | 128 | SA | 0.00 | ∞ | [inf,inf] | -464.86 | -471.75 | 0.0097 | 0.25 | 96 |
-| dense | 128 | PT | 0.00 | ∞ | [inf,inf] | -313.44 | -347.54 | 0.3322 | 4.70 | 96 |
-| dense | 128 | Ultimate | 1.00 | 235.4 | [235.4,235.4] | -469.39 | -473.56 | 0.0000 | 235.39 | 96 |
-| sparse | 64 | SA | 0.17 | 0.8 | [0.3,inf] | -37.01 | -40.38 | 0.0304 | 0.03 | 48 |
-| sparse | 64 | PT | 0.00 | ∞ | [inf,inf] | -34.84 | -39.05 | 0.0870 | 0.19 | 48 |
-| sparse | 64 | Ultimate | 1.00 | 125.3 | [125.3,125.3] | -38.11 | -40.38 | 0.0000 | 125.25 | 48 |
-| sparse | 128 | SA | 0.00 | ∞ | [inf,inf] | -100.57 | -115.20 | 0.0144 | 0.07 | 96 |
-| sparse | 128 | PT | 0.00 | ∞ | [inf,inf] | -69.62 | -80.08 | 0.3154 | 0.31 | 96 |
-| sparse | 128 | Ultimate | 1.00 | 133.2 | [133.2,133.2] | -101.92 | -115.39 | 0.0000 | 133.21 | 96 |
-| chimera | 8 | SA | 0.75 | 0.0 | [0.0,0.0] | -1.59 | -1.84 | 0.0430 | 0.00 | 6 |
-| chimera | 8 | PT | 1.00 | 0.1 | [0.1,0.1] | -1.65 | -1.84 | 0.0000 | 0.08 | 6 |
-| chimera | 8 | Ultimate | 1.00 | 115.6 | [115.6,115.6] | -1.65 | -1.84 | 0.0000 | 115.59 | 6 |
-| chimera | 32 | SA | 0.42 | 0.1 | [0.1,0.4] | -18.15 | -20.05 | 0.0107 | 0.02 | 24 |
-| chimera | 32 | PT | 0.50 | 0.8 | [0.4,1.9] | -18.29 | -20.05 | 0.0036 | 0.12 | 24 |
-| chimera | 32 | Ultimate | 1.00 | 121.2 | [121.2,121.2] | -18.35 | -20.05 | 0.0000 | 121.23 | 24 |
-| pegasus_like | 8 | SA | 0.75 | 0.0 | [0.0,0.0] | -3.80 | -5.03 | 0.0858 | 0.00 | 6 |
-| pegasus_like | 8 | PT | 1.00 | 0.1 | [0.1,0.1] | -4.07 | -5.03 | 0.0000 | 0.07 | 6 |
-| pegasus_like | 8 | Ultimate | 1.00 | 113.3 | [113.3,113.3] | -4.07 | -5.03 | 0.0000 | 113.25 | 6 |
-| pegasus_like | 32 | SA | 0.25 | 0.3 | [0.1,inf] | -17.39 | -20.63 | 0.0172 | 0.02 | 24 |
-| pegasus_like | 32 | PT | 0.42 | 1.2 | [0.6,3.4] | -17.54 | -20.63 | 0.0082 | 0.14 | 24 |
-| pegasus_like | 32 | Ultimate | 1.00 | 123.0 | [123.0,123.0] | -17.67 | -20.63 | 0.0000 | 123.02 | 24 |
+| family | solver | inst | p_success | mean gap | gap CI95 | TTS(0.99) ms | mean ms |
+|---|---|---|---|---|---|---|---|
+| chimera | PT | 4 | 0.94 | 0.0019 | [0.0000,0.0054] | 0.4518 | 0.27 |
+| chimera | SA | 4 | 0.88 | 0.0046 | [0.0004,0.0094] | 0.3063 | 0.14 |
+| chimera | Ultimate | 4 | 1.00 | 0.0000 | [0.0000,0.0000] | 232.9817 | 232.98 |
+| dense | PT | 4 | 0.03 | 0.0888 | [0.0614,0.1141] | 888.9663 | 6.13 |
+| dense | SA | 4 | 0.62 | 0.0020 | [0.0008,0.0037] | 13.4767 | 2.87 |
+| dense | Ultimate | 4 | 1.00 | 0.0000 | [0.0000,0.0000] | 373.1322 | 373.13 |
+| random | PT | 4 | 0.00 | 0.0877 | [0.0629,0.1116] | inf | 2.34 |
+| random | SA | 4 | 0.34 | 0.0019 | [0.0006,0.0034] | 14.5749 | 1.33 |
+| random | Ultimate | 4 | 1.00 | 0.0000 | [0.0000,0.0000] | 296.3227 | 296.32 |
+| sk | PT | 4 | 0.00 | 0.0965 | [0.0686,0.1228] | inf | 3.16 |
+| sk | SA | 4 | 0.53 | 0.0016 | [0.0006,0.0031] | 16.6794 | 2.74 |
+| sk | Ultimate | 4 | 1.00 | 0.0000 | [0.0000,0.0000] | 377.6393 | 377.64 |
+| sparse | PT | 4 | 0.00 | 0.0801 | [0.0597,0.1008] | inf | 0.66 |
+| sparse | SA | 4 | 0.34 | 0.0022 | [0.0010,0.0037] | 8.4272 | 0.77 |
+| sparse | Ultimate | 4 | 1.00 | 0.0000 | [0.0000,0.0000] | 257.3920 | 257.39 |
+
+## Significance (Ultimate vs. baseline, per family)
+
+| family | vs | Wilcoxon p | t-test p | Ultimate better |
+|---|---|---|---|---|
+| chimera | PT | 1.0000 | 0.3910 | yes |
+| chimera | SA | 0.3711 | 0.1931 | yes |
+| dense | PT | 0.1003 | 0.1602 | yes |
+| dense | SA | 0.1003 | 0.1434 | yes |
+| random | PT | 0.1003 | 0.1560 | yes |
+| random | SA | 0.1003 | 0.3229 | yes |
+| sk | PT | 0.1003 | 0.1530 | yes |
+| sk | SA | 0.1003 | 0.1026 | yes |
+| sparse | PT | 0.1003 | 0.1282 | yes |
+| sparse | SA | 0.1003 | 0.0918 | yes |
+
+## Artifacts
+
+- `results_raw.csv` — every run.
+- `summary.csv` — per (family,solver) metrics.
+- `results.json` — machine-readable summary + significance.
+- `tables.tex` — LaTeX booktabs tables.
+- `plot_success.svg`, `plot_gap.svg` — figures.

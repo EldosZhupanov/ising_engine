@@ -1,0 +1,31 @@
+{
+  "summaries": [
+    {"family":"chimera","solver":"PT","n_instances":4,"n_runs":32,"p_success":0.937500,"tts099":0.451807,"tts_lo":0.272015,"tts_hi":0.674824,"mean_native":-7.408602,"best_native":-11.246297,"mean_gap":0.001927,"gap_lo":0.000000,"gap_hi":0.005413,"mean_ms":0.272015},
+    {"family":"chimera","solver":"SA","n_instances":4,"n_runs":32,"p_success":0.875000,"tts099":0.306324,"tts_lo":0.183795,"tts_hi":0.459486,"mean_native":-7.378765,"best_native":-11.246297,"mean_gap":0.004585,"gap_lo":0.000368,"gap_hi":0.009439,"mean_ms":0.138319},
+    {"family":"chimera","solver":"Ultimate","n_instances":4,"n_runs":32,"p_success":1.000000,"tts099":232.981658,"tts_lo":232.981658,"tts_hi":232.981658,"mean_native":-7.428088,"best_native":-11.246297,"mean_gap":0.000000,"gap_lo":0.000000,"gap_hi":0.000000,"mean_ms":232.981658},
+    {"family":"dense","solver":"PT","n_instances":4,"n_runs":32,"p_success":0.031250,"tts099":888.966260,"tts_lo":286.707646,"tts_hi":null,"mean_native":-267.249662,"best_native":-424.072789,"mean_gap":0.088848,"gap_lo":0.061415,"gap_hi":0.114080,"mean_ms":6.128660},
+    {"family":"dense","solver":"SA","n_instances":4,"n_runs":32,"p_success":0.625000,"tts099":13.476656,"tts_lo":8.697246,"tts_hi":22.973797,"mean_native":-304.509086,"best_native":-458.655196,"mean_gap":0.002012,"gap_lo":0.000755,"gap_hi":0.003657,"mean_ms":2.870317},
+    {"family":"dense","solver":"Ultimate","n_instances":4,"n_runs":32,"p_success":1.000000,"tts099":373.132161,"tts_lo":373.132161,"tts_hi":373.132161,"mean_native":-305.030653,"best_native":-458.655196,"mean_gap":0.000000,"gap_lo":0.000000,"gap_hi":0.000000,"mean_ms":373.132161},
+    {"family":"random","solver":"PT","n_instances":4,"n_runs":32,"p_success":0.000000,"tts099":null,"tts_lo":null,"tts_hi":null,"mean_native":-143.118170,"best_native":-228.202274,"mean_gap":0.087684,"gap_lo":0.062940,"gap_hi":0.111614,"mean_ms":2.341046},
+    {"family":"random","solver":"SA","n_instances":4,"n_runs":32,"p_success":0.343750,"tts099":14.574917,"tts_lo":8.856923,"tts_hi":29.566414,"mean_native":-162.646288,"best_native":-246.809743,"mean_gap":0.001887,"gap_lo":0.000554,"gap_hi":0.003413,"mean_ms":1.333100},
+    {"family":"random","solver":"Ultimate","n_instances":4,"n_runs":32,"p_success":1.000000,"tts099":296.322675,"tts_lo":296.322675,"tts_hi":296.322675,"mean_native":-162.788865,"best_native":-246.809743,"mean_gap":0.000000,"gap_lo":0.000000,"gap_hi":0.000000,"mean_ms":296.322675},
+    {"family":"sk","solver":"PT","n_instances":4,"n_runs":32,"p_success":0.000000,"tts099":null,"tts_lo":null,"tts_hi":null,"mean_native":-133.571391,"best_native":-194.200342,"mean_gap":0.096519,"gap_lo":0.068579,"gap_hi":0.122787,"mean_ms":3.164509},
+    {"family":"sk","solver":"SA","n_instances":4,"n_runs":32,"p_success":0.531250,"tts099":16.679399,"tts_lo":10.865093,"tts_hi":30.003176,"mean_native":-153.125736,"best_native":-225.527628,"mean_gap":0.001634,"gap_lo":0.000576,"gap_hi":0.003111,"mean_ms":2.744251},
+    {"family":"sk","solver":"Ultimate","n_instances":4,"n_runs":32,"p_success":1.000000,"tts099":377.639322,"tts_lo":377.639322,"tts_hi":377.639322,"mean_native":-153.354126,"best_native":-225.527628,"mean_gap":0.000000,"gap_lo":0.000000,"gap_hi":0.000000,"mean_ms":377.639322},
+    {"family":"sparse","solver":"PT","n_instances":4,"n_runs":32,"p_success":0.000000,"tts099":null,"tts_lo":null,"tts_hi":null,"mean_native":-62.052703,"best_native":-84.223560,"mean_gap":0.080058,"gap_lo":0.059742,"gap_hi":0.100771,"mean_ms":0.659681},
+    {"family":"sparse","solver":"SA","n_instances":4,"n_runs":32,"p_success":0.343750,"tts099":8.427156,"tts_lo":5.121036,"tts_hi":17.095176,"mean_native":-68.556614,"best_native":-91.579841,"mean_gap":0.002161,"gap_lo":0.000968,"gap_hi":0.003672,"mean_ms":0.770793},
+    {"family":"sparse","solver":"Ultimate","n_instances":4,"n_runs":32,"p_success":1.000000,"tts099":257.391988,"tts_lo":257.391988,"tts_hi":257.391988,"mean_native":-68.667391,"best_native":-91.587953,"mean_gap":0.000000,"gap_lo":0.000000,"gap_hi":0.000000,"mean_ms":257.391988}
+  ],
+  "significance": [
+    {"family":"chimera","a":"Ultimate","b":"PT","metric":"native_objective","wilcoxon_p":1.000000,"t_p":0.391002,"n_pairs":4,"a_better":true},
+    {"family":"chimera","a":"Ultimate","b":"SA","metric":"native_objective","wilcoxon_p":0.371093,"t_p":0.193057,"n_pairs":4,"a_better":true},
+    {"family":"dense","a":"Ultimate","b":"PT","metric":"native_objective","wilcoxon_p":0.100348,"t_p":0.160188,"n_pairs":4,"a_better":true},
+    {"family":"dense","a":"Ultimate","b":"SA","metric":"native_objective","wilcoxon_p":0.100348,"t_p":0.143431,"n_pairs":4,"a_better":true},
+    {"family":"random","a":"Ultimate","b":"PT","metric":"native_objective","wilcoxon_p":0.100348,"t_p":0.156029,"n_pairs":4,"a_better":true},
+    {"family":"random","a":"Ultimate","b":"SA","metric":"native_objective","wilcoxon_p":0.100348,"t_p":0.322872,"n_pairs":4,"a_better":true},
+    {"family":"sk","a":"Ultimate","b":"PT","metric":"native_objective","wilcoxon_p":0.100348,"t_p":0.153025,"n_pairs":4,"a_better":true},
+    {"family":"sk","a":"Ultimate","b":"SA","metric":"native_objective","wilcoxon_p":0.100348,"t_p":0.102568,"n_pairs":4,"a_better":true},
+    {"family":"sparse","a":"Ultimate","b":"PT","metric":"native_objective","wilcoxon_p":0.100348,"t_p":0.128180,"n_pairs":4,"a_better":true},
+    {"family":"sparse","a":"Ultimate","b":"SA","metric":"native_objective","wilcoxon_p":0.100348,"t_p":0.091769,"n_pairs":4,"a_better":true}
+  ]
+}

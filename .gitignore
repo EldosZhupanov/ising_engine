@@ -42,3 +42,8 @@ coverage/
 archive/
 
 benchmarks/results.csv
+# Downloaded raw instance files (regenerable via `--download`).
+benchmarks/cache/
+# Benchmark Hub downloads (regenerable via download_all_benchmarks.py).
+benchmark_suite/data/
+__pycache__/
