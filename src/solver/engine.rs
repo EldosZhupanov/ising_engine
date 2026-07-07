@@ -579,35 +579,59 @@ pub fn step<R: Rng>(
                     let delta_classical =
                         calculate_delta_e_local(model, spins_chunk, num_vars, v, s);
 
-                    // --- Compute Trotter delta + acceptance (VECTORIZED) ---
+                    // --- Acceptance (VECTORIZED) ---
                     let base_v = (v + num_vars * s) * NUM_REPLICAS;
-                    let s_prev = if s == 0 { num_slices - 1 } else { s - 1 };
-                    let s_next = if s == num_slices - 1 { 0 } else { s + 1 };
-                    let base_prev = (v + num_vars * s_prev) * NUM_REPLICAS;
-                    let base_next = (v + num_vars * s_next) * NUM_REPLICAS;
-                    let rng_offset = (v + num_vars * s) * NUM_REPLICAS;
+                    let rng_offset = base_v;
 
-                    // SIMD-friendly inner loop: contiguous loads, FMA, branchless accept
-                    for r in 0..NUM_REPLICAS {
-                        // Trotter parity (contiguous byte loads)
-                        let pp = (spins_chunk[base_v + r] ^ spins_chunk[base_prev + r]) as f64;
-                        let pn = (spins_chunk[base_v + r] ^ spins_chunk[base_next + r]) as f64;
-                        let delta_q = j_tau * (2.0 * pp - 1.0) + j_tau * (2.0 * pn - 1.0);
+                    if j_tau == 0.0 {
+                        // FAST PATH (production default: num_slices == 1 forces
+                        // j_tau = 0 above). The Trotter term is identically
+                        // ±0.0 here, so it is dropped along with its 2 byte
+                        // loads, 2 XORs, 2 int→f64 converts, and 6 FLOPs per
+                        // lane. SAFETY (bit-identical decisions): the only
+                        // arithmetic difference vs. adding delta_q = ±0.0 is
+                        // the SIGN of a zero total_delta. IEEE-754 makes
+                        // -0.0 <= 0.0, -0.0 >= 0.0, and x + (-0.0) == x + 0.0
+                        // for the accept test, the PT swap test, and the
+                        // energy accumulation alike, so no decision or tracked
+                        // value can differ (golden regression enforces this).
+                        for r in 0..NUM_REPLICAS {
+                            let total_delta = delta_classical[r];
+                            let exp_val = fast_exp(-total_delta * beta);
+                            let accept = (total_delta <= 0.0) | (rng_buf[rng_offset + r] < exp_val);
+                            let flip = accept as i8;
+                            spins_chunk[base_v + r] ^= flip;
+                            energy_slot[0][r] += total_delta * (flip as f64);
+                        }
+                    } else {
+                        // Trotter path (num_slices > 1): original loop.
+                        let s_prev = if s == 0 { num_slices - 1 } else { s - 1 };
+                        let s_next = if s == num_slices - 1 { 0 } else { s + 1 };
+                        let base_prev = (v + num_vars * s_prev) * NUM_REPLICAS;
+                        let base_next = (v + num_vars * s_next) * NUM_REPLICAS;
 
-                        let total_delta = delta_classical[r] + delta_q;
+                        // SIMD-friendly inner loop: contiguous loads, FMA, branchless accept
+                        for r in 0..NUM_REPLICAS {
+                            // Trotter parity (contiguous byte loads)
+                            let pp = (spins_chunk[base_v + r] ^ spins_chunk[base_prev + r]) as f64;
+                            let pn = (spins_chunk[base_v + r] ^ spins_chunk[base_next + r]) as f64;
+                            let delta_q = j_tau * (2.0 * pp - 1.0) + j_tau * (2.0 * pn - 1.0);
 
-                        // Branchless Metropolis acceptance:
-                        // accept = (delta <= 0) OR (rand < exp(-delta * beta))
-                        // Compiles to: vcmppd + vcmppd + vorpd
-                        let exp_val = fast_exp(-total_delta * beta);
-                        let accept = (total_delta <= 0.0) | (rng_buf[rng_offset + r] < exp_val);
+                            let total_delta = delta_classical[r] + delta_q;
 
-                        // Branchless spin flip: XOR with 0 (no flip) or 1 (flip)
-                        let flip = accept as i8;
-                        spins_chunk[base_v + r] ^= flip;
+                            // Branchless Metropolis acceptance:
+                            // accept = (delta <= 0) OR (rand < exp(-delta * beta))
+                            // Compiles to: vcmppd + vcmppd + vorpd
+                            let exp_val = fast_exp(-total_delta * beta);
+                            let accept = (total_delta <= 0.0) | (rng_buf[rng_offset + r] < exp_val);
 
-                        // Branchless energy tracking: multiply by 0.0 or 1.0
-                        energy_slot[0][r] += total_delta * (flip as f64);
+                            // Branchless spin flip: XOR with 0 (no flip) or 1 (flip)
+                            let flip = accept as i8;
+                            spins_chunk[base_v + r] ^= flip;
+
+                            // Branchless energy tracking: multiply by 0.0 or 1.0
+                            energy_slot[0][r] += total_delta * (flip as f64);
+                        }
                     }
                 }
             }
