@@ -135,6 +135,20 @@ impl Xoshiro256PlusPlusX8 {
             rem.copy_from_slice(&vals[..rem.len()]);
         }
     }
+
+    /// One replica-block (64 lanes) of uniforms — exactly the next 64 values
+    /// of the same stream `fill_f64` would produce (8 × 8-lane draws, no
+    /// remainder since NUM_REPLICAS = 64). Lets the sweep generate its
+    /// acceptance randomness just-in-time in registers/L1 instead of
+    /// round-tripping an 8-bytes-per-spin-site buffer through memory.
+    #[inline(always)]
+    pub fn next_f64x64(&mut self) -> [f64; NUM_REPLICAS] {
+        let mut out = [0.0f64; NUM_REPLICAS];
+        for block in out.chunks_exact_mut(8) {
+            block.copy_from_slice(&self.next_f64x8());
+        }
+        out
+    }
 }
 
 /// Fast exponential approximation using 6th-order Taylor polynomial.
@@ -387,13 +401,13 @@ pub fn calculate_replica_energies(
 
 /// Reusable scratch for `step()`, allocated once per solve.
 ///
-/// Eliminates the per-step heap allocations in the hot path (per-cell RNG
-/// buffers). Every region is fully overwritten before it is read within a
-/// step, so reuse is numerically identical to fresh buffers.
+/// Eliminates the per-step heap allocations in the hot path. Every region is
+/// fully overwritten before it is read within a step, so reuse is
+/// numerically identical to fresh buffers. (The former per-cell RNG buffer —
+/// 8 bytes per spin-site per step, the sweep's dominant memory traffic — is
+/// gone: acceptance randomness is now generated just-in-time per replica
+/// block, producing the identical value stream; see `next_f64x64`.)
 pub struct StepScratch {
-    /// One RNG region per (temperature, population) cell,
-    /// each `num_vars × num_slices × NUM_REPLICAS` long.
-    rng_buf: Vec<f64>,
     /// PT swap attempts per adjacent temperature pair (aggregated over
     /// populations and steps since the last reset). Purely observational:
     /// counting does not alter RNG consumption or swap decisions.
@@ -428,11 +442,8 @@ pub struct StepScratch {
 
 impl StepScratch {
     pub fn for_field(field: &QuantumField) -> Self {
-        let per_cell = field.num_vars * field.num_slices * NUM_REPLICAS;
-        let num_cells = field.num_temps * field.num_pops;
         let num_pairs = field.num_temps.saturating_sub(1);
         Self {
-            rng_buf: vec![0.0; per_cell * num_cells],
             swap_attempts: vec![0; num_pairs],
             swap_accepts: vec![0; num_pairs],
             collect_swap_stats: false,
@@ -540,11 +551,6 @@ pub fn step<R: Rng>(
 
     let base_seed = rng.gen::<u64>();
     let chunk_size = num_vars * num_slices * NUM_REPLICAS;
-    assert_eq!(
-        scratch.rng_buf.len(),
-        chunk_size * num_temps * num_pops,
-        "scratch was built for a different field geometry"
-    );
     assert_eq!(scratch.swap_attempts.len(), num_temps.saturating_sub(1));
 
     // ========================================================================
@@ -554,20 +560,26 @@ pub fn step<R: Rng>(
         .spins
         .par_chunks_mut(chunk_size)
         .zip(field.energies.par_chunks_mut(1))
-        .zip(scratch.rng_buf.par_chunks_mut(chunk_size))
         .enumerate()
-        .for_each(|(cell_idx, ((spins_chunk, energy_slot), rng_buf))| {
+        .for_each(|(cell_idx, (spins_chunk, energy_slot))| {
             let t = cell_idx % num_temps;
             let beta = 1.0 / temps[t];
             let mut cell_rng = Xoshiro256PlusPlusX8::new(base_seed.wrapping_add(cell_idx as u64));
 
-            // Pre-generate ALL random values for entire sweep into the
-            // caller-owned scratch region (fully overwritten every step).
-            // Hot loop only LOADS from this buffer — no RNG calls inside.
-            cell_rng.fill_f64(rng_buf);
-
+            // Acceptance randomness is generated JUST-IN-TIME per replica
+            // block (Fix C, Rank 2). The old design pre-filled a buffer of
+            // one f64 per spin-site per step — 8 bytes of RNG round-tripped
+            // through memory per 1 byte of spin state, the sweep's dominant
+            // memory traffic. SAFETY (bit-identical values): consumption
+            // order (s asc, v asc, r asc) equals the old linear fill order,
+            // NUM_REPLICAS = 64 = 8×8 exactly matches fill_f64's 8-lane
+            // blocking with no remainder, and clamped variables still draw
+            // (and discard) their block so the stream stays aligned — every
+            // consumed value is identical to the buffered design's.
             for s in 0..num_slices {
                 for v in 0..num_vars {
+                    let lane_rng = cell_rng.next_f64x64();
+
                     // Conditioned variables are excluded from proposals.
                     // Branch is per-variable, outside the replica lanes —
                     // the vectorized inner loops are unaffected.
@@ -581,7 +593,6 @@ pub fn step<R: Rng>(
 
                     // --- Acceptance (VECTORIZED) ---
                     let base_v = (v + num_vars * s) * NUM_REPLICAS;
-                    let rng_offset = base_v;
 
                     if j_tau == 0.0 {
                         // FAST PATH (production default: num_slices == 1 forces
@@ -598,7 +609,7 @@ pub fn step<R: Rng>(
                         for r in 0..NUM_REPLICAS {
                             let total_delta = delta_classical[r];
                             let exp_val = fast_exp(-total_delta * beta);
-                            let accept = (total_delta <= 0.0) | (rng_buf[rng_offset + r] < exp_val);
+                            let accept = (total_delta <= 0.0) | (lane_rng[r] < exp_val);
                             let flip = accept as i8;
                             spins_chunk[base_v + r] ^= flip;
                             energy_slot[0][r] += total_delta * (flip as f64);
@@ -623,7 +634,7 @@ pub fn step<R: Rng>(
                             // accept = (delta <= 0) OR (rand < exp(-delta * beta))
                             // Compiles to: vcmppd + vcmppd + vorpd
                             let exp_val = fast_exp(-total_delta * beta);
-                            let accept = (total_delta <= 0.0) | (rng_buf[rng_offset + r] < exp_val);
+                            let accept = (total_delta <= 0.0) | (lane_rng[r] < exp_val);
 
                             // Branchless spin flip: XOR with 0 (no flip) or 1 (flip)
                             let flip = accept as i8;
