@@ -1,0 +1,168 @@
+# Benchmark Hub registry — the single source of truth for every dataset.
+#
+# Every official_url below was verified reachable when this registry was
+# authored (2026-07). mirror_urls are tried in order after the official URL
+# fails. Strategies:
+#   files       — download each name in `files` via each `url_templates`
+#                 entry ({file} substituted), first success wins.
+#   archive     — download `archives` (tar.gz/zip), unpack, keep files
+#                 matching `select` globs.
+#   qplib_index — fetch the QPLIB instance index CSV, select unconstrained
+#                 all-binary instances (ncons==0, nbinvars==nvars), download
+#                 each .qplib file, and record best-known objectives.
+#
+# `parser` must name an entry in ising_bench.parsers.PARSERS.
+
+datasets:
+  gset:
+    description: "G-Set MaxCut instances (rudy-generated, n=800..20000)"
+    kind: maxcut
+    license: "Free for research use; no formal license published"
+    citation: "Helmberg & Rendl, 'A spectral bundle method for semidefinite programming', SIAM J. Optim. 10(3), 2000"
+    format: rudy_maxcut
+    parser: rudy
+    official_url: "https://web.stanford.edu/~yyye/yyye/Gset/"
+    mirror_urls: []
+    strategy: files
+    url_templates:
+      - "https://web.stanford.edu/~yyye/yyye/Gset/{file}"
+    files:
+      - G1
+      - G2
+      - G3
+      - G11
+      - G12
+      - G13
+      - G14
+      - G15
+      - G16
+      - G22
+      - G23
+      - G24
+      - G32
+      - G33
+      - G34
+      - G35
+      - G36
+      - G43
+      - G44
+      - G45
+      - G48
+      - G49
+      - G50
+      - G51
+      - G52
+      - G53
+      - G55
+      - G60
+      - G63
+      - G70
+
+  orlib:
+    description: "Beasley OR-Library unconstrained BQP sets (n=50..2500)"
+    kind: qubo
+    license: "Free for research use (J.E. Beasley, OR-Library)"
+    citation: "Beasley, 'OR-Library: distributing test problems by electronic mail', JORS 41(11), 1990"
+    format: beasley_bqp
+    parser: orlib_bqp
+    official_url: "http://people.brunel.ac.uk/~mastjjb/jeb/orlib/bqpinfo.html"
+    mirror_urls:
+      - "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/"
+    strategy: files
+    url_templates:
+      - "http://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/{file}"
+      - "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/{file}"
+    files:
+      - bqp50.txt
+      - bqp100.txt
+      - bqp250.txt
+      - bqp500.txt
+      - bqp1000.txt
+      # n=2500 set is only published gzipped (bqp2500.txt does not exist).
+      - bqp2500.gz
+      - bqpgka.txt
+
+  biqmac:
+    description: "Biq Mac library: MaxCut (rudy/ising) and Beasley/GKA sparse BQP"
+    kind: mixed
+    license: "Free for research use (Biq Mac library, AAU Klagenfurt)"
+    citation: "Wiegele, 'Biq Mac Library - a collection of Max-Cut and quadratic 0-1 programming instances', 2007"
+    format: mixed
+    parser: maxcut_auto
+    official_url: "https://biqmac.aau.at/biqmaclib.html"
+    mirror_urls: []
+    strategy: archive
+    archives:
+      - name: rudy_all.tar.gz
+        urls:
+          - "https://biqmac.aau.at/library/tar_files/rudy_all.tar.gz"
+        select: "*"
+        parser: rudy
+      - name: ising_all.tar.gz
+        urls:
+          - "https://biqmac.aau.at/library/tar_files/ising_all.tar.gz"
+        select: "*"
+        parser: rudy
+      - name: gka_sparse_all.tar.gz
+        urls:
+          - "https://biqmac.aau.at/library/tar_files/gka_sparse_all.tar.gz"
+        select: "*"
+        parser: biqmac_sparse
+      - name: be_sparse_all.tar.gz
+        urls:
+          - "https://biqmac.aau.at/library/tar_files/be_sparse_all.tar.gz"
+        select: "*"
+        parser: biqmac_sparse
+
+  qplib:
+    description: "QPLIB unconstrained all-binary quadratic instances (23 instances, n=120..1225)"
+    kind: qubo
+    license: "Free for research use; see qplib.zib.de"
+    citation: "Furini et al., 'QPLIB: a library of quadratic programming instances', Math. Prog. Comp. 11, 2019"
+    format: qplib
+    parser: qplib
+    official_url: "https://qplib.zib.de/"
+    mirror_urls: []
+    strategy: qplib_index
+    index_url: "https://qplib.zib.de/instancedata.csv"
+    instance_url_template: "https://qplib.zib.de/qplib/{file}.qplib"
+
+  dimacs_maxcut:
+    description: "MaxCut sets from the Optsicom project (incl. DIMACS torus and spin-glass instances)"
+    kind: maxcut
+    license: "Free for research use (Optsicom project, URJC)"
+    citation: "Marti, Duarte & Laguna, 'Advanced scatter search for the Max-Cut problem', INFORMS JOC 21(1), 2009"
+    format: rudy_or_dimacs
+    parser: maxcut_auto
+    official_url: "https://grafo.etsii.urjc.es/optsicom/maxcut"
+    mirror_urls: []
+    strategy: archive
+    archives:
+      - name: set2.zip
+        urls:
+          - "https://grafo.etsii.urjc.es/optsicom/maxcut/set2.zip"
+        select: "*"
+        parser: maxcut_auto
+      - name: set3.zip
+        urls:
+          - "https://grafo.etsii.urjc.es/optsicom/maxcut/set3.zip"
+        select: "*"
+        parser: maxcut_auto
+
+  snap:
+    description: "SNAP real-world graphs (as unweighted MaxCut instances)"
+    kind: maxcut
+    license: "BSD-style; see snap.stanford.edu/data"
+    citation: "Leskovec & Krevl, 'SNAP Datasets: Stanford Large Network Dataset Collection', 2014"
+    format: snap_edgelist
+    parser: snap_edgelist
+    official_url: "https://snap.stanford.edu/data/"
+    mirror_urls: []
+    strategy: files
+    url_templates:
+      - "https://snap.stanford.edu/data/{file}"
+    files:
+      - facebook_combined.txt.gz
+      - ca-GrQc.txt.gz
+      - email-Eu-core.txt.gz
+      - ca-HepTh.txt.gz

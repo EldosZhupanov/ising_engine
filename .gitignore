@@ -47,3 +47,12 @@ benchmarks/cache/
 # Benchmark Hub downloads (regenerable via download_all_benchmarks.py).
 benchmark_suite/data/
 __pycache__/
+# Benchmark Hub: vendored solver clones, venv, build/run artifacts.
+benchmark_suite/external/
+benchmark_suite/build/
+benchmark_suite/downloads/
+benchmark_suite/logs/
+benchmark_suite/datasets/
+benchmark_suite/results/raw/
+benchmark_suite/results/converted/
+benchmark-env/
