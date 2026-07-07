@@ -672,19 +672,34 @@ pub fn step<R: Rng>(
                 scratch.swap_accepts[t] += accepted;
             }
             if any_swap {
-                let base1_cell = (t + num_temps * p) * num_vars * num_slices * NUM_REPLICAS;
-                let base2_cell = ((t + 1) + num_temps * p) * num_vars * num_slices * NUM_REPLICAS;
+                let cell_len = num_vars * num_slices * NUM_REPLICAS;
+                let base1_cell = (t + num_temps * p) * cell_len;
+                let base2_cell = ((t + 1) + num_temps * p) * cell_len;
 
-                for s in 0..num_slices {
-                    for v in 0..num_vars {
-                        let offset = (v + num_vars * s) * NUM_REPLICAS;
-                        for r in 0..NUM_REPLICAS {
-                            if swap_mask[r] {
-                                field
-                                    .spins
-                                    .swap(base1_cell + offset + r, base2_cell + offset + r);
-                            }
-                        }
+                // Branchless masked lane-group exchange (Fix B, Rank 5).
+                // The old per-lane `Vec::swap` took an unpredictable branch
+                // per replica and touched a 64-byte cache line per useful
+                // byte. XOR-exchange with a per-lane 0x00/0xFF mask produces
+                // byte-for-byte the same result (swap(a,b) ≡ a^=d, b^=d with
+                // d = a^b), is branch-free, auto-vectorizes, and streams both
+                // cells' lines at full utilization. Trajectories unchanged.
+                let mut lane_mask = [0i8; NUM_REPLICAS];
+                for r in 0..NUM_REPLICAS {
+                    lane_mask[r] = (swap_mask[r] as i8).wrapping_neg(); // 0x00 / 0xFF
+                }
+                // Cells t and t+1 are adjacent in the flat layout, so a
+                // single split yields disjoint &mut regions.
+                let (left, right) = field.spins.split_at_mut(base2_cell);
+                let cell1 = &mut left[base1_cell..base1_cell + cell_len];
+                let cell2 = &mut right[..cell_len];
+                for (block1, block2) in cell1
+                    .chunks_exact_mut(NUM_REPLICAS)
+                    .zip(cell2.chunks_exact_mut(NUM_REPLICAS))
+                {
+                    for r in 0..NUM_REPLICAS {
+                        let d = (block1[r] ^ block2[r]) & lane_mask[r];
+                        block1[r] ^= d;
+                        block2[r] ^= d;
                     }
                 }
 
