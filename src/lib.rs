@@ -42,5 +42,6 @@
 pub mod benchmark;
 pub mod compiler;
 pub mod core;
+pub mod engine_v2;
 pub mod presolve;
 pub mod solver;
