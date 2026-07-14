@@ -21,6 +21,7 @@ pub mod capability;
 pub mod context;
 pub mod decision;
 pub mod evolution;
+pub mod families;
 pub mod frontend;
 pub mod ir;
 pub mod knowledge;

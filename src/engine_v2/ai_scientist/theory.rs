@@ -89,6 +89,9 @@ pub struct Theory {
     pub survived: u32,
     /// survived/trials, shrunk toward 0 while trials are few (evidence weight).
     pub confidence: f64,
+    /// A clean, self-contained answer to "WHY is this algorithm good here?" —
+    /// causality (ablation cost) tied to the measured mechanism.
+    pub explanation: String,
     pub evidence: Vec<String>,
 }
 
@@ -170,38 +173,74 @@ impl TheoryEngine {
         schedule: &Schedule,
         operator: &str,
         num_replicas: usize,
-        seed: u64,
+        seeds: &[u64],
     ) -> MechanismSignature {
-        let tr = capture_trajectory(ir, registry, schedule, num_replicas, seed);
-        // Indices of the operator's steps.
-        let idx: Vec<usize> = schedule
-            .ops
-            .iter()
-            .enumerate()
-            .filter(|(_, o)| o.as_str() == operator)
-            .map(|(i, _)| i)
-            .filter(|&i| i < tr.steps.len())
-            .collect();
-        if idx.is_empty() {
+        // Average the signature over ALL seeds so the mechanism narrative rests
+        // on a stable measurement, not one noisy trajectory.
+        let (mut ed, mut ma, mut dd, mut n) = (0.0, 0.0, 0.0, 0usize);
+        for &seed in seeds {
+            let tr = capture_trajectory(ir, registry, schedule, num_replicas, seed);
+            let idx: Vec<usize> = schedule
+                .ops
+                .iter()
+                .enumerate()
+                .filter(|(_, o)| o.as_str() == operator)
+                .map(|(i, _)| i)
+                .filter(|&i| i < tr.steps.len())
+                .collect();
+            if idx.is_empty() {
+                continue;
+            }
+            let first = idx[0];
+            let last = *idx.last().unwrap();
+            let before = if first > 0 { first - 1 } else { first };
+            ed += tr.steps[last].entropy - tr.steps[before].entropy;
+            dd += tr.steps[last].diversity - tr.steps[before].diversity;
+            ma += idx.iter().map(|&i| tr.steps[i].acceptance).sum::<f64>() / idx.len() as f64;
+            n += 1;
+        }
+        if n == 0 {
             return MechanismSignature {
                 entropy_delta: 0.0,
                 mean_acceptance: 0.0,
                 diversity_delta: 0.0,
             };
         }
-        let first = idx[0];
-        let last = *idx.last().unwrap();
-        // Entropy/diversity BEFORE the operator's first step (the prior step, or
-        // the first step itself) vs AFTER its last step.
-        let before = if first > 0 { first - 1 } else { first };
-        let entropy_delta = tr.steps[last].entropy - tr.steps[before].entropy;
-        let diversity_delta = tr.steps[last].diversity - tr.steps[before].diversity;
-        let mean_acceptance =
-            idx.iter().map(|&i| tr.steps[i].acceptance).sum::<f64>() / idx.len() as f64;
         MechanismSignature {
-            entropy_delta,
-            mean_acceptance,
-            diversity_delta,
+            entropy_delta: ed / n as f64,
+            mean_acceptance: ma / n as f64,
+            diversity_delta: dd / n as f64,
+        }
+    }
+
+    /// The dominant mechanism narrative from the measured signature — honest:
+    /// it names the STRONGEST observed effect and only asserts a mechanism when
+    /// the signal is clear, otherwise it says the mechanism is not evident.
+    fn mechanism_story(s: &MechanismSignature) -> &'static str {
+        const STRONG: f64 = 0.1;
+        let signals = [
+            (-s.entropy_delta, "it relaxes the ensemble — energy-entropy falls, collapsing a barrier a greedy quench stalls at"),
+            (-s.diversity_delta, "it converges the replicas — diversity collapses onto a shared basin"),
+            (s.mean_acceptance - 0.4, "it explores broadly — acceptance stays high, keeping the ensemble moving"),
+            (s.entropy_delta, "it injects exploration — energy-entropy rises while it runs"),
+        ];
+        let (mag, story) = signals.iter().cloned().fold(
+            (
+                f64::NEG_INFINITY,
+                "its mechanism is not clearly evident in the trajectory",
+            ),
+            |acc, (m, st)| {
+                if m > acc.0 {
+                    (m, st)
+                } else {
+                    acc
+                }
+            },
+        );
+        if mag >= STRONG {
+            story
+        } else {
+            "its mechanism is not clearly evident in the trajectory (weak, mixed signals)"
         }
     }
 
@@ -241,34 +280,25 @@ impl TheoryEngine {
         condition: &str,
         seeds: &[u64],
     ) -> Theory {
-        let seed0 = seeds.first().copied().unwrap_or(1);
         let sig = Self::signature(
             ir,
             registry,
             schedule,
             operator,
             self.cfg.num_replicas,
-            seed0,
+            seeds,
         );
         let capability = Self::capability_name(registry, operator);
-
-        // Mechanism narrative — assembled from evidence, not invented.
-        let entropy_story = if sig.entropy_delta < -1e-9 {
-            "energy-entropy falls while it runs (the ensemble relaxes / crosses a barrier)"
-        } else if sig.entropy_delta > 1e-9 {
-            "energy-entropy rises while it runs (it injects exploration)"
-        } else {
-            "energy-entropy is roughly flat while it runs"
-        };
+        let mechanism = Self::mechanism_story(&sig);
         let claim = format!(
-            "On {condition}, {operator} provides {capability}: {entropy_story}; \
-mean acceptance {:.2}, diversity Δ {:+.2}.",
-            sig.mean_acceptance, sig.diversity_delta
+            "On {condition}, {operator} acts as a {capability} operator: {mechanism} \
+(mean acceptance {:.2}, entropy Δ {:+.2}, diversity Δ {:+.2}).",
+            sig.mean_acceptance, sig.entropy_delta, sig.diversity_delta
         );
         let hypothesis = MechanismHypothesis {
             operator: operator.to_string(),
             condition: condition.to_string(),
-            capability,
+            capability: capability.clone(),
             signature: sig,
             claim,
         };
@@ -304,6 +334,26 @@ mean acceptance {:.2}, diversity Δ {:+.2}.",
         let degradation = (ablated_best - full) / scale; // ≥ 0 ⇒ operator helped
         let upheld = degradation >= prediction.min_degradation;
 
+        // The clean "why is this algorithm good here?" — causality (measured by
+        // the ablation) tied to the mechanism, stated plainly either way.
+        let explanation = if upheld {
+            format!(
+                "`{operator}` is genuinely good on {condition}: removing it worsens the best \
+energy by {:.1}% — so it is the causal {} in this algorithm. It works because {}.",
+                degradation * 100.0,
+                hypothesis.capability,
+                mechanism
+            )
+        } else {
+            format!(
+                "`{operator}` is NOT what makes this algorithm good on {condition}: removing it \
+changes the best energy by only {:.1}%, so its presence in the schedule is a spurious \
+correlation — the useful work is done by the other operators. (Observed while it ran: {}.)",
+                degradation * 100.0,
+                mechanism
+            )
+        };
+
         let mut theory = Theory {
             hypothesis,
             prediction,
@@ -311,6 +361,7 @@ mean acceptance {:.2}, diversity Δ {:+.2}.",
             trials: 1,
             survived: u32::from(upheld),
             confidence: 0.0,
+            explanation,
             evidence: vec![format!(
                 "ablation trial: full best {full:.2}, ablated best {ablated_best:.2}, \
 degradation {:+.1}% of scale ⇒ prediction {}",
@@ -362,7 +413,7 @@ degradation {:+.1}% of scale ⇒ prediction {}",
         };
         let proof = format!(
             "{} | prediction: {} | {} | confidence {:.2} ({}/{} trials)",
-            theory.hypothesis.claim,
+            theory.explanation,
             theory.prediction.statement,
             theory.evidence.last().cloned().unwrap_or_default(),
             theory.confidence,
@@ -424,6 +475,12 @@ mod tests {
         assert!(t.confidence > 0.0);
         assert!(t.hypothesis.claim.contains("greedy_descent"));
         assert_eq!(t.hypothesis.capability, "exploitation");
+        // The explanation states clearly WHY it is good: causality + mechanism.
+        assert!(
+            t.explanation.contains("genuinely good") && t.explanation.contains("causal"),
+            "explanation must state why it's good: {}",
+            t.explanation
+        );
     }
 
     #[test]

@@ -95,6 +95,34 @@ fn main() {
     let evolver = Evolver::new(Default::default());
     let executor = RuntimeExecutor::auto();
 
+    // --render-dashboard just (re)generates the dashboard from the persisted
+    // stores — no experiments run — and prints its path. Use it to view the
+    // accumulated platform state at any time.
+    if std::env::args().any(|a| a == "--render-dashboard") {
+        use ising_engine::engine_v2::ai_scientist::write_dashboard;
+        let mgr = CampaignManager::open(&dir, report_every).unwrap_or_else(|e| {
+            eprintln!("cannot open platform dir {dir}: {e}");
+            exit(1);
+        });
+        match write_dashboard(&dir, &mgr.db, &mgr.graph, &mgr.archive, &[]) {
+            Ok(p) => {
+                let abs = std::fs::canonicalize(&p).unwrap_or(p);
+                println!(
+                    "dashboard rendered from {} experiments, {} knowledge facts",
+                    mgr.db.len(),
+                    mgr.graph.len()
+                );
+                println!("open: {}", abs.display());
+                println!("      file://{}", abs.display());
+            }
+            Err(e) => {
+                eprintln!("failed to render dashboard: {e}");
+                exit(1);
+            }
+        }
+        return;
+    }
+
     // --orchestrate <ticks> runs the Stage-8 Research Orchestrator: the full
     // life cycle (observe→analyze→learn→plan→run→evaluate→update→write-knowledge)
     // with the Theory Engine, Scientific Memory, and Foundation Dataset export.

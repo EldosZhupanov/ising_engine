@@ -165,7 +165,7 @@ impl ResearchOrchestrator {
                     engine.explain(ir, registry, &schedule, op, condition, &[7, 8, 9]);
                 report.theories.push(format!(
                     "{op}: {:?} (conf {:.2}) — {}",
-                    theory.status, theory.confidence, theory.hypothesis.claim
+                    theory.status, theory.confidence, theory.explanation
                 ));
                 if theory.status != TheoryStatus::Hypothesis {
                     engine.publish(&theory, &mut self.mgr.graph);
