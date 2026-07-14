@@ -30,6 +30,7 @@ use super::super::ir::ProblemIR;
 use super::super::registry::OperatorRegistry;
 use super::campaign::{CampaignConfig, CampaignManager, CampaignSummary};
 use super::dataset::FoundationDataset;
+use super::executive::{Action, ExecutiveConfig, ResearchExecutive, ResourceState};
 use super::executor::BatchExecutor;
 use super::memory_os::{recall, MemoryManager};
 use super::predictor::InstanceSignature;
@@ -53,6 +54,9 @@ pub struct TickReport {
     pub dataset_rows: usize,
     /// A one-line memory-manager health summary.
     pub memory: String,
+    /// The Chief Scientist's directives this tick (and, when executive-driven,
+    /// what the loop actually did about them).
+    pub directives: Vec<String>,
 }
 
 /// Configuration of the orchestrated loop.
@@ -71,6 +75,12 @@ pub struct OrchestratorConfig {
     /// expected new knowledge (the loop sets its own task) instead of cycling
     /// the instance list round-robin.
     pub planner_driven: bool,
+    /// When true, the loop OBEYS the Research Executive (Chief Scientist): each
+    /// tick it consults the executive and ACTS on its directives — trains the
+    /// models it says are stale, investigates the theories it flags. The
+    /// executive brief is always shown on the dashboard; this makes the loop
+    /// follow it, turning the manager from an advisor into the driver.
+    pub executive_driven: bool,
 }
 
 impl Default for OrchestratorConfig {
@@ -82,6 +92,7 @@ impl Default for OrchestratorConfig {
             recall_radius: 0.15,
             theory_cfg: TheoryConfig::default(),
             planner_driven: false,
+            executive_driven: false,
         }
     }
 }
@@ -92,6 +103,9 @@ pub struct ResearchOrchestrator {
     mgr: CampaignManager,
     dir: PathBuf,
     tick_count: usize,
+    /// The executive's view of model freshness — watermarks advanced as the
+    /// loop retrains, so its staleness judgments stay accurate across ticks.
+    resources: ResourceState,
 }
 
 impl ResearchOrchestrator {
@@ -103,6 +117,11 @@ impl ResearchOrchestrator {
             mgr,
             dir,
             tick_count: 0,
+            resources: ResourceState {
+                local_available: true,
+                cloud_available: std::env::var("ANTHROPIC_API_KEY").is_ok(),
+                ..Default::default()
+            },
         })
     }
 
@@ -137,39 +156,104 @@ impl ResearchOrchestrator {
         // ── observe(): Scientific Memory — have we seen this structure? ──
         report.recall = recall(&self.mgr.db, &self.mgr.graph, &sig, cfg.recall_radius).narrative;
 
+        // ── the Chief Scientist directs the cycle: consult, then OBEY. ──
+        let brief = ResearchExecutive::new(ExecutiveConfig::default()).assess(
+            &self.mgr.db,
+            &self.mgr.graph,
+            &self.resources,
+        );
+        let mut campaign_cfg = cfg.campaign.clone();
+        let mut investigate: Vec<String> = Vec::new();
+        if cfg.executive_driven {
+            for d in &brief.decisions {
+                report
+                    .directives
+                    .push(format!("{} — {}", d.title(), d.reason));
+                match &d.action {
+                    // "retrain the World/Dynamics model" ⇒ turn on the shared-
+                    // knowledge path this tick, which trains them.
+                    Action::TrainModel { model } if model == "World" || model == "Dynamics" => {
+                        campaign_cfg.shared_knowledge = true;
+                    }
+                    // "gather evidence for X" ⇒ queue X for the Theory Engine.
+                    Action::GatherTheoryEvidence { operator }
+                        if investigate.len() < 2 && !investigate.contains(operator) =>
+                    {
+                        investigate.push(operator.clone());
+                    }
+                    _ => {}
+                }
+            }
+        }
+
         // ── analyze → update_all_models(): the campaign runs the bulk loop ──
         report.campaign = self
             .mgr
-            .run(ir, registry, evolver, executor, &cfg.campaign)?;
+            .run(ir, registry, evolver, executor, &campaign_cfg)?;
+        // The Predictor refits every run; the World/Dynamics models were (re)trained
+        // iff the shared-knowledge path ran. Advance the executive's watermarks.
+        self.resources.predictor_trained_at = self.mgr.db.len();
+        if campaign_cfg.shared_knowledge {
+            self.resources.world_trained_at = self.mgr.db.len();
+            self.resources.dynamics_trained_at = self.mgr.db.len();
+        }
 
-        // ── write_knowledge(): Theory Engine on the best schedule's operators ──
-        if cfg.theory && !report.campaign.best_schedule.is_empty() {
+        // ── write_knowledge(): Theory Engine on the best schedule's operators,
+        // plus any operator the Chief Scientist flagged for investigation. ──
+        if cfg.theory && (!report.campaign.best_schedule.is_empty() || !investigate.is_empty()) {
             let condition = if stats.density < 0.05 {
                 "density<0.05"
             } else {
                 "density>=0.05"
             };
             let schedule = Schedule {
-                sweeps: vec![16; report.campaign.best_schedule.len()],
+                sweeps: vec![16; report.campaign.best_schedule.len().max(1)],
                 ops: report.campaign.best_schedule.clone(),
                 temp_hi: 4.0,
                 temp_lo: 0.1,
             };
             let engine = TheoryEngine::new(cfg.theory_cfg);
             let mut seen = std::collections::BTreeSet::new();
-            for op in &report.campaign.best_schedule {
-                if !seen.insert(op.clone()) {
-                    continue; // one theory per distinct operator
+            let run_theory =
+                |op: &str,
+                 sched: &Schedule,
+                 directed: bool,
+                 report: &mut TickReport,
+                 graph: &mut super::graph::KnowledgeGraph| {
+                    let theory: Theory =
+                        engine.explain(ir, registry, sched, op, condition, &[7, 8, 9]);
+                    report.theories.push(format!(
+                        "{op}{}: {:?} (conf {:.2}) — {}",
+                        if directed {
+                            " (executive-directed)"
+                        } else {
+                            ""
+                        },
+                        theory.status,
+                        theory.confidence,
+                        theory.explanation
+                    ));
+                    if theory.status != TheoryStatus::Hypothesis {
+                        engine.publish(&theory, graph);
+                        report.theories_published += 1;
+                    }
+                };
+            for op in report.campaign.best_schedule.clone() {
+                if seen.insert(op.clone()) {
+                    run_theory(&op, &schedule, false, &mut report, &mut self.mgr.graph);
                 }
-                let theory: Theory =
-                    engine.explain(ir, registry, &schedule, op, condition, &[7, 8, 9]);
-                report.theories.push(format!(
-                    "{op}: {:?} (conf {:.2}) — {}",
-                    theory.status, theory.confidence, theory.explanation
-                ));
-                if theory.status != TheoryStatus::Hypothesis {
-                    engine.publish(&theory, &mut self.mgr.graph);
-                    report.theories_published += 1;
+            }
+            // Executive-directed: does this dominant-but-unexplained operator do
+            // causal work? Test it standalone (ablation ⇒ nothing).
+            for op in &investigate {
+                if seen.insert(op.clone()) {
+                    let solo = Schedule {
+                        ops: vec![op.clone()],
+                        sweeps: vec![16],
+                        temp_hi: 4.0,
+                        temp_lo: 0.1,
+                    };
+                    run_theory(op, &solo, true, &mut report, &mut self.mgr.graph);
                 }
             }
             // Persist the graph now that new theories landed in it.
@@ -210,14 +294,20 @@ impl ResearchOrchestrator {
             }
         }
 
-        // Refresh the (enriched) dashboard now that theories + decisions landed,
-        // so the single pane reflects this tick's understanding.
-        let _ = super::dashboard::write_dashboard(
+        // Refresh the dashboard with a FRESH executive brief (state changed this
+        // tick), so the single pane shows the Chief Scientist's current directives.
+        let brief_now = ResearchExecutive::new(ExecutiveConfig::default()).assess(
+            &self.mgr.db,
+            &self.mgr.graph,
+            &self.resources,
+        );
+        let _ = super::dashboard::write_dashboard_with(
             &self.dir,
             &self.mgr.db,
             &self.mgr.graph,
             &self.mgr.archive,
             &report.campaign.notes,
+            Some(&brief_now),
         );
 
         Ok(report)
@@ -312,6 +402,7 @@ mod tests {
                 min_degradation: 0.005,
             },
             planner_driven: false,
+            executive_driven: false,
         }
     }
 
@@ -393,6 +484,43 @@ mod tests {
             studied.contains("ringA") && studied.contains("ringB"),
             "planner should have studied BOTH instances, got {studied:?}"
         );
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn executive_driven_loop_obeys_the_chief_scientist() {
+        let dir = std::env::temp_dir().join(format!("orch_exec_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let reg = OperatorRegistry::standard();
+        let evolver = Evolver::new(Default::default());
+        let exec = RuntimeExecutor::new(2);
+
+        let mut cfg = small_orch_cfg();
+        cfg.executive_driven = true;
+
+        let ir = ring(16);
+        let insts = vec![("ring16".to_string(), ir)];
+        let mut orch = ResearchOrchestrator::open(&dir, 10).unwrap();
+        // First tick seeds the DB; second tick the executive has real state to
+        // direct (stale models, saturation, unexplained operators).
+        let reports = orch.run(&insts, &reg, &evolver, &exec, &cfg, 2).unwrap();
+
+        // The Chief Scientist issued directives and they were recorded.
+        assert!(
+            !reports[1].directives.is_empty(),
+            "the executive must produce directives when executive-driven"
+        );
+        // Obedience: the loop advanced the model watermarks (it retrained), so
+        // the executive's staleness view stays current — no infinite "retrain"
+        // loop. The dashboard was refreshed with the brief.
+        assert!(std::path::Path::new(&dir).join("dashboard.html").exists());
+        let html = std::fs::read_to_string(dir.join("dashboard.html")).unwrap();
+        assert!(
+            html.contains("Chief Scientist"),
+            "dashboard must show the executive"
+        );
+        // Valid results throughout.
+        assert!(reports[1].campaign.best_score <= reports[1].campaign.baseline + 1e-9);
         let _ = std::fs::remove_dir_all(&dir);
     }
 }

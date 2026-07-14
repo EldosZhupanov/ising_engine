@@ -147,6 +147,10 @@ fn main() {
             // --planner lets the loop choose its own next instance by expected
             // new knowledge (autonomous task-setting) instead of round-robin.
             planner_driven: std::env::args().any(|a| a == "--planner"),
+            // --executive makes the loop OBEY the Chief Scientist: it trains the
+            // models the executive says are stale and investigates the theories
+            // it flags, each tick.
+            executive_driven: std::env::args().any(|a| a == "--executive"),
             ..Default::default()
         };
         println!(
@@ -162,6 +166,9 @@ fn main() {
         for r in &reports {
             println!("── tick {} [{}] ──", r.tick, r.instance);
             println!("  observe : {}", r.recall);
+            for d in r.directives.iter().take(5) {
+                println!("  chief   : {d}");
+            }
             println!(
                 "  run     : experiments {} → {}, best {:.1}",
                 r.campaign.experiments_before, r.campaign.experiments_after, r.campaign.best_score

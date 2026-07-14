@@ -226,13 +226,37 @@ impl WorldModel {
     }
 
     /// Predicted single-step yield (raw energy improvement, ≥ 0) of applying
-    /// `op` once from the analytic initial state. The World model's
-    /// contribution to the shared Meta-Learning Layer: which operators it
-    /// expects to pay off on this instance — imagined, no Runtime.
+    /// `op` once, WARM-STARTED. The naive probe measures yield from the all-zero
+    /// cold start, which unfairly under-values ensemble / cluster / replica-
+    /// exchange operators — they act on the DISAGREEMENT between replicas that
+    /// does not exist until a thermal pass has spread the ensemble out. So if a
+    /// warm-up operator is available (`warm_op`, e.g. `metropolis_sweep`), the
+    /// probe first imagines that pass, then measures `op`'s yield from the warm
+    /// state — a fairer read of what each operator contributes mid-schedule.
+    /// Imagined throughout; no Runtime.
     pub fn predicted_yield(&self, ir: &ProblemIR, op: &str, temp_hi: f64, sweeps: u32) -> f64 {
-        let s0 = initial_obs(ir);
+        self.predicted_yield_from(ir, op, temp_hi, sweeps, None)
+    }
+
+    /// Yield of `op`, optionally warm-started by first imagining `warm_op`.
+    pub fn predicted_yield_from(
+        &self,
+        ir: &ProblemIR,
+        op: &str,
+        temp_hi: f64,
+        sweeps: u32,
+        warm_op: Option<&str>,
+    ) -> f64 {
+        let scale = escale(ir);
+        let s0 = match warm_op {
+            // Only warm up with a KNOWN operator that is not the one under test.
+            Some(w) if w != op && self.vocab.iter().any(|v| v == w) => {
+                self.step(&initial_obs(ir), w, temp_hi, sweeps)
+            }
+            _ => initial_obs(ir),
+        };
         let s1 = self.step(&s0, op, temp_hi, sweeps);
-        ((s0.best - s1.best) * escale(ir)).max(0.0)
+        ((s0.best - s1.best) * scale).max(0.0)
     }
 
     /// Operators known to the world model (training vocabulary).
@@ -358,5 +382,45 @@ mod tests {
         let a = model.imagine_final_best(&held, &s);
         let b = model.imagine_final_best(&held, &s);
         assert_eq!(a.to_bits(), b.to_bits());
+    }
+
+    #[test]
+    fn warm_start_probe_guards_are_correct() {
+        let reg = OperatorRegistry::standard();
+        let train_scheds = vec![
+            sched(&["metropolis_sweep", "greedy_descent"], 4),
+            sched(&["gibbs_color_sweep", "greedy_descent"], 4),
+        ];
+        let train: Vec<ProblemIR> = (0..5).map(|i| ring(20, 0.3 + i as f64 * 0.2)).collect();
+        let refs: Vec<&ProblemIR> = train.iter().collect();
+        let model = WorldModel::fit(&refs, &reg, &train_scheds, 8, &[1, 2, 3], 1e-4).unwrap();
+        let held = ring(20, 3.0);
+
+        let cold = model.predicted_yield(&held, "greedy_descent", 4.0, 4);
+        // Warming with an UNKNOWN operator falls back to cold (identical).
+        let unknown =
+            model.predicted_yield_from(&held, "greedy_descent", 4.0, 4, Some("not_an_op"));
+        assert_eq!(
+            cold.to_bits(),
+            unknown.to_bits(),
+            "unknown warm-op → cold fallback"
+        );
+        // Warming with the op UNDER TEST is disallowed ⇒ also cold.
+        let self_warm =
+            model.predicted_yield_from(&held, "greedy_descent", 4.0, 4, Some("greedy_descent"));
+        assert_eq!(
+            cold.to_bits(),
+            self_warm.to_bits(),
+            "self warm-up guarded → cold"
+        );
+        // A real, distinct warm-up operator changes the probe (warm ≠ cold).
+        let warm =
+            model.predicted_yield_from(&held, "greedy_descent", 4.0, 4, Some("metropolis_sweep"));
+        assert!(warm >= 0.0);
+        assert_ne!(
+            cold.to_bits(),
+            warm.to_bits(),
+            "warm-start should change the measured yield"
+        );
     }
 }

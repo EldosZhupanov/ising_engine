@@ -103,7 +103,10 @@ impl OperatorSignals {
         self
     }
 
-    /// Add the World model's imagined per-operator yields on this instance.
+    /// Add the World model's imagined per-operator yields on this instance,
+    /// WARM-STARTED with a thermal pass (`metropolis_sweep` when known) so
+    /// ensemble/cluster/replica operators are judged on the warm state they
+    /// actually need — not the all-zero cold start, which unfairly avoids them.
     pub fn with_world(
         mut self,
         world: &WorldModel,
@@ -111,9 +114,12 @@ impl OperatorSignals {
         temp_hi: f64,
         sweeps: u32,
     ) -> Self {
+        let warm = Some("metropolis_sweep");
         for op in world.vocab() {
-            self.world_yield
-                .insert(op.clone(), world.predicted_yield(ir, op, temp_hi, sweeps));
+            self.world_yield.insert(
+                op.clone(),
+                world.predicted_yield_from(ir, op, temp_hi, sweeps, warm),
+            );
         }
         self
     }
