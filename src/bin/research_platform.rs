@@ -99,12 +99,22 @@ fn main() {
     // stores — no experiments run — and prints its path. Use it to view the
     // accumulated platform state at any time.
     if std::env::args().any(|a| a == "--render-dashboard") {
-        use ising_engine::engine_v2::ai_scientist::write_dashboard;
+        use ising_engine::engine_v2::ai_scientist::{
+            write_dashboard_with, ResearchExecutive, ResourceState,
+        };
         let mgr = CampaignManager::open(&dir, report_every).unwrap_or_else(|e| {
             eprintln!("cannot open platform dir {dir}: {e}");
             exit(1);
         });
-        match write_dashboard(&dir, &mgr.db, &mgr.graph, &mgr.archive, &[]) {
+        // The Chief Scientist surveys the accumulated state for the hero panel.
+        let resources = ResourceState {
+            cloud_available: std::env::var("ANTHROPIC_API_KEY").is_ok(),
+            local_available: true,
+            ..Default::default()
+        };
+        let brief =
+            ResearchExecutive::new(Default::default()).assess(&mgr.db, &mgr.graph, &resources);
+        match write_dashboard_with(&dir, &mgr.db, &mgr.graph, &mgr.archive, &[], Some(&brief)) {
             Ok(p) => {
                 let abs = std::fs::canonicalize(&p).unwrap_or(p);
                 println!(

@@ -24,6 +24,7 @@ pub mod dataset;
 pub mod db;
 pub mod dynamics;
 pub mod evaluation;
+pub mod executive;
 pub mod executor;
 pub mod graph;
 pub mod lab;
@@ -46,7 +47,7 @@ pub mod world;
 pub use campaign::{CampaignConfig, CampaignManager, CampaignSummary};
 pub use cloud::{deep_analysis_prompt, CloudScientist};
 pub use curiosity::{explore_exploit_priority, CuriosityConfig, CuriosityEngine, CuriousIdeator};
-pub use dashboard::write_dashboard;
+pub use dashboard::{write_dashboard, write_dashboard_with};
 pub use dataset::FoundationDataset;
 pub use db::{ExperimentDb, ExperimentRecord, RunContext};
 pub use dynamics::{
@@ -54,6 +55,9 @@ pub use dynamics::{
     Trajectory,
 };
 pub use evaluation::{evaluate_predictor, rule_reproducibility, write_evaluation};
+pub use executive::{
+    Action, Decision, ExecutiveBrief, ExecutiveConfig, ResearchExecutive, ResourceState,
+};
 pub use executor::{BatchExecutor, ExperimentOutcome, ExperimentTask, RuntimeExecutor};
 pub use graph::{KnowledgeGraph, Triple};
 pub use lab::{
