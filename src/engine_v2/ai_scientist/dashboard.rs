@@ -8,8 +8,10 @@
 //! polarity. Identity is never color-alone: every mark carries a text label or
 //! a native `<title>` tooltip, and each chart has a table twin.
 
+use super::curiosity::{CuriosityConfig, CuriosityEngine};
 use super::db::ExperimentDb;
 use super::graph::KnowledgeGraph;
+use super::memory_os::MemoryManager;
 use super::reports::ReportArchive;
 use std::collections::BTreeMap;
 use std::fs;
@@ -306,6 +308,99 @@ a{color:var(--s1)}ul{margin:6px 0}</style></head><body>\n<h1>Autonomous Research
         ));
     }
     html.push_str("</table>\n");
+
+    // ---- theories (mechanism, ablation-tested) -------------------------------
+    let theories: Vec<_> = graph
+        .triples()
+        .iter()
+        .filter(|t| t.predicate == "theory-explains" || t.predicate == "theory-refuted")
+        .collect();
+    if !theories.is_empty() {
+        html.push_str("<h2>Theories — mechanisms that faced ablation</h2>\n<p class=\"muted\">A rule is a correlation; a theory is a mechanism that survived the Runtime's attempt to refute it.</p>\n<table><tr><th>operator</th><th>verdict</th><th>provides</th><th>if</th><th>confidence</th><th>mechanism &amp; ablation</th></tr>");
+        let mut ts = theories.clone();
+        ts.sort_by(|a, b| b.confidence().total_cmp(&a.confidence()));
+        for t in ts.iter().take(12) {
+            let verdict = if t.predicate == "theory-explains" {
+                "SUPPORTED"
+            } else {
+                "refuted"
+            };
+            html.push_str(&format!(
+                "<tr><td><code>{}</code></td><td>{}</td><td>{}</td><td>{}</td><td>{:.2}</td><td class=\"muted\">{}</td></tr>",
+                esc(&t.subject),
+                verdict,
+                esc(&t.object),
+                if t.condition.is_empty() { "—".into() } else { esc(&t.condition) },
+                t.confidence(),
+                esc(&t.proof),
+            ));
+        }
+        html.push_str("</table>\n");
+    }
+
+    // ---- cross-model consensus (the meta-learning layer) ---------------------
+    let consensus: Vec<_> = graph
+        .triples()
+        .iter()
+        .filter(|t| {
+            t.predicate == "consensus-prefer"
+                || t.predicate == "consensus-avoid"
+                || t.predicate == "plateaus-early"
+        })
+        .collect();
+    if !consensus.is_empty() {
+        html.push_str("<h2>Cross-model consensus — what the models jointly decided</h2>\n<table><tr><th>operator</th><th>verdict</th><th>if</th><th>why (source attribution)</th></tr>");
+        for t in &consensus {
+            let verdict = match t.predicate.as_str() {
+                "consensus-prefer" => "PREFER",
+                "consensus-avoid" => "avoid",
+                _ => "switch-early",
+            };
+            html.push_str(&format!(
+                "<tr><td><code>{}</code></td><td>{}</td><td>{}</td><td class=\"muted\">{}</td></tr>",
+                esc(&t.subject),
+                verdict,
+                if t.condition.is_empty() { "—".into() } else { esc(&t.condition) },
+                esc(&t.proof),
+            ));
+        }
+        html.push_str("</table>\n");
+    }
+
+    // ---- curiosity (where the platform is UNSURE — active learning) ----------
+    let curiosity = CuriosityEngine::from_db(db, None, &CuriosityConfig::default());
+    let curious = curiosity.ranked();
+    if !curious.is_empty() {
+        html.push_str("<h2>Curiosity — where the models are least certain</h2>\n<p class=\"muted\">Surprise = coverage deficit + cross-seed anomaly. The platform steers exploration here.</p>\n<table><tr><th>operator</th><th>curiosity</th><th>coverage</th><th>anomaly</th></tr>");
+        for (op, c) in curious.iter().take(8) {
+            let (cov, anom, _dis) = curiosity.components(op);
+            html.push_str(&format!(
+                "<tr><td><code>{}</code></td><td>{c:.2}</td><td>{cov:.2}</td><td>{anom:.2}</td></tr>",
+                esc(op)
+            ));
+        }
+        html.push_str("</table>\n");
+    }
+
+    // ---- scientific memory regimes -------------------------------------------
+    let mem = MemoryManager::default().analyze(db);
+    if !mem.buckets.is_empty() {
+        html.push_str("<h2>Memory regimes — what is well-characterized</h2>\n<table><tr><th>regime</th><th>experiments</th><th>instances</th><th>dominant operator</th><th>compactable</th></tr>");
+        for b in &mem.buckets {
+            html.push_str(&format!(
+                "<tr><td>{}</td><td>{}</td><td>{}</td><td><code>{}</code></td><td>{}</td></tr>",
+                esc(&b.label),
+                b.experiments,
+                b.instances,
+                esc(b.dominant_operator.as_deref().unwrap_or("—")),
+                if b.compactable { "yes" } else { "no" },
+            ));
+        }
+        html.push_str(&format!(
+            "</table>\n<p class=\"muted\">{}</p>\n",
+            esc(&mem.note)
+        ));
+    }
 
     // ---- operator table twin (accessibility) ----------------------------------
     html.push_str("<h2>Operator data (table view)</h2>\n<table><tr><th>operator</th><th>mean improvement</th><th>runs</th></tr>");

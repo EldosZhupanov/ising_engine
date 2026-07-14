@@ -13,6 +13,8 @@
 //! platform and a pitch deck is refusing to call a dataset a foundation model.
 
 use super::db::ExperimentDb;
+use super::dynamics::Trajectory;
+use super::graph::KnowledgeGraph;
 use std::collections::BTreeSet;
 use std::fs;
 use std::io;
@@ -126,6 +128,79 @@ until the milestones are met — only then does a large model have something to 
         ));
         m
     }
+
+    /// DECISION LOG — the "why" behind the platform's choices. Every fact in the
+    /// knowledge graph carries its provenance (which agent/model decided it, on
+    /// what evidence) in the `proof` field; this export compiles them into a
+    /// decision history: `subject → predicate → object IF condition | reason`.
+    /// It is the honest answer to "the reasons for each agent's action
+    /// selection", drawn from data already persisted — no re-running.
+    pub fn export_decision_log(graph: &KnowledgeGraph, dir: impl AsRef<Path>) -> io::Result<usize> {
+        let dir = dir.as_ref();
+        fs::create_dir_all(dir)?;
+        let mut facts: Vec<_> = graph.triples().iter().collect();
+        facts.sort_by(|a, b| b.confidence().total_cmp(&a.confidence()));
+        let mut out = String::from(
+            "subject\tpredicate\tobject\tcondition\tweight\tsupport\tconfidence\treason\n",
+        );
+        for t in &facts {
+            out.push_str(&format!(
+                "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
+                t.subject,
+                t.predicate,
+                t.object,
+                if t.condition.is_empty() {
+                    "-"
+                } else {
+                    &t.condition
+                },
+                t.weight,
+                t.support,
+                t.confidence(),
+                t.proof.replace(['\t', '\n'], " "),
+            ));
+        }
+        fs::write(dir.join("decision_log.tsv"), out)?;
+        Ok(facts.len())
+    }
+
+    /// SEARCH-TRAJECTORY digests — one row per STEP of the captured trajectories,
+    /// with the operator that ran and the observable state after it (best/mean
+    /// energy, entropy, replica diversity, acceptance, fraction elapsed). This
+    /// is the "solution search trajectories" corpus: how the ensemble MOVED, not
+    /// just where it ended. Callers capture (via `capture_trajectory`) and pass
+    /// `(instance_id, operator-sequence, trajectory)`; nothing is re-run here.
+    pub fn export_trajectories(
+        dir: impl AsRef<Path>,
+        captures: &[(String, Vec<String>, Trajectory)],
+    ) -> io::Result<usize> {
+        let dir = dir.as_ref();
+        fs::create_dir_all(dir)?;
+        let mut out = String::from(
+            "instance\tstep\toperator\tbest_energy\tmean_energy\tentropy\tdiversity\tacceptance\tfrac_elapsed\n",
+        );
+        let mut rows = 0usize;
+        for (inst, ops, tr) in captures {
+            for (i, s) in tr.steps.iter().enumerate() {
+                let op = ops.get(i).map(|s| s.as_str()).unwrap_or("?");
+                out.push_str(&format!(
+                    "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
+                    inst.replace(['\t', '\n'], " "),
+                    i,
+                    op,
+                    s.best_energy,
+                    s.mean_energy,
+                    s.entropy,
+                    s.diversity,
+                    s.acceptance,
+                    s.frac_elapsed,
+                ));
+                rows += 1;
+            }
+        }
+        fs::write(dir.join("trajectories.tsv"), out)?;
+        Ok(rows)
+    }
 }
 
 #[cfg(test)]
@@ -175,5 +250,69 @@ mod tests {
         // 100 examples ⇒ far from every milestone, with an explicit multiplier.
         assert!(m.contains("5000×"), "should state 500000/100 = 5000×: {m}");
         assert!(m.contains("training corpus, not a foundation model"));
+    }
+
+    #[test]
+    fn decision_log_captures_the_reason_behind_every_fact() {
+        let mut g = KnowledgeGraph::new();
+        g.observe_if(
+            "metropolis_sweep",
+            "consensus-prefer",
+            "schedule",
+            "density<0.05",
+            2.5,
+            "meta-layer: policy=+3.6, world=+1.5",
+        );
+        g.observe_if(
+            "greedy_descent",
+            "theory-explains",
+            "exploitation",
+            "density<0.05",
+            0.9,
+            "ablation: removing it worsened best by 40% ⇒ causal",
+        );
+        let dir = std::env::temp_dir().join(format!("dlog_{}", std::process::id()));
+        let _ = fs::remove_dir_all(&dir);
+        let n = FoundationDataset::export_decision_log(&g, &dir).unwrap();
+        assert_eq!(n, 2);
+        let tsv = fs::read_to_string(dir.join("decision_log.tsv")).unwrap();
+        assert!(tsv.starts_with("subject\tpredicate\tobject"));
+        assert!(tsv.contains("meta-layer: policy=+3.6"));
+        assert!(tsv.contains("ablation: removing it worsened"));
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn trajectory_export_writes_per_step_search_path() {
+        use super::super::dynamics::{StepObs, Trajectory};
+        let step = |best: f64, ent: f64, frac: f64| StepObs {
+            best_energy: best,
+            mean_energy: best + 1.0,
+            entropy: ent,
+            diversity: 0.1,
+            acceptance: 0.3,
+            frac_elapsed: frac,
+        };
+        let tr = Trajectory {
+            features: [0.0; 5],
+            steps: vec![step(-5.0, 2.0, 0.5), step(-8.0, 1.0, 1.0)],
+        };
+        let captures = vec![(
+            "G11".to_string(),
+            vec!["metropolis_sweep".to_string(), "greedy_descent".to_string()],
+            tr,
+        )];
+        let dir = std::env::temp_dir().join(format!("traj_{}", std::process::id()));
+        let _ = fs::remove_dir_all(&dir);
+        let rows = FoundationDataset::export_trajectories(&dir, &captures).unwrap();
+        assert_eq!(rows, 2);
+        let tsv = fs::read_to_string(dir.join("trajectories.tsv")).unwrap();
+        let lines: Vec<&str> = tsv.lines().collect();
+        assert_eq!(lines.len(), 3, "header + 2 steps");
+        assert!(lines[1].contains("metropolis_sweep"));
+        assert!(lines[2].contains("greedy_descent"));
+        // The search path is visible: best energy improves −5 → −8, entropy falls.
+        assert!(lines[1].contains("-5") && lines[2].contains("-8"));
+        let _ = fs::remove_dir_all(&dir);
     }
 }

@@ -185,9 +185,40 @@ impl ResearchOrchestrator {
             mem.buckets.iter().filter(|b| b.compactable).count()
         );
         if cfg.export_dataset {
-            report.dataset_rows =
-                FoundationDataset::export(&self.mgr.db, self.dir.join("dataset")).unwrap_or(0);
+            let ds = self.dir.join("dataset");
+            report.dataset_rows = FoundationDataset::export(&self.mgr.db, &ds).unwrap_or(0);
+            // Decision history: every graph fact with its provenance (which
+            // agent/model decided it, and why) → the "reasons for action".
+            let _ = FoundationDataset::export_decision_log(&self.mgr.graph, &ds);
+            // Search-trajectory digest: how the ensemble MOVED under the best
+            // schedule (best/mean energy, entropy, diversity, acceptance per
+            // step) — the "solution search trajectories" corpus.
+            if !report.campaign.best_schedule.is_empty() {
+                let schedule = Schedule {
+                    sweeps: vec![16; report.campaign.best_schedule.len()],
+                    ops: report.campaign.best_schedule.clone(),
+                    temp_hi: 4.0,
+                    temp_lo: 0.1,
+                };
+                let tr = super::dynamics::capture_trajectory(ir, registry, &schedule, 16, 12345);
+                let captures = vec![(
+                    cfg.campaign.instance_id.clone(),
+                    report.campaign.best_schedule.clone(),
+                    tr,
+                )];
+                let _ = FoundationDataset::export_trajectories(&ds, &captures);
+            }
         }
+
+        // Refresh the (enriched) dashboard now that theories + decisions landed,
+        // so the single pane reflects this tick's understanding.
+        let _ = super::dashboard::write_dashboard(
+            &self.dir,
+            &self.mgr.db,
+            &self.mgr.graph,
+            &self.mgr.archive,
+            &report.campaign.notes,
+        );
 
         Ok(report)
     }
