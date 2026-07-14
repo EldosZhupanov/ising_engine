@@ -1,5 +1,23 @@
 # Ising Engine
 
+## Constitution
+
+research/ISING_ENGINE_CONSTITUTION.md is the Single Source of Truth.
+
+It outranks this file and every blueprint.
+
+Before any architecture, algorithm, refactoring, or research work:
+align with the Constitution first.
+
+The architectural vector is presumed fixed there. Research clarifies
+details; direction changes only via the Amendment Procedure with
+reproducible evidence (Constitution §15).
+
+Architecture decisions and their rationale live in
+research/architecture/ADR/ (queryable knowledge graph:
+research/architecture/query_graph.py). Consult relevant ADRs before
+architectural work; record new architecture decisions as ADRs.
+
 ## Mission
 
 You are working on a production-grade Rust optimization engine implementing Ising/QUBO algorithms.
