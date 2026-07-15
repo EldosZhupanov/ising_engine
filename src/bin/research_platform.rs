@@ -148,11 +148,22 @@ fn main() {
             // new knowledge (autonomous task-setting) instead of round-robin.
             planner_driven: std::env::args().any(|a| a == "--planner"),
             // --executive makes the loop OBEY the Chief Scientist: it trains the
-            // models the executive says are stale and investigates the theories
-            // it flags, each tick.
+            // models the executive says are stale, investigates the theories it
+            // flags, and ROUTES idea generation to the local/cloud LLM.
             executive_driven: std::env::args().any(|a| a == "--executive"),
+            // Local tier the executive may route to: --llm, else auto-detect a
+            // running Ollama server. Cloud tier: --cloud-model (honest skip
+            // without an API key).
+            local_llm: base_cfg
+                .llm_model
+                .clone()
+                .or_else(ising_engine::engine_v2::ai_scientist::detect_local_llm),
+            cloud_llm: base_cfg.cloud_model.clone(),
             ..Default::default()
         };
+        if let Some(m) = &ocfg.local_llm {
+            println!("local LLM available for the executive to route to: {m}");
+        }
         println!(
             "Research Orchestrator: {ticks} lifecycle ticks over {} instance(s)\n",
             instances.len()

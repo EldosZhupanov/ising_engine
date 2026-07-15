@@ -71,7 +71,7 @@ pub use meta_layer::{
 };
 pub use meta_learner::{MetaLearner, OperatorGap, Rule, RuleKind};
 pub use novelty::{schedule_distance, NoveltyArchive};
-pub use orchestrator::{OrchestratorConfig, ResearchOrchestrator, TickReport};
+pub use orchestrator::{detect_local_llm, OrchestratorConfig, ResearchOrchestrator, TickReport};
 pub use planner::{PlannedTask, ResearchPlanner, TargetScore};
 pub use policy::{
     tokens_to_schedule, train_reinforce, OperatorPolicy, PolicyIdeator, ReinforceStep,

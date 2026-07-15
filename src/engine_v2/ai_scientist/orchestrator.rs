@@ -77,10 +77,17 @@ pub struct OrchestratorConfig {
     pub planner_driven: bool,
     /// When true, the loop OBEYS the Research Executive (Chief Scientist): each
     /// tick it consults the executive and ACTS on its directives — trains the
-    /// models it says are stale, investigates the theories it flags. The
-    /// executive brief is always shown on the dashboard; this makes the loop
-    /// follow it, turning the manager from an advisor into the driver.
+    /// models it says are stale, investigates the theories it flags, and ROUTES
+    /// idea generation to the local or cloud LLM as it directs. The executive
+    /// brief is always shown on the dashboard; this makes the loop follow it,
+    /// turning the manager from an advisor into the driver.
     pub executive_driven: bool,
+    /// Local LLM model (Ollama, e.g. `qwen2.5-coder:7b`) the executive may route
+    /// idea generation to. `None` ⇒ no local tier available to the executive.
+    pub local_llm: Option<String>,
+    /// Cloud LLM model the executive may escalate to (rarely). `None` ⇒ no
+    /// cloud tier.
+    pub cloud_llm: Option<String>,
 }
 
 impl Default for OrchestratorConfig {
@@ -93,8 +100,28 @@ impl Default for OrchestratorConfig {
             theory_cfg: TheoryConfig::default(),
             planner_driven: false,
             executive_driven: false,
+            local_llm: None,
+            cloud_llm: None,
         }
     }
+}
+
+/// Probe a local Ollama server (localhost:11434) and return the first available
+/// model name, or `None` if it is not running. Cheap, bounded, no dependency —
+/// so the platform routes to a local LLM only when one is genuinely up.
+pub fn detect_local_llm() -> Option<String> {
+    let out = std::process::Command::new("curl")
+        .args(["-s", "--max-time", "3", "http://localhost:11434/api/tags"])
+        .output()
+        .ok()?;
+    if !out.status.success() {
+        return None;
+    }
+    let s = String::from_utf8_lossy(&out.stdout);
+    let i = s.find("\"name\":\"")? + 8;
+    let rest = &s[i..];
+    let j = rest.find('"')?;
+    Some(rest[..j].to_string())
 }
 
 /// The conductor. Owns the persistent `CampaignManager` (and through it every
@@ -157,6 +184,10 @@ impl ResearchOrchestrator {
         report.recall = recall(&self.mgr.db, &self.mgr.graph, &sig, cfg.recall_radius).narrative;
 
         // ── the Chief Scientist directs the cycle: consult, then OBEY. ──
+        // Availability reflects reality: a tier exists only if configured.
+        self.resources.local_available = cfg.local_llm.is_some();
+        self.resources.cloud_available =
+            cfg.cloud_llm.is_some() || std::env::var("ANTHROPIC_API_KEY").is_ok();
         let brief = ResearchExecutive::new(ExecutiveConfig::default()).assess(
             &self.mgr.db,
             &self.mgr.graph,
@@ -164,7 +195,11 @@ impl ResearchOrchestrator {
         );
         let mut campaign_cfg = cfg.campaign.clone();
         let mut investigate: Vec<String> = Vec::new();
+        let (mut consult_local, mut consult_cloud) = (false, false);
         if cfg.executive_driven {
+            // Start from a clean LLM slate; the executive routes idea generation.
+            campaign_cfg.llm_model = None;
+            campaign_cfg.cloud_model = None;
             for d in &brief.decisions {
                 report
                     .directives
@@ -181,8 +216,17 @@ impl ResearchOrchestrator {
                     {
                         investigate.push(operator.clone());
                     }
+                    // Route idea generation to the tier the executive chose.
+                    Action::ConsultLocalLLM => consult_local = true,
+                    Action::ConsultCloudLLM => consult_cloud = true,
                     _ => {}
                 }
+            }
+            if consult_local {
+                campaign_cfg.llm_model = cfg.local_llm.clone();
+            }
+            if consult_cloud {
+                campaign_cfg.cloud_model = cfg.cloud_llm.clone();
             }
         }
 
@@ -196,6 +240,9 @@ impl ResearchOrchestrator {
         if campaign_cfg.shared_knowledge {
             self.resources.world_trained_at = self.mgr.db.len();
             self.resources.dynamics_trained_at = self.mgr.db.len();
+        }
+        if consult_cloud {
+            self.resources.last_cloud_consult_at = self.mgr.db.len();
         }
 
         // ── write_knowledge(): Theory Engine on the best schedule's operators,
@@ -403,6 +450,8 @@ mod tests {
             },
             planner_driven: false,
             executive_driven: false,
+            local_llm: None,
+            cloud_llm: None,
         }
     }
 
