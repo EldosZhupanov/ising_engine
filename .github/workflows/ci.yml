@@ -1,5 +1,9 @@
 name: CI
 
+# The engine's guarantees are only real if CI enforces them. This pipeline is
+# fail-fast: cheap correctness gates (fmt, clippy) run first, then the full test
+# suite, then the golden-regression gate that protects production trajectories.
+
 on:
   push:
     branches: [ main, master ]
@@ -8,17 +12,19 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
 
 jobs:
-  check:
-    name: Build & Test
+  # Fast, cheap gates. If formatting or lints fail, don't waste minutes building.
+  lint:
+    name: Format & Clippy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@nightly
-
+        with:
+          components: rustfmt, clippy
       - name: Cache cargo
         uses: actions/cache@v4
         with:
@@ -28,16 +34,57 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: Build
-        run: cargo build --all-targets
-
-      - name: Test
-        run: cargo test
-
-      - name: Clippy
-        run: cargo clippy --all-targets -- -D warnings
-
+          key: ${{ runner.os }}-cargo-lint-${{ hashFiles('**/Cargo.lock') }}
       - name: Format check
         run: cargo fmt -- --check
+      - name: Clippy (deny warnings)
+        run: cargo clippy --all-targets -- -D warnings
+
+  # Full build + test. Keeps every binary target compilable (--all-targets).
+  test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@nightly
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.lock') }}
+      - name: Build (all targets — no binary may break)
+        run: cargo build --all-targets
+      - name: Test (full suite)
+        run: cargo test --all-targets
+
+  # The correctness firewall: production trajectories and cross-backend
+  # bit-identity must never drift. This gate is non-negotiable (CLAUDE.md §4, §9).
+  regression:
+    name: Golden Regression & Bit-Identity
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@nightly
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.lock') }}
+      - name: Golden regression (production trajectories frozen)
+        run: cargo test --release --test test_regression_golden
+      - name: Cross-backend bit-identity (SparseBitSlice vs oracle)
+        run: cargo test --release --test test_sparse_bitslice_verification
