@@ -290,6 +290,21 @@ fn main() {
         families.push(("maxcut(ref)".into(), maxcut));
     }
 
+    // Synthesized SAT/TSP families (the families-frontend generators) as cold
+    // transfer targets — genuinely out-of-family, since the policy trained ONLY
+    // on MaxCut. Always available (no benchmark files needed), so the study
+    // covers SAT/TSP even on a bare checkout.
+    use ising_engine::engine_v2::families::{max2sat_instance, tsp_instance};
+    let synth = per_family.clamp(1, 4);
+    let tsp: Vec<(String, ProblemIR)> = (0..synth as u64)
+        .map(|s| tsp_instance(7, 1000 + s))
+        .collect();
+    families.push(("tsp(synth)".into(), tsp));
+    let sat: Vec<(String, ProblemIR)> = (0..synth as u64)
+        .map(|s| max2sat_instance(30, 120, 2000 + s))
+        .collect();
+    families.push(("max2sat(synth)".into(), sat));
+
     if families.is_empty() {
         eprintln!("no benchmark family data found under {data}; nothing to test");
         exit(1);
