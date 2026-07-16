@@ -14,6 +14,7 @@ use super::super::ir::ProblemIR;
 use super::super::plan::{Backend, Phase, Plan, PlanStep};
 use super::super::registry::OperatorRegistry;
 use super::super::runtime::Runtime;
+use super::dynamics::{DynamicsModel, EarlyStopController, PlateauAction};
 use std::thread;
 
 /// One reproducible experiment to run: a schedule plus its execution params.
@@ -81,17 +82,57 @@ fn lower(ir: &ProblemIR, task: &ExperimentTask) -> Plan {
     }
 }
 
+/// Opt-in early-stopping for the executor: attach a Dynamics-model
+/// [`EarlyStopController`] to EVERY run, so a task that has plateaued stops (or
+/// switches operator) instead of burning its full budget. Deterministic and
+/// replay-safe (the controller is a pure function of the run's own sensors); a
+/// `RuntimeExecutor` without this behaves EXACTLY as before (bit-identical).
+#[derive(Debug, Clone)]
+pub struct EarlyStopConfig {
+    pub model: DynamicsModel,
+    /// Stop/switch once the predicted remaining improvement falls below this.
+    pub epsilon: f64,
+    /// …but only after this fraction of the operator's budget has elapsed.
+    pub min_frac: f64,
+    pub action: PlateauAction,
+}
+
+impl EarlyStopConfig {
+    /// Sensible defaults: stop the run once < 0.5% further improvement is
+    /// predicted, after at least half the budget.
+    pub fn new(model: DynamicsModel) -> Self {
+        Self {
+            model,
+            epsilon: 0.005,
+            min_frac: 0.5,
+            action: PlateauAction::Stop,
+        }
+    }
+}
+
 /// Run a single task through the Runtime and measure it. Deterministic in
-/// `task.seed`; touches only read-only core components.
+/// `task.seed`; touches only read-only core components. When `early` is set, an
+/// opt-in Dynamics early-stop controller is attached (a fresh one per run, since
+/// it accumulates the run's own best-history).
 fn run_one(
     ir: &ProblemIR,
     registry: &OperatorRegistry,
     task: &ExperimentTask,
+    early: Option<&EarlyStopConfig>,
 ) -> ExperimentOutcome {
     let plan = lower(ir, task);
     let init = vec![0u8; ir.n];
     let mut state = boxed_state(ir, plan.backend, task.num_replicas, &init);
     let mut rt = Runtime::new(RunContext::new(task.seed), &plan);
+    if let Some(cfg) = early {
+        rt = rt.with_controller(Box::new(EarlyStopController::new(
+            cfg.model.clone(),
+            ir,
+            cfg.epsilon,
+            cfg.min_frac,
+            cfg.action,
+        )));
+    }
     match rt.run(&plan, state.as_mut(), registry, ir) {
         Ok(rec) => {
             let work: f64 = rt.context().profiler.entries().map(|(_, e)| e.work).sum();
@@ -114,12 +155,16 @@ fn run_one(
 /// Local executor that distributes a batch across `threads` OS threads.
 pub struct RuntimeExecutor {
     pub threads: usize,
+    /// Opt-in Dynamics early-stop applied to every run. `None` ⇒ full budget,
+    /// bit-identical to the historical executor.
+    early_stop: Option<EarlyStopConfig>,
 }
 
 impl RuntimeExecutor {
     pub fn new(threads: usize) -> Self {
         Self {
             threads: threads.max(1),
+            early_stop: None,
         }
     }
 
@@ -130,6 +175,36 @@ impl RuntimeExecutor {
                 .map(|n| n.get())
                 .unwrap_or(1),
         )
+    }
+
+    /// Enable opt-in Dynamics early-stopping on every run with default
+    /// thresholds. Changes trajectories BY DESIGN (that is the point) — so it is
+    /// opt-in and never the default; the plain executor stays bit-identical.
+    pub fn with_early_stop_default(mut self, model: DynamicsModel) -> Self {
+        self.early_stop = Some(EarlyStopConfig::new(model));
+        self
+    }
+
+    /// Enable opt-in Dynamics early-stopping with explicit thresholds.
+    pub fn with_early_stop(
+        mut self,
+        model: DynamicsModel,
+        epsilon: f64,
+        min_frac: f64,
+        action: PlateauAction,
+    ) -> Self {
+        self.early_stop = Some(EarlyStopConfig {
+            model,
+            epsilon,
+            min_frac,
+            action,
+        });
+        self
+    }
+
+    /// Whether opt-in early-stopping is active.
+    pub fn early_stopping(&self) -> bool {
+        self.early_stop.is_some()
     }
 }
 
@@ -145,6 +220,7 @@ impl BatchExecutor for RuntimeExecutor {
         }
         let nthreads = self.threads.min(tasks.len()).max(1);
         let chunk = tasks.len().div_ceil(nthreads);
+        let early = self.early_stop.as_ref();
         // Each thread handles a contiguous chunk; concatenating in chunk order
         // reproduces the serial ordering exactly.
         let chunk_results: Vec<Vec<ExperimentOutcome>> = thread::scope(|s| {
@@ -153,7 +229,7 @@ impl BatchExecutor for RuntimeExecutor {
                 .map(|c| {
                     s.spawn(move || {
                         c.iter()
-                            .map(|t| run_one(ir, registry, t))
+                            .map(|t| run_one(ir, registry, t, early))
                             .collect::<Vec<_>>()
                     })
                 })
@@ -221,5 +297,45 @@ mod tests {
             assert_eq!(ir.energy(&o.best_state), o.score, "seed {}", t.seed);
             assert!(o.work > 0.0);
         }
+    }
+
+    #[test]
+    fn early_stop_executor_stays_deterministic_and_valid() {
+        use super::super::dynamics::train_on_instances;
+        let ir = ir7();
+        let reg = OperatorRegistry::standard();
+        // Train a small Dynamics model on a couple of long schedules.
+        let train_sched = Schedule {
+            ops: vec!["metropolis_sweep".into(), "greedy_descent".into()],
+            sweeps: vec![20, 20],
+            temp_hi: 4.0,
+            temp_lo: 0.1,
+        };
+        let Some(model) = train_on_instances(&[&ir], &reg, &train_sched, 16, &[1, 2, 3], 1e-4)
+        else {
+            return; // honest skip if there is too little data to fit
+        };
+
+        let tasks: Vec<ExperimentTask> = (0..8).map(task).collect();
+        // Opt-in early-stop, serial vs parallel: attaching a controller must not
+        // break the executor's determinism guarantee (ADR-0004).
+        let serial = RuntimeExecutor::new(1)
+            .with_early_stop(model.clone(), 0.01, 0.5, PlateauAction::Stop)
+            .run_batch(&ir, &reg, &tasks);
+        let parallel = RuntimeExecutor::new(4)
+            .with_early_stop(model, 0.01, 0.5, PlateauAction::Stop)
+            .run_batch(&ir, &reg, &tasks);
+        assert_eq!(serial.len(), tasks.len());
+        for (a, b) in serial.iter().zip(&parallel) {
+            assert_eq!(a.score, b.score, "early-stop broke thread determinism");
+            assert_eq!(a.best_state, b.best_state);
+        }
+        // Results remain VALID: the canonical re-score matches the reported score.
+        for (t, o) in tasks.iter().zip(&serial) {
+            assert_eq!(ir.energy(&o.best_state), o.score, "seed {}", t.seed);
+        }
+        // The plain executor (no early-stop) is unchanged — the opt-in never
+        // touches the default path.
+        assert!(!RuntimeExecutor::new(1).early_stopping());
     }
 }

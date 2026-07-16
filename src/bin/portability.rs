@@ -11,6 +11,7 @@
 //! two references at identical seeds / replicas / budget:
 //!   - default: `DecisionEngine::default_plan` (rule-based, known weak);
 //!   - random:  a same-length operator sequence from the capability pool.
+//!
 //! Lower raw Runtime energy is better (the family sign conventions are already
 //! baked into the bridge). Transfer is claimed ONLY to the extent the table
 //! shows it — a family where the policy does not beat baselines is reported as

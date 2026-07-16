@@ -13,9 +13,10 @@
 //! canonical scorer, Operator API) is read-only; this binary only orchestrates.
 
 use ising_engine::engine_v2::ai_scientist::{
-    write_evaluation, CampaignConfig, CampaignManager, LabConfig, MetaLearner, RuntimeExecutor,
+    train_on_instances, write_evaluation, CampaignConfig, CampaignManager, LabConfig, MetaLearner,
+    RuntimeExecutor,
 };
-use ising_engine::engine_v2::evolution::Evolver;
+use ising_engine::engine_v2::evolution::{Evolver, Schedule};
 use ising_engine::engine_v2::frontend::rudy_maxcut_ir;
 use ising_engine::engine_v2::registry::OperatorRegistry;
 use std::process::exit;
@@ -93,7 +94,37 @@ fn main() {
 
     let reg = OperatorRegistry::standard();
     let evolver = Evolver::new(Default::default());
-    let executor = RuntimeExecutor::auto();
+    let mut executor = RuntimeExecutor::auto();
+    // --early-stop (opt-in): attach a Dynamics early-stop controller to EVERY
+    // run, so plateaued tasks stop instead of burning their full budget. We
+    // bootstrap a Dynamics model from the first instance; if there is too little
+    // trajectory data to fit one, we skip honestly rather than pretend.
+    if std::env::args().any(|a| a == "--early-stop") {
+        if let Some((_, ir0)) = instances.first() {
+            let boot = Schedule {
+                ops: vec!["metropolis_sweep".into(), "greedy_descent".into()],
+                sweeps: vec![24, 24],
+                temp_hi: 4.0,
+                temp_lo: 0.1,
+            };
+            match train_on_instances(
+                &[ir0],
+                &reg,
+                &boot,
+                base_cfg.lab.num_replicas.max(2),
+                &[1, 2, 3],
+                1e-4,
+            ) {
+                Some(model) => {
+                    executor = executor.with_early_stop_default(model);
+                    println!("early-stop: Dynamics controller active on every run (opt-in)");
+                }
+                None => println!(
+                    "early-stop requested but too little trajectory data to fit a Dynamics model — skipping honestly"
+                ),
+            }
+        }
+    }
 
     // --render-dashboard just (re)generates the dashboard from the persisted
     // stores — no experiments run — and prints its path. Use it to view the

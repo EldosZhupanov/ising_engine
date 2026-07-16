@@ -10,6 +10,7 @@
 //!   - "random"   — a uniformly sampled operator sequence of the SAME length
 //!     as the policy's, from the same capability pool (isolates "did it learn
 //!     a good CHOICE/ORDER" from "does more compute help").
+//!
 //! All three get the same seed list, replica count, and per-operator sweep
 //! budget. No claim beyond what the table shows (repository rule).
 //!
