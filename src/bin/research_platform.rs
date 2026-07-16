@@ -257,6 +257,112 @@ fn main() {
         return;
     }
 
+    // --service runs the orchestrator as a persistent, budget-capped loop (the
+    // planner picks its own tasks). Caps: --max-ticks / --max-experiments /
+    // --max-wall-secs (0 = uncapped on that axis). Interruptible & resumable —
+    // everything persists after every tick.
+    if std::env::args().any(|a| a == "--service") {
+        use ising_engine::engine_v2::ai_scientist::{
+            OrchestratorConfig, ResearchOrchestrator, ServiceBudget,
+        };
+        let mut orch = ResearchOrchestrator::open(&dir, report_every).unwrap_or_else(|e| {
+            eprintln!("cannot open platform dir {dir}: {e}");
+            exit(1);
+        });
+        let ocfg = OrchestratorConfig {
+            campaign: base_cfg.clone(),
+            // A service is autonomous by default: the planner sets its own tasks
+            // unless --no-planner forces round-robin.
+            planner_driven: !std::env::args().any(|a| a == "--no-planner"),
+            executive_driven: std::env::args().any(|a| a == "--executive"),
+            local_llm: base_cfg
+                .llm_model
+                .clone()
+                .or_else(ising_engine::engine_v2::ai_scientist::detect_local_llm),
+            cloud_llm: base_cfg.cloud_model.clone(),
+            ..Default::default()
+        };
+        let budget = ServiceBudget {
+            max_ticks: argn("--max-ticks", 0),
+            max_experiments: argn("--max-experiments", 0),
+            max_wall_secs: arg("--max-wall-secs")
+                .and_then(|s| s.parse().ok())
+                .unwrap_or(0),
+        };
+        if budget.max_ticks == 0 && budget.max_experiments == 0 && budget.max_wall_secs == 0 {
+            eprintln!(
+                "--service needs at least one cap: --max-ticks N / --max-experiments N / --max-wall-secs N"
+            );
+            exit(2);
+        }
+        println!(
+            "Research service: budget ticks={} experiments={} wall_secs={} over {} instance(s)\n",
+            budget.max_ticks,
+            budget.max_experiments,
+            budget.max_wall_secs,
+            instances.len()
+        );
+        let reports = orch
+            .run_service(&instances, &reg, &evolver, &executor, &ocfg, budget)
+            .unwrap_or_else(|e| {
+                eprintln!("service failed: {e}");
+                exit(1);
+            });
+        println!(
+            "service ran {} ticks; platform state: {} experiments, {} knowledge facts",
+            reports.len(),
+            orch.manager().db.len(),
+            orch.manager().graph.len()
+        );
+        return;
+    }
+
+    // --investigate <operator> runs a MULTI-INSTANCE Theory-Engine ablation of
+    // one operator across every loaded instance, aggregating the trials into a
+    // single theory (Popperian confidence grows with cross-instance survival),
+    // and publishes it (supported OR refuted — refutations are kept).
+    if let Some(op) = arg("--investigate") {
+        use ising_engine::engine_v2::ai_scientist::{
+            ResearchOrchestrator, TheoryConfig, TheoryStatus,
+        };
+        let mut orch = ResearchOrchestrator::open(&dir, report_every).unwrap_or_else(|e| {
+            eprintln!("cannot open platform dir {dir}: {e}");
+            exit(1);
+        });
+        let nseeds = argn("--inv-seeds", 3).max(1) as u64;
+        let seeds: Vec<u64> = (0..nseeds)
+            .map(|i| base_cfg.base_seed.wrapping_add(i + 1))
+            .collect();
+        println!(
+            "Investigating '{op}' across {} instance(s), {} seeds each…",
+            instances.len(),
+            seeds.len()
+        );
+        match orch.investigate_operator(&instances, &reg, &op, TheoryConfig::default(), &seeds) {
+            Some(theory) => {
+                println!("  status     : {:?}", theory.status);
+                println!(
+                    "  trials     : {} (survived {})",
+                    theory.trials, theory.survived
+                );
+                println!("  confidence : {:.2}", theory.confidence);
+                println!("  explanation: {}", theory.explanation);
+                match theory.status {
+                    TheoryStatus::Supported => {
+                        println!("  → published: the mechanism survived ablation across instances")
+                    }
+                    _ => println!("  → recorded as a refutation (kept, not discarded)"),
+                }
+            }
+            None => println!("  no theory produced (no instances?)"),
+        }
+        println!(
+            "platform state: {} knowledge facts",
+            orch.manager().graph.len()
+        );
+        return;
+    }
+
     let mut mgr = CampaignManager::open(&dir, report_every).unwrap_or_else(|e| {
         eprintln!("cannot open platform dir {dir}: {e}");
         exit(1);

@@ -393,6 +393,39 @@ impl ResearchOrchestrator {
         Ok(report)
     }
 
+    /// Choose the next instance to study: the Planner picks the least-known
+    /// instance by expected new knowledge; otherwise cycle round-robin.
+    fn choose_instance(
+        &self,
+        instances: &[(String, ProblemIR)],
+        cfg: &OrchestratorConfig,
+        tick: usize,
+    ) -> usize {
+        if cfg.planner_driven {
+            let sigs: Vec<(String, InstanceSignature)> = instances
+                .iter()
+                .map(|(id, ir)| {
+                    let s = DecisionEngine::analyze(ir);
+                    (
+                        id.clone(),
+                        InstanceSignature {
+                            n: s.n,
+                            density: s.density,
+                            clustering: s.clustering,
+                            mean_degree: s.mean_degree,
+                            degree_cv: s.degree_cv,
+                        },
+                    )
+                })
+                .collect();
+            super::planner::ResearchPlanner::default()
+                .next_target(&sigs, &self.mgr.db)
+                .unwrap_or(tick % instances.len())
+        } else {
+            tick % instances.len()
+        }
+    }
+
     /// Run the lifecycle for `ticks` iterations, cycling through `instances`
     /// (each a `(instance_id, ir)`). This is the platform's main loop.
     pub fn run(
@@ -406,31 +439,7 @@ impl ResearchOrchestrator {
     ) -> std::io::Result<Vec<TickReport>> {
         let mut reports = Vec::new();
         for t in 0..ticks {
-            // The loop sets its own task: the Planner picks the least-known
-            // instance by expected new knowledge; otherwise cycle round-robin.
-            let chosen = if cfg.planner_driven {
-                let sigs: Vec<(String, InstanceSignature)> = instances
-                    .iter()
-                    .map(|(id, ir)| {
-                        let s = DecisionEngine::analyze(ir);
-                        (
-                            id.clone(),
-                            InstanceSignature {
-                                n: s.n,
-                                density: s.density,
-                                clustering: s.clustering,
-                                mean_degree: s.mean_degree,
-                                degree_cv: s.degree_cv,
-                            },
-                        )
-                    })
-                    .collect();
-                super::planner::ResearchPlanner::default()
-                    .next_target(&sigs, &self.mgr.db)
-                    .unwrap_or(t % instances.len())
-            } else {
-                t % instances.len()
-            };
+            let chosen = self.choose_instance(instances, cfg, t);
             let (id, ir) = &instances[chosen];
             let mut tick_cfg = cfg.clone();
             tick_cfg.campaign.instance_id = id.clone();
@@ -451,6 +460,107 @@ impl ResearchOrchestrator {
         }
         Ok(reports)
     }
+
+    /// Run as a persistent SERVICE: keep ticking (planner-picking its own tasks)
+    /// until any budget cap is hit — a tick count, an experiment count, or a wall
+    /// clock. `0` on a field means "no cap on this axis"; a service with all
+    /// three zero would run until the Monitor halts it or the agent cap trips, so
+    /// callers should always set at least one. Everything persists after each
+    /// tick (via the campaign), so the service is interruptible and resumable.
+    ///
+    /// The wall-clock cap is a STOPPING condition only — it never feeds any model
+    /// input or seed, so per-experiment determinism (ADR-0004) is unaffected;
+    /// only the NUMBER of ticks a run completes may vary with machine speed.
+    pub fn run_service(
+        &mut self,
+        instances: &[(String, ProblemIR)],
+        registry: &OperatorRegistry,
+        evolver: &Evolver,
+        executor: &dyn BatchExecutor,
+        cfg: &OrchestratorConfig,
+        budget: ServiceBudget,
+    ) -> std::io::Result<Vec<TickReport>> {
+        let mut reports = Vec::new();
+        let start = std::time::Instant::now();
+        let mut t = 0usize;
+        loop {
+            if budget.max_ticks != 0 && t >= budget.max_ticks {
+                break;
+            }
+            if budget.max_experiments != 0 && self.mgr.db.len() >= budget.max_experiments {
+                break;
+            }
+            if budget.max_wall_secs != 0 && start.elapsed().as_secs() >= budget.max_wall_secs {
+                break;
+            }
+            let chosen = self.choose_instance(instances, cfg, t);
+            let (id, ir) = &instances[chosen];
+            let mut tick_cfg = cfg.clone();
+            tick_cfg.campaign.instance_id = id.clone();
+            reports.push(self.tick(ir, registry, evolver, executor, &tick_cfg)?);
+            t += 1;
+
+            if cfg.monitor {
+                let health = self.health();
+                if !health.healthy() {
+                    if let Some(last) = reports.last_mut() {
+                        last.directives
+                            .push(format!("MONITOR HALT — {}", health.summary()));
+                    }
+                    break;
+                }
+            }
+        }
+        Ok(reports)
+    }
+
+    /// Multi-instance theory INVESTIGATION: run the Theory Engine's ablation of
+    /// `operator` (a solo-operator schedule) across EVERY given instance and
+    /// aggregate the trials into one theory. This is how a mechanism earns real
+    /// Popperian confidence — a single-instance ablation is weak, but surviving
+    /// refutation on many instances is strong. The resulting theory (supported OR
+    /// refuted) is published into the graph. Returns the aggregated theory.
+    pub fn investigate_operator(
+        &mut self,
+        instances: &[(String, ProblemIR)],
+        registry: &OperatorRegistry,
+        operator: &str,
+        theory_cfg: TheoryConfig,
+        seeds: &[u64],
+    ) -> Option<Theory> {
+        if instances.is_empty() {
+            return None;
+        }
+        let irs: Vec<&ProblemIR> = instances.iter().map(|(_, ir)| ir).collect();
+        let schedule = Schedule {
+            ops: vec![operator.to_string()],
+            sweeps: vec![16],
+            temp_hi: 4.0,
+            temp_lo: 0.1,
+        };
+        // Condition label from the first instance's regime band (most --family /
+        // --file batches share a regime); honest and consistent with the buckets.
+        let d0 = DecisionEngine::analyze(&instances[0].1).density;
+        let condition = if d0 < 0.05 {
+            "density<0.05"
+        } else {
+            "density>=0.05"
+        };
+        let engine = TheoryEngine::new(theory_cfg);
+        let theory = engine.investigate(&irs, registry, &schedule, operator, condition, seeds)?;
+        engine.publish(&theory, &mut self.mgr.graph);
+        let _ = self.mgr.graph.save(self.dir.join("knowledge_graph.txt"));
+        Some(theory)
+    }
+}
+
+/// Budget caps for a persistent [`ResearchOrchestrator::run_service`] loop. A
+/// field set to `0` imposes no cap on that axis.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct ServiceBudget {
+    pub max_ticks: usize,
+    pub max_experiments: usize,
+    pub max_wall_secs: u64,
 }
 
 #[cfg(test)]
@@ -579,6 +689,84 @@ mod tests {
         assert!(
             studied.contains("ringA") && studied.contains("ringB"),
             "planner should have studied BOTH instances, got {studied:?}"
+        );
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn service_loop_stops_at_the_experiment_budget() {
+        let dir = std::env::temp_dir().join(format!("orch_svc_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let reg = OperatorRegistry::standard();
+        let evolver = Evolver::new(Default::default());
+        let exec = RuntimeExecutor::new(2);
+
+        let mut cfg = small_orch_cfg();
+        cfg.theory = false; // fast; the budget mechanics are the point
+
+        let insts = vec![("ring16".to_string(), ring(16))];
+        let mut orch = ResearchOrchestrator::open(&dir, 10).unwrap();
+        // Cap by experiments: stop once the DB reaches >= 20 records.
+        let budget = ServiceBudget {
+            max_experiments: 20,
+            ..Default::default()
+        };
+        let reports = orch
+            .run_service(&insts, &reg, &evolver, &exec, &cfg, budget)
+            .unwrap();
+        assert!(
+            !reports.is_empty(),
+            "the service must run at least one tick"
+        );
+        assert!(
+            orch.manager().db.len() >= 20,
+            "service must run until the experiment budget is met: {}",
+            orch.manager().db.len()
+        );
+        // It must STOP shortly after crossing the budget, not run forever.
+        assert!(
+            reports.len() <= 20,
+            "service ran too long past its budget: {} ticks",
+            reports.len()
+        );
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn multi_instance_investigate_aggregates_trials_across_instances() {
+        let dir = std::env::temp_dir().join(format!("orch_inv_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let reg = OperatorRegistry::standard();
+
+        let insts = vec![
+            ("ringA".to_string(), ring(16)),
+            ("ringB".to_string(), ring(20)),
+            ("ringC".to_string(), ring(24)),
+        ];
+        let mut orch = ResearchOrchestrator::open(&dir, 10).unwrap();
+        let tcfg = TheoryConfig {
+            num_replicas: 8,
+            min_degradation: 0.005,
+        };
+        let theory = orch
+            .investigate_operator(&insts, &reg, "metropolis_sweep", tcfg, &[7, 8])
+            .expect("a theory should be produced across instances");
+        // Aggregation: trials span all three instances × two seeds each, so more
+        // than a single-instance ablation would give — that is what earns
+        // Popperian confidence.
+        assert!(
+            theory.trials >= 3,
+            "multi-instance investigate must aggregate trials: {}",
+            theory.trials
+        );
+        // The theory (supported or refuted) was published to the graph.
+        assert!(
+            orch.manager()
+                .graph
+                .triples()
+                .iter()
+                .any(|t| t.subject == "metropolis_sweep"),
+            "the investigated theory must be published"
         );
         let _ = std::fs::remove_dir_all(&dir);
     }

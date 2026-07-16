@@ -75,7 +75,9 @@ pub use meta_learner::{MetaLearner, OperatorGap, Rule, RuleKind};
 pub use model_registry::{ModelKind, ModelRegistry, ModelSnapshot};
 pub use monitor::{HealthCheck, HealthReport, HealthStatus, Monitor, MonitorConfig};
 pub use novelty::{schedule_distance, NoveltyArchive};
-pub use orchestrator::{detect_local_llm, OrchestratorConfig, ResearchOrchestrator, TickReport};
+pub use orchestrator::{
+    detect_local_llm, OrchestratorConfig, ResearchOrchestrator, ServiceBudget, TickReport,
+};
 pub use planner::{PlannedTask, ResearchPlanner, TargetScore};
 pub use policy::{
     tokens_to_schedule, train_reinforce, OperatorPolicy, PolicyIdeator, ReinforceStep,
