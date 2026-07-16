@@ -34,14 +34,14 @@ Legend: 🟢 Completed · 🟡 In Progress · 🔵 Planned · 🔬 Research · �
 | 4 | Knowledge system (append-only DB, Knowledge Graph, Meta-Learner) | 🟢 | 90% |
 | 5 | AI Scientist (multi-agent Lab, LLM ideator, novelty, reports) | 🟢 | 90% |
 | 6 | **Autonomous Research Platform** (Campaign Manager + all above) | 🟢 | 95% |
-| 6b | Learned models (Predictor, Policy, Dynamics, World) | 🟡 | 80% |
+| 6b | Learned models (Predictor, Policy, Dynamics, World) + wiring | 🟢 | 90% |
 | 6c | Meta-Learning Layer (cross-model consensus) | 🟢 | 85% |
 | 6d | Curiosity Engine (active learning) | 🟢 | 80% |
-| 7 | **Research OS / Operations** (Orchestrator, Planner, Executive) | 🟡 | 60% |
-| 8 | **Knowledge OS** (Theory Engine, Scientific Memory, Dataset) | 🟡 | 70% |
-| 9 | Problem families (MaxCut/BQP/QPLIB + TSP/SAT) | 🟡 | 50% |
+| 7 | **Research OS / Operations** (Orchestrator, Planner, Executive, Registry, Monitor, Service) | 🟢 | 90% |
+| 8 | **Knowledge OS** (Theory Engine + multi-instance investigate, Memory, Dataset) | 🟢 | 80% |
+| 9 | Problem families (MaxCut/BQP/QPLIB + runnable TSP/SAT) | 🟡 | 75% |
 | 10 | Dashboard (single pane, executive-driven) | 🟢 | 90% |
-| 11 | Foundation Dataset → **Research Foundation Model** | 🔬 | 8% |
+| 11 | Foundation Dataset → **Research Foundation Model** | 🔬 | 10% |
 
 ---
 
@@ -227,15 +227,32 @@ bias over-AVOIDed ensemble operators (**now fixed** via warm-start).
 
 ---
 
-## Next 10 (highest priority)
+## Done — the prior "Next 10" (all shipped)
 
-1. Wire **World-model filtering** into ideation (rank Qwen/Evolution candidates, run top few).
-2. Wire **Dynamics early-stop** into the executor's every-run path (bounded, opt-in).
-3. **Per-situation model selection** in the Executive (choose the model that fits).
-4. Add **SAT/TSP as runnable platform research targets** (a families frontend + campaign path).
-5. **Model Registry** (Stage 7): versioned Policy/World/Dynamics/Predictor + lineage.
-6. **Monitor** (Stage 7): continuous golden/replay/ledger + model-health gates that pause the loop.
-7. **Cross-family transfer study** at scale: train on MaxCut, evaluate cold on BQP/QPLIB/SAT.
-8. **Persistent Orchestrator service** + job scheduler (24/7 autonomous cadence, budget-accounted).
-9. **Grow the Foundation Dataset** toward 500k via Curiosity-driven campaigns; re-measure transfer.
-10. **Warm-start audit + confidence** for theories: multi-instance `investigate` to earn real Popperian confidence.
+All ten prior-priority tasks are implemented, tested, and committed on
+`feat/solver-research-upgrades` (additive / opt-in throughout — the golden
+regression and cross-backend bit-identity firewall pass unchanged):
+
+1. ✅ **World-model filtering** in ideation (`WorldFilteredIdeator`: imagine → rank → run top few).
+2. ✅ **Dynamics early-stop** on the executor's every-run path (opt-in `RuntimeExecutor::with_early_stop`, `--early-stop`).
+3. ✅ **Per-situation model selection** in the Executive (`Action::UseModel`, regime + staleness conditioned).
+4. ✅ **SAT/TSP runnable** (`families::{tsp_instance,max2sat_instance}` + `--family tsp|max2sat`; verified end-to-end).
+5. ✅ **Model Registry** (`model_registry.rs`: versioned weights + lineage; snapshots each campaign/generation).
+6. ✅ **Monitor** (`monitor.rs`: health gates; halts the loop on a broken append-only invariant).
+7. ✅ **Cross-family transfer at scale** (portability now covers TSP/SAT; MaxCut-policy 12/15 non-MaxCut on the 18,570-exp DB).
+8. ✅ **Persistent budget-capped service** (`run_service` + `ServiceBudget`; `--service --max-ticks/-experiments/-wall-secs`).
+9. ✅ **Foundation Dataset growth observable** (`--dataset`: export + honest scale-gap manifest; growth via the curiosity service).
+10. ✅ **Multi-instance theory `investigate`** (`investigate_operator` + `--investigate <op>`; aggregates ablation trials → Popperian confidence).
+
+## Next 10 (new priorities)
+
+1. **Run the growth campaign**: a long curiosity-driven `--service` toward 500k experiments; re-measure transfer as it grows.
+2. **Distributed `BatchExecutor`** behind the same trait (multi-machine), for the growth campaign's throughput.
+3. **Model Registry consumption**: load the latest snapshot to warm-start training / A-B model versions on held-out instances.
+4. **Monitor → live gate** in the service loop with alerting + auto-pause thresholds tuned on real runs.
+5. **Reconstruct-and-serve models** from the registry (a `--serve-model` path) so a trained Policy/World is reusable without retraining.
+6. **SAT/TSP knowledge**: run campaigns on the new families and mine family-specific rules; add k>2 SAT gadgets, job-shop scheduling.
+7. **AVX/SIMD field ledger** in `SparseBitSlice` (the one remaining production-shaped throughput win).
+8. **World-filtered ideation on by default** once its rank-correlation is validated per-family (currently opt-in with shared-knowledge).
+9. **Theory confidence at scale**: `--investigate` across the full G-Set to move key operators from support≈1 to durable confidence.
+10. **Foundation-model readiness gate**: when the dataset crosses 500k, re-evaluate whether a shared GNN/Transformer representation is finally earned.
