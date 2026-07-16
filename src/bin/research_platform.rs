@@ -112,8 +112,8 @@ fn main() {
             local_available: true,
             ..Default::default()
         };
-        let brief =
-            ResearchExecutive::new(Default::default()).assess(&mgr.db, &mgr.graph, &resources);
+        let brief = ResearchExecutive::new(Default::default())
+            .assess(&mgr.db, &mgr.graph, &resources, None);
         match write_dashboard_with(&dir, &mgr.db, &mgr.graph, &mgr.archive, &[], Some(&brief)) {
             Ok(p) => {
                 let abs = std::fs::canonicalize(&p).unwrap_or(p);

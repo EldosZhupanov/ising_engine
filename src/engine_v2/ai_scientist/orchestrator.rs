@@ -33,6 +33,7 @@ use super::dataset::FoundationDataset;
 use super::executive::{Action, ExecutiveConfig, ResearchExecutive, ResourceState};
 use super::executor::BatchExecutor;
 use super::memory_os::{recall, MemoryManager};
+use super::monitor::{HealthReport, Monitor, MonitorConfig};
 use super::predictor::InstanceSignature;
 use super::theory::{Theory, TheoryConfig, TheoryEngine, TheoryStatus};
 use std::path::PathBuf;
@@ -54,6 +55,8 @@ pub struct TickReport {
     pub dataset_rows: usize,
     /// A one-line memory-manager health summary.
     pub memory: String,
+    /// The Monitor's one-line health summary for this tick (gates the loop).
+    pub health: String,
     /// The Chief Scientist's directives this tick (and, when executive-driven,
     /// what the loop actually did about them).
     pub directives: Vec<String>,
@@ -75,6 +78,10 @@ pub struct OrchestratorConfig {
     /// expected new knowledge (the loop sets its own task) instead of cycling
     /// the instance list round-robin.
     pub planner_driven: bool,
+    /// When true (default), the Monitor runs health gates each tick and PAUSES
+    /// the loop if a hard invariant fails (e.g. the append-only DB is corrupted).
+    /// Warnings are surfaced but never halt the loop.
+    pub monitor: bool,
     /// When true, the loop OBEYS the Research Executive (Chief Scientist): each
     /// tick it consults the executive and ACTS on its directives — trains the
     /// models it says are stale, investigates the theories it flags, and ROUTES
@@ -98,6 +105,7 @@ impl Default for OrchestratorConfig {
             export_dataset: true,
             recall_radius: 0.15,
             theory_cfg: TheoryConfig::default(),
+            monitor: true,
             planner_driven: false,
             executive_driven: false,
             local_llm: None,
@@ -156,6 +164,12 @@ impl ResearchOrchestrator {
         &self.mgr
     }
 
+    /// A cheap Monitor pass over the current stores — the health gates the loop
+    /// consults each tick. `healthy()` is false iff a hard invariant failed.
+    pub fn health(&self) -> HealthReport {
+        Monitor::new(MonitorConfig::default()).check(&self.mgr.db, &self.mgr.graph)
+    }
+
     /// One full lifecycle tick on one instance.
     pub fn tick(
         &mut self,
@@ -192,6 +206,7 @@ impl ResearchOrchestrator {
             &self.mgr.db,
             &self.mgr.graph,
             &self.resources,
+            Some(&sig),
         );
         let mut campaign_cfg = cfg.campaign.clone();
         let mut investigate: Vec<String> = Vec::new();
@@ -219,6 +234,19 @@ impl ResearchOrchestrator {
                     // Route idea generation to the tier the executive chose.
                     Action::ConsultLocalLLM => consult_local = true,
                     Action::ConsultCloudLLM => consult_cloud = true,
+                    // Per-situation model selection: record which model the loop
+                    // trusts for this regime this tick, provenance-stamped and
+                    // append-only, so its accuracy can be scored over time.
+                    Action::UseModel { model, regime } => {
+                        self.mgr.graph.observe_if(
+                            model,
+                            "model-selected-in",
+                            regime,
+                            "",
+                            1.0,
+                            "executive",
+                        );
+                    }
                     _ => {}
                 }
             }
@@ -238,8 +266,10 @@ impl ResearchOrchestrator {
         // iff the shared-knowledge path ran. Advance the executive's watermarks.
         self.resources.predictor_trained_at = self.mgr.db.len();
         if campaign_cfg.shared_knowledge {
+            // The shared-knowledge path (re)trained Policy + World + Dynamics.
             self.resources.world_trained_at = self.mgr.db.len();
             self.resources.dynamics_trained_at = self.mgr.db.len();
+            self.resources.policy_trained_at = self.mgr.db.len();
         }
         if consult_cloud {
             self.resources.last_cloud_consult_at = self.mgr.db.len();
@@ -315,6 +345,8 @@ impl ResearchOrchestrator {
             mem.buckets.len(),
             mem.buckets.iter().filter(|b| b.compactable).count()
         );
+        // Monitor: health gates over the freshly-updated stores.
+        report.health = self.health().summary();
         if cfg.export_dataset {
             let ds = self.dir.join("dataset");
             report.dataset_rows = FoundationDataset::export(&self.mgr.db, &ds).unwrap_or(0);
@@ -347,6 +379,7 @@ impl ResearchOrchestrator {
             &self.mgr.db,
             &self.mgr.graph,
             &self.resources,
+            Some(&sig),
         );
         let _ = super::dashboard::write_dashboard_with(
             &self.dir,
@@ -402,6 +435,19 @@ impl ResearchOrchestrator {
             let mut tick_cfg = cfg.clone();
             tick_cfg.campaign.instance_id = id.clone();
             reports.push(self.tick(ir, registry, evolver, executor, &tick_cfg)?);
+
+            // Monitor gate: if a hard invariant broke (e.g. the append-only DB
+            // was corrupted), PAUSE the loop rather than compound the fault.
+            if cfg.monitor {
+                let health = self.health();
+                if !health.healthy() {
+                    if let Some(last) = reports.last_mut() {
+                        last.directives
+                            .push(format!("MONITOR HALT — {}", health.summary()));
+                    }
+                    break;
+                }
+            }
         }
         Ok(reports)
     }
@@ -448,6 +494,7 @@ mod tests {
                 num_replicas: 8,
                 min_degradation: 0.005,
             },
+            monitor: true,
             planner_driven: false,
             executive_driven: false,
             local_llm: None,

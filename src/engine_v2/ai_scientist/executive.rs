@@ -20,6 +20,7 @@
 use super::db::ExperimentDb;
 use super::graph::KnowledgeGraph;
 use super::memory_os::MemoryManager;
+use super::predictor::InstanceSignature;
 use std::collections::BTreeMap;
 
 /// When each model was last trained (as an experiment-count watermark) plus the
@@ -29,9 +30,27 @@ pub struct ResourceState {
     pub predictor_trained_at: usize,
     pub world_trained_at: usize,
     pub dynamics_trained_at: usize,
+    /// The Policy has no `trained_on` field of its own, so its freshness is
+    /// tracked here (advanced by the loop when it retrains the Policy).
+    pub policy_trained_at: usize,
     pub last_cloud_consult_at: usize,
     pub cloud_available: bool,
     pub local_available: bool,
+}
+
+/// The structural regime of an instance from its edge density — the SAME
+/// thresholds the Memory Manager buckets by, so the regime label a
+/// per-situation model choice is conditioned on agrees with `mem.buckets`.
+fn regime_of(density: f64) -> &'static str {
+    if density < 0.01 {
+        "very-sparse"
+    } else if density < 0.05 {
+        "sparse"
+    } else if density < 0.2 {
+        "medium"
+    } else {
+        "dense"
+    }
 }
 
 /// Thresholds governing the executive's judgment.
@@ -90,6 +109,10 @@ pub enum Action {
     RegimeSaturated { regime: String },
     /// Retrain a model (`Predictor` / `World` / `Dynamics`).
     TrainModel { model: String },
+    /// Trust a specific learned model (`Predictor` / `Policy` / `World` /
+    /// `Dynamics`) for the next decision on this regime — per-situation model
+    /// selection, conditioned on how well the regime is characterized.
+    UseModel { model: String, regime: String },
     /// Generate more ideas cheaply with the local model (Qwen) first.
     ConsultLocalLLM,
     /// Spend a rare, deep review from the cloud model (Claude).
@@ -130,6 +153,9 @@ fn label(a: &Action) -> String {
         Action::GatherMoreData { regime } => format!("RUN MORE experiments on {regime}"),
         Action::RegimeSaturated { regime } => format!("ENOUGH data on {regime} — move on"),
         Action::TrainModel { model } => format!("RETRAIN the {model} model"),
+        Action::UseModel { model, regime } => {
+            format!("TRUST the {model} model for the next {regime} decision")
+        }
         Action::ConsultLocalLLM => "ASK the local model (Qwen) for ideas first".into(),
         Action::ConsultCloudLLM => "CONSULT the cloud model (Claude) for a deep review".into(),
         Action::PublishTheory { operator } => format!("PUBLISH the theory for {operator}"),
@@ -149,12 +175,16 @@ impl ResearchExecutive {
         Self { cfg }
     }
 
-    /// Survey the whole platform state and decide what to do this cycle.
+    /// Survey the whole platform state and decide what to do this cycle. When
+    /// `sig` is `Some`, the executive ALSO chooses which learned model to trust
+    /// for the next decision on that instance's regime (per-situation model
+    /// selection); render-context callers with no current instance pass `None`.
     pub fn assess(
         &self,
         db: &ExperimentDb,
         graph: &KnowledgeGraph,
         resources: &ResourceState,
+        sig: Option<&InstanceSignature>,
     ) -> ExecutiveBrief {
         let n = db.len();
         let mem = MemoryManager::default().analyze(db);
@@ -244,6 +274,65 @@ impl ResearchExecutive {
                     n.saturating_sub(resources.world_trained_at)
                 ),
                 urgency: 0.45 + 0.35 * u,
+            });
+        }
+
+        // ── Per-situation model selection: which learned model to TRUST for the
+        // NEXT decision on THIS instance's regime? Different models answer
+        // different questions, so the choice is conditioned on how well the
+        // regime is characterized (Predictor is reliable only in-distribution)
+        // and on each model's freshness — never a bare "pick the newest". ──
+        if let Some(sig) = sig {
+            let regime = regime_of(sig.density);
+            let here = mem.buckets.iter().find(|b| b.label == regime);
+            let experiments = here.map(|b| b.experiments).unwrap_or(0);
+            let dominant = here.and_then(|b| b.dominant_operator.clone());
+            let world_stale = n.saturating_sub(resources.world_trained_at);
+            let policy_stale = n.saturating_sub(resources.policy_trained_at);
+
+            let (model, reason) = if experiments >= self.cfg.regime_saturation && dominant.is_some()
+            {
+                (
+                    "Predictor",
+                    format!(
+                        "the {regime} regime is well characterized ({experiments} experiments, dominant {}) — the Predictor's in-distribution score forecast is the reliable guide",
+                        dominant.as_deref().unwrap_or("?")
+                    ),
+                )
+            } else if experiments < self.cfg.predictor_refresh {
+                // Under-sampled: the Predictor would extrapolate off-distribution.
+                // Prefer the World model's imagined rollouts, unless it is the
+                // staler of the two — then fall back to the Policy's proposals.
+                if world_stale <= policy_stale {
+                    (
+                        "World",
+                        format!(
+                            "the {regime} regime is under-sampled ({experiments} experiments) — trust the World model's imagined rollouts rather than the Predictor extrapolating off-distribution"
+                        ),
+                    )
+                } else {
+                    (
+                        "Policy",
+                        format!(
+                            "the {regime} regime is under-sampled ({experiments} experiments) and the World model is {world_stale} experiments stale — trust the Policy's distilled operator proposals instead"
+                        ),
+                    )
+                }
+            } else {
+                (
+                    "Policy",
+                    format!(
+                        "the {regime} regime is partly characterized ({experiments} experiments, no stable dominant operator) — trust the Policy to propose the next operator"
+                    ),
+                )
+            };
+            decisions.push(Decision {
+                action: Action::UseModel {
+                    model: model.into(),
+                    regime: regime.into(),
+                },
+                reason,
+                urgency: 0.5,
             });
         }
 
@@ -355,7 +444,7 @@ mod tests {
                 .collect(),
         );
         let exec = ResearchExecutive::new(ExecutiveConfig::default());
-        let brief = exec.assess(&db, &KnowledgeGraph::new(), &ResourceState::default());
+        let brief = exec.assess(&db, &KnowledgeGraph::new(), &ResourceState::default(), None);
         assert!(
             brief
                 .decisions
@@ -385,6 +474,7 @@ mod tests {
             &db,
             &KnowledgeGraph::new(),
             &res,
+            None,
         );
         let train = brief
             .decisions
@@ -417,6 +507,7 @@ mod tests {
             &db,
             &KnowledgeGraph::new(),
             &res,
+            None,
         );
         assert!(brief
             .decisions
@@ -426,6 +517,79 @@ mod tests {
             .decisions
             .iter()
             .any(|d| d.action == Action::ConsultCloudLLM));
+    }
+
+    #[test]
+    fn selects_the_predictor_for_a_well_characterized_regime() {
+        // 300 very-sparse experiments with a stable operator ⇒ saturated regime
+        // ⇒ trust the in-distribution Predictor's score forecast.
+        let db = ExperimentDb::from_records(
+            (0..300)
+                .map(|_| rec("g", 0.005, &["metropolis_sweep"], -0.5))
+                .collect(),
+        );
+        let sig = InstanceSignature {
+            n: 800,
+            density: 0.005,
+            clustering: 0.3,
+            mean_degree: 4.0,
+            degree_cv: 0.5,
+        };
+        let brief = ResearchExecutive::new(ExecutiveConfig::default()).assess(
+            &db,
+            &KnowledgeGraph::new(),
+            &ResourceState::default(),
+            Some(&sig),
+        );
+        assert!(
+            brief.decisions.iter().any(|d| matches!(&d.action,
+                Action::UseModel { model, regime } if model == "Predictor" && regime == "very-sparse")),
+            "well-characterized regime should trust the Predictor: {}",
+            brief.narrative()
+        );
+    }
+
+    #[test]
+    fn selects_an_exploratory_model_for_an_under_sampled_regime() {
+        // Only 4 experiments in this regime ⇒ under-sampled ⇒ trust the World
+        // model's imagined rollouts, not the Predictor extrapolating.
+        let db = ExperimentDb::from_records(
+            (0..4)
+                .map(|_| rec("g", 0.005, &["metropolis_sweep"], -0.5))
+                .collect(),
+        );
+        let sig = InstanceSignature {
+            n: 800,
+            density: 0.005,
+            ..Default::default()
+        };
+        let brief = ResearchExecutive::new(ExecutiveConfig::default()).assess(
+            &db,
+            &KnowledgeGraph::new(),
+            &ResourceState::default(),
+            Some(&sig),
+        );
+        let picked = brief.decisions.iter().find_map(|d| match &d.action {
+            Action::UseModel { model, regime } => Some((model.clone(), regime.clone())),
+            _ => None,
+        });
+        assert_eq!(
+            picked,
+            Some(("World".into(), "very-sparse".into())),
+            "under-sampled regime should trust the World model: {}",
+            brief.narrative()
+        );
+        // With no current instance there is NO per-situation model selection.
+        let none_brief = ResearchExecutive::new(ExecutiveConfig::default()).assess(
+            &db,
+            &KnowledgeGraph::new(),
+            &ResourceState::default(),
+            None,
+        );
+        assert!(!none_brief
+            .decisions
+            .iter()
+            .any(|d| matches!(d.action, Action::UseModel { .. })));
     }
 
     #[test]
@@ -456,6 +620,7 @@ mod tests {
             &db,
             &g,
             &ResourceState::default(),
+            None,
         );
         assert!(brief.decisions.iter().any(
             |d| matches!(&d.action, Action::PublishTheory { operator } if operator == "greedy_descent")

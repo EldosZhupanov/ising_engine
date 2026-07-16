@@ -669,6 +669,8 @@ mod tests {
                 local_available: true,
                 ..Default::default()
             },
+            // Render context: no single current instance to select a model for.
+            None,
         );
         let path2 = write_dashboard_with(&dir, &db, &graph, &archive, &[], Some(&brief)).unwrap();
         let html2 = fs::read_to_string(&path2).unwrap();
