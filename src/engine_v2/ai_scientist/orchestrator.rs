@@ -141,6 +141,10 @@ pub struct ResearchOrchestrator {
     /// The executive's view of model freshness — watermarks advanced as the
     /// loop retrains, so its staleness judgments stay accurate across ticks.
     resources: ResourceState,
+    /// Gate result of the most recent tick's Monitor pass. The health check runs
+    /// ONCE per tick (it includes a leave-one-out predictor evaluation, which is
+    /// not free); the run loops read this cached flag instead of re-running it.
+    last_health_ok: bool,
 }
 
 impl ResearchOrchestrator {
@@ -157,6 +161,7 @@ impl ResearchOrchestrator {
                 cloud_available: std::env::var("ANTHROPIC_API_KEY").is_ok(),
                 ..Default::default()
             },
+            last_health_ok: true,
         })
     }
 
@@ -345,8 +350,12 @@ impl ResearchOrchestrator {
             mem.buckets.len(),
             mem.buckets.iter().filter(|b| b.compactable).count()
         );
-        // Monitor: health gates over the freshly-updated stores.
-        report.health = self.health().summary();
+        // Monitor: health gates over the freshly-updated stores. Computed ONCE
+        // here (not free — includes a predictor evaluation); the run loops read
+        // the cached `last_health_ok` rather than re-running the pass.
+        let health = self.health();
+        report.health = health.summary();
+        self.last_health_ok = health.healthy();
         if cfg.export_dataset {
             let ds = self.dir.join("dataset");
             report.dataset_rows = FoundationDataset::export(&self.mgr.db, &ds).unwrap_or(0);
@@ -437,6 +446,9 @@ impl ResearchOrchestrator {
         cfg: &OrchestratorConfig,
         ticks: usize,
     ) -> std::io::Result<Vec<TickReport>> {
+        if instances.is_empty() {
+            return Ok(Vec::new());
+        }
         let mut reports = Vec::new();
         for t in 0..ticks {
             let chosen = self.choose_instance(instances, cfg, t);
@@ -446,16 +458,14 @@ impl ResearchOrchestrator {
             reports.push(self.tick(ir, registry, evolver, executor, &tick_cfg)?);
 
             // Monitor gate: if a hard invariant broke (e.g. the append-only DB
-            // was corrupted), PAUSE the loop rather than compound the fault.
-            if cfg.monitor {
-                let health = self.health();
-                if !health.healthy() {
-                    if let Some(last) = reports.last_mut() {
-                        last.directives
-                            .push(format!("MONITOR HALT — {}", health.summary()));
-                    }
-                    break;
+            // was corrupted), PAUSE the loop rather than compound the fault. The
+            // pass already ran inside tick(); read its cached result.
+            if cfg.monitor && !self.last_health_ok {
+                let summary = reports.last().map(|r| r.health.clone()).unwrap_or_default();
+                if let Some(last) = reports.last_mut() {
+                    last.directives.push(format!("MONITOR HALT — {summary}"));
                 }
+                break;
             }
         }
         Ok(reports)
@@ -480,6 +490,9 @@ impl ResearchOrchestrator {
         cfg: &OrchestratorConfig,
         budget: ServiceBudget,
     ) -> std::io::Result<Vec<TickReport>> {
+        if instances.is_empty() {
+            return Ok(Vec::new());
+        }
         let mut reports = Vec::new();
         let start = std::time::Instant::now();
         let mut t = 0usize;
@@ -500,15 +513,13 @@ impl ResearchOrchestrator {
             reports.push(self.tick(ir, registry, evolver, executor, &tick_cfg)?);
             t += 1;
 
-            if cfg.monitor {
-                let health = self.health();
-                if !health.healthy() {
-                    if let Some(last) = reports.last_mut() {
-                        last.directives
-                            .push(format!("MONITOR HALT — {}", health.summary()));
-                    }
-                    break;
+            // Health gate (cached from the tick's single Monitor pass).
+            if cfg.monitor && !self.last_health_ok {
+                let summary = reports.last().map(|r| r.health.clone()).unwrap_or_default();
+                if let Some(last) = reports.last_mut() {
+                    last.directives.push(format!("MONITOR HALT — {summary}"));
                 }
+                break;
             }
         }
         Ok(reports)
@@ -729,6 +740,28 @@ mod tests {
             "service ran too long past its budget: {} ticks",
             reports.len()
         );
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn empty_instance_set_does_not_panic() {
+        let dir = std::env::temp_dir().join(format!("orch_empty_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let reg = OperatorRegistry::standard();
+        let evolver = Evolver::new(Default::default());
+        let exec = RuntimeExecutor::new(1);
+        let cfg = small_orch_cfg();
+        let mut orch = ResearchOrchestrator::open(&dir, 10).unwrap();
+        // No instances: both loops must return empty, not divide-by-zero panic.
+        let r1 = orch.run(&[], &reg, &evolver, &exec, &cfg, 3).unwrap();
+        let budget = ServiceBudget {
+            max_ticks: 3,
+            ..Default::default()
+        };
+        let r2 = orch
+            .run_service(&[], &reg, &evolver, &exec, &cfg, budget)
+            .unwrap();
+        assert!(r1.is_empty() && r2.is_empty());
         let _ = std::fs::remove_dir_all(&dir);
     }
 

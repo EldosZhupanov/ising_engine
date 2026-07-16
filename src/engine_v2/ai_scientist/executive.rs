@@ -19,7 +19,7 @@
 
 use super::db::ExperimentDb;
 use super::graph::KnowledgeGraph;
-use super::memory_os::MemoryManager;
+use super::memory_os::{regime_label, MemoryManager};
 use super::predictor::InstanceSignature;
 use std::collections::BTreeMap;
 
@@ -36,21 +36,6 @@ pub struct ResourceState {
     pub last_cloud_consult_at: usize,
     pub cloud_available: bool,
     pub local_available: bool,
-}
-
-/// The structural regime of an instance from its edge density — the SAME
-/// thresholds the Memory Manager buckets by, so the regime label a
-/// per-situation model choice is conditioned on agrees with `mem.buckets`.
-fn regime_of(density: f64) -> &'static str {
-    if density < 0.01 {
-        "very-sparse"
-    } else if density < 0.05 {
-        "sparse"
-    } else if density < 0.2 {
-        "medium"
-    } else {
-        "dense"
-    }
 }
 
 /// Thresholds governing the executive's judgment.
@@ -283,7 +268,7 @@ impl ResearchExecutive {
         // regime is characterized (Predictor is reliable only in-distribution)
         // and on each model's freshness — never a bare "pick the newest". ──
         if let Some(sig) = sig {
-            let regime = regime_of(sig.density);
+            let regime = regime_label(sig.density);
             let here = mem.buckets.iter().find(|b| b.label == regime);
             let experiments = here.map(|b| b.experiments).unwrap_or(0);
             let dominant = here.and_then(|b| b.dominant_operator.clone());

@@ -442,6 +442,47 @@ mod tests {
     }
 
     #[test]
+    fn weights_text_round_trips_exactly() {
+        let reg = OperatorRegistry::standard();
+        let sched = quench_schedule(2, 12);
+        let train: Vec<ProblemIR> = (0..4).map(|i| ring(24, 0.3 + i as f64 * 0.2)).collect();
+        let refs: Vec<&ProblemIR> = train.iter().collect();
+        let model = train_on_instances(&refs, &reg, &sched, 8, &[1, 2, 3], 1e-4).unwrap();
+        let round = DynamicsModel::from_weights_text(&model.to_weights_text()).unwrap();
+        assert_eq!(round.trained_on, model.trained_on);
+        // Bit-identical remaining-improvement predictions → a reloaded registry
+        // snapshot is exactly the same model (registry correctness).
+        let held = ring(24, 5.0);
+        let tr = capture_trajectory(&held, &reg, &sched, 8, 99);
+        let best: Vec<f64> = tr.steps.iter().map(|s| s.best_energy).collect();
+        for k in [0, tr.steps.len() / 2, tr.steps.len() - 1] {
+            let s = &tr.steps[k];
+            let a = model.predict_remaining(
+                &tr.features,
+                &best,
+                k,
+                s.mean_energy,
+                s.entropy,
+                s.diversity,
+                s.acceptance,
+                s.frac_elapsed,
+            );
+            let b = round.predict_remaining(
+                &tr.features,
+                &best,
+                k,
+                s.mean_energy,
+                s.entropy,
+                s.diversity,
+                s.acceptance,
+                s.frac_elapsed,
+            );
+            assert_eq!(a.to_bits(), b.to_bits(), "step {k} prediction diverged");
+        }
+        assert!(DynamicsModel::from_weights_text("").is_none());
+    }
+
+    #[test]
     fn early_stop_saves_steps_without_losing_much_quality_and_replays() {
         let reg = OperatorRegistry::standard();
         let sched = quench_schedule(2, 16);

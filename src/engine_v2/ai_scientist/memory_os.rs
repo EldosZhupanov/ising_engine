@@ -197,17 +197,25 @@ impl Default for MemoryManager {
     }
 }
 
+/// The canonical structural-regime label for an instance's edge density. This is
+/// the SINGLE source of truth for the density bands, shared by the Memory Manager
+/// (bucketing) and the Research Executive (per-situation model selection), so the
+/// two never disagree about what "sparse" means.
+pub(crate) fn regime_label(density: f64) -> &'static str {
+    if density < 0.01 {
+        "very-sparse"
+    } else if density < 0.05 {
+        "sparse"
+    } else if density < 0.2 {
+        "medium"
+    } else {
+        "dense"
+    }
+}
+
 impl MemoryManager {
     fn bucket_label(density: f64) -> &'static str {
-        if density < 0.01 {
-            "very-sparse"
-        } else if density < 0.05 {
-            "sparse"
-        } else if density < 0.2 {
-            "medium"
-        } else {
-            "dense"
-        }
+        regime_label(density)
     }
 
     pub fn analyze(&self, db: &ExperimentDb) -> MemoryReport {

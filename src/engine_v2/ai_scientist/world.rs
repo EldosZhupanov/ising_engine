@@ -500,6 +500,40 @@ mod tests {
     }
 
     #[test]
+    fn weights_text_round_trips_exactly() {
+        let reg = OperatorRegistry::standard();
+        let train_scheds = vec![
+            sched(&["metropolis_sweep", "greedy_descent"], 4),
+            sched(&["gibbs_color_sweep", "greedy_descent"], 4),
+        ];
+        let train: Vec<ProblemIR> = (0..5).map(|i| ring(24, 0.3 + i as f64 * 0.15)).collect();
+        let refs: Vec<&ProblemIR> = train.iter().collect();
+        let model = WorldModel::fit(&refs, &reg, &train_scheds, 8, &[1, 2, 3], 1e-4).unwrap();
+        let round = WorldModel::from_weights_text(&model.to_weights_text()).unwrap();
+        assert_eq!(round.vocab(), model.vocab());
+        assert_eq!(round.trained_on, model.trained_on);
+        // Bit-identical imagined final best on a held-out instance/schedule → a
+        // reloaded registry snapshot is exactly the same World model.
+        let held = ring(24, 4.4);
+        for ops in [
+            vec!["metropolis_sweep".to_string(), "greedy_descent".to_string()],
+            vec!["greedy_descent".to_string()],
+        ] {
+            let s = Schedule {
+                ops,
+                sweeps: vec![10; 2],
+                temp_hi: 3.0,
+                temp_lo: 0.1,
+            };
+            assert_eq!(
+                model.imagine_final_best(&held, &s).to_bits(),
+                round.imagine_final_best(&held, &s).to_bits()
+            );
+        }
+        assert!(WorldModel::from_weights_text("a,b;1.0").is_none());
+    }
+
+    #[test]
     fn world_filtered_ideator_keeps_the_best_imagined_candidate() {
         use super::super::db::ExperimentDb;
         use super::super::graph::KnowledgeGraph;
