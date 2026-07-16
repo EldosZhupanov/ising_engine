@@ -817,6 +817,15 @@ mod tests {
                 .any(|t| t.subject == "metropolis_sweep"),
             "the investigated theory must be published"
         );
+
+        // Edge case: investigating greedy_descent itself must NOT panic or
+        // produce a vacuous vs-nothing test. The quench falls back to
+        // steepest_descent (differs from the ablated op), so the ablated schedule
+        // is [steepest_descent] — non-empty — and the marginal test is real.
+        let g = orch
+            .investigate_operator(&insts, &reg, "greedy_descent", tcfg, &[7, 8])
+            .expect("greedy_descent investigation should also produce a theory");
+        assert!(g.trials >= 3, "aggregation must hold for the quench op too");
         let _ = std::fs::remove_dir_all(&dir);
     }
 
