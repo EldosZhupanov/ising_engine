@@ -526,11 +526,19 @@ impl ResearchOrchestrator {
     }
 
     /// Multi-instance theory INVESTIGATION: run the Theory Engine's ablation of
-    /// `operator` (a solo-operator schedule) across EVERY given instance and
-    /// aggregate the trials into one theory. This is how a mechanism earns real
-    /// Popperian confidence — a single-instance ablation is weak, but surviving
-    /// refutation on many instances is strong. The resulting theory (supported OR
-    /// refuted) is published into the graph. Returns the aggregated theory.
+    /// `operator` across EVERY given instance and aggregate the trials into one
+    /// theory. This is how a mechanism earns real Popperian confidence — a
+    /// single-instance ablation is weak, but surviving refutation on many
+    /// instances is strong. The resulting theory (supported OR refuted) is
+    /// published into the graph. Returns the aggregated theory.
+    ///
+    /// The operator is tested for its MARGINAL contribution inside a real
+    /// explore→quench pipeline `[operator, quench]`, NOT in isolation. Ablating a
+    /// solo operator leaves an EMPTY schedule that runs nothing, so *any*
+    /// operator would look "causal" — a vacuous test. Ablating `operator` from
+    /// `[operator, quench]` instead leaves `[quench]`, so the engine measures
+    /// whether `operator` genuinely helps the following descent reach a lower
+    /// energy (causal) or is a spurious passenger (the quench does the work).
     pub fn investigate_operator(
         &mut self,
         instances: &[(String, ProblemIR)],
@@ -543,9 +551,17 @@ impl ResearchOrchestrator {
             return None;
         }
         let irs: Vec<&ProblemIR> = instances.iter().map(|(_, ir)| ir).collect();
+        // Quench must differ from `operator` (the ablation removes ALL matching
+        // tokens, so `[greedy, greedy]` would ablate to empty). Both descents are
+        // in the standard registry.
+        let quench = if operator == "greedy_descent" {
+            "steepest_descent"
+        } else {
+            "greedy_descent"
+        };
         let schedule = Schedule {
-            ops: vec![operator.to_string()],
-            sweeps: vec![16],
+            ops: vec![operator.to_string(), quench.to_string()],
+            sweeps: vec![16, 16],
             temp_hi: 4.0,
             temp_lo: 0.1,
         };

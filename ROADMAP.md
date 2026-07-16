@@ -215,15 +215,24 @@ bias over-AVOIDed ensemble operators (**now fixed** via warm-start).
 
 ## Technical debt / unfinished
 
-- Per-situation **model selection** (the meta-layer consults all models).
-- **World-filtered ideation** (imagine→rank→run-top-few) designed, not wired.
-- **Dynamics early-stop** not applied on the executor's every-run path.
+- **`cargo doc` is broken by pre-existing rustdoc-link errors** (~14) in
+  unrelated files (`curiosity`, `graph`, `frontend`, `ir`, `lib`, `solver/*`,
+  `core/hubo`) — square brackets in prose / bare `[Type]` links. Warrants a
+  dedicated `docs: fix rustdoc` cleanup + a `RUSTDOCFLAGS="-D warnings" cargo doc`
+  CI gate to prevent regression. (New-code docs in this branch are clean.)
 - **Adaptive cloud routing** recommended but cloud unavailable (no API key).
-- Stage 7 **Model Registry / Monitor / Scheduler service** designed, unbuilt.
-- SAT/routing **not yet runnable platform research targets** (encoders only).
+- **World-filtered ideation / Dynamics early-stop are opt-in** (change
+  candidate-selection / budget by design); default-on needs per-family
+  rank-correlation / early-stop validation first.
+- **Registry** snapshots the Predictor every generation (append-only growth is
+  fine but consider bounding for very long 24/7 services).
+- **`--early-stop`** bootstraps one Dynamics model from `instance[0]`; a
+  per-instance controller would transfer its stop decisions better.
+- **Multi-instance `investigate`** confidence stays low until run across many
+  instances (single-instance = weak, by the shrink-for-few-trials design).
 - Consensus/theory facts publish at **support=1** → low graph-confidence until
   accumulated across campaigns.
-- `experiments/` generated state (~5MB) is gitignored (regenerable).
+- `experiments/` generated state (gitignored, regenerable).
 
 ---
 

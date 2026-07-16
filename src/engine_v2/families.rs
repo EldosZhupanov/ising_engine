@@ -7,7 +7,7 @@
 //! genuinely new families beyond MaxCut/BQP/QPLIB:
 //!
 //!   - TSP  (Travelling Salesman / routing) — the Lucas (2014) permutation
-//!     encoding: n² binary variables x[city][position], one-hot penalties for
+//!     encoding: n² binary variables `x[city][position]`, one-hot penalties for
 //!     "each city once / each position once", plus the tour-length objective.
 //!   - MAX-2-SAT (Boolean satisfiability) — minimize the number of UNSATISFIED
 //!     clauses; the QUBO ground state is a maximum-satisfying assignment.

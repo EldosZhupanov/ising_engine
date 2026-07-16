@@ -11,7 +11,7 @@
 //! `payload` = the model's own `to_weights_text()` serialization. A snapshot's
 //! weights are therefore fully reconstructable (`Model::from_weights_text`).
 //!
-//! Persistence copies the [`ExperimentDb`] idiom exactly: dependency-free,
+//! Persistence copies the `ExperimentDb` idiom exactly: dependency-free,
 //! pipe-delimited, one snapshot per line, append-only via a `persisted` cursor,
 //! missing-file → empty. The `payload` uses only `,` and `;` internally, never
 //! `|` or `\n`, so the pipe split stays unambiguous.
