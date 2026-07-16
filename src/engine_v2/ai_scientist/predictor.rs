@@ -199,6 +199,51 @@ impl Predictor {
         idx.truncate(keep.max(1));
         idx
     }
+
+    /// Serialize the learned weights for the Model Registry. Round-trip f64
+    /// `Display` (shortest exact) so a reload is bit-identical and preserves
+    /// determinism (ADR-0004). Groups are `;`-separated, values `,`-separated;
+    /// operator names are snake_case identifiers, so neither separator collides.
+    /// Layout: `vocab;weights;trained_on`.
+    pub fn to_weights_text(&self) -> String {
+        let w = self
+            .weights
+            .iter()
+            .map(|x| x.to_string())
+            .collect::<Vec<_>>()
+            .join(",");
+        format!("{};{};{}", self.vocab.join(","), w, self.trained_on)
+    }
+
+    /// Reconstruct a predictor from [`Self::to_weights_text`]. Returns `None` on
+    /// a malformed payload or a weight-vector length that disagrees with the
+    /// vocabulary (mirrors the db's skip-malformed-line policy).
+    pub fn from_weights_text(s: &str) -> Option<Self> {
+        let mut g = s.split(';');
+        let vocab_s = g.next()?;
+        let w_s = g.next()?;
+        let trained_on: usize = g.next()?.parse().ok()?;
+        let vocab: Vec<String> = if vocab_s.is_empty() {
+            Vec::new()
+        } else {
+            vocab_s.split(',').map(|x| x.to_string()).collect()
+        };
+        let weights: Vec<f64> = if w_s.is_empty() {
+            Vec::new()
+        } else {
+            w_s.split(',')
+                .map(|x| x.parse().ok())
+                .collect::<Option<_>>()?
+        };
+        if weights.len() != 10 + vocab.len() {
+            return None;
+        }
+        Some(Self {
+            vocab,
+            weights,
+            trained_on,
+        })
+    }
 }
 
 #[cfg(test)]
@@ -276,6 +321,34 @@ mod tests {
             "strong_op schedule must survive: {kept:?}"
         );
         assert!(!kept.contains(&0), "weak-only schedule must be filtered");
+    }
+
+    #[test]
+    fn weights_text_round_trips_exactly() {
+        let mut db = ExperimentDb::new();
+        for i in 0..40 {
+            let jitter = (i % 5) as f64 * 0.01;
+            db.record(rec(&["strong_op"], -0.5 - jitter, 10));
+            db.record(rec(&["weak_op"], -0.05 - jitter, 10));
+        }
+        let p = Predictor::fit(&db, 1e-3).unwrap();
+        let round = Predictor::from_weights_text(&p.to_weights_text()).unwrap();
+        let sig = InstanceSignature {
+            density: 0.01,
+            clustering: 0.3,
+            ..Default::default()
+        };
+        // Reconstruction is bit-identical (round-trip f64 Display), so a reloaded
+        // registry snapshot predicts exactly what the live model did.
+        for s in [sched(&["strong_op"]), sched(&["weak_op", "strong_op"])] {
+            assert_eq!(
+                p.predict(&sig, &s).to_bits(),
+                round.predict(&sig, &s).to_bits()
+            );
+        }
+        assert_eq!(round.trained_on, p.trained_on);
+        // A truncated payload is rejected, not silently accepted.
+        assert!(Predictor::from_weights_text("op_a,op_b;1.0,2.0;30").is_none());
     }
 
     #[test]

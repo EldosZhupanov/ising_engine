@@ -32,6 +32,7 @@ pub mod llm;
 pub mod memory_os;
 pub mod meta_layer;
 pub mod meta_learner;
+pub mod model_registry;
 pub mod novelty;
 pub mod orchestrator;
 pub mod planner;
@@ -70,6 +71,7 @@ pub use meta_layer::{
     MetaBiasedIdeator, MetaKnowledge, MetaWeights, OperatorSignals, OperatorVerdict, Source,
 };
 pub use meta_learner::{MetaLearner, OperatorGap, Rule, RuleKind};
+pub use model_registry::{ModelKind, ModelRegistry, ModelSnapshot};
 pub use novelty::{schedule_distance, NoveltyArchive};
 pub use orchestrator::{detect_local_llm, OrchestratorConfig, ResearchOrchestrator, TickReport};
 pub use planner::{PlannedTask, ResearchPlanner, TargetScore};

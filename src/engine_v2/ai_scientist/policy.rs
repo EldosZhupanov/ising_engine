@@ -118,6 +118,70 @@ impl OperatorPolicy {
         self.vocab.binary_search_by(|v| v.as_str().cmp(op)).ok()
     }
 
+    /// Serialize all weights for the Model Registry (round-trip f64 `Display`).
+    /// Layout: `vocab;emb;w_feat;bias;head;head_bias` (groups `;`, values `,`).
+    pub fn to_weights_text(&self) -> String {
+        let j = |v: &[f64]| {
+            v.iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<_>>()
+                .join(",")
+        };
+        format!(
+            "{};{};{};{};{};{}",
+            self.vocab.join(","),
+            j(&self.emb),
+            j(&self.w_feat),
+            j(&self.bias),
+            j(&self.head),
+            j(&self.head_bias),
+        )
+    }
+
+    /// Reconstruct a policy from [`Self::to_weights_text`]; `None` if any group
+    /// is missing or a weight-vector length disagrees with the vocabulary.
+    pub fn from_weights_text(s: &str) -> Option<Self> {
+        let mut g = s.split(';');
+        let vocab: Vec<String> = {
+            let v = g.next()?;
+            if v.is_empty() {
+                Vec::new()
+            } else {
+                v.split(',').map(|x| x.to_string()).collect()
+            }
+        };
+        let parse = |o: Option<&str>| -> Option<Vec<f64>> {
+            let s = o?;
+            if s.is_empty() {
+                Some(Vec::new())
+            } else {
+                s.split(',').map(|x| x.parse().ok()).collect()
+            }
+        };
+        let emb = parse(g.next())?;
+        let w_feat = parse(g.next())?;
+        let bias = parse(g.next())?;
+        let head = parse(g.next())?;
+        let head_bias = parse(g.next())?;
+        let v = vocab.len();
+        if emb.len() != (v + 1) * DIM
+            || w_feat.len() != N_FEATS * DIM
+            || bias.len() != DIM
+            || head.len() != (v + 1) * DIM
+            || head_bias.len() != v + 1
+        {
+            return None;
+        }
+        Some(Self {
+            vocab,
+            emb,
+            w_feat,
+            bias,
+            head,
+            head_bias,
+        })
+    }
+
     /// One forward step: probability distribution over the next token given
     /// the features and the tokens chosen so far.
     fn forward(&self, feats: &[f64; N_FEATS], context: &[usize]) -> Forward {
@@ -648,6 +712,28 @@ mod tests {
             "metropolis_sweep".into(),
             "random_flip_sweep".into(),
         ]
+    }
+
+    #[test]
+    fn weights_text_round_trips_exactly() {
+        let mut db = ExperimentDb::new();
+        for i in 0..30 {
+            db.record(rec(
+                "G",
+                &["metropolis_sweep", "greedy_descent"],
+                -0.5 - 0.001 * i as f64,
+                0.005,
+            ));
+        }
+        let mut p = OperatorPolicy::new(vocab(), 7);
+        p.train_supervised(&db, 20, 0.05);
+        // Reconstruction re-serializes byte-for-byte identically → the reloaded
+        // registry snapshot is the same policy.
+        let round = OperatorPolicy::from_weights_text(&p.to_weights_text()).unwrap();
+        assert_eq!(round.to_weights_text(), p.to_weights_text());
+        assert_eq!(round.vocab, p.vocab);
+        // A group with the wrong length is rejected.
+        assert!(OperatorPolicy::from_weights_text("a,b;1.0;2.0").is_none());
     }
 
     #[test]

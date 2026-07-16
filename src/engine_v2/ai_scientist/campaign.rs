@@ -25,6 +25,7 @@ use super::lab::{HypothesisGenerator, Ideator, LabConfig, ResearchBrief, Scienti
 use super::llm::LlmHypothesisGenerator;
 use super::meta_layer::{MetaBiasedIdeator, MetaKnowledge, MetaWeights, OperatorSignals};
 use super::meta_learner::MetaLearner;
+use super::model_registry::{ModelKind, ModelRegistry};
 use super::policy::OperatorPolicy;
 use super::predictor::{InstanceSignature, Predictor};
 use super::proposal::OperatorProposal;
@@ -155,6 +156,8 @@ pub struct CampaignManager {
     pub graph: KnowledgeGraph,
     pub archive: ReportArchive,
     pub meta: MetaLearner,
+    /// Versioned snapshots of the learned models with lineage (append-only).
+    pub models: ModelRegistry,
     next_campaign_id: u64,
 }
 
@@ -169,6 +172,7 @@ impl CampaignManager {
         let kb = KnowledgeBase::load(dir.join("knowledge.txt")).unwrap_or_default();
         let graph = KnowledgeGraph::load(dir.join("knowledge_graph.txt"))?;
         let archive = ReportArchive::open(dir.join("reports"), report_every)?;
+        let models = ModelRegistry::load(dir.join("model_registry.txt"))?;
         let next_campaign_id = fs::read_to_string(dir.join("campaign_state.txt"))
             .ok()
             .and_then(|t| t.trim().parse().ok())
@@ -180,6 +184,7 @@ impl CampaignManager {
             graph,
             archive,
             meta: MetaLearner::new(),
+            models,
             next_campaign_id,
         })
     }
@@ -192,6 +197,8 @@ impl CampaignManager {
         self.db.flush_append(self.dir.join("ai_experiments.txt"))?;
         self.kb.save(self.dir.join("knowledge.txt"))?;
         self.graph.save(self.dir.join("knowledge_graph.txt"))?;
+        self.models
+            .flush_append(self.dir.join("model_registry.txt"))?;
         fs::write(
             self.dir.join("campaign_state.txt"),
             format!("{}\n", self.next_campaign_id),
@@ -226,6 +233,10 @@ impl CampaignManager {
     /// the graph, the next campaign). Degrades gracefully: a model that can't
     /// train yet simply contributes no signal. `None` if the DB has no
     /// operator vocabulary to learn from at all.
+    /// Train the shared-knowledge models and consolidate their consensus.
+    /// Returns the consensus plus the trained models' weight payloads (for the
+    /// Model Registry) so the caller can snapshot them under `&mut self`.
+    #[allow(clippy::type_complexity)]
     fn build_shared_knowledge(
         &self,
         ir: &ProblemIR,
@@ -233,7 +244,7 @@ impl CampaignManager {
         cfg: &CampaignConfig,
         sig: &InstanceSignature,
         stats: &super::super::decision::InstanceStats,
-    ) -> Option<MetaKnowledge> {
+    ) -> Option<(MetaKnowledge, Vec<(ModelKind, String, usize)>)> {
         let vocab: Vec<String> = self
             .db
             .all()
@@ -302,11 +313,20 @@ impl CampaignManager {
         } else {
             "density>=0.05"
         };
-        Some(MetaKnowledge::consolidate(
-            &signals,
-            &MetaWeights::default(),
-            condition,
-        ))
+        let mk = MetaKnowledge::consolidate(&signals, &MetaWeights::default(), condition);
+
+        // Snapshot the models that were just trained, for the registry (lineage
+        // + versioned weights). Policy is always trained on the whole history;
+        // World/Dynamics only when their fits succeeded.
+        let mut snaps: Vec<(ModelKind, String, usize)> =
+            vec![(ModelKind::Policy, policy.to_weights_text(), self.db.len())];
+        if let Some(w) = &world {
+            snaps.push((ModelKind::World, w.to_weights_text(), w.trained_on));
+        }
+        if let Some(d) = &dynamics {
+            snaps.push((ModelKind::Dynamics, d.to_weights_text(), d.trained_on));
+        }
+        Some((mk, snaps))
     }
 
     /// Run one campaign: `cfg.generations` lab generations with full
@@ -363,7 +383,24 @@ impl CampaignManager {
         // publish it into the graph (so reports + the LLM read it this and next
         // campaign), and bias every generation's ideation toward it.
         let shared = if cfg.shared_knowledge {
-            self.build_shared_knowledge(ir, registry, cfg, &sig, &stats)
+            match self.build_shared_knowledge(ir, registry, cfg, &sig, &stats) {
+                Some((k, snaps)) => {
+                    // Snapshot the freshly trained models into the registry
+                    // (versioned weights + lineage), trained once per campaign.
+                    for (kind, payload, trained_on) in snaps {
+                        self.models.record(
+                            kind,
+                            payload,
+                            trained_on,
+                            campaign_id,
+                            0,
+                            &cfg.instance_id,
+                        );
+                    }
+                    Some(k)
+                }
+                None => None,
+            }
         } else {
             None
         };
@@ -492,6 +529,18 @@ impl CampaignManager {
 
             // Task 8: refit the filter on the grown history.
             predictor = Predictor::fit(&self.db, 1e-3);
+            // Registry: one Predictor version per generation, forming a lineage
+            // chain (its parent is the previous generation's version).
+            if let Some(p) = &predictor {
+                self.models.record(
+                    ModelKind::Predictor,
+                    p.to_weights_text(),
+                    p.trained_on,
+                    campaign_id,
+                    generation as u64,
+                    &cfg.instance_id,
+                );
+            }
 
             // Task 10: the dashboard mirrors the stores after every generation.
             summary.dashboard = Some(super::dashboard::write_dashboard(

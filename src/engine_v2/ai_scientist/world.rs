@@ -263,6 +263,71 @@ impl WorldModel {
     pub fn vocab(&self) -> &[String] {
         &self.vocab
     }
+
+    /// Serialize the four observable-transition weight vectors for the Model
+    /// Registry (round-trip f64 `Display`). Each vector has length
+    /// `7 + vocab.len()` (4 observables + temp + sweeps + one-hot ops + bias).
+    /// Layout: `vocab;w_best;w_mean;w_entropy;w_diversity;trained_on`.
+    pub fn to_weights_text(&self) -> String {
+        let j = |v: &[f64]| {
+            v.iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<_>>()
+                .join(",")
+        };
+        format!(
+            "{};{};{};{};{};{}",
+            self.vocab.join(","),
+            j(&self.w_best),
+            j(&self.w_mean),
+            j(&self.w_entropy),
+            j(&self.w_diversity),
+            self.trained_on,
+        )
+    }
+
+    /// Reconstruct from [`Self::to_weights_text`]; `None` if any weight vector's
+    /// length disagrees with the vocabulary.
+    pub fn from_weights_text(s: &str) -> Option<Self> {
+        let mut g = s.split(';');
+        let vocab: Vec<String> = {
+            let v = g.next()?;
+            if v.is_empty() {
+                Vec::new()
+            } else {
+                v.split(',').map(|x| x.to_string()).collect()
+            }
+        };
+        let parse = |o: Option<&str>| -> Option<Vec<f64>> {
+            let s = o?;
+            if s.is_empty() {
+                Some(Vec::new())
+            } else {
+                s.split(',').map(|x| x.parse().ok()).collect()
+            }
+        };
+        let w_best = parse(g.next())?;
+        let w_mean = parse(g.next())?;
+        let w_entropy = parse(g.next())?;
+        let w_diversity = parse(g.next())?;
+        let trained_on: usize = g.next()?.parse().ok()?;
+        let expect = 7 + vocab.len();
+        if w_best.len() != expect
+            || w_mean.len() != expect
+            || w_entropy.len() != expect
+            || w_diversity.len() != expect
+        {
+            return None;
+        }
+        Some(Self {
+            vocab,
+            w_best,
+            w_mean,
+            w_entropy,
+            w_diversity,
+            trained_on,
+        })
+    }
 }
 
 /// The HONEST verification: rank a set of candidate schedules by imagined final

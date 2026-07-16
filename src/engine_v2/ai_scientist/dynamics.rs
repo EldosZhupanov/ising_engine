@@ -144,6 +144,36 @@ pub struct DynamicsModel {
 }
 
 impl DynamicsModel {
+    /// Serialize weights for the Model Registry (round-trip f64 `Display`).
+    /// Layout: `weights;trained_on`.
+    pub fn to_weights_text(&self) -> String {
+        let w = self
+            .weights
+            .iter()
+            .map(|x| x.to_string())
+            .collect::<Vec<_>>()
+            .join(",");
+        format!("{};{}", w, self.trained_on)
+    }
+
+    /// Reconstruct from [`Self::to_weights_text`]; `None` on a malformed payload.
+    pub fn from_weights_text(s: &str) -> Option<Self> {
+        let mut g = s.split(';');
+        let w_s = g.next()?;
+        let trained_on: usize = g.next()?.parse().ok()?;
+        let weights: Vec<f64> = if w_s.is_empty() {
+            return None;
+        } else {
+            w_s.split(',')
+                .map(|x| x.parse().ok())
+                .collect::<Option<_>>()?
+        };
+        Some(Self {
+            weights,
+            trained_on,
+        })
+    }
+
     /// Fit on captured trajectories. Each step contributes one example:
     /// features(step k) → (best_k − final_best)/|best_k|, the scale-free
     /// improvement STILL TO COME. `None` if there is too little data.
