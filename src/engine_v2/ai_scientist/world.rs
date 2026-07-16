@@ -24,7 +24,10 @@ use super::super::ir::ProblemIR;
 use super::super::registry::OperatorRegistry;
 use super::super::runtime::Runtime;
 use super::executor::{lower_public, ExperimentTask};
+use super::lab::{Ideator, ResearchBrief};
 use super::predictor::ridge_fit;
+use super::scientist::Hypothesis;
+use rand_chacha::ChaCha8Rng;
 use std::collections::BTreeSet;
 
 /// The reduced observable state — the world model's "latent". Energies are
@@ -330,6 +333,78 @@ impl WorldModel {
     }
 }
 
+/// An [`Ideator`] wrapper that filters candidate hypotheses through the World
+/// model BEFORE they cost a Runtime run: it oversamples from an inner ideator,
+/// imagines each candidate's final best energy (no Runtime), and keeps only the
+/// most promising few — "imagine → rank → run the top few". This is the exploit
+/// stack's cheapest look-ahead; its worth is only as high as the World model's
+/// measured [`rank_correlation`] on these instances.
+pub struct WorldFilteredIdeator {
+    inner: Box<dyn Ideator>,
+    world: WorldModel,
+    ir: ProblemIR,
+    oversample: usize,
+    sweeps: u32,
+    temp_hi: f64,
+    temp_lo: f64,
+}
+
+impl WorldFilteredIdeator {
+    /// Wrap `inner`, imagining under the canonical campaign budget (16 sweeps/op,
+    /// T 4.0→0.1) so candidates are ranked by their operator SEQUENCE.
+    pub fn new(
+        inner: Box<dyn Ideator>,
+        world: WorldModel,
+        ir: ProblemIR,
+        oversample: usize,
+    ) -> Self {
+        Self {
+            inner,
+            world,
+            ir,
+            oversample: oversample.max(1),
+            sweeps: 16,
+            temp_hi: 4.0,
+            temp_lo: 0.1,
+        }
+    }
+
+    /// Imagined final best energy of a candidate operator sequence (lower =
+    /// better). An empty sequence returns the initial-state energy.
+    fn imagined(&self, ops: &[String]) -> f64 {
+        let sched = Schedule {
+            ops: ops.to_vec(),
+            sweeps: vec![self.sweeps; ops.len().max(1)],
+            temp_hi: self.temp_hi,
+            temp_lo: self.temp_lo,
+        };
+        self.world.imagine_final_best(&self.ir, &sched)
+    }
+}
+
+impl Ideator for WorldFilteredIdeator {
+    fn propose(
+        &mut self,
+        brief: &ResearchBrief,
+        n: usize,
+        rng: &mut ChaCha8Rng,
+    ) -> Vec<Hypothesis> {
+        let cand = self.inner.propose(brief, n * self.oversample, rng);
+        if cand.len() <= n {
+            return cand;
+        }
+        // Score each candidate ONCE by imagined final best, then keep the lowest
+        // (best) n. Stable order preserved for equal imagined energies.
+        let mut scored: Vec<(f64, Hypothesis)> = cand
+            .into_iter()
+            .map(|h| (self.imagined(&h.operators), h))
+            .collect();
+        scored.sort_by(|a, b| a.0.total_cmp(&b.0));
+        scored.truncate(n);
+        scored.into_iter().map(|(_, h)| h).collect()
+    }
+}
+
 /// The HONEST verification: rank a set of candidate schedules by imagined final
 /// best and by REAL Runtime final best (mean over seeds), and return the
 /// Spearman correlation of the two rankings. 1.0 = the world model orders
@@ -421,6 +496,110 @@ mod tests {
         assert!(
             rho >= 0.5,
             "imagined ranking must track reality to be a useful filter: rho={rho}"
+        );
+    }
+
+    #[test]
+    fn world_filtered_ideator_keeps_the_best_imagined_candidate() {
+        use super::super::db::ExperimentDb;
+        use super::super::graph::KnowledgeGraph;
+        use super::super::lab::ResearchBrief;
+        use super::super::scientist::{AIScientist, HypothesisStatus};
+        use crate::engine_v2::decision::DecisionEngine;
+        use rand::SeedableRng;
+
+        let reg = OperatorRegistry::standard();
+        let train_scheds = vec![
+            sched(&["random_flip_sweep"], 4),
+            sched(&["greedy_descent"], 4),
+            sched(&["metropolis_sweep", "greedy_descent"], 4),
+            sched(&["gibbs_color_sweep", "greedy_descent"], 4),
+        ];
+        let train: Vec<ProblemIR> = (0..5).map(|i| ring(30, 0.2 + i as f64 * 0.15)).collect();
+        let refs: Vec<&ProblemIR> = train.iter().collect();
+        let model = WorldModel::fit(&refs, &reg, &train_scheds, 8, &[1, 2, 3], 1e-4).unwrap();
+
+        let held = ring(30, 3.3);
+        // A clearly-improving multi-op sequence vs pure noise — the model must
+        // imagine the former as lower energy. (Under the ideator's 16-sweep budget.)
+        let good = vec![
+            "metropolis_sweep".to_string(),
+            "greedy_descent".to_string(),
+            "greedy_descent".to_string(),
+        ];
+        let bad = vec!["random_flip_sweep".to_string()];
+        let imagine = |ops: &[String]| {
+            let s = Schedule {
+                ops: ops.to_vec(),
+                sweeps: vec![16; ops.len()],
+                temp_hi: 4.0,
+                temp_lo: 0.1,
+            };
+            model.imagine_final_best(&held, &s)
+        };
+        assert!(
+            imagine(&good) < imagine(&bad),
+            "the model must distinguish the candidates: good {} vs bad {}",
+            imagine(&good),
+            imagine(&bad)
+        );
+
+        struct FixedIdeator {
+            proposals: Vec<Vec<String>>,
+            next: u64,
+        }
+        impl Ideator for FixedIdeator {
+            fn propose(
+                &mut self,
+                _b: &ResearchBrief,
+                n: usize,
+                _r: &mut ChaCha8Rng,
+            ) -> Vec<Hypothesis> {
+                (0..n)
+                    .map(|i| {
+                        let id = self.next;
+                        self.next += 1;
+                        Hypothesis {
+                            id,
+                            operators: self.proposals[i % self.proposals.len()].clone(),
+                            rationale: "f".into(),
+                            reasoning: "f".into(),
+                            predicted_improvement: 0.0,
+                            status: HypothesisStatus::Proposed,
+                            observed_improvement: 0.0,
+                            confidence: 0.0,
+                        }
+                    })
+                    .collect()
+            }
+        }
+        // Inner alternates bad,good,bad,… so keeping the first n would take the
+        // BAD one; the World filter must instead keep the best-imagined (good).
+        let inner = Box::new(FixedIdeator {
+            proposals: vec![bad.clone(), good.clone()],
+            next: 0,
+        });
+        let mut filt = WorldFilteredIdeator::new(inner, model.clone(), held.clone(), 3);
+
+        let stats = DecisionEngine::analyze(&held);
+        let db = ExperimentDb::new();
+        let analysis = AIScientist::analyze(&db);
+        let pool = DecisionEngine::operator_pool(&stats, stats.select_backend(), &reg);
+        let graph = KnowledgeGraph::new();
+        let brief = ResearchBrief {
+            stats: &stats,
+            analysis: &analysis,
+            graph: &graph,
+            pool: &pool,
+            registry: &reg,
+            context: "test",
+        };
+        let mut rng = ChaCha8Rng::from_seed([7u8; 32]);
+        let out = filt.propose(&brief, 1, &mut rng);
+        assert_eq!(out.len(), 1);
+        assert_eq!(
+            out[0].operators, good,
+            "the World filter must keep the best-imagined candidate"
         );
     }
 

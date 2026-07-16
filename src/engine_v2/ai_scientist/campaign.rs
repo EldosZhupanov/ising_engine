@@ -31,7 +31,7 @@ use super::predictor::{InstanceSignature, Predictor};
 use super::proposal::OperatorProposal;
 use super::reports::ReportArchive;
 use super::scientist::Hypothesis;
-use super::world::WorldModel;
+use super::world::{WorldFilteredIdeator, WorldModel};
 use rand_chacha::ChaCha8Rng;
 use std::collections::BTreeSet;
 use std::fs;
@@ -234,8 +234,9 @@ impl CampaignManager {
     /// train yet simply contributes no signal. `None` if the DB has no
     /// operator vocabulary to learn from at all.
     /// Train the shared-knowledge models and consolidate their consensus.
-    /// Returns the consensus plus the trained models' weight payloads (for the
-    /// Model Registry) so the caller can snapshot them under `&mut self`.
+    /// Returns the consensus, the trained models' weight payloads (for the Model
+    /// Registry), and the trained World model (for World-filtered ideation) so
+    /// the caller can use/snapshot them under `&mut self`.
     #[allow(clippy::type_complexity)]
     fn build_shared_knowledge(
         &self,
@@ -244,7 +245,11 @@ impl CampaignManager {
         cfg: &CampaignConfig,
         sig: &InstanceSignature,
         stats: &super::super::decision::InstanceStats,
-    ) -> Option<(MetaKnowledge, Vec<(ModelKind, String, usize)>)> {
+    ) -> Option<(
+        MetaKnowledge,
+        Vec<(ModelKind, String, usize)>,
+        Option<WorldModel>,
+    )> {
         let vocab: Vec<String> = self
             .db
             .all()
@@ -326,7 +331,7 @@ impl CampaignManager {
         if let Some(d) = &dynamics {
             snaps.push((ModelKind::Dynamics, d.to_weights_text(), d.trained_on));
         }
-        Some((mk, snaps))
+        Some((mk, snaps, world))
     }
 
     /// Run one campaign: `cfg.generations` lab generations with full
@@ -382,9 +387,9 @@ impl CampaignManager {
         // Meta-Learning Layer (opt-in): consolidate the models' consensus once,
         // publish it into the graph (so reports + the LLM read it this and next
         // campaign), and bias every generation's ideation toward it.
-        let shared = if cfg.shared_knowledge {
+        let (shared, shared_world) = if cfg.shared_knowledge {
             match self.build_shared_knowledge(ir, registry, cfg, &sig, &stats) {
-                Some((k, snaps)) => {
+                Some((k, snaps, world)) => {
                     // Snapshot the freshly trained models into the registry
                     // (versioned weights + lineage), trained once per campaign.
                     for (kind, payload, trained_on) in snaps {
@@ -397,12 +402,12 @@ impl CampaignManager {
                             &cfg.instance_id,
                         );
                     }
-                    Some(k)
+                    (Some(k), world)
                 }
-                None => None,
+                None => (None, None),
             }
         } else {
-            None
+            (None, None)
         };
         if let Some(k) = &shared {
             let wrote = k.publish(&mut self.graph);
@@ -463,6 +468,18 @@ impl CampaignManager {
             let exploit_ideator: Box<dyn Ideator> = match &shared {
                 Some(k) => Box::new(MetaBiasedIdeator::new(base_ideator, k.clone(), 2)),
                 None => base_ideator,
+            };
+            // …then, when a World model was trained, filter candidates through it
+            // (imagine → rank → keep the top few) as the exploit stack's cheapest
+            // look-ahead, BEFORE the curiosity blend so exploration still wins…
+            let exploit_ideator: Box<dyn Ideator> = match &shared_world {
+                Some(w) => Box::new(WorldFilteredIdeator::new(
+                    exploit_ideator,
+                    w.clone(),
+                    ir.clone(),
+                    2,
+                )),
+                None => exploit_ideator,
             };
             // …then wrap with the Curiosity Engine (explore the unknown), so the
             // final ideator is the explore/exploit blend on the λ dial.

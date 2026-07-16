@@ -91,4 +91,4 @@ pub use theory::{
     MechanismHypothesis, MechanismSignature, Prediction, Theory, TheoryConfig, TheoryEngine,
     TheoryStatus,
 };
-pub use world::{rank_correlation, ObsState, WorldModel};
+pub use world::{rank_correlation, ObsState, WorldFilteredIdeator, WorldModel};
