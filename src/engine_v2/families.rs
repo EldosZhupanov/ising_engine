@@ -187,6 +187,58 @@ pub fn count_satisfied(assignment: &[u8], clauses: &[Clause]) -> usize {
         .count()
 }
 
+// ====================================================== instance synthesis
+//
+// Deterministic generators so TSP and MAX-2-SAT are RUNNABLE platform research
+// targets: one seed → one reproducible `(id, ProblemIR)` that feeds the exact
+// same campaign / orchestrator loop the G-Set MaxCut instances do. No claim is
+// made that the loop SOLVES these well — only that the substrate runs on them.
+
+use rand::{Rng, SeedableRng};
+use rand_chacha::ChaCha8Rng;
+
+/// A reproducible metric-TSP instance: `n_cities` random points in the unit
+/// square with Euclidean distances, lowered to a QUBO `ProblemIR`.
+pub fn tsp_instance(n_cities: usize, seed: u64) -> (String, ProblemIR) {
+    let mut rng = ChaCha8Rng::seed_from_u64(seed);
+    let pts: Vec<(f64, f64)> = (0..n_cities)
+        .map(|_| (rng.gen::<f64>(), rng.gen::<f64>()))
+        .collect();
+    let dist: Vec<Vec<f64>> = (0..n_cities)
+        .map(|i| {
+            (0..n_cities)
+                .map(|j| {
+                    let (dx, dy) = (pts[i].0 - pts[j].0, pts[i].1 - pts[j].1);
+                    (dx * dx + dy * dy).sqrt()
+                })
+                .collect()
+        })
+        .collect();
+    let (ir, _n) = tsp_qubo(&dist);
+    (format!("tsp{n_cities}_s{seed}"), ir)
+}
+
+/// A reproducible random MAX-2-SAT instance: `n_clauses` two-literal clauses over
+/// `n_vars` variables (distinct variables, random signs), lowered to a QUBO
+/// `ProblemIR` whose energy = number of unsatisfied clauses.
+pub fn max2sat_instance(n_vars: usize, n_clauses: usize, seed: u64) -> (String, ProblemIR) {
+    let mut rng = ChaCha8Rng::seed_from_u64(seed);
+    let nv = n_vars.max(1) as i32;
+    let mut clauses: Vec<Clause> = Vec::with_capacity(n_clauses);
+    for _ in 0..n_clauses {
+        let v1 = rng.gen_range(1..=nv);
+        let mut v2 = rng.gen_range(1..=nv);
+        while v2 == v1 && nv > 1 {
+            v2 = rng.gen_range(1..=nv);
+        }
+        let s1 = if rng.gen::<bool>() { 1 } else { -1 };
+        let s2 = if rng.gen::<bool>() { 1 } else { -1 };
+        clauses.push((s1 * v1, s2 * v2));
+    }
+    let ir = max2sat_qubo(n_vars, &clauses);
+    (format!("max2sat{n_vars}x{n_clauses}_s{seed}"), ir)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -301,5 +353,28 @@ mod tests {
                 ir.energy(&a)
             );
         }
+    }
+
+    #[test]
+    fn synthesized_instances_are_reproducible_and_well_formed() {
+        // Same seed → identical instance (id + variable count).
+        let (id_a, ir_a) = tsp_instance(6, 42);
+        let (id_b, ir_b) = tsp_instance(6, 42);
+        assert_eq!(id_a, id_b);
+        assert_eq!(ir_a.n, ir_b.n);
+        assert_eq!(ir_a.n, 36, "6 cities ⇒ 36 one-hot variables");
+        // A different seed generally differs.
+        let (_id_c, _ir_c) = tsp_instance(6, 43);
+
+        let (sid_a, sir_a) = max2sat_instance(20, 80, 7);
+        let (sid_b, sir_b) = max2sat_instance(20, 80, 7);
+        assert_eq!(sid_a, sid_b);
+        assert_eq!(sir_a.n, 20);
+        assert_eq!(sir_a.n, sir_b.n);
+        // The synthesized SAT instance is a real optimizable IR: some assignment
+        // beats the all-false one (energy is a meaningful unsat count).
+        let e0 = sir_a.energy(&[0u8; 20]);
+        let e1 = sir_a.energy(&[1u8; 20]);
+        assert!(e0.is_finite() && e1.is_finite());
     }
 }

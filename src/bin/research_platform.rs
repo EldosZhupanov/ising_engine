@@ -32,33 +32,59 @@ fn argn(name: &str, d: usize) -> usize {
 }
 
 fn main() {
-    // One or more instances: --file accepts a comma-separated list, so a whole
-    // benchmark family runs from one command (e.g. --file "$(ls d/G* | paste -sd,)").
-    let files_arg = arg("--file").unwrap_or_else(|| {
-        eprintln!(
-            "usage: research_platform --file <rudy>[,<rudy>...] [--dir D] [--campaigns N] [--generations N]\n\
-       [--rounds N] [--hypotheses N] [--batch N] [--seeds N] [--replicas N]\n\
-       [--report-every N] [--cloud-every N] [--llm MODEL] [--cloud-model MODEL] [--seed N]"
-        );
-        exit(2);
-    });
     let mut instances = Vec::new();
-    for file in files_arg.split(',').filter(|f| !f.trim().is_empty()) {
-        let file = file.trim();
-        let text = std::fs::read_to_string(file).unwrap_or_else(|e| {
-            eprintln!("cannot read {file}: {e}");
-            exit(1);
+    // --family {tsp|max2sat} SYNTHESIZES a runnable instance of another problem
+    // family (same campaign/orchestrator loop, via the energy-exact families
+    // frontend) instead of reading a MaxCut rudy file. Deterministic in --seed.
+    if let Some(fam) = arg("--family") {
+        use ising_engine::engine_v2::families::{max2sat_instance, tsp_instance};
+        let seed = arg("--seed").and_then(|s| s.parse().ok()).unwrap_or(1);
+        match fam.as_str() {
+            "tsp" => {
+                let cities = argn("--cities", 8);
+                println!("synthesizing TSP: {cities} cities, seed {seed}");
+                instances.push(tsp_instance(cities, seed));
+            }
+            "max2sat" | "sat" => {
+                let vars = argn("--vars", 40);
+                let clauses = argn("--clauses", vars * 4);
+                println!("synthesizing MAX-2-SAT: {vars} vars, {clauses} clauses, seed {seed}");
+                instances.push(max2sat_instance(vars, clauses, seed));
+            }
+            other => {
+                eprintln!("unknown --family '{other}' (use tsp | max2sat)");
+                exit(2);
+            }
+        }
+    } else {
+        // One or more instances: --file accepts a comma-separated list, so a whole
+        // benchmark family runs from one command (e.g. --file "$(ls d/G* | paste -sd,)").
+        let files_arg = arg("--file").unwrap_or_else(|| {
+            eprintln!(
+                "usage: research_platform (--file <rudy>[,...] | --family tsp|max2sat) [--dir D]\n\
+       [--campaigns N] [--generations N] [--rounds N] [--hypotheses N] [--batch N] [--seeds N]\n\
+       [--replicas N] [--report-every N] [--cloud-every N] [--llm MODEL] [--cloud-model MODEL]\n\
+       [--seed N] [--cities N] [--vars N] [--clauses N] [--early-stop]"
+            );
+            exit(2);
         });
-        let ir = rudy_maxcut_ir(&text).unwrap_or_else(|e| {
-            eprintln!("parse error in {file}: {e}");
-            exit(1);
-        });
-        let id = std::path::Path::new(file)
-            .file_name()
-            .and_then(|f| f.to_str())
-            .unwrap_or("unnamed")
-            .to_string();
-        instances.push((id, ir));
+        for file in files_arg.split(',').filter(|f| !f.trim().is_empty()) {
+            let file = file.trim();
+            let text = std::fs::read_to_string(file).unwrap_or_else(|e| {
+                eprintln!("cannot read {file}: {e}");
+                exit(1);
+            });
+            let ir = rudy_maxcut_ir(&text).unwrap_or_else(|e| {
+                eprintln!("parse error in {file}: {e}");
+                exit(1);
+            });
+            let id = std::path::Path::new(file)
+                .file_name()
+                .and_then(|f| f.to_str())
+                .unwrap_or("unnamed")
+                .to_string();
+            instances.push((id, ir));
+        }
     }
 
     let dir = arg("--dir").unwrap_or_else(|| "experiments/platform".into());
