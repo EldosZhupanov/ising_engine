@@ -32,6 +32,38 @@ fn argn(name: &str, d: usize) -> usize {
 }
 
 fn main() {
+    // --dataset (standalone): export the Foundation Dataset (ML-ready corpus)
+    // and print the HONEST scale-gap manifest from a persisted platform dir, so
+    // progress toward the 500k/1M/5M/20M foundation-scale milestones is
+    // observable. Grow the corpus with a curiosity-driven service, then re-check:
+    //   research_platform --file <...> --dir D --service --max-experiments 500000 \
+    //       --curiosity 0.5 --planner --shared-knowledge
+    //   research_platform --dir D --dataset      # progress + re-export
+    if std::env::args().any(|a| a == "--dataset") {
+        use ising_engine::engine_v2::ai_scientist::FoundationDataset;
+        let dir = arg("--dir").unwrap_or_else(|| "experiments/platform".into());
+        let report_every = argn("--report-every", 5000);
+        let mgr = CampaignManager::open(&dir, report_every).unwrap_or_else(|e| {
+            eprintln!("cannot open platform dir {dir}: {e}");
+            exit(1);
+        });
+        let ds = std::path::Path::new(&dir).join("dataset");
+        match FoundationDataset::export(&mgr.db, &ds) {
+            Ok(rows) => {
+                println!(
+                    "Foundation Dataset exported: {rows} rows → {}",
+                    ds.join("foundation_dataset.tsv").display()
+                );
+                println!("\n{}", FoundationDataset::manifest(&mgr.db));
+            }
+            Err(e) => {
+                eprintln!("dataset export failed: {e}");
+                exit(1);
+            }
+        }
+        return;
+    }
+
     let mut instances = Vec::new();
     // --family {tsp|max2sat} SYNTHESIZES a runnable instance of another problem
     // family (same campaign/orchestrator loop, via the energy-exact families
