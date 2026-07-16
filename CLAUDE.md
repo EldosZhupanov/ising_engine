@@ -197,6 +197,20 @@ cargo run --release --bin research_platform -- \
 investigates flagged theories, routes ideation to a live Ollama/Qwen).
 `--planner` lets it choose its own next instance by expected new knowledge.
 
+**Other run modes of `research_platform` (all opt-in, deterministic):**
+- `--family tsp|max2sat [--cities N | --vars N --clauses N] [--seed N]` —
+  synthesize a runnable SAT/TSP instance and run the same loop (no rudy file).
+- `--service --max-ticks N | --max-experiments N | --max-wall-secs N [--no-planner]`
+  — persistent, budget-capped orchestrator loop (24/7 pattern; Monitor-gated,
+  resumable). At least one cap is required.
+- `--investigate <operator> [--inv-seeds N]` — multi-instance Theory-Engine
+  ablation of one operator across all `--file`/`--family` instances; aggregated
+  Popperian confidence, published (supported or refuted).
+- `--dataset --dir D` — export the Foundation Dataset + print the honest
+  scale-gap manifest (progress toward 500k/1M/5M/20M).
+- `--early-stop` — attach the Dynamics early-stop controller to every run
+  (opt-in; the plain executor stays bit-identical).
+
 **Performance claims (bit-identical protocol):**
 - Measure — never assert. Use `criterion` / `hyperfine` / `cargo bench`.
 - A/B with identical seeds via `benchmark_suite/scripts/ab_engine_compare.py`
