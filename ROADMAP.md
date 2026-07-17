@@ -224,6 +224,11 @@ bias over-AVOIDed ensemble operators (**now fixed** via warm-start).
 - **World-filtered ideation / Dynamics early-stop are opt-in** (change
   candidate-selection / budget by design); default-on needs per-family
   rank-correlation / early-stop validation first.
+- **Monitor** predictor-health costs a leave-one-out evaluation — **measured
+  238 ms/pass at 18,570 experiments** (env-gated bench `monitor_cost_on_a_real_db`)
+  and grows with the DB. The dedup fix made it once/tick (was 2×); small vs a
+  campaign tick today, but before the 500k growth campaign it should be throttled
+  to periodic (the cheap db-integrity gate can stay every tick).
 - **Registry** snapshots the Predictor every generation (append-only growth is
   fine but consider bounding for very long 24/7 services).
 - **`--early-stop`** bootstraps one Dynamics model from `instance[0]`; a

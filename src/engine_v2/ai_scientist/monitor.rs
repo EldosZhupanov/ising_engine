@@ -336,6 +336,31 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "benchmark: set ISING_BENCH_DB=<path to ai_experiments.txt> to measure"]
+    fn monitor_cost_on_a_real_db() {
+        // Honest measurement of the per-tick Monitor cost (dominated by the
+        // leave-one-out predictor evaluation) on a real, large DB. Env-gated so
+        // it is a no-op in CI. Run: ISING_BENCH_DB=… cargo test monitor_cost -- --ignored --nocapture
+        let Ok(path) = std::env::var("ISING_BENCH_DB") else {
+            return;
+        };
+        let db = ExperimentDb::load(&path).expect("load db");
+        let graph = KnowledgeGraph::default();
+        let mon = Monitor::new(MonitorConfig::default());
+        let _ = mon.check(&db, &graph); // warm caches
+        let iters = 10;
+        let t = std::time::Instant::now();
+        for _ in 0..iters {
+            let _ = mon.check(&db, &graph);
+        }
+        let per_ms = t.elapsed().as_secs_f64() / iters as f64 * 1000.0;
+        eprintln!(
+            "Monitor::check over {} experiments: {per_ms:.2} ms/pass (was 2x this per tick before the dedup fix)",
+            db.len()
+        );
+    }
+
+    #[test]
     fn empty_db_short_circuits_to_a_warning() {
         let db = ExperimentDb::new();
         let graph = KnowledgeGraph::default();
