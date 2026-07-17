@@ -29,6 +29,11 @@ pub struct SparseBitSlice<'a> {
     energies: Vec<i64>,
     ilinear: Vec<i64>,
     iweights: Vec<i64>,
+    /// Reusable per-replica flip-sign scratch (len r), invariant: all zero
+    /// between `apply_flips` calls. Lets the field update run neighbor-major over
+    /// contiguous, vectorizable replica blocks instead of scattered stride-r
+    /// writes. Never affects the ledger (sign 0 ⇒ +0).
+    flip_sign: Vec<i64>,
 }
 
 impl<'a> SparseBitSlice<'a> {
@@ -69,6 +74,7 @@ impl<'a> SparseBitSlice<'a> {
             energies: vec![0; r],
             ilinear,
             iweights,
+            flip_sign: vec![0; r],
         };
         s.rebuild();
         Ok(s)
@@ -129,6 +135,104 @@ impl<'a> SparseBitSlice<'a> {
         }
         self.ir.offset as i64 + lin + quad / 2
     }
+
+    /// Field update for SPARSE flips: replica-outer, neighbor-inner. Does
+    /// `O(neighbors · flips)` scattered stride-`r` writes — the right choice when
+    /// few replicas flip (the writes are few, so their scatter is cheap and it
+    /// avoids touching non-flipped replicas). Selected by `apply_flips` when the
+    /// flip count is below the measured crossover (~`r/3`).
+    #[inline]
+    fn apply_flips_sparse(&mut self, site: usize, mask: &ReplicaMask) {
+        let (r, w) = (self.r, self.w);
+        let (a, b) = (
+            self.ir.row_ptr[site] as usize,
+            self.ir.row_ptr[site + 1] as usize,
+        );
+        let sbase = site * w;
+        for word in 0..w {
+            let mbits = mask.words()[word];
+            if mbits == 0 {
+                continue;
+            }
+            let spin_word = self.spins[sbase + word];
+            let mut bits = mbits;
+            while bits != 0 {
+                let bpos = bits.trailing_zeros() as usize;
+                let rep = word * 64 + bpos;
+                let x = (spin_word >> bpos) & 1;
+                let h = self.fields[site * r + rep];
+                self.energies[rep] += if x == 0 { h } else { -h };
+                let sign: i64 = if x == 0 { 1 } else { -1 };
+                for k in a..b {
+                    let j = self.ir.col_idx[k] as usize;
+                    self.fields[j * r + rep] += sign * self.iweights[k];
+                }
+                bits &= bits - 1;
+            }
+            self.spins[sbase + word] ^= mbits;
+        }
+    }
+
+    /// Field update for DENSE flips: neighbor-outer, replica-inner. Updates each
+    /// neighbor's CONTIGUOUS replica block `fields[j*r .. j*r+r]` in one burst — a
+    /// vectorizable SAXPY over the flip-sign scratch — giving temporal locality
+    /// instead of stride-`r` cache thrash. Does `O(neighbors·r)` work regardless
+    /// of flip count, so it wins only above the ~`r/3` crossover. Bit-identical to
+    /// `apply_flips_sparse`: each `(j,rep)` cell is written exactly once, integer
+    /// add is exact, and a non-flipped replica has `flip_sign == 0` ⇒ it adds 0.
+    #[inline]
+    fn apply_flips_dense(&mut self, site: usize, mask: &ReplicaMask) {
+        let (r, w) = (self.r, self.w);
+        let (a, b) = (
+            self.ir.row_ptr[site] as usize,
+            self.ir.row_ptr[site + 1] as usize,
+        );
+        let sbase = site * w;
+
+        // Pass 1: on-site energy delta + record flip sign; flip the spin bits.
+        for word in 0..w {
+            let mbits = mask.words()[word];
+            if mbits == 0 {
+                continue;
+            }
+            let spin_word = self.spins[sbase + word]; // pre-flip snapshot
+            let mut bits = mbits;
+            while bits != 0 {
+                let bpos = bits.trailing_zeros() as usize;
+                let rep = word * 64 + bpos;
+                let x = (spin_word >> bpos) & 1;
+                let h = self.fields[site * r + rep];
+                self.energies[rep] += if x == 0 { h } else { -h };
+                self.flip_sign[rep] = if x == 0 { 1 } else { -1 };
+                bits &= bits - 1;
+            }
+            self.spins[sbase + word] ^= mbits;
+        }
+
+        // Pass 2: contiguous, vectorizable per-neighbor block update.
+        let fields = &mut self.fields;
+        let signs = &self.flip_sign;
+        let iweights = &self.iweights;
+        let col_idx = &self.ir.col_idx;
+        for k in a..b {
+            let j = col_idx[k] as usize;
+            let wt = iweights[k];
+            let block = &mut fields[j * r..j * r + r];
+            for (f, &s) in block.iter_mut().zip(signs.iter()) {
+                *f += s * wt;
+            }
+        }
+
+        // Restore the scratch invariant (all zero) — clear only the flipped reps.
+        for word in 0..w {
+            let mut bits = mask.words()[word];
+            while bits != 0 {
+                let bpos = bits.trailing_zeros() as usize;
+                self.flip_sign[word * 64 + bpos] = 0;
+                bits &= bits - 1;
+            }
+        }
+    }
 }
 
 impl SpinState for SparseBitSlice<'_> {
@@ -152,34 +256,17 @@ impl SpinState for SparseBitSlice<'_> {
 
     fn apply_flips(&mut self, site: usize, mask: &ReplicaMask) {
         debug_assert_eq!(mask.len(), self.r);
-        let (r, w) = (self.r, self.w);
-        let (a, b) = (
-            self.ir.row_ptr[site] as usize,
-            self.ir.row_ptr[site + 1] as usize,
-        );
-        let sbase = site * w;
-        for word in 0..w {
-            let mbits = mask.words()[word];
-            if mbits == 0 {
-                continue;
-            }
-            let spin_word = self.spins[sbase + word]; // pre-flip snapshot
-            let mut bits = mbits;
-            while bits != 0 {
-                let bpos = bits.trailing_zeros() as usize;
-                let rep = word * 64 + bpos;
-                let x = (spin_word >> bpos) & 1;
-                let h = self.fields[site * r + rep];
-                let de = if x == 0 { h } else { -h };
-                self.energies[rep] += de;
-                let sign: i64 = if x == 0 { 1 } else { -1 };
-                for k in a..b {
-                    let j = self.ir.col_idx[k] as usize;
-                    self.fields[j * r + rep] += sign * self.iweights[k];
-                }
-                bits &= bits - 1;
-            }
-            self.spins[sbase + word] ^= mbits; // flip all masked replicas at once
+        // The field update has two regimes: the SCATTERED path is O(neighbors·
+        // flips); the DENSE path is O(neighbors·r) but contiguous + vectorizable.
+        // A/B on real instances puts the crossover at ≈ r/3 flips. Dispatch per
+        // call by the actual flip count — so a single sweep automatically uses
+        // the dense path on hot (high-acceptance) sites and the scattered path on
+        // cold ones. Both are bit-identical (integer ledger, each cell once).
+        let flips: u32 = mask.words().iter().map(|x| x.count_ones()).sum();
+        if (flips as usize) * 3 >= self.r {
+            self.apply_flips_dense(site, mask);
+        } else {
+            self.apply_flips_sparse(site, mask);
         }
     }
 
@@ -264,6 +351,59 @@ mod tests {
     use super::super::ReferenceState;
     use super::*;
     use crate::engine_v2::state::SpinState;
+
+    #[test]
+    #[ignore = "profiling: ISING_PROFILE_RUDY=<gset file> cargo test apply_flips_kernel_ab -- --ignored --nocapture"]
+    fn apply_flips_kernel_ab_by_flip_count() {
+        use crate::engine_v2::frontend::rudy_maxcut_ir;
+        use crate::engine_v2::state::ReplicaMask;
+        let Ok(path) = std::env::var("ISING_PROFILE_RUDY") else {
+            return;
+        };
+        let ir = rudy_maxcut_ir(&std::fs::read_to_string(&path).unwrap()).unwrap();
+        let (r, sweeps) = (64usize, 40usize);
+        eprintln!(
+            "apply_flips A/B on n={}, r={r}, {sweeps} sweeps — old(scattered) vs new(neighbor-major), min-of-3",
+            ir.n
+        );
+        eprintln!("   f (flips) | sparse ms |  dense ms | dispatch ms | dispatch/sparse");
+        for f in [4usize, 8, 16, 32, 64] {
+            let mut mask = ReplicaMask::new(r);
+            let step = (r / f).max(1);
+            let (mut set, mut rep) = (0usize, 0usize);
+            while set < f && rep < r {
+                mask.set(rep);
+                rep += step;
+                set += 1;
+            }
+            // path: 0 = sparse (forced), 1 = dense (forced), 2 = dispatch (prod).
+            let time = |path: u8| -> f64 {
+                let mut bs = SparseBitSlice::new(&ir, r, &vec![0u8; ir.n]).unwrap();
+                let call = |bs: &mut SparseBitSlice, s: usize| match path {
+                    0 => bs.apply_flips_sparse(s, &mask),
+                    1 => bs.apply_flips_dense(s, &mask),
+                    _ => bs.apply_flips(s, &mask), // the production dispatcher
+                };
+                for site in 0..ir.n {
+                    call(&mut bs, site); // warm
+                }
+                let t = std::time::Instant::now();
+                for _ in 0..sweeps {
+                    for site in 0..ir.n {
+                        call(std::hint::black_box(&mut bs), site);
+                    }
+                }
+                t.elapsed().as_secs_f64() * 1000.0
+            };
+            let sparse = (0..3).map(|_| time(0)).fold(f64::INFINITY, f64::min);
+            let dense = (0..3).map(|_| time(1)).fold(f64::INFINITY, f64::min);
+            let disp = (0..3).map(|_| time(2)).fold(f64::INFINITY, f64::min);
+            eprintln!(
+                "   {f:>8} | {sparse:9.2} | {dense:9.2} | {disp:11.2} | {:.3}",
+                disp / sparse
+            );
+        }
+    }
     use rand::{Rng, SeedableRng};
     use rand_chacha::ChaCha8Rng;
 

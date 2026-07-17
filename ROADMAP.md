@@ -267,7 +267,13 @@ regression and cross-backend bit-identity firewall pass unchanged):
 4. **Monitor → live gate** in the service loop with alerting + auto-pause thresholds tuned on real runs.
 5. **Reconstruct-and-serve models** from the registry (a `--serve-model` path) so a trained Policy/World is reusable without retraining.
 6. **SAT/TSP knowledge**: run campaigns on the new families and mine family-specific rules; add k>2 SAT gadgets, job-shop scheduling.
-7. **AVX/SIMD field ledger** in `SparseBitSlice` (the one remaining production-shaped throughput win).
+7. ~~AVX/SIMD field ledger~~ **PARTIALLY DONE**: `SparseBitSlice::apply_flips` now
+   adaptively dispatches the field update — scattered `O(neighbors·flips)` for
+   sparse flips, contiguous/vectorizable `O(neighbors·r)` for dense flips
+   (crossover ~`r/3`, measured). Bit-identical (integer ledger; firewall
+   unchanged). Isolated-kernel A/B: no regression at low flip count, **1.6–4.6×
+   faster at high flip count** (G11→G1); random_flip_sweep −29% end-to-end.
+   Remaining: explicit `#[target_feature]` AVX2/512 for the dense inner SAXPY.
 8. **World-filtered ideation on by default** once its rank-correlation is validated per-family (currently opt-in with shared-knowledge).
 9. **Theory confidence at scale**: `--investigate` across the full G-Set to move key operators from support≈1 to durable confidence.
 10. **Foundation-model readiness gate**: when the dataset crosses 500k, re-evaluate whether a shared GNN/Transformer representation is finally earned.

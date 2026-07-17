@@ -300,6 +300,60 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "profiling: ISING_PROFILE_RUDY=<gset file> cargo test profile_operator_kernels -- --ignored --nocapture"]
+    fn profile_operator_kernels_on_a_real_instance() {
+        use crate::engine_v2::frontend::rudy_maxcut_ir;
+        let Ok(path) = std::env::var("ISING_PROFILE_RUDY") else {
+            return;
+        };
+        let ir = rudy_maxcut_ir(&std::fs::read_to_string(&path).expect("read")).expect("parse");
+        let reg = OperatorRegistry::standard();
+        let exec = RuntimeExecutor::new(1); // single-thread for clean per-op timing
+        let (replicas, sweeps) = (64usize, 50u32);
+        let seeds = [1u64, 2, 3];
+        eprintln!(
+            "profiling n={} edges≈? on the selected backend; {replicas} replicas, {sweeps} sweeps, {} seeds",
+            ir.n,
+            seeds.len()
+        );
+        let ops: Vec<String> = reg.names().map(|s| s.to_string()).collect();
+        let mut timings: Vec<(String, f64)> = Vec::new();
+        for op in &ops {
+            let tasks: Vec<ExperimentTask> = seeds
+                .iter()
+                .map(|&s| ExperimentTask {
+                    schedule: Schedule {
+                        ops: vec![op.clone()],
+                        sweeps: vec![sweeps],
+                        temp_hi: 4.0,
+                        temp_lo: 0.1,
+                    },
+                    num_replicas: replicas,
+                    seed: s,
+                })
+                .collect();
+            let _ = exec.run_batch(&ir, &reg, &tasks); // warm
+            let iters = 5;
+            let t = std::time::Instant::now();
+            for _ in 0..iters {
+                std::hint::black_box(exec.run_batch(&ir, &reg, &tasks));
+            }
+            timings.push((
+                op.clone(),
+                t.elapsed().as_secs_f64() / iters as f64 * 1000.0,
+            ));
+        }
+        timings.sort_by(|a, b| b.1.total_cmp(&a.1));
+        eprintln!(
+            "--- per-operator wall time (batch of {} runs) ---",
+            seeds.len()
+        );
+        for (op, ms) in &timings {
+            eprintln!("  {op:>26}: {ms:8.2} ms");
+        }
+    }
+
+    #[test]
     fn early_stop_executor_stays_deterministic_and_valid() {
         use super::super::dynamics::train_on_instances;
         let ir = ir7();
