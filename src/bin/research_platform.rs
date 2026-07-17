@@ -132,6 +132,59 @@ fn main() {
         }
     }
 
+    // --structural prints structural landscape signals for the loaded instances,
+    // used to test whether RUGGEDNESS predicts which quench/barrier operator is
+    // causal across problem classes. ruggedness = fraction of DISTINCT local
+    // minima reached by `samples` random-start greedy descents (smooth landscape
+    // → few distinct traps → low; rugged → many → high).
+    if std::env::args().any(|a| a == "--structural") {
+        use rand::{Rng, SeedableRng};
+        use rand_chacha::ChaCha8Rng;
+        fn ruggedness(ir: &ising_engine::engine_v2::ir::ProblemIR, samples: usize) -> f64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(12345);
+            let n = ir.n;
+            let mut minima = Vec::with_capacity(samples);
+            for _ in 0..samples {
+                let mut x: Vec<u8> = (0..n).map(|_| rng.gen::<bool>() as u8).collect();
+                loop {
+                    let mut improved = false;
+                    for i in 0..n {
+                        let (a, b) = (ir.row_ptr[i] as usize, ir.row_ptr[i + 1] as usize);
+                        let mut h = ir.linear[i];
+                        for k in a..b {
+                            h += ir.weights[k] * x[ir.col_idx[k] as usize] as f64;
+                        }
+                        // ΔE of flipping spin i = (1 - 2·x_i)·field_i.
+                        if (1.0 - 2.0 * x[i] as f64) * h < -1e-9 {
+                            x[i] ^= 1;
+                            improved = true;
+                        }
+                    }
+                    if !improved {
+                        break;
+                    }
+                }
+                minima.push((ir.energy(&x) * 1e6).round() as i64);
+            }
+            minima.sort_unstable();
+            minima.dedup();
+            minima.len() as f64 / samples as f64
+        }
+        println!("instance | n | weight_cv | ruggedness(distinct-minima frac, 64 starts)");
+        for (id, ir) in &instances {
+            let w: Vec<f64> = ir.weights.iter().map(|x| x.abs()).collect();
+            let wm = w.iter().sum::<f64>() / w.len().max(1) as f64;
+            let wcv = if wm > 1e-9 {
+                (w.iter().map(|x| (x - wm).powi(2)).sum::<f64>() / w.len().max(1) as f64).sqrt()
+                    / wm
+            } else {
+                0.0
+            };
+            println!("{id} | {} | {:.3} | {:.3}", ir.n, wcv, ruggedness(ir, 64));
+        }
+        return;
+    }
+
     let dir = arg("--dir").unwrap_or_else(|| "experiments/platform".into());
     let campaigns = argn("--campaigns", 1);
     let report_every = argn("--report-every", 5000);
