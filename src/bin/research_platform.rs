@@ -69,7 +69,9 @@ fn main() {
     // family (same campaign/orchestrator loop, via the energy-exact families
     // frontend) instead of reading a MaxCut rudy file. Deterministic in --seed.
     if let Some(fam) = arg("--family") {
-        use ising_engine::engine_v2::families::{max2sat_instance, tsp_instance};
+        use ising_engine::engine_v2::families::{
+            coloring_instance, max2sat_instance, tsp_instance,
+        };
         let seed = arg("--seed").and_then(|s| s.parse().ok()).unwrap_or(1);
         // --count N synthesizes N distinct instances (seeds seed..seed+N), so a
         // whole synthetic family can be studied/investigated in one command.
@@ -94,6 +96,18 @@ fn main() {
                 );
                 for s in seed..seed + count {
                     instances.push(max2sat_instance(vars, clauses, s));
+                }
+            }
+            "coloring" | "color" => {
+                let verts = argn("--vertices", 20);
+                let deg = argn("--avg-deg", 4);
+                let k = argn("--colors", 4);
+                println!(
+                    "synthesizing {count} coloring instance(s): {verts} vertices, k={k}, avg-deg {deg}, seeds {seed}..{}",
+                    seed + count - 1
+                );
+                for s in seed..seed + count {
+                    instances.push(coloring_instance(verts, deg, k, s));
                 }
             }
             other => {

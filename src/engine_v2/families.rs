@@ -239,6 +239,73 @@ pub fn max2sat_instance(n_vars: usize, n_clauses: usize, seed: u64) -> (String, 
     (format!("max2sat{n_vars}x{n_clauses}_s{seed}"), ir)
 }
 
+// ================================================= GRAPH COLORING (scheduling)
+
+/// Lower graph K-coloring into a QUBO `ProblemIR` (Lucas 2014). Variables
+/// `x[v*k + c]` = "vertex v takes color c". Two penalty families: each vertex
+/// gets exactly one color (one-hot, strength `a`), and adjacent vertices differ
+/// (edge conflict, strength `b`). Energy 0 iff a proper k-coloring exists — the
+/// canonical constraint-satisfaction problem (scheduling / register allocation /
+/// frequency assignment are all coloring). Pure feasibility: NO objective term.
+pub fn graph_coloring_qubo(
+    n_vertices: usize,
+    edges: &[(u32, u32)],
+    k_colors: usize,
+    a: f64,
+    b: f64,
+) -> ProblemIR {
+    let nk = n_vertices * k_colors;
+    let mut linear = vec![0.0f64; nk];
+    let mut pairs: Vec<(u32, u32, f64)> = Vec::new();
+    let mut offset = 0.0f64;
+    // One-hot per vertex: a·(Σ_c x_vc − 1)² = a·(−Σ_c x_vc + 2 Σ_{c<c'} x_vc x_vc' + 1).
+    for v in 0..n_vertices {
+        offset += a;
+        for c in 0..k_colors {
+            let i = v * k_colors + c;
+            linear[i] -= a;
+            for c2 in (c + 1)..k_colors {
+                pairs.push(ordered(i as u32, (v * k_colors + c2) as u32, 2.0 * a));
+            }
+        }
+    }
+    // Edge conflict: b·Σ_c x_uc x_vc (same color on an edge is penalised).
+    for &(u, w) in edges {
+        let (u, w) = (u as usize, w as usize);
+        for c in 0..k_colors {
+            pairs.push(ordered(
+                (u * k_colors + c) as u32,
+                (w * k_colors + c) as u32,
+                b,
+            ));
+        }
+    }
+    ProblemIR::from_pairs(nk, offset, linear, &pairs)
+}
+
+/// A reproducible random graph-coloring instance: an Erdős–Rényi graph on
+/// `n_vertices` (target average degree ~`avg_deg`) with `k_colors`, lowered to a
+/// QUBO. Constraint-heavy (feasibility penalties only), like scheduling/VRP.
+pub fn coloring_instance(
+    n_vertices: usize,
+    avg_deg: usize,
+    k_colors: usize,
+    seed: u64,
+) -> (String, ProblemIR) {
+    let mut rng = ChaCha8Rng::seed_from_u64(seed);
+    let p = (avg_deg as f64 / (n_vertices.max(2) - 1) as f64).min(1.0);
+    let mut edges = Vec::new();
+    for u in 0..n_vertices {
+        for w in (u + 1)..n_vertices {
+            if rng.gen::<f64>() < p {
+                edges.push((u as u32, w as u32));
+            }
+        }
+    }
+    let ir = graph_coloring_qubo(n_vertices, &edges, k_colors, 1.0, 1.0);
+    (format!("color{n_vertices}k{k_colors}_s{seed}"), ir)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -353,6 +420,34 @@ mod tests {
                 ir.energy(&a)
             );
         }
+    }
+
+    #[test]
+    fn coloring_ground_state_is_a_proper_coloring() {
+        let edges = [(0u32, 1), (1, 2), (0, 2)]; // triangle: 3-colorable, not 2-colorable
+        let ir3 = graph_coloring_qubo(3, &edges, 3, 1.0, 1.0);
+        let (e3, g3) = brute_ground(&ir3);
+        assert!(
+            e3.abs() < 1e-9,
+            "triangle IS 3-colorable → ground energy 0, got {e3}"
+        );
+        for v in 0..3 {
+            assert_eq!(
+                (0..3).filter(|&c| g3[v * 3 + c] == 1).count(),
+                1,
+                "vertex {v} must take exactly one color"
+            );
+        }
+        for &(u, w) in &edges {
+            let cu = (0..3).find(|&c| g3[u as usize * 3 + c] == 1).unwrap();
+            let cw = (0..3).find(|&c| g3[w as usize * 3 + c] == 1).unwrap();
+            assert_ne!(cu, cw, "adjacent vertices must differ");
+        }
+        let (e2, _) = brute_ground(&graph_coloring_qubo(3, &edges, 2, 1.0, 1.0));
+        assert!(
+            e2 > 0.5,
+            "triangle is NOT 2-colorable → ground energy > 0, got {e2}"
+        );
     }
 
     #[test]
