@@ -10,7 +10,7 @@
 
 use super::super::evolution::Schedule;
 use super::db::ExperimentDb;
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// Instance features the predictor conditions on.
 #[derive(Debug, Clone, Copy, Default)]
@@ -35,6 +35,28 @@ pub struct Predictor {
 const MIN_TRAIN: usize = 30;
 
 fn features(vocab: &[String], sig: &InstanceSignature, sched: &Schedule) -> Vec<f64> {
+    feature_row(
+        vocab,
+        sig,
+        &sched.ops,
+        &sched.sweeps,
+        sched.temp_hi,
+        sched.temp_lo,
+    )
+}
+
+/// The feature row, computed directly from borrowed schedule fields — so hot
+/// loops (e.g. leave-one-out sufficient statistics) can build features from a
+/// raw `ExperimentRecord` without cloning it into a `Schedule`. Bit-identical to
+/// `features` for the same inputs.
+fn feature_row(
+    vocab: &[String],
+    sig: &InstanceSignature,
+    ops: &[String],
+    sweeps: &[u32],
+    temp_hi: f64,
+    temp_lo: f64,
+) -> Vec<f64> {
     let mut x = Vec::with_capacity(10 + vocab.len());
     x.push(1.0); // bias
     x.push(((sig.n as f64) + 1.0).ln() / 10.0);
@@ -42,12 +64,12 @@ fn features(vocab: &[String], sig: &InstanceSignature, sched: &Schedule) -> Vec<
     x.push(sig.clustering);
     x.push(sig.mean_degree / 10.0);
     x.push(sig.degree_cv);
-    x.push(sched.ops.len() as f64 / 4.0);
-    x.push((sched.sweeps.iter().sum::<u32>() as f64 + 1.0).ln() / 10.0);
-    x.push((sched.temp_hi + 1.0).ln());
-    x.push(sched.temp_lo);
+    x.push(ops.len() as f64 / 4.0);
+    x.push((sweeps.iter().sum::<u32>() as f64 + 1.0).ln() / 10.0);
+    x.push((temp_hi + 1.0).ln());
+    x.push(temp_lo);
     for op in vocab {
-        x.push(if sched.ops.iter().any(|o| o == op) {
+        x.push(if ops.iter().any(|o| o == op) {
             1.0
         } else {
             0.0
@@ -244,6 +266,118 @@ impl Predictor {
             trained_on,
         })
     }
+}
+
+/// Leave-one-instance-out fitted predictors via ADDITIVE SUFFICIENT STATISTICS.
+///
+/// The normal-equation matrices XᵀX and Xᵀy are sums over rows, so the training
+/// set for fold *k* (every row whose instance ≠ *k*) has matrices
+/// `S_total − S_k` and `b_total − b_k`. One pass builds the global sums and every
+/// per-instance partial (O(N·d²), and — via [`feature_row`] — with ZERO per-row
+/// cloning); each fold is then a single d×d solve (O(K·d³)). This replaces the
+/// naïve O(K·N·d²)-compute + O(K·N)-clone leave-one-out.
+///
+/// All folds share ONE global vocabulary. This is identical to refitting per fold
+/// whenever the instances share an operator pool (the normal case — the whole
+/// campaign draws from one registry); the tests verify the outputs match a
+/// from-scratch leave-one-out. NOTE: `S_total − S_k` differs from a fresh
+/// `Σ_{j≠k}` by floating-point reordering, so predictions can differ at the ULP
+/// level — immaterial to the Spearman RANK correlation this feeds, and verified.
+///
+/// Returns a fitted [`Predictor`] per instance that has ≥ `MIN_TRAIN` training
+/// rows from the other instances.
+pub(crate) fn leave_one_instance_out(
+    db: &ExperimentDb,
+    lambda: f64,
+) -> BTreeMap<String, Predictor> {
+    let vocab: Vec<String> = db
+        .all()
+        .iter()
+        .flat_map(|r| r.sequence.iter().cloned())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect();
+    let dim = 10 + vocab.len();
+
+    // Per-instance partial normal equations (upper triangle stored flat).
+    struct Partial {
+        s: Vec<f64>, // dim*dim, only [i*dim + j] for j ≥ i written
+        b: Vec<f64>,
+        n: usize,
+    }
+    let mut s_total = vec![0.0f64; dim * dim];
+    let mut b_total = vec![0.0f64; dim];
+    let mut n_total = 0usize;
+    let mut per: BTreeMap<String, Partial> = BTreeMap::new();
+
+    for r in db.all() {
+        let sig = InstanceSignature {
+            n: r.n,
+            density: r.density,
+            clustering: r.clustering,
+            mean_degree: r.mean_degree,
+            degree_cv: r.degree_cv,
+        };
+        // No clone: features straight from the borrowed record fields.
+        let x = feature_row(&vocab, &sig, &r.sequence, &r.sweeps, r.temp_hi, r.temp_lo);
+        let y = r.rel_improvement();
+        let e = per.entry(r.instance_id.clone()).or_insert_with(|| Partial {
+            s: vec![0.0; dim * dim],
+            b: vec![0.0; dim],
+            n: 0,
+        });
+        for i in 0..dim {
+            let xi = x[i];
+            b_total[i] += xi * y;
+            e.b[i] += xi * y;
+            let row = i * dim;
+            for j in i..dim {
+                let v = xi * x[j];
+                s_total[row + j] += v;
+                e.s[row + j] += v;
+            }
+        }
+        e.n += 1;
+        n_total += 1;
+    }
+
+    // Each fold: A = (S_total − S_k), symmetrized + ridged EXACTLY as
+    // `Predictor::fit`, then the same Gaussian-elimination solve.
+    let mut out = BTreeMap::new();
+    for (inst, p) in &per {
+        if n_total - p.n < MIN_TRAIN {
+            continue;
+        }
+        let mut a = vec![vec![0.0; dim]; dim];
+        let mut rhs = vec![0.0; dim];
+        for i in 0..dim {
+            rhs[i] = b_total[i] - p.b[i];
+            let row = i * dim;
+            for j in i..dim {
+                a[i][j] = s_total[row + j] - p.s[row + j];
+            }
+        }
+        // Mirror the upper triangle down and add ridge to the diagonal — the
+        // identical `split_at_mut` idiom `Predictor::fit` uses (same FP ops).
+        for i in 0..dim {
+            let (upper, lower) = a.split_at_mut(i);
+            for (j, u) in upper.iter().enumerate() {
+                lower[0][j] = u[i];
+            }
+            lower[0][i] += lambda.max(1e-9);
+        }
+        if let Some(weights) = solve(a, rhs) {
+            out.insert(
+                inst.clone(),
+                Predictor {
+                    vocab: vocab.clone(),
+                    weights,
+                    trained_on: n_total - p.n,
+                },
+            );
+        }
+    }
+    out
 }
 
 #[cfg(test)]

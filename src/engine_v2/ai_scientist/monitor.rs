@@ -355,7 +355,7 @@ mod tests {
         }
         let per_ms = t.elapsed().as_secs_f64() / iters as f64 * 1000.0;
         eprintln!(
-            "Monitor::check over {} experiments: {per_ms:.2} ms/pass (was 2x this per tick before the dedup fix)",
+            "Monitor::check over {} experiments: {per_ms:.2} ms/pass",
             db.len()
         );
     }

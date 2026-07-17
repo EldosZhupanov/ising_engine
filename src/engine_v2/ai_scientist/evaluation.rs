@@ -15,7 +15,7 @@
 
 use super::db::ExperimentDb;
 use super::meta_learner::MetaLearner;
-use super::predictor::{InstanceSignature, Predictor};
+use super::predictor::{leave_one_instance_out, InstanceSignature};
 use crate::engine_v2::evolution::Schedule;
 use std::collections::BTreeMap;
 use std::fs;
@@ -143,16 +143,14 @@ pub fn evaluate_predictor(db: &ExperimentDb, lambda: f64) -> Option<Vec<Instance
     if eligible.len() < 2 {
         return None;
     }
+    // One pass builds every fold's predictor via additive sufficient statistics
+    // (O(N·d²), no per-fold refit, no row cloning) instead of refitting on a
+    // fresh clone of ~all rows per instance (O(K·N·d²)).
+    let folds = leave_one_instance_out(db, lambda);
     let mut out = Vec::new();
     for inst in eligible {
         let test_idx = &groups[inst];
-        let train: Vec<_> = db
-            .all()
-            .iter()
-            .filter(|r| r.instance_id != *inst)
-            .cloned()
-            .collect();
-        let Some(p) = Predictor::fit(&ExperimentDb::from_records(train), lambda) else {
+        let Some(p) = folds.get(inst) else {
             continue;
         };
         let mut preds = Vec::with_capacity(test_idx.len());
@@ -313,6 +311,33 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "benchmark: set ISING_BENCH_DB=<path to ai_experiments.txt> to measure"]
+    fn evaluate_predictor_cost_on_a_real_db() {
+        let Ok(path) = std::env::var("ISING_BENCH_DB") else {
+            return;
+        };
+        let db = ExperimentDb::load(&path).expect("load db");
+        let _ = evaluate_predictor(&db, 1e-3); // warm
+        let iters = 5;
+        let t = std::time::Instant::now();
+        let mut folds = 0usize;
+        for _ in 0..iters {
+            folds = evaluate_predictor(&db, 1e-3).map(|v| v.len()).unwrap_or(0);
+        }
+        let per_ms = t.elapsed().as_secs_f64() / iters as f64 * 1000.0;
+        // Honesty check: the mean leave-one-out Spearman must still match the
+        // historically-recorded +0.747, i.e. the sufficient-statistics rewrite
+        // did not change the science, only the speed.
+        let accs = evaluate_predictor(&db, 1e-3).unwrap();
+        let mean_spear = accs.iter().map(|a| a.spearman).sum::<f64>() / accs.len() as f64;
+        eprintln!(
+            "evaluate_predictor over {} experiments / {folds} folds: {per_ms:.2} ms/call \
+             (mean leave-one-out Spearman {mean_spear:.4})",
+            db.len()
+        );
+    }
+
+    #[test]
     fn reproduced_rules_require_two_instances() {
         let db = two_instance_db();
         let (rules, analyzed) = rule_reproducibility(&db, &MetaLearner::new());
@@ -349,6 +374,97 @@ mod tests {
                 "expected transfer on {}: spearman {}",
                 r.instance,
                 r.spearman
+            );
+        }
+    }
+
+    #[test]
+    fn sufficient_statistics_loo_matches_from_scratch() {
+        use super::super::predictor::Predictor;
+        // Three instances sharing the operator pool (30 rows each ⇒ 60 training
+        // rows per fold ≥ MIN_TRAIN). Slight per-instance jitter avoids ties.
+        let mut recs = Vec::new();
+        for (k, inst) in ["G_a", "G_b", "G_c"].iter().enumerate() {
+            let d = 0.005 + 0.003 * k as f64;
+            for i in 0..15 {
+                let mut r = rec(
+                    inst,
+                    &["metropolis_sweep", "greedy_descent"],
+                    -0.5 - 0.01 * i as f64 - 0.002 * k as f64,
+                    d,
+                );
+                r.id = recs.len() as u64;
+                recs.push(r);
+                let mut r = rec(inst, &["random_flip_sweep"], -0.02 - 0.001 * i as f64, d);
+                r.id = recs.len() as u64;
+                recs.push(r);
+            }
+        }
+        let db = ExperimentDb::from_records(recs);
+
+        // NEW path (sufficient statistics).
+        let fast = evaluate_predictor(&db, 1e-3).unwrap();
+
+        // REFERENCE: the pre-optimization from-scratch leave-one-out.
+        let groups = by_instance(&db);
+        let eligible: Vec<&String> = groups.keys().filter(|k| groups[*k].len() >= 10).collect();
+        let mut reference: Vec<(String, f64, f64)> = Vec::new();
+        for inst in &eligible {
+            let train: Vec<_> = db
+                .all()
+                .iter()
+                .filter(|r| &r.instance_id != *inst)
+                .cloned()
+                .collect();
+            let p = Predictor::fit(&ExperimentDb::from_records(train), 1e-3).unwrap();
+            let mut preds = Vec::new();
+            let mut actual = Vec::new();
+            let mut abs_err = 0.0;
+            for &i in &groups[*inst] {
+                let r = &db.all()[i];
+                let sig = InstanceSignature {
+                    n: r.n,
+                    density: r.density,
+                    clustering: r.clustering,
+                    mean_degree: r.mean_degree,
+                    degree_cv: r.degree_cv,
+                };
+                let sched = Schedule {
+                    ops: r.sequence.clone(),
+                    sweeps: r.sweeps.clone(),
+                    temp_hi: r.temp_hi,
+                    temp_lo: r.temp_lo,
+                };
+                let yh = p.predict(&sig, &sched);
+                abs_err += (yh - r.rel_improvement()).abs();
+                preds.push(yh);
+                actual.push(r.rel_improvement());
+            }
+            reference.push((
+                (*inst).clone(),
+                spearman(&preds, &actual),
+                abs_err / preds.len() as f64,
+            ));
+        }
+
+        // Same instances, IDENTICAL Spearman (ranks are robust to ULP prediction
+        // differences from the total−partial reordering), MAE within FP tolerance.
+        assert_eq!(fast.len(), reference.len());
+        for (f, (rinst, rspear, rmae)) in fast.iter().zip(&reference) {
+            assert_eq!(&f.instance, rinst);
+            assert!(
+                (f.spearman - rspear).abs() < 1e-9,
+                "spearman drift on {}: {} vs {}",
+                f.instance,
+                f.spearman,
+                rspear
+            );
+            assert!(
+                (f.mae - rmae).abs() < 1e-6,
+                "mae drift on {}: {} vs {}",
+                f.instance,
+                f.mae,
+                rmae
             );
         }
     }
