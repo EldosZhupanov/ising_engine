@@ -71,17 +71,30 @@ fn main() {
     if let Some(fam) = arg("--family") {
         use ising_engine::engine_v2::families::{max2sat_instance, tsp_instance};
         let seed = arg("--seed").and_then(|s| s.parse().ok()).unwrap_or(1);
+        // --count N synthesizes N distinct instances (seeds seed..seed+N), so a
+        // whole synthetic family can be studied/investigated in one command.
+        let count = argn("--count", 1).max(1) as u64;
         match fam.as_str() {
             "tsp" => {
                 let cities = argn("--cities", 8);
-                println!("synthesizing TSP: {cities} cities, seed {seed}");
-                instances.push(tsp_instance(cities, seed));
+                println!(
+                    "synthesizing {count} TSP instance(s): {cities} cities, seeds {seed}..{}",
+                    seed + count - 1
+                );
+                for s in seed..seed + count {
+                    instances.push(tsp_instance(cities, s));
+                }
             }
             "max2sat" | "sat" => {
                 let vars = argn("--vars", 40);
                 let clauses = argn("--clauses", vars * 4);
-                println!("synthesizing MAX-2-SAT: {vars} vars, {clauses} clauses, seed {seed}");
-                instances.push(max2sat_instance(vars, clauses, seed));
+                println!(
+                    "synthesizing {count} MAX-2-SAT instance(s): {vars} vars, {clauses} clauses, seeds {seed}..{}",
+                    seed + count - 1
+                );
+                for s in seed..seed + count {
+                    instances.push(max2sat_instance(vars, clauses, s));
+                }
             }
             other => {
                 eprintln!("unknown --family '{other}' (use tsp | max2sat)");
