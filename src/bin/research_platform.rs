@@ -199,6 +199,60 @@ fn main() {
         return;
     }
 
+    // --op-benchmark: ABSOLUTE operator-quality metric (fixes the marginal-quench
+    // confound). For each instance, run every operator SOLO (fixed budget) and
+    // normalize the mean best energy per instance to [0,1] (0 = best operator on
+    // that instance, 1 = worst). No quench baseline ⇒ no shifting reference.
+    // Prints a tab-separated instance × operator matrix for cross-family analysis.
+    if std::env::args().any(|a| a == "--op-benchmark") {
+        use ising_engine::engine_v2::ai_scientist::{
+            BatchExecutor, ExperimentTask, RuntimeExecutor,
+        };
+        use ising_engine::engine_v2::evolution::Schedule;
+        use ising_engine::engine_v2::registry::OperatorRegistry;
+        let reg = OperatorRegistry::standard();
+        let exec = RuntimeExecutor::auto();
+        let ops: Vec<String> = reg.names().map(|s| s.to_string()).collect();
+        let sweeps = argn("--sweeps", 50) as u32;
+        let replicas = argn("--replicas", 32);
+        let seeds = [1u64, 2, 3];
+        print!("instance");
+        for op in &ops {
+            print!("\t{op}");
+        }
+        println!();
+        for (id, ir) in &instances {
+            let mut means = Vec::with_capacity(ops.len());
+            for op in &ops {
+                let tasks: Vec<ExperimentTask> = seeds
+                    .iter()
+                    .map(|&s| ExperimentTask {
+                        schedule: Schedule {
+                            ops: vec![op.clone()],
+                            sweeps: vec![sweeps],
+                            temp_hi: 4.0,
+                            temp_lo: 0.1,
+                        },
+                        num_replicas: replicas,
+                        seed: s,
+                    })
+                    .collect();
+                let outs = exec.run_batch(ir, &reg, &tasks);
+                means.push(outs.iter().map(|o| o.score).sum::<f64>() / outs.len().max(1) as f64);
+            }
+            let mn = means.iter().cloned().fold(f64::INFINITY, f64::min);
+            let mx = means.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
+            print!("{id}");
+            for &e in &means {
+                // 0 = best (lowest energy) operator on this instance, 1 = worst.
+                let norm = if mx > mn { (e - mn) / (mx - mn) } else { 0.0 };
+                print!("\t{norm:.3}");
+            }
+            println!();
+        }
+        return;
+    }
+
     let dir = arg("--dir").unwrap_or_else(|| "experiments/platform".into());
     let campaigns = argn("--campaigns", 1);
     let report_every = argn("--report-every", 5000);
