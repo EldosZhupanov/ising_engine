@@ -374,11 +374,18 @@ fn main() {
         let rounds = argn("--rounds", 20);
         let per = argn("--per", 2) as u32; // metropolis sweeps per round
         let seeds = [1u64, 2, 3, 4];
-        // pure: metropolis with the SAME total metropolis budget as PT.
+        // pure: metropolis. --fair gives it PT's TOTAL sweep count (metro+exchange)
+        // as metropolis sweeps, so pure gets MORE thermal work than PT — killing the
+        // "PT just does extra sweeps" confound.
         let total = rounds as u32 * per;
+        let pure_sweeps = if std::env::args().any(|a| a == "--fair") {
+            total + rounds as u32
+        } else {
+            total
+        };
         let pure = Schedule {
             ops: vec!["metropolis_sweep".into()],
-            sweeps: vec![total],
+            sweeps: vec![pure_sweeps],
             temp_hi: 4.0,
             temp_lo: 0.1,
         };
