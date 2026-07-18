@@ -205,17 +205,42 @@ fn main() {
             minima.dedup();
             minima.len() as f64 / samples as f64
         }
-        println!("instance | n | weight_cv | ruggedness(distinct-minima frac, 64 starts)");
+        // Tab-separated feature vector for cross-family correlation analysis.
+        println!("instance\tn\tdensity\tmean_deg\tdeg_cv\tweight_cv\tlin_coup\truggedness");
         for (id, ir) in &instances {
+            let n = ir.n;
+            // degree stats from CSR.
+            let degs: Vec<f64> = (0..n)
+                .map(|i| (ir.row_ptr[i + 1] - ir.row_ptr[i]) as f64)
+                .collect();
+            let mean_deg = degs.iter().sum::<f64>() / n.max(1) as f64;
+            let deg_cv = if mean_deg > 1e-9 {
+                (degs.iter().map(|d| (d - mean_deg).powi(2)).sum::<f64>() / n.max(1) as f64).sqrt()
+                    / mean_deg
+            } else {
+                0.0
+            };
+            let density = if n > 1 {
+                mean_deg / (n - 1) as f64
+            } else {
+                0.0
+            };
+            // coupling-magnitude spread (penalty-heaviness proxy — refuted, kept).
             let w: Vec<f64> = ir.weights.iter().map(|x| x.abs()).collect();
             let wm = w.iter().sum::<f64>() / w.len().max(1) as f64;
-            let wcv = if wm > 1e-9 {
+            let weight_cv = if wm > 1e-9 {
                 (w.iter().map(|x| (x - wm).powi(2)).sum::<f64>() / w.len().max(1) as f64).sqrt()
                     / wm
             } else {
                 0.0
             };
-            println!("{id} | {} | {:.3} | {:.3}", ir.n, wcv, ruggedness(ir, 64));
+            // field-driven vs coupling-driven: mean|linear| / mean|coupling|.
+            let lm = ir.linear.iter().map(|x| x.abs()).sum::<f64>() / n.max(1) as f64;
+            let lin_coup = if wm > 1e-9 { lm / wm } else { 0.0 };
+            println!(
+                "{id}\t{n}\t{density:.4}\t{mean_deg:.2}\t{deg_cv:.3}\t{weight_cv:.3}\t{lin_coup:.3}\t{:.3}",
+                ruggedness(ir, 64)
+            );
         }
         return;
     }
