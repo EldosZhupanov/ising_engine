@@ -306,6 +306,59 @@ pub fn coloring_instance(
     (format!("color{n_vertices}k{k_colors}_s{seed}"), ir)
 }
 
+// ============================================ NUMBER PARTITIONING (unconstrained)
+
+/// Number partitioning as QUBO: split `a` into two subsets minimizing the squared
+/// difference of their sums, `E = (Σ_i (2x_i−1) a_i)²`. UNCONSTRAINED (a pure
+/// objective, no penalties) — the contrast case for the penalty-heaviness law.
+pub fn number_partition_qubo(a: &[f64]) -> ProblemIR {
+    let n = a.len();
+    let total: f64 = a.iter().sum();
+    let mut linear = vec![0.0f64; n];
+    let mut pairs: Vec<(u32, u32, f64)> = Vec::new();
+    for i in 0..n {
+        linear[i] = 4.0 * a[i] * (a[i] - total);
+        for j in (i + 1)..n {
+            pairs.push((i as u32, j as u32, 8.0 * a[i] * a[j]));
+        }
+    }
+    ProblemIR::from_pairs(n, total * total, linear, &pairs)
+}
+
+/// A reproducible number-partitioning instance: `n` random weights in `[1, 100]`.
+pub fn partition_instance(n: usize, seed: u64) -> (String, ProblemIR) {
+    let mut rng = ChaCha8Rng::seed_from_u64(seed);
+    let a: Vec<f64> = (0..n).map(|_| rng.gen_range(1.0..100.0)).collect();
+    (format!("npart{n}_s{seed}"), number_partition_qubo(&a))
+}
+
+// ============================================ MAX INDEPENDENT SET (constrained)
+
+/// Maximum independent set as QUBO: `E = −Σ_i x_i + p·Σ_{(u,v)} x_u x_v`. Maximise
+/// chosen vertices subject to no edge having both endpoints (penalty `p > 1`).
+/// Constraint-heavy (edge penalties).
+pub fn max_independent_set_qubo(n_vertices: usize, edges: &[(u32, u32)], p: f64) -> ProblemIR {
+    let linear = vec![-1.0f64; n_vertices];
+    let pairs: Vec<(u32, u32, f64)> = edges.iter().map(|&(u, v)| ordered(u, v, p)).collect();
+    ProblemIR::from_pairs(n_vertices, 0.0, linear, &pairs)
+}
+
+/// A reproducible random max-independent-set instance (Erdős–Rényi graph).
+pub fn mis_instance(n_vertices: usize, avg_deg: usize, seed: u64) -> (String, ProblemIR) {
+    let mut rng = ChaCha8Rng::seed_from_u64(seed);
+    let p = (avg_deg as f64 / (n_vertices.max(2) - 1) as f64).min(1.0);
+    let mut edges = Vec::new();
+    for u in 0..n_vertices {
+        for w in (u + 1)..n_vertices {
+            if rng.gen::<f64>() < p {
+                edges.push((u as u32, w as u32));
+            }
+        }
+    }
+    let ir = max_independent_set_qubo(n_vertices, &edges, 2.0);
+    (format!("mis{n_vertices}_s{seed}"), ir)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -418,6 +471,45 @@ mod tests {
                 (ir.energy(&a) - unsat as f64).abs() < 1e-9,
                 "assignment {a:?}: energy {} != unsatisfied {unsat}",
                 ir.energy(&a)
+            );
+        }
+    }
+
+    #[test]
+    fn number_partition_ground_state_minimizes_difference() {
+        // {1,2,3,4} → perfect split {1,4}|{2,3} exists → ground energy 0.
+        let a = [1.0, 2.0, 3.0, 4.0];
+        let ir = number_partition_qubo(&a);
+        let (e, g) = brute_ground(&ir);
+        assert!(
+            e.abs() < 1e-6,
+            "perfect partition exists → energy 0, got {e}"
+        );
+        // energy = (subset difference)²: verify for the ground state.
+        let diff: f64 = a
+            .iter()
+            .zip(&g)
+            .map(|(&ai, &xi)| if xi == 1 { ai } else { -ai })
+            .sum();
+        assert!((ir.energy(&g) - diff * diff).abs() < 1e-6);
+    }
+
+    #[test]
+    fn max_independent_set_ground_state_is_independent() {
+        // A 4-cycle 0-1-2-3-0: max independent set = {0,2} or {1,3}, size 2.
+        let edges = [(0u32, 1), (1, 2), (2, 3), (0, 3)];
+        let ir = max_independent_set_qubo(4, &edges, 2.0);
+        let (_e, g) = brute_ground(&ir);
+        let chosen: Vec<usize> = (0..4).filter(|&i| g[i] == 1).collect();
+        assert_eq!(
+            chosen.len(),
+            2,
+            "max independent set of a 4-cycle has size 2"
+        );
+        for &(u, v) in &edges {
+            assert!(
+                !(g[u as usize] == 1 && g[v as usize] == 1),
+                "chosen set must be independent"
             );
         }
     }

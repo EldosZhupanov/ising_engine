@@ -70,7 +70,7 @@ fn main() {
     // frontend) instead of reading a MaxCut rudy file. Deterministic in --seed.
     if let Some(fam) = arg("--family") {
         use ising_engine::engine_v2::families::{
-            coloring_instance, max2sat_instance, tsp_instance,
+            coloring_instance, max2sat_instance, mis_instance, partition_instance, tsp_instance,
         };
         let seed = arg("--seed").and_then(|s| s.parse().ok()).unwrap_or(1);
         // --count N synthesizes N distinct instances (seeds seed..seed+N), so a
@@ -108,6 +108,27 @@ fn main() {
                 );
                 for s in seed..seed + count {
                     instances.push(coloring_instance(verts, deg, k, s));
+                }
+            }
+            "npart" | "partition" => {
+                let nums = argn("--nums", 40);
+                println!(
+                    "synthesizing {count} number-partition instance(s): {nums} numbers, seeds {seed}..{}",
+                    seed + count - 1
+                );
+                for s in seed..seed + count {
+                    instances.push(partition_instance(nums, s));
+                }
+            }
+            "mis" => {
+                let verts = argn("--vertices", 40);
+                let deg = argn("--avg-deg", 6);
+                println!(
+                    "synthesizing {count} max-independent-set instance(s): {verts} vertices, avg-deg {deg}, seeds {seed}..{}",
+                    seed + count - 1
+                );
+                for s in seed..seed + count {
+                    instances.push(mis_instance(verts, deg, s));
                 }
             }
             other => {
