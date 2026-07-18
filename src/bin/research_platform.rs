@@ -358,6 +358,80 @@ fn main() {
         return;
     }
 
+    // --pt-ab: does a real PARALLEL-TEMPERING-style schedule (many
+    // metropolis+replica_exchange rounds over the temperature ladder) beat PURE
+    // metropolis of EQUAL metropolis budget? The decisive falsification of the
+    // universal "thermal is best" law — the exchange mechanism is PT's whole point.
+    if std::env::args().any(|a| a == "--pt-ab") {
+        use ising_engine::engine_v2::ai_scientist::{
+            BatchExecutor, ExperimentTask, RuntimeExecutor,
+        };
+        use ising_engine::engine_v2::evolution::Schedule;
+        use ising_engine::engine_v2::registry::OperatorRegistry;
+        let reg = OperatorRegistry::standard();
+        let exec = RuntimeExecutor::auto();
+        let replicas = argn("--replicas", 32);
+        let rounds = argn("--rounds", 20);
+        let per = argn("--per", 2) as u32; // metropolis sweeps per round
+        let seeds = [1u64, 2, 3, 4];
+        // pure: metropolis with the SAME total metropolis budget as PT.
+        let total = rounds as u32 * per;
+        let pure = Schedule {
+            ops: vec!["metropolis_sweep".into()],
+            sweeps: vec![total],
+            temp_hi: 4.0,
+            temp_lo: 0.1,
+        };
+        // PT: [metropolis(per), replica_exchange(1)] × rounds.
+        let mut pt_ops = Vec::new();
+        let mut pt_sw = Vec::new();
+        for _ in 0..rounds {
+            pt_ops.push("metropolis_sweep".to_string());
+            pt_sw.push(per);
+            pt_ops.push("replica_exchange".to_string());
+            pt_sw.push(1);
+        }
+        let pt = Schedule {
+            ops: pt_ops,
+            sweeps: pt_sw,
+            temp_hi: 4.0,
+            temp_lo: 0.1,
+        };
+        println!("instance\tpure_metro\tPT_metro+exchange\tPT_better?\trel_gain");
+        let (mut pt_wins, mut n) = (0usize, 0usize);
+        for (id, ir) in &instances {
+            let run = |sc: &Schedule| -> f64 {
+                let tasks: Vec<ExperimentTask> = seeds
+                    .iter()
+                    .map(|&s| ExperimentTask {
+                        schedule: sc.clone(),
+                        num_replicas: replicas,
+                        seed: s,
+                    })
+                    .collect();
+                let outs = exec.run_batch(ir, &reg, &tasks);
+                outs.iter().map(|o| o.score).sum::<f64>() / outs.len().max(1) as f64
+            };
+            let (ep, ept) = (run(&pure), run(&pt));
+            let better = ept < ep - 1e-9;
+            if better {
+                pt_wins += 1;
+            }
+            n += 1;
+            let rel = if ep.abs() > 1e-9 {
+                (ep - ept) / ep.abs()
+            } else {
+                0.0
+            };
+            println!(
+                "{id}\t{ep:.1}\t{ept:.1}\t{}\t{rel:+.4}",
+                if better { "YES" } else { "no" }
+            );
+        }
+        eprintln!("\nPT (metro+exchange) beat pure metropolis on {pt_wins}/{n} instances (equal metropolis budget)");
+        return;
+    }
+
     let dir = arg("--dir").unwrap_or_else(|| "experiments/platform".into());
     let campaigns = argn("--campaigns", 1);
     let report_every = argn("--report-every", 5000);
