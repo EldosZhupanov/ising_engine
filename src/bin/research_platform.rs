@@ -65,10 +65,55 @@ fn main() {
     }
 
     let mut instances = Vec::new();
-    // --family {tsp|max2sat} SYNTHESIZES a runnable instance of another problem
-    // family (same campaign/orchestrator loop, via the energy-exact families
-    // frontend) instead of reading a MaxCut rudy file. Deterministic in --seed.
-    if let Some(fam) = arg("--family") {
+    // --benchmark {biqmac|orlib} loads REAL benchmark instances (energy-exact via
+    // qubo_model_to_ir), a natural range of densities for the structural-law test.
+    if let Some(bench) = arg("--benchmark") {
+        use ising_engine::benchmark::instances::{parse_biqmac_sparse, parse_orlib_bqp};
+        use ising_engine::engine_v2::frontend::qubo_model_to_ir;
+        let n_take = argn("--count", 20);
+        match bench.as_str() {
+            "biqmac" => {
+                let mut files: Vec<_> = std::fs::read_dir("benchmark_suite/data/biqmac")
+                    .map(|rd| rd.filter_map(|e| e.ok().map(|e| e.path())).collect())
+                    .unwrap_or_default();
+                files.sort();
+                let files: Vec<_> = files.into_iter().filter(|p| p.is_file()).collect();
+                // Stride-sample across the (subfamily-clustered) file list to span
+                // the full density range (planar pw → random w → dense be).
+                let stride = (files.len() / n_take.max(1)).max(1);
+                for path in files.iter().step_by(stride) {
+                    let name = path
+                        .file_name()
+                        .and_then(|f| f.to_str())
+                        .unwrap_or("")
+                        .to_string();
+                    if let Ok(t) = std::fs::read_to_string(path) {
+                        if let Ok(inst) = parse_biqmac_sparse(&t, &name) {
+                            instances.push((inst.name.clone(), qubo_model_to_ir(&inst.model)));
+                        }
+                    }
+                }
+            }
+            "orlib" => {
+                for f in ["bqp50.txt", "bqp100.txt", "bqp250.txt", "bqp500.txt"] {
+                    if let Ok(t) =
+                        std::fs::read_to_string(format!("benchmark_suite/data/orlib/{f}"))
+                    {
+                        if let Ok(insts) = parse_orlib_bqp(&t, f) {
+                            for inst in insts.into_iter().take(n_take) {
+                                instances.push((inst.name.clone(), qubo_model_to_ir(&inst.model)));
+                            }
+                        }
+                    }
+                }
+            }
+            other => {
+                eprintln!("unknown --benchmark '{other}' (use biqmac | orlib)");
+                exit(2);
+            }
+        }
+        println!("loaded {} real {bench} instances", instances.len());
+    } else if let Some(fam) = arg("--family") {
         use ising_engine::engine_v2::families::{
             coloring_instance, max2sat_instance, mis_instance, partition_instance, tsp_instance,
         };
