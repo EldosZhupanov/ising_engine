@@ -307,6 +307,12 @@ fn main() {
         let sweeps = argn("--sweeps", 50) as u32;
         let replicas = argn("--replicas", 32);
         let seeds = [1u64, 2, 3];
+        // --warm evaluates each operator in a WARM context [metropolis_sweep, op]
+        // (a thermal warm-up creates the diverse replica ensemble that cluster /
+        // replica-exchange / population operators REQUIRE) instead of solo [op].
+        // This is the falsification test of the "thermal is universally best" law:
+        // the solo metric under-credits ensemble operators by construction.
+        let warm = std::env::args().any(|a| a == "--warm");
         print!("instance");
         for op in &ops {
             print!("\t{op}");
@@ -315,12 +321,20 @@ fn main() {
         for (id, ir) in &instances {
             let mut means = Vec::with_capacity(ops.len());
             for op in &ops {
+                let (sched_ops, sched_sw) = if warm {
+                    (
+                        vec!["metropolis_sweep".to_string(), op.clone()],
+                        vec![sweeps, sweeps],
+                    )
+                } else {
+                    (vec![op.clone()], vec![sweeps])
+                };
                 let tasks: Vec<ExperimentTask> = seeds
                     .iter()
                     .map(|&s| ExperimentTask {
                         schedule: Schedule {
-                            ops: vec![op.clone()],
-                            sweeps: vec![sweeps],
+                            ops: sched_ops.clone(),
+                            sweeps: sched_sw.clone(),
                             temp_hi: 4.0,
                             temp_lo: 0.1,
                         },
