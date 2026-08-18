@@ -308,10 +308,38 @@ cannot explain it, and the downhill-acceptance gap predicts the advantage should
 G43 at low temperature.
 
 This is the sharpest open question the cycle produced, it is **not** pre-registered,
-and it is recorded as an anomaly rather than a finding. The obvious next
-pre-registration is whether the cold reversal is specific to G43 or appears across
-a matched density band — which is precisely what Amendment 2 A2.4's matched set
-should be pointed at, in preference to re-litigating density-vs-weighting.
+and it is recorded as an anomaly rather than a finding.
+
+### 10.1 CORRECTION — the tie mechanism was dismissed on bad reasoning
+
+*Added after review. The paragraph above concludes "the tie mechanism cannot
+explain it" from a 2.3% tie mass. That inference does not follow, on three
+counts, and `PREREG_RC015.md` exists to test what it wrongly excluded.*
+
+1. **A fraction was compared where a count was required.** 2.3% of
+   `1000 × 16 = 16 000` proposals per replica is **368 tied proposals**;
+   Metropolis flips at every one, heat-bath at half — **≈184 divergent decisions
+   per replica**, ample to reach a different basin. The comparison against
+   G11/G32's 33% answered "which instance has more ties", not "are there enough
+   here to matter".
+2. **Off-tie behaviour at T = 0.1 was never checked, and it is decisive.** With
+   integer couplings at `T = 0.1`, the acceptance ratio Metropolis : heat-bath is
+   **1.0000** at `ΔE = +1` (both 4.540e−05) and **1.0000** at `ΔE = +2`. The
+   kernels are numerically indistinguishable off ties, so **essentially all** of
+   the observed difference must flow through the `ΔE = 0` channel, where the ratio
+   is 2.0 and temperature-independent. Ties are not merely admissible at that
+   temperature — they are the only channel left.
+3. **The tie statistic is post-treatment.** `tie_fraction` counts along a
+   *Metropolis* trajectory only; after the first divergent decision the heat-bath
+   arm is elsewhere with a different tie profile. 2.3% describes one arm's
+   realised path, not the landscape.
+
+**Consequence.** The anomaly's stated status is unchanged — it remains an
+unexplained, non-pre-registered observation — but the *reason* given for
+excluding the tie mechanism is withdrawn. RC-015 pre-registers the three-arm
+causal test (M / M½ / G, all draw-identical) that decides it, on the exact
+matched triples G43/G44/G45 (n=1000, m=9990, all weights +1) that G-Set already
+contains, so Amendment 2 A2.4's matched set needs no synthetic generator.
 
 ---
 
