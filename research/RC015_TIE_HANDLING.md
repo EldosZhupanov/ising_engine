@@ -187,3 +187,84 @@ Expected: all three controls pass; G43 `I_full = −44.125`, share 0.963 held-in
 4. **Re-read RC-014 §10 with this in hand:** G11 and G32 carry 13–34% tie mass,
    an order of magnitude above G43's 2.3%, yet were never decomposed. Their
    ladder-based effects are the natural next cell for this instrument.
+
+---
+
+## 10. D-15 — monotonicity REFUTED, and the interior optimum does not pay
+
+Run exactly as pre-registered, semantics per `PREREG_RC015_AMENDMENT_1.md`
+A1.2–A1.4. Tie-acceptance probability `q` over `{0, .25, .5, .75, 1}`;
+`q = 1` ≡ Metropolis (null by construction, re-verified), `q = 0.5` ≡ the
+heat-bath tie rule.
+
+### 10.1 The curves
+
+Mean `Y` after `greedy_descent`, flat `T = 0.1`, 8 seeds:
+
+| Instance | q=0 | q=0.25 | q=0.5 | q=0.75 | q=1 | shape | argmin |
+|---|---|---|---|---|---|---|---|
+| **G43** in | −6344.25 | −6517.50 | −6536.75 | **−6546.00** | −6494.25 | **NON-MONOTONE** | **0.75** |
+| **G43** out | −6341.50 | −6509.38 | −6539.25 | **−6541.38** | −6496.00 | **NON-MONOTONE** | **0.75** |
+| G23 in | −12682.38 | −12960.75 | −13016.88 | −13060.13 | **−13074.25** | MONOTONE | 1.00 |
+| G23 out | −12683.25 | −12967.00 | −13022.75 | −13057.88 | **−13075.63** | MONOTONE | 1.00 |
+| G24 in | −12703.75 | −13011.25 | −13056.13 | −13080.75 | **−13107.88** | MONOTONE | 1.00 |
+| G24 out | −12705.13 | −13011.25 | −13056.13 | −13082.75 | **−13107.75** | MONOTONE | 1.00 |
+
+**All three shapes replicate exactly** — verdict *and* argmin position, as
+A1.4 requires. The endpoint sign prediction `sign(Y(1) − Y(0.5)) = sign(−I_tie)`
+holds on all three instances in both seed sets.
+
+### 10.2 Verdict
+
+**D-15 is REFUTED**, on G43, in both seed sets: `Y` is **not** monotone in `q`,
+and the interior optimum at `q = 0.75` replicates. It holds on G23 and G24.
+
+Per A1.2, fixed before the data: this refutes **D-15**, the monotone
+dose–response hypothesis. It does **not** touch **H-15**, the causal
+decomposition, which stands confirmed. The reviewer's prediction that strict
+monotonicity might not survive all three instances was correct.
+
+### 10.3 The deflation — the interior optimum does not beat the shipped operator
+
+This is the part that matters practically, and it goes against the enthusiasm the
+shape invites. Exploratory (**not** pre-registered, labelled as such):
+
+| G43, `q = 0.75` vs | held-in | held-out | replicates? |
+|---|---|---|---|
+| `q = 1` (**`metropolis_sweep`**) | −51.75 (ρ 6.23, rel 0.80%, p .008) | −45.38 (ρ 3.22, rel 0.70%, p .016) | **yes** — material, significant, ratio 0.88 |
+| `q = 0.5` (**the heat-bath tie rule**) | −9.25 (ρ 0.648, rel 0.14%, **p .219**) | −2.13 (ρ 0.191, rel 0.03%, **p .617**) | **no** — not material held-out, ratio 0.23 |
+
+So `q = 0.75` beats **Metropolis** materially and significantly and replicably —
+but it does **not** beat the heat-bath tie rule. The curve is essentially **flat
+across `[0.5, 0.75]`**, and the argmin lands at 0.75 in both seed sets by a margin
+that is neither material nor replicating.
+
+**Consequence, stated against my own earlier suggestion.** RC-015 §3 filed "make
+tie handling an explicit operator parameter" as an open decision, and A1.2
+anticipated that a reproducible interior optimum would argue for a
+`neutral_move_rate` policy variable. **The measurement does not support that.**
+What it supports is the weaker and cheaper claim: **on G43 the shipped
+`metropolis_sweep` is materially worse than any `q ∈ [0.25, 0.75]`, and
+`gibbs_color_sweep` already captures essentially all of the available gain there.**
+The actionable gap is per-instance *selection between two operators that already
+exist*, not a new continuous parameter.
+
+### 10.4 What is solid across all three
+
+**`q = 0` is catastrophically the worst everywhere** — 3.0–3.1% worse than the
+best point on every instance and in both seed sets, an order of magnitude beyond
+anything else on the curve. Refusing neutral moves entirely is the one clearly
+wrong setting. Almost all of that is recovered by `q = 0.25`; the curve is nearly
+flat from there on.
+
+### 10.5 A power limitation, recorded
+
+Amendment A1.3 offered two equivalence branches. The **bootstrap-CI branch never
+fired**: at 8 seeds the 95% CI on the paired difference is always wider than
+±0.1% (observed half-widths 0.09–0.21%). Every equivalence verdict rests on the
+non-materiality branch. `q = 0.5 ≡ G` passed in **5 of 6** cells; the exception is
+G24 held-in (+6.75, ρ ≥ 0.5), which passes held-out (+2.50).
+
+**Eight seeds cannot establish ±0.1% equivalence by CI.** That is a property of
+the design, not of the result, and any future equivalence claim at this bar needs
+more seeds — roughly 4× for half the CI width.

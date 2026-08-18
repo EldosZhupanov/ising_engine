@@ -80,12 +80,24 @@ const SET_B: &[(&str, &str)] = &[
 
 // ------------------------------------------------------------- the M½ operator
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq)]
 enum TieMode {
     /// ΔE = 0 ⇒ accept. Identical to `metropolis_sweep`; the null by construction.
     Accept,
     /// ΔE = 0 ⇒ flip with probability ½, i.e. heat-bath's tie rule.
     Half,
+    /// D-15: ΔE = 0 ⇒ flip with probability `q`. `Accept` is q = 1, `Half` is
+    /// q = 0.5; this variant carries the intermediate dial points.
+    Prob(f64),
+}
+
+/// The D-15 dial. `q = 1` is Metropolis, `q = 0.5` is M½/heat-bath's tie rule.
+const Q_GRID: [f64; 5] = [0.0, 0.25, 0.5, 0.75, 1.0];
+
+/// Operator name for a dial point. Leaked once per q — the registry needs
+/// `&'static str` and the grid is a five-element compile-time constant.
+fn q_name(q: f64) -> &'static str {
+    Box::leak(format!("metropolis_tie_q{:.2}", q).into_boxed_str())
 }
 
 /// Metropolis with a parameterised tie rule. Everything off `ΔE = 0` is
@@ -112,6 +124,7 @@ impl MetropolisTie {
             name: match mode {
                 TieMode::Accept => MNULL,
                 TieMode::Half => MHALF,
+                TieMode::Prob(q) => q_name(q),
             },
             order: Vec::new(),
             de: Vec::new(),
@@ -216,9 +229,12 @@ impl Operator for MetropolisTie {
                         true
                     } else if d == 0.0 {
                         let u: f64 = rng.gen();
+                        // One draw on every path, in every mode, so all dial
+                        // points stay mutually draw-identical.
                         match self.mode {
                             TieMode::Accept => true,
                             TieMode::Half => u < 0.5,
+                            TieMode::Prob(q) => u < q,
                         }
                     } else {
                         let p = if t > 0.0 { (-d / t).exp() } else { 0.0 };
@@ -254,6 +270,11 @@ fn local_registry() -> OperatorRegistry {
     let mut reg = OperatorRegistry::standard();
     reg.register(|| Box::new(MetropolisTie::new(TieMode::Half)));
     reg.register(|| Box::new(MetropolisTie::new(TieMode::Accept)));
+    // D-15 dial points. q = 1.0 must be bit-identical to `metropolis_sweep`
+    // (null by construction) and q = 0.5 must reproduce the G arm.
+    for q in Q_GRID {
+        reg.register(move || Box::new(MetropolisTie::new(TieMode::Prob(q))));
+    }
     reg
 }
 
@@ -642,6 +663,137 @@ fn gradient(reg: &OperatorRegistry) {
     }
 }
 
+/// Seeded percentile bootstrap on the paired mean difference (Amendment 1 A1.3).
+fn bootstrap_ci(xs: &[f64], reps: usize, seed: u64) -> (f64, f64) {
+    let mut rng = ChaCha8Rng::seed_from_u64(seed);
+    let mut means: Vec<f64> = Vec::with_capacity(reps);
+    for _ in 0..reps {
+        let mut s = 0.0;
+        for _ in 0..xs.len() {
+            s += xs[rng.gen_range(0..xs.len())];
+        }
+        means.push(s / xs.len() as f64);
+    }
+    means.sort_by(f64::total_cmp);
+    (means[reps / 40], means[reps - 1 - reps / 40])
+}
+
+/// D-15 — dose–response in the tie-acceptance probability `q`.
+///
+/// Pre-registered in `PREREG_RC015.md` §9, semantics fixed by
+/// `PREREG_RC015_AMENDMENT_1.md` A1.2–A1.4:
+/// * non-monotonicity refutes **D-15**, not H-15;
+/// * a *reproducible* interior optimum means tie handling is a NON-LINEAR
+///   control parameter — a stronger practical result than monotonicity;
+/// * `q = 0.5 ≡ G` is decided by a machine criterion, not by eye;
+/// * held-out must replicate the curve's SHAPE, not just the endpoints.
+fn d15(reg: &OperatorRegistry, seeds: &[u64], label: &str) {
+    println!("D-15 — dose–response in the tie probability q  [{label}], flat T={T_COLD}\n");
+    for (inst, path) in SET_A.iter().take(1).chain(SET_B.iter().skip(1)) {
+        let Ok(ir) = load(path) else { continue };
+        println!("  {inst}");
+        let mut curve: Vec<(f64, f64)> = Vec::new();
+        let mut ys: Vec<Vec<f64>> = Vec::new();
+        for q in Q_GRID {
+            let mut y = Vec::new();
+            for &s in seeds {
+                match execute(&ir, reg, &plan_for(&ir, q_name(q), s, T_COLD)) {
+                    Ok(o) => y.push(o.post),
+                    Err(_) => break,
+                }
+            }
+            if y.len() != seeds.len() {
+                println!("    q={q}: run failed");
+                return;
+            }
+            let mean = y.iter().sum::<f64>() / y.len() as f64;
+            println!("    q={q:<5} mean Y = {mean:12.4}");
+            curve.push((q, mean));
+            ys.push(y);
+        }
+
+        // Shape: monotone in either direction, or an interior optimum.
+        let m: Vec<f64> = curve.iter().map(|c| c.1).collect();
+        let nondec = m.windows(2).all(|w| w[1] >= w[0]);
+        let noninc = m.windows(2).all(|w| w[1] <= w[0]);
+        let best = m
+            .iter()
+            .enumerate()
+            .min_by(|a, b| a.1.total_cmp(b.1))
+            .map(|(i, _)| i)
+            .unwrap_or(0);
+        let shape = if nondec || noninc {
+            "MONOTONE"
+        } else {
+            "NON-MONOTONE (interior structure)"
+        };
+        println!(
+            "    shape: {shape}   best q = {:.2} (lowest mean Y)   argmin index {best}",
+            Q_GRID[best]
+        );
+
+        // EXPLORATORY, not pre-registered: does the argmin beat BOTH shipped
+        // operators? This is the decision-relevant question for a
+        // `neutral_move_rate` policy variable, and it is labelled exploratory
+        // rather than folded into D-15's verdict.
+        if best != 4 && best != 2 {
+            for (rival, rname) in [
+                (2usize, "q=0.5 (heat-bath tie rule)"),
+                (4, "q=1 (metropolis)"),
+            ] {
+                let pe = Paired {
+                    base: ys[rival].clone(),
+                    other: ys[best].clone(),
+                };
+                println!(
+                    "    [exploratory] q={:.2} vs {rname}: {}",
+                    Q_GRID[best],
+                    pe.fmt()
+                );
+            }
+        }
+
+        // Direction check from the pre-registration: sign(Y(1) − Y(0.5)).
+        let d_endpoints = m[4] - m[2];
+        println!("    Y(q=1) − Y(q=0.5) = {d_endpoints:+.4}  (D-15 predicted sign = sign(−I_tie))");
+
+        // Machine equivalence: q = 0.5 vs the real G arm (Amendment 1 A1.3).
+        let mut yg = Vec::new();
+        for &s in seeds {
+            match execute(&ir, reg, &plan_for(&ir, G, s, T_COLD)) {
+                Ok(o) => yg.push(o.post),
+                Err(_) => break,
+            }
+        }
+        if yg.len() == seeds.len() {
+            let pe = Paired {
+                base: yg.clone(),
+                other: ys[2].clone(),
+            };
+            let diffs = pe.effects();
+            let (lo, hi) = bootstrap_ci(&diffs, 2000, 0xD15);
+            let scale = (yg.iter().sum::<f64>() / yg.len() as f64).abs().max(1.0);
+            let ci_ok = lo.abs() / scale < 0.001 && hi.abs() / scale < 0.001;
+            let mat_ok = !pe.rho().is_some_and(|r| r >= 0.5) && pe.rel() < 0.001;
+            println!(
+                "    q=0.5 vs G: mean diff {:+.4}  CI95 [{:+.4}, {:+.4}] = [{:+.4}%, {:+.4}%]  \
+                 CI-inside-0.1%={ci_ok}  non-material={mat_ok}  -> {}",
+                pe.mean(),
+                lo,
+                hi,
+                lo / scale * 100.0,
+                hi / scale * 100.0,
+                if ci_ok || mat_ok {
+                    "EQUIVALENT (pass)"
+                } else {
+                    "NOT EQUIVALENT (D-15 refuted on this clause)"
+                }
+            );
+        }
+        println!();
+    }
+}
+
 fn main() {
     let reg = local_registry();
     let ctrl =
@@ -697,5 +849,11 @@ fn main() {
     }
     if flag("--gradient") {
         gradient(&reg);
+    }
+    if flag("--d15") {
+        d15(&reg, &HELD_IN, "held-in");
+    }
+    if flag("--d15-holdout") {
+        d15(&reg, &HELD_OUT, "HELD-OUT");
     }
 }

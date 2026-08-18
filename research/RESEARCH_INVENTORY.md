@@ -354,10 +354,29 @@ backends, 0 failures, **0 of 18 inert**. Closed the gap that
   temperature gradient and a sign nothing measured predicts.
 - **Limitations** — flat T = 0.1 (gradient on G43 only), one schedule, legacy init,
   six unweighted instances, cache-resident scale.
-- **Follow-up** — D-15 dose–response in the tie probability `q` (pre-registered);
-  what sets the sign; decomposing G11/G32, which carry 13–34% tie mass — an order
-  of magnitude above G43 — and were never decomposed.
-  Record: `RC015_TIE_HANDLING.md`.
+- **Descendant D-15 — REFUTED, and the refutation deflates the practical claim.**
+  `Y` is **non-monotone** in the tie probability `q` on G43 with an interior
+  optimum at `q = 0.75`, and the shape (verdict *and* argmin) **replicates
+  exactly** on held-out; G23 and G24 are monotone to `q = 1`. Per Amendment 1
+  A1.2, fixed before the data, this refutes D-15 and leaves H-15 untouched.
+  **But the optimum does not pay:** `q = 0.75` beats `metropolis_sweep`
+  materially and replicably (−51.8 / −45.4, ρ 6.2 / 3.2, p .008 / .016) and does
+  **not** beat the heat-bath tie rule (−9.25 p .219 held-in, −2.13 p .617
+  held-out, no replication). The curve is flat over `[0.5, 0.75]`. So the earlier
+  suggestion of a `neutral_move_rate` policy variable is **not supported**; what
+  is supported is per-instance *selection between two operators that already
+  exist*. Solid across all three: `q = 0` is 3.0–3.1% worse than the best point
+  everywhere — refusing neutral moves is the one clearly wrong setting, and
+  `q = 0.25` recovers almost all of it.
+- **Power limitation recorded** — Amendment A1.3's bootstrap-CI equivalence branch
+  **never fired**: at 8 seeds the 95% CI is always wider than ±0.1% (half-widths
+  0.09–0.21%), so every equivalence verdict rests on the non-materiality branch.
+  Eight seeds cannot establish ±0.1% equivalence by CI.
+- **Follow-up** — what sets the sign (open, no candidate); the neutral-network
+  observables declared in Amendment 1 A1.6; decomposing G11/G32, which carry
+  13–34% tie mass but whose RC-014 effects were measured on a **ladder**, so under
+  the A1.1 identity that is a different quantity and needs its own
+  pre-registration (A1.5). Record: `RC015_TIE_HANDLING.md`.
 
 ### Non-cycle records
 `AXIOMS_OF_OPTIMIZATION.md` (eight axioms, validated against six historical
