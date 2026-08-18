@@ -121,9 +121,22 @@ proposals → Predictor refit → dashboard, all persisted and resumable. Verifi
 - **Dynamics** (`dynamics.rs`) — remaining-improvement from a partial trajectory;
   powers the early-stop controller.
 - **World** (`world.rs`) — imagined observable-state rollouts; imagined-vs-real
-  schedule ranking **Spearman 0.975**. Warm-start probe fixes the cold-start bias.
-- *Confirmed:* cross-family transfer is real (portability **9/12**, predictor
-  leave-one-instance-out **Spearman +0.747**).
+  schedule ranking **Spearman ≈0.85–0.90 on genuinely held-out candidates**
+  (RC-010). The previously reported **0.975** came from a 5-candidate set of
+  which **4 were verbatim training members**; `world.rs`'s test gates only at
+  `rho >= 0.5`. Audited: rho does NOT collapse when the easy noise-vs-greedy gap
+  is removed (0.8485 with the ranking task 7.5× narrower), so the skill is
+  genuine — the headline number was inflated, not fabricated. Warm-start probe
+  fixes the cold-start bias.
+- *Confirmed:* cross-family transfer is real (portability **9/12**). ⚠️ The
+  predictor's leave-one-instance-out **Spearman 0.747** is **NOT** evidence for
+  transfer and has been removed from that claim (RC-011): the predictor is purely
+  additive in (instance, schedule) with no interaction terms, and every row of a
+  held-out instance shares one signature, so `w·x_instance` is a constant offset
+  across the fold — and Spearman, being rank-based, is *provably invariant* to it
+  (verified: max deviation 1.1e-16, 0 signature violations over 18,570 rows).
+  0.747 measures **schedule-quality ranking**, which is what `filter` needs; a
+  predictor ignoring the instance entirely would score the same.
 - *Remaining:* all four are small (ridge/MLP); foundation scale is Stage 11.
 
 ### 6c — Meta-Learning Layer 🟢 85%
@@ -215,11 +228,17 @@ bias over-AVOIDed ensemble operators (**now fixed** via warm-start).
 
 ## Technical debt / unfinished
 
-- **`cargo doc` is broken by pre-existing rustdoc-link errors** (~14) in
-  unrelated files (`curiosity`, `graph`, `frontend`, `ir`, `lib`, `solver/*`,
-  `core/hubo`) — square brackets in prose / bare `[Type]` links. Warrants a
-  dedicated `docs: fix rustdoc` cleanup + a `RUSTDOCFLAGS="-D warnings" cargo doc`
-  CI gate to prevent regression. (New-code docs in this branch are clean.)
+- ~~**`cargo doc` is broken by pre-existing rustdoc-link errors**~~ **RESOLVED
+  (2026-07-27).** 18 error sites across 9 files (`core/hubo`, `concept`,
+  `curiosity`, `graph`, `frontend`, `ir`, `solver/engine`,
+  `solver/population_annealing`, `bin/solve_v2`, `bin/experiment`) — bare `[x]`
+  in prose parsed as intra-doc links, `Vec<Vec<Edge>>` and `<EXP>` parsed as
+  unclosed HTML tags, and one public→private link (`[`ridge_fit`]`). All fixed by
+  backticking the prose; **doc-comments only, 15 lines changed, zero code lines**
+  (verified by diff). `RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --workspace`
+  now returns **0 errors**. Note the errors cascade — rustdoc aborts per crate, so
+  each fix reveals the next; three passes were needed. 🔵 *Remaining:* add that
+  command as a CI gate to prevent regression.
 - **Adaptive cloud routing** recommended but cloud unavailable (no API key).
 - **World-filtered ideation / Dynamics early-stop are opt-in** (change
   candidate-selection / budget by design); default-on needs per-family
@@ -249,7 +268,7 @@ All ten prior-priority tasks are implemented, tested, and committed on
 regression and cross-backend bit-identity firewall pass unchanged):
 
 1. ✅ **World-model filtering** in ideation (`WorldFilteredIdeator`: imagine → rank → run top few).
-2. ✅ **Dynamics early-stop** on the executor's every-run path (opt-in `RuntimeExecutor::with_early_stop`, `--early-stop`).
+2. ✅ **Dynamics early-stop** on the executor's every-run path (opt-in `RuntimeExecutor::with_early_stop`, `--early-stop`). ⚠️ **RC-012: non-functional as shipped.** The deployed bootstrap (2-step schedule × 3 seeds = 6 rows) is below `fit`'s 20-row floor, so the flag *always* skips; and even a fitted model (module-test corpus) predicts ≡0 remaining at every step, making the ε-gate vacuous — behaviourally 'stop at min_frac'. Layers must be fixed together; see `research/RC012_DYNAMICS_EARLY_STOP_AUDIT.md`.
 3. ✅ **Per-situation model selection** in the Executive (`Action::UseModel`, regime + staleness conditioned).
 4. ✅ **SAT/TSP runnable** (`families::{tsp_instance,max2sat_instance}` + `--family tsp|max2sat`; verified end-to-end).
 5. ✅ **Model Registry** (`model_registry.rs`: versioned weights + lineage; snapshots each campaign/generation).

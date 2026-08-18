@@ -1,4 +1,24 @@
-# CONTEXT.md — Ising Engine Project Context
+# CONTEXT.md — SUPERSEDED
+
+> **Retained for history only. Do not plan from it.**
+>
+> - **Architecture** → `ARCHITECTURE.md`, `CLAUDE.md` §1–2, `memory/ARCHITECTURE.md`
+> - **Status / priorities** → `ROADMAP.md`, `memory/CURRENT_TASK.md`
+> - **Index of everything** → `memory/INDEX.md`
+>
+> Two things below are wrong about the current code:
+>
+> 1. **"SIMD-first architecture" and the Phase 0–7 plan are not current.**
+>    `src/core/simd_utils.rs` is declared in no `mod.rs` — orphaned, never
+>    compiled. No explicit SIMD intrinsics exist; only `-Ctarget-cpu=native
+>    +avx2,+fma` auto-vectorization. The live plan is `ROADMAP.md` "Next 10",
+>    where SIMD is item 7.
+> 2. **It omits `src/engine_v2` entirely** — the autonomous research platform
+>    (~20.6k lines, 18 operators, 28+ `ai_scientist` modules, 18,570 recorded
+>    experiments) where all current work happens.
+>
+> The hot-path rules (§Hot Path) and the public entry point (§Public Entry
+> Point) below remain accurate and still bind.
 
 ## Project
 
