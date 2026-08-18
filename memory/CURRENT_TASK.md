@@ -3,30 +3,83 @@
 *Authored here — no other file in the repo tracks live status. Update this on
 every meaningful change.*
 
-Last updated: 2026-07-27
+Last updated: 2026-08-19
 
 ## Branch
 
 `feat/solver-research-upgrades` (main branch for PRs: `master`).
-**~37 uncommitted paths** — 9 modified under `src/`, the rest untracked
-(`research/RC00*.md`, `research/AXIOMS_OF_OPTIMIZATION.md`,
-`research/CHANNEL_EXHAUSTION.md`, `research/RELATIONAL_PRIMITIVE.md`,
-`research/COMPETITIVE_ANALYSIS.md`, `src/bin/exp_*.rs`, `src/bin/control_api*`,
-`website/`, this `memory/` directory). Nothing is committed yet.
+**Working tree clean.** The RC-001…RC-013 corpus, `memory/`, the `exp_*` binaries,
+the two permanent tests and `website/` are committed, as are RC-014 and RC-015
+with their pre-registrations. Pre-registration now precedes data in git history,
+which is what makes Constitution §13 checkable rather than asserted.
 
-## Active priority
+## Active priority — RC-012, and it is an engineering defect, not a study
 
-**`../ROADMAP.md` "Next 10", item 1 — the growth campaign.** A long
-curiosity-driven `--service` run toward 500k recorded experiments, re-measuring
-cross-family transfer as the dataset grows. Everything in Stage 11 (Research
-Foundation Model) is gated on data volume, not on architecture, so this is the
-unblocking task.
+**`--early-stop` is documented as shipped and silently does nothing** (RC-012:
+the deployed bootstrap yields 6 rows against `fit`'s 20-row floor, so it always
+skips; and a fitted model predicts ≡0 at every step, making the ε-gate vacuous).
+This is the only one of the five open decisions that is a **correctness/honesty
+defect** rather than an improvement, so it goes first.
 
-```
-cargo run --release --bin research_platform -- \
-    --file "$(ls benchmark_suite/data/gset/G* | paste -sd,)" \
-    --service --max-experiments N --executive --planner --shared-knowledge
-```
+**Decompose it — the two halves have very different risk:**
+
+- **Disable now (zero risk).** The flag currently changes nothing, so gating or
+  removing it is **trajectory-neutral by construction** and makes the product
+  honest immediately. No A/B needed; nothing to replay.
+- **Fix properly (a project).** Layers 2 and 3 must be repaired *together* —
+  fixing only the bootstrap ships a silent 50% truncation of every run. That is
+  trajectory-changing and needs approval + identical-seed A/B.
+
+## Then, in order (agreed priority for the five open decisions)
+
+1. **RC-012** — fix or disable `--early-stop` (above).
+2. **RC-011** — remove the predictor's proven blindness to instance features.
+   Without it no sensor-sufficiency result can be turned into *control*: the
+   model literally cannot see the instance it would be conditioning on.
+3. **RC-005** — correct the `cost_model` (φ, not shape-only), A/B at identical
+   seeds. Also a **prerequisite for RC-014 Gate B**, whose `I_replace_cost`
+   estimand needs an honest equal-cost budget.
+4. **RC-007** — narrow the Evolution Engine's ordering search; stop spending
+   compute on pair-level distinctions that do not exist.
+5. **RC-002** — diverse initialisation last: the effect is real but 0.09–0.46%,
+   and adopting it re-bases the entire historical corpus.
+
+## Next scientific question — sensor sufficiency, not a better operator
+
+RC-014/RC-015 landed the project on it. The load-bearing consequence of RC-015 is
+**not** the tie mechanism but this:
+
+> Identical global parameters — `n`, `m`, weights, **and tie count** — determine
+> neither the magnitude nor the sign of an operator's value.
+
+G43/G44/G45 are the same `n = 1000, m = 9990`, all weights `+1`, and require
+opposite treatment: G43 wants heat-bath (materially, −44), G44 and G45 are
+indifferent. That is a candidate counterexample for the frozen `S_1` sensor map,
+and it is the concrete, cheap instantiation of the plan's Phase 5.
+
+**The audit, in order:**
+
+1. Finish the **narrow G11/G32 cycle** under its own pre-registration, answering
+   only "what fraction of the already-measured *ladder* effect passes through tie
+   handling". Flat-`T` conclusions may not be transferred (Amendment 1 A1.5).
+2. **Stop RC-015.** Do not hunt for an optimal `q`: D-15 showed `q = 0.75` does
+   not beat the shipped heat-bath rule. Neutral-network observables are justified
+   only as a **predictor of the Gibbs↔Metropolis choice**, never as a new operator.
+3. **Sweep `S_1(instance) → (I_replace, ρ, sign, materiality)` across the whole
+   G-Set**, not the six instances used so far. The harness already exists
+   (`exp_tie_handling`, `exp_counterfactual`).
+   **Caveat that shapes the sweep:** the six measured instances contain **no**
+   close pair with opposite *material* signs — G43 is materially negative at
+   n = 1000 while G23/G24 are materially positive at n = 2000, so `log_n` already
+   separates them and the pair proves nothing. A real impossibility result needs
+   **opposite material signs at the same n**, ideally inside one matched triple.
+   That is what the sweep must look for; G43 vs G44 is only the weak
+   "switch vs indifferent" form.
+4. **Only if `S_1` is insufficient**, test the Amendment 1 A1.6 neutral-network
+   observables as `S_2` — cheapest first (run lengths, recurrence, first
+   non-neutral exit energy, overlap change). **Kill criterion:** if they do not
+   separate the nearest conflicting pairs on held-out, do not build a
+   neutral-network model.
 
 ## Last verified gate results (2026-07-26)
 
