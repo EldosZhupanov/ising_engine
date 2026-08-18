@@ -257,6 +257,47 @@ backends, 0 failures, **0 of 18 inert**. Closed the gap that
   small φ_lo; WSL2 wall-clock; one operator/backend.
 - **Status — PARTIAL** (one prediction each way; both informative).
 
+### RC-014 — Substitution beats deletion (exact-counterfactual instrument)
+- **Motivation** — the Theory Engine certifies `metropolis_sweep` AND
+  `gibbs_color_sweep` as causal "exploration" on the same condition, with
+  near-identical deletion degradations (+8.1% / +7.5%) and the same ablated
+  baseline (−8496.00). Deletion measures distance from a greedy-only schedule,
+  so it cannot separate two operators of the same capability even in principle.
+- **Hypothesis (pre-registered)** — an equal-work substitution changes the run's
+  horizon value by more than re-seeding (`ρ ≥ 0.5`, rel ≥ 0.1%), and its sign is
+  regime-dependent.
+- **Method** — `I_replace_work = Y(gibbs) − Y(metropolis)` at equal sweeps and
+  equal draws. Exact under the Runtime's single stream because the pair is
+  draw-identical (`sweeps·n·r` `f64` each, measured at the operator boundary) and
+  the only downstream operator draws nothing. 6 instances × 2 initialisation arms
+  × 8 held-in + 8 held-out seeds; exact sign-flip test over 2⁸; BH at FDR 0.10 on
+  the 11 secondaries; primary contrast named in advance.
+- **Result — PARTIAL.** First clause CONFIRMED: Metropolis beats Gibbs on all
+  five G-Set instances, both arms, both seed sets, 0.17–2.41% at ρ = 1.6–9.6;
+  **10/10 contrasts replicate** under the numeric A6 rule. Second clause NOT
+  ESTABLISHED: `be100.1` reverses sign in all four cells but is
+  `DEGENERATE_NULL` in one arm, ρ < 0.5 in the other, fails replication, and is
+  confounded weighted×dense.
+- **Novelty, stated honestly** — the *direction* is KNOWN (Peskun ordering:
+  Metropolis dominates heat-bath; Metropolis accepts every `ΔE ≤ 0` move with
+  probability 1, heat-bath with `1/(1+exp(−|h|/T)) < 1`). **The contribution is
+  methodological**: deletion-based ablation reports two operators as equivalently
+  causal where substitution separates them cleanly.
+- **Instrument validation** — an independent reference implementation, sharing no
+  code with the operators, reproduces both **exactly on 648/648 fixtures**; the
+  draw-alignment probe returns identical generator state and detects an injected
+  one-word shift; null and both inert controls are exact. The first fixture grid
+  was **vacuous** (32 replicas × 16 sweeps saturates every small instance to its
+  optimum, so every reference difference was 0) — recorded, and the grid widened
+  without touching the pass criterion.
+- **Limitations** — one pair, one schedule, 16 sweeps, cache-resident scale,
+  pairs not schedules. The real-positive CI (+2.52% [+2.43, +2.64]) does **not**
+  contain the historical 2.1%; exact historical reproduction was never available
+  because `ExperimentDb` records no code version (Phase 0 §0.2).
+- **Follow-up** — D-14 (density vs weighting, pre-registered before the held-out
+  arm); adding a substitution arm to `theory.rs` (trajectory-changing ⇒ open
+  decision). Record: `RC014_COUNTERFACTUAL_SUBSTITUTION.md`.
+
 ### Non-cycle records
 `AXIOMS_OF_OPTIMIZATION.md` (eight axioms, validated against six historical
 breakthroughs; our operators destroy none), `CHANNEL_EXHAUSTION.md` (**contains a
@@ -304,6 +345,7 @@ experiment that overturned it.
 | RC-011 | CONFIRMED | ✅ invariance proof | 18,570-row DB | — | ✅ | — |
 | RC-012 | CONFIRMED (3 layers) | — | 4 cond × 5 seeds + deployed config verbatim | — | ✅ | — |
 | RC-013 | PARTIAL (P1 refuted, P2 confirmed) | — | 2 topo × 5 sizes × 2 φ + 3 floors | — | ✅ | — |
+| RC-014 | PARTIAL (clause 1 confirmed) | draw-identity measured | 6 inst × 2 arms × 16 seeds | — | ✅ | — |
 
 "CI-gated" = an automated gate fails if the property regresses. RC-006 and RC-009
 became tests and therefore run in the CI `test` job.
@@ -327,6 +369,7 @@ Every experiment is an executable in `src/bin/`. All are deterministic.
 | 010 | `cargo run --release --bin exp_world_model_audit` | A 0.9747 / B 0.8984 / C 0.8485 |
 | 011 | `cargo run --release --bin exp_predictor_audit` | max deviation 1.110e-16; 0 violations; 0.7467 |
 | 012 | `cargo run --release --bin exp_dynamics_audit` | 20 firings / 7 false (all thermal); Q2 all-zero predictions; Q3 `fit returned NONE (rows < 20)` |
+| 014 | `cargo run --release --bin exp_counterfactual -- --controls` (then `--science`, `--holdout`) | 648/648 agreement; G22/legacy I=+37.875 ρ=1.737 p=0.0078 |
 | 013 | `cargo run --release --bin exp_kernel_floors` | ring rows flat across ladder; random flip ns 2.1× rise; 1.9× ring-vs-random at 134 MB |
 
 **Interpretation guide.** A *scale-free* metric (relative difference, ρ = ratio to
