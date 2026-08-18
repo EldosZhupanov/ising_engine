@@ -25,23 +25,26 @@ use std::collections::{BTreeMap, BTreeSet};
 /// regime label → (experiment count, distinct instances, per-operator (Σ rel, n)).
 type RegimeAgg = BTreeMap<&'static str, (usize, BTreeSet<String>, BTreeMap<String, (f64, usize)>)>;
 
-/// The 5-feature structural encoding shared with the learned models, so
-/// "similarity" here means the same thing it means to the Policy/Predictor.
-fn feats(n: usize, density: f64, clustering: f64, mean_degree: f64, degree_cv: f64) -> [f64; 5] {
-    [
-        ((n as f64) + 1.0).ln() / 10.0,
+/// The structural encoding shared with the learned models (feature_registry v0),
+/// so "similarity" here means the same thing it means to the Policy/Predictor —
+/// and a discovered concept widens this similarity metric automatically.
+fn feats(n: usize, density: f64, clustering: f64, mean_degree: f64, degree_cv: f64) -> Vec<f64> {
+    sig_feats(&InstanceSignature {
+        n,
         density,
         clustering,
-        mean_degree / 10.0,
+        mean_degree,
         degree_cv,
-    ]
+    })
 }
 
-fn sig_feats(s: &InstanceSignature) -> [f64; 5] {
-    feats(s.n, s.density, s.clustering, s.mean_degree, s.degree_cv)
+fn sig_feats(s: &InstanceSignature) -> Vec<f64> {
+    // The LIVE vocabulary: a concept admitted by the Concept Discovery Engine
+    // immediately widens what "structurally similar" means to Scientific Memory.
+    super::feature_registry::current().encode(s)
 }
 
-fn distance(a: &[f64; 5], b: &[f64; 5]) -> f64 {
+fn distance(a: &[f64], b: &[f64]) -> f64 {
     a.iter()
         .zip(b)
         .map(|(x, y)| (x - y).powi(2))
@@ -75,7 +78,7 @@ pub fn recall(
     let target = sig_feats(sig);
 
     // Group records by instance; each instance's feature vector from any record.
-    let mut inst_feats: BTreeMap<String, [f64; 5]> = BTreeMap::new();
+    let mut inst_feats: BTreeMap<String, Vec<f64>> = BTreeMap::new();
     for r in db.all() {
         if !r.instance_id.is_empty() {
             inst_feats

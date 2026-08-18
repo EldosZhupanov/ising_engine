@@ -5,7 +5,7 @@
 //! Ensures the solver binaries this experiment needs are built in release,
 //! then hands off to the Python experiment runner (which owns the stats and
 //! visualization stack). One command → json/tables/graphs/html/report.md
-//! under experiments/results/<EXP>/.
+//! under `experiments/results/<EXP>/`.
 //!
 //! This shim contains no experiment logic; it exists so the canonical
 //! invocation is a single `cargo run`.

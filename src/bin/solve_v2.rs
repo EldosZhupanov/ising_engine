@@ -84,7 +84,7 @@ fn parse_rudy(text: &str) -> Result<(usize, Edges), String> {
 }
 
 /// Lower MaxCut to a QUBO minimization (minimize −cut). For each edge (u,v,w):
-///   −cut term = −w·(x_u + x_v − 2·x_u·x_v)  ⇒  linear[u]−=w, linear[v]−=w,
+///   −cut term = −w·(x_u + x_v − 2·x_u·x_v)  ⇒  `linear[u]−=w`, `linear[v]−=w`,
 ///   pair(u,v) += 2w. Identical to the runner's `_qubo_from_edges`, so lowest
 ///   QUBO energy ⇔ highest cut and the canonical scorer agrees across engines.
 fn maxcut_to_qubo(n: usize, pairs: &[(u32, u32, f64)]) -> ProblemIR {

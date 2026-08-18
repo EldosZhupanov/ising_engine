@@ -258,7 +258,7 @@ impl CuriosityEngine {
 
 /// The explore/exploit dial (§ Stage 8): blend an exploitation `value` (e.g. the
 /// Predictor's expected improvement or the Meta-Layer's consensus score, both
-/// pre-normalized to [0,1]) with a `curiosity` in [0,1]. `λ→0` optimizes,
+/// pre-normalized to `[0,1]`) with a `curiosity` in `[0,1]`. `λ→0` optimizes,
 /// `λ→1` explores.
 pub fn explore_exploit_priority(value: f64, curiosity: f64, lambda: f64) -> f64 {
     let l = lambda.clamp(0.0, 1.0);

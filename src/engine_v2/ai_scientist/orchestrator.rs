@@ -53,6 +53,9 @@ pub struct TickReport {
     pub theories_published: usize,
     /// write_knowledge(): rows in the re-exported Foundation Dataset.
     pub dataset_rows: usize,
+    /// learn(): concepts the Concept Discovery Engine admitted into the shared
+    /// vocabulary this tick (the scientist expanding its own representation).
+    pub concepts: Vec<String>,
     /// A one-line memory-manager health summary.
     pub memory: String,
     /// The Monitor's one-line health summary for this tick (gates the loop).
@@ -278,6 +281,32 @@ impl ResearchOrchestrator {
         }
         if consult_cloud {
             self.resources.last_cloud_consult_at = self.mgr.db.len();
+        }
+
+        // ── Discover Concepts (learn): the scientist EXPANDS ITS OWN VOCABULARY.
+        // The Concept Discovery Engine tests candidate structural concepts against
+        // the accumulated evidence (out-of-sample leave-one-out + Occam) and admits
+        // the ones that improve the representation, publishing every verdict
+        // (admitted AND rejected) to the graph. Admitted concepts extend the shared
+        // FeatureRegistry, so faculties reading the live vocabulary (Scientific
+        // Memory today; the models as they refit) get them automatically. ──
+        {
+            let base = (*super::feature_registry::current()).clone();
+            let (grown, verdicts) = super::concept::discover(
+                &self.mgr.db,
+                base,
+                &super::concept::default_candidates(),
+                &super::concept::ConceptConfig::default(),
+                &mut self.mgr.graph,
+            );
+            report.concepts = verdicts
+                .iter()
+                .filter(|v| v.admitted)
+                .map(|v| v.name.clone())
+                .collect();
+            if grown.len() > super::feature_registry::current().len() {
+                super::feature_registry::set_current(grown);
+            }
         }
 
         // ── write_knowledge(): Theory Engine on the best schedule's operators,

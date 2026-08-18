@@ -16,7 +16,7 @@
 //!   in sequential Monte Carlo).
 //! - Resampling is SYSTEMATIC: offspring counts are determined by a single
 //!   uniform offset u ∈ [0,1) via positions (j + u)/R against the cumulative
-//!   weights. Systematic resampling is unbiased (E_u[count_i] = R·w̃_i) and
+//!   weights. Systematic resampling is unbiased (`E_u[count_i]` = R·w̃_i) and
 //!   has minimal variance: every count lies in {⌊R·w̃_i⌋, ⌈R·w̃_i⌉}.
 //! - Offspring are placed at randomly shuffled destinations to avoid
 //!   deterministic cloning patterns.
@@ -151,8 +151,8 @@ pub fn adapt_spacings(spacings: &[f64], acceptance: &[f64]) -> Vec<f64> {
 /// Troyer, "Feedback-optimized parallel tempering Monte Carlo", JSTAT
 /// P03018 (2006)).
 ///
-/// Given the current interior positions `alphas` (in [0,1] log-temperature
-/// space, α[0]=0 hot, α[last]=1 cold) and the measured replica flow
+/// Given the current interior positions `alphas` (in `[0,1]` log-temperature
+/// space, `α[0]`=0 hot, `α[last]`=1 cold) and the measured replica flow
 /// `flow[k]` = fraction of up-moving replicas at ladder point k, the optimal
 /// local temperature density is η(α) ∝ √( (df/dα) ), so the mass of an
 /// interval is m_k = √( |Δf_k| · Δα_k ). New points equidistribute the

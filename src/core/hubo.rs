@@ -1,6 +1,6 @@
 //! Hypergraph Unconstrained Binary Optimization (HUBO) Model
 //!
-//! Contains both the original HuboModel (Vec<Vec<Edge>>) for construction,
+//! Contains both the original HuboModel (`Vec<Vec<Edge>>`) for construction,
 //! and FlatHuboModel (CSR-style contiguous arrays) for SIMD-optimized traversal.
 
 // Preserve legacy QuboModel for backward compatibility across modules
@@ -31,7 +31,7 @@ pub struct Edge4 {
     pub weight: f64,
 }
 
-/// Original HuboModel with Vec<Vec<Edge>> storage.
+/// Original HuboModel with `Vec<Vec<Edge>>` storage.
 /// Used during construction (LogicBuilder::build_hubo).
 /// Convert to FlatHuboModel before running the solver.
 #[derive(Clone)]
@@ -61,7 +61,7 @@ impl HuboModel {
 
 /// Flattened HUBO model with CSR-style contiguous edge arrays.
 ///
-/// Eliminates N separate heap allocations from Vec<Vec<Edge>>.
+/// Eliminates N separate heap allocations from `Vec<Vec<Edge>>`.
 /// All edges for all variables are stored in single contiguous Vecs.
 /// Access pattern: `for idx in offsets[v]..offsets[v+1]` — cache-line friendly,
 /// hardware prefetcher compatible.
@@ -90,7 +90,7 @@ pub struct FlatHuboModel {
 
 impl FlatHuboModel {
     /// Convert from HuboModel to FlatHuboModel.
-    /// This flattens Vec<Vec<Edge>> into contiguous CSR arrays.
+    /// This flattens `Vec<Vec<Edge>>` into contiguous CSR arrays.
     pub fn from_hubo(model: &HuboModel) -> Self {
         let n = model.num_vars;
 

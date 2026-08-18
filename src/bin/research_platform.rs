@@ -218,43 +218,189 @@ fn main() {
     // minima reached by `samples` random-start greedy descents (smooth landscape
     // → few distinct traps → low; rugged → many → high).
     if std::env::args().any(|a| a == "--structural") {
+        use ising_engine::engine_v2::ir::ProblemIR;
         use rand::{Rng, SeedableRng};
         use rand_chacha::ChaCha8Rng;
-        fn ruggedness(ir: &ising_engine::engine_v2::ir::ProblemIR, samples: usize) -> f64 {
-            let mut rng = ChaCha8Rng::seed_from_u64(12345);
+        // One greedy-descent pass from a random start (shared by several probes).
+        fn descend(ir: &ProblemIR, x: &mut [u8]) {
             let n = ir.n;
-            let mut minima = Vec::with_capacity(samples);
-            for _ in 0..samples {
-                let mut x: Vec<u8> = (0..n).map(|_| rng.gen::<bool>() as u8).collect();
-                loop {
-                    let mut improved = false;
-                    for i in 0..n {
-                        let (a, b) = (ir.row_ptr[i] as usize, ir.row_ptr[i + 1] as usize);
-                        let mut h = ir.linear[i];
-                        for k in a..b {
-                            h += ir.weights[k] * x[ir.col_idx[k] as usize] as f64;
-                        }
-                        // ΔE of flipping spin i = (1 - 2·x_i)·field_i.
-                        if (1.0 - 2.0 * x[i] as f64) * h < -1e-9 {
-                            x[i] ^= 1;
-                            improved = true;
-                        }
+            loop {
+                let mut improved = false;
+                for i in 0..n {
+                    let (a, b) = (ir.row_ptr[i] as usize, ir.row_ptr[i + 1] as usize);
+                    let mut h = ir.linear[i];
+                    for k in a..b {
+                        h += ir.weights[k] * x[ir.col_idx[k] as usize] as f64;
                     }
-                    if !improved {
-                        break;
+                    // ΔE of flipping spin i = (1 - 2·x_i)·field_i.
+                    if (1.0 - 2.0 * x[i] as f64) * h < -1e-9 {
+                        x[i] ^= 1;
+                        improved = true;
                     }
                 }
-                minima.push((ir.energy(&x) * 1e6).round() as i64);
+                if !improved {
+                    break;
+                }
             }
-            minima.sort_unstable();
-            minima.dedup();
-            minima.len() as f64 / samples as f64
         }
-        // Tab-separated feature vector for cross-family correlation analysis.
-        println!("instance\tn\tdensity\tmean_deg\tdeg_cv\tweight_cv\tlin_coup\truggedness");
+        // Sample `samples` random-start descents; return the multiset of local-min
+        // energies (µ-scaled ints). ruggedness / minima-entropy / funnel all derive
+        // from this single pass so they describe the SAME sampled landscape.
+        fn descend_minima(ir: &ProblemIR, samples: usize) -> Vec<i64> {
+            let mut rng = ChaCha8Rng::seed_from_u64(12345);
+            let n = ir.n;
+            let mut mins = Vec::with_capacity(samples);
+            for _ in 0..samples {
+                let mut x: Vec<u8> = (0..n).map(|_| rng.gen::<bool>() as u8).collect();
+                descend(ir, &mut x);
+                mins.push((ir.energy(&x) * 1e6).round() as i64);
+            }
+            mins
+        }
+        // Random-walk (accept-all single flips) energy autocorrelation length τ, the
+        // lag at which the normalized autocorrelation first drops below 1/e; returned
+        // normalized by n. Energy is tracked incrementally (O(deg) per step).
+        fn autocorr_len(ir: &ProblemIR, steps: usize) -> f64 {
+            let n = ir.n;
+            if n == 0 {
+                return 0.0;
+            }
+            let mut rng = ChaCha8Rng::seed_from_u64(999);
+            let mut x: Vec<u8> = (0..n).map(|_| rng.gen::<bool>() as u8).collect();
+            let mut e = ir.energy(&x);
+            let mut series = Vec::with_capacity(steps);
+            for _ in 0..steps {
+                let i = (rng.gen::<u32>() as usize) % n;
+                let (a, b) = (ir.row_ptr[i] as usize, ir.row_ptr[i + 1] as usize);
+                let mut h = ir.linear[i];
+                for k in a..b {
+                    h += ir.weights[k] * x[ir.col_idx[k] as usize] as f64;
+                }
+                e += (1.0 - 2.0 * x[i] as f64) * h; // ΔE
+                x[i] ^= 1;
+                series.push(e);
+            }
+            let m = series.iter().sum::<f64>() / series.len() as f64;
+            let var = series.iter().map(|z| (z - m) * (z - m)).sum::<f64>() / series.len() as f64;
+            if var < 1e-12 {
+                return 0.0;
+            }
+            let max_lag = (steps / 2).min(4 * n);
+            let mut tau = max_lag as f64;
+            for lag in 1..max_lag {
+                let mut c = 0.0;
+                for t in 0..series.len() - lag {
+                    c += (series[t] - m) * (series[t + lag] - m);
+                }
+                c /= (series.len() - lag) as f64 * var;
+                if c < std::f64::consts::E.recip() {
+                    tau = lag as f64;
+                    break;
+                }
+            }
+            tau / n as f64
+        }
+        // Frustration index: fraction of coupled edges left UNSATISFIED at a greedy
+        // local minimum. In Ising form (s = 2x−1, J = q/4) an edge raises energy when
+        // J·s_i·s_j > 0 — a convention-free frustration signal.
+        fn frustration(ir: &ProblemIR) -> f64 {
+            let n = ir.n;
+            let mut rng = ChaCha8Rng::seed_from_u64(7);
+            let mut x: Vec<u8> = (0..n).map(|_| rng.gen::<bool>() as u8).collect();
+            descend(ir, &mut x);
+            let (mut tot, mut fr) = (0usize, 0usize);
+            for i in 0..n {
+                let (a, b) = (ir.row_ptr[i] as usize, ir.row_ptr[i + 1] as usize);
+                for k in a..b {
+                    let j = ir.col_idx[k] as usize;
+                    if j <= i {
+                        continue; // each edge once
+                    }
+                    let si = 2.0 * x[i] as f64 - 1.0;
+                    let sj = 2.0 * x[j] as f64 - 1.0;
+                    tot += 1;
+                    if (ir.weights[k] / 4.0) * si * sj > 1e-12 {
+                        fr += 1;
+                    }
+                }
+            }
+            if tot > 0 {
+                fr as f64 / tot as f64
+            } else {
+                0.0
+            }
+        }
+        // Normalized spectral gap (λ1−λ2)/λ1 of the |coupling| matrix, via power
+        // iteration + deflation (200 iters). Cheap CSR mat-vec; a graph-mixing proxy.
+        fn spectral_gap(ir: &ProblemIR) -> f64 {
+            let n = ir.n;
+            if n < 2 {
+                return 0.0;
+            }
+            let matvec = |v: &[f64], out: &mut [f64]| {
+                for (i, oi) in out.iter_mut().enumerate() {
+                    let (a, b) = (ir.row_ptr[i] as usize, ir.row_ptr[i + 1] as usize);
+                    let mut s = 0.0;
+                    for k in a..b {
+                        s += ir.weights[k].abs() * v[ir.col_idx[k] as usize];
+                    }
+                    *oi = s;
+                }
+            };
+            let norm = |v: &[f64]| v.iter().map(|z| z * z).sum::<f64>().sqrt();
+            let mut v = vec![1.0 / (n as f64).sqrt(); n];
+            let mut w = vec![0.0; n];
+            let mut l1 = 0.0;
+            for _ in 0..200 {
+                matvec(&v, &mut w);
+                let nn = norm(&w);
+                if nn < 1e-12 {
+                    break;
+                }
+                l1 = nn;
+                for z in w.iter_mut() {
+                    *z /= nn;
+                }
+                v.copy_from_slice(&w);
+            }
+            let v1 = v.clone();
+            let mut u: Vec<f64> = (0..n)
+                .map(|i| if i % 2 == 0 { 1.0 } else { -1.0 })
+                .collect();
+            let nu = norm(&u);
+            for z in u.iter_mut() {
+                *z /= nu;
+            }
+            let mut l2 = 0.0;
+            for _ in 0..200 {
+                matvec(&u, &mut w);
+                let dot: f64 = w.iter().zip(&v1).map(|(a, b)| a * b).sum();
+                for i in 0..n {
+                    w[i] -= dot * v1[i]; // deflate the Perron component
+                }
+                let nn = norm(&w);
+                if nn < 1e-12 {
+                    break;
+                }
+                l2 = nn;
+                for z in w.iter_mut() {
+                    *z /= nn;
+                }
+                u.copy_from_slice(&w);
+            }
+            if l1 > 1e-12 {
+                (l1 - l2) / l1
+            } else {
+                0.0
+            }
+        }
+        // Multidimensional landscape descriptor: structural (density/degree/weight) +
+        // landscape (ruggedness/entropy/funnel/autocorr/frustration/spectral gap).
+        // The single-scalar hunt (density/weight_cv/lin_coup) is dead; this is the
+        // vector-descriptor test — does the WHOLE vector predict operator behavior?
+        println!("instance\tn\tdensity\tmean_deg\tdeg_cv\tweight_cv\tlin_coup\truggedness\tlmin_entropy\tfunnel\tautocorr\tfrustration\tspectral_gap");
         for (id, ir) in &instances {
             let n = ir.n;
-            // degree stats from CSR.
             let degs: Vec<f64> = (0..n)
                 .map(|i| (ir.row_ptr[i + 1] - ir.row_ptr[i]) as f64)
                 .collect();
@@ -270,7 +416,6 @@ fn main() {
             } else {
                 0.0
             };
-            // coupling-magnitude spread (penalty-heaviness proxy — refuted, kept).
             let w: Vec<f64> = ir.weights.iter().map(|x| x.abs()).collect();
             let wm = w.iter().sum::<f64>() / w.len().max(1) as f64;
             let weight_cv = if wm > 1e-9 {
@@ -279,12 +424,37 @@ fn main() {
             } else {
                 0.0
             };
-            // field-driven vs coupling-driven: mean|linear| / mean|coupling|.
             let lm = ir.linear.iter().map(|x| x.abs()).sum::<f64>() / n.max(1) as f64;
             let lin_coup = if wm > 1e-9 { lm / wm } else { 0.0 };
+            // Landscape probes from the sampled-minima pass.
+            let samples = 64usize;
+            let mins = descend_minima(ir, samples);
+            let mut sorted = mins.clone();
+            sorted.sort_unstable();
+            let best = *sorted.first().unwrap_or(&0);
+            let funnel = mins.iter().filter(|&&m| m == best).count() as f64 / samples as f64;
+            sorted.dedup();
+            let ruggedness = sorted.len() as f64 / samples as f64;
+            // Shannon entropy over the empirical local-min energy distribution, in
+            // bits, normalized by log2(samples) → [0,1].
+            let mut counts: std::collections::HashMap<i64, usize> =
+                std::collections::HashMap::new();
+            for &m in &mins {
+                *counts.entry(m).or_insert(0) += 1;
+            }
+            let entropy: f64 = counts
+                .values()
+                .map(|&c| {
+                    let p = c as f64 / samples as f64;
+                    -p * p.log2()
+                })
+                .sum();
+            let lmin_entropy = entropy / (samples as f64).log2().max(1e-9);
             println!(
-                "{id}\t{n}\t{density:.4}\t{mean_deg:.2}\t{deg_cv:.3}\t{weight_cv:.3}\t{lin_coup:.3}\t{:.3}",
-                ruggedness(ir, 64)
+                "{id}\t{n}\t{density:.4}\t{mean_deg:.2}\t{deg_cv:.3}\t{weight_cv:.3}\t{lin_coup:.3}\t{ruggedness:.3}\t{lmin_entropy:.3}\t{funnel:.3}\t{:.3}\t{:.3}\t{:.3}",
+                autocorr_len(ir, 8 * n.max(1)),
+                frustration(ir),
+                spectral_gap(ir)
             );
         }
         return;
@@ -301,17 +471,17 @@ fn main() {
         };
         use ising_engine::engine_v2::evolution::Schedule;
         use ising_engine::engine_v2::registry::OperatorRegistry;
+        // A HUMAN DIAGNOSTIC (print-only): the absolute operator-quality matrix.
+        // It is deliberately NOT a knowledge source — the autonomous loop
+        // (--orchestrate / --service) is the sole writer of canonical knowledge,
+        // so this hand tool never forks a parallel store.
         let reg = OperatorRegistry::standard();
         let exec = RuntimeExecutor::auto();
         let ops: Vec<String> = reg.names().map(|s| s.to_string()).collect();
         let sweeps = argn("--sweeps", 50) as u32;
         let replicas = argn("--replicas", 32);
         let seeds = [1u64, 2, 3];
-        // --warm evaluates each operator in a WARM context [metropolis_sweep, op]
-        // (a thermal warm-up creates the diverse replica ensemble that cluster /
-        // replica-exchange / population operators REQUIRE) instead of solo [op].
-        // This is the falsification test of the "thermal is universally best" law:
-        // the solo metric under-credits ensemble operators by construction.
+        // --warm evaluates each operator in a WARM context [metropolis_sweep, op].
         let warm = std::env::args().any(|a| a == "--warm");
         print!("instance");
         for op in &ops {
@@ -436,6 +606,117 @@ fn main() {
             );
         }
         eprintln!("\nPT (metro+exchange) beat pure metropolis on {pt_wins}/{n} instances (equal metropolis budget)");
+        return;
+    }
+
+    // --adaptive-oracle: is the best operator STATE-dependent? Tests the thesis
+    // "Search State → Best Next Operator" against "Problem → Best Operator". Uses
+    // deterministic replay (ADR-0004): to score prefix+[op] we re-run the whole
+    // schedule; identical prefix ⇒ identical intermediate state across candidates,
+    // so a greedy oracle schedule is buildable purely through the executor. The
+    // oracle PEEKS at true energies — it measures whether the INFORMATION exists
+    // (the adaptivity ceiling), not a deployable policy. Greedy ⇒ a LOWER bound on
+    // the value of adaptivity (myopic). Equal budget: both use phases*block sweeps.
+    if std::env::args().any(|a| a == "--adaptive-oracle") {
+        use ising_engine::engine_v2::ai_scientist::{
+            BatchExecutor, ExperimentTask, RuntimeExecutor,
+        };
+        use ising_engine::engine_v2::evolution::Schedule;
+        use ising_engine::engine_v2::registry::OperatorRegistry;
+        let reg = OperatorRegistry::standard();
+        let exec = RuntimeExecutor::auto();
+        let replicas = argn("--replicas", 24);
+        let phases = argn("--phases", 5);
+        let block = argn("--block", 20) as u32;
+        // --temp-hi/--temp-lo override the ladder; set equal for a FIXED-temperature
+        // ensemble (no in-operator annealing) — the confound check for whether the
+        // always-on ladder is masking schedule-level operator state-dependence.
+        let temp_hi = arg("--temp-hi").and_then(|s| s.parse().ok()).unwrap_or(4.0);
+        let temp_lo = arg("--temp-lo").and_then(|s| s.parse().ok()).unwrap_or(0.1);
+        let seeds = [1u64, 2, 3];
+        let ops: Vec<String> = reg.names().map(|s| s.to_string()).collect();
+        let run =
+            |ir: &ising_engine::engine_v2::ir::ProblemIR, ops_: &[String], sw: &[u32]| -> f64 {
+                let tasks: Vec<ExperimentTask> = seeds
+                    .iter()
+                    .map(|&s| ExperimentTask {
+                        schedule: Schedule {
+                            ops: ops_.to_vec(),
+                            sweeps: sw.to_vec(),
+                            temp_hi,
+                            temp_lo,
+                        },
+                        num_replicas: replicas,
+                        seed: s,
+                    })
+                    .collect();
+                let outs = exec.run_batch(ir, &reg, &tasks);
+                outs.iter().map(|o| o.score).sum::<f64>() / outs.len().max(1) as f64
+            };
+        println!("instance\tstatic_op\tstatic_e\tadaptive_e\trel_gain\tsequence");
+        let mut phase_pick: Vec<std::collections::HashMap<String, usize>> =
+            vec![Default::default(); phases];
+        let (mut wins, mut n, mut sum_gain) = (0usize, 0usize, 0.0f64);
+        for (id, ir) in &instances {
+            // Best PROBLEM→OPERATOR: single op repeated over all phases (equal budget).
+            let mut best_static = f64::INFINITY;
+            let mut best_static_op = ops[0].clone();
+            for op in &ops {
+                let e = run(ir, &vec![op.clone(); phases], &vec![block; phases]);
+                if e < best_static {
+                    best_static = e;
+                    best_static_op = op.clone();
+                }
+            }
+            // Greedy STATE→NEXT-OPERATOR oracle: at each phase pick the op that most
+            // lowers energy given the committed prefix.
+            let mut pre_ops: Vec<String> = Vec::new();
+            let mut pre_sw: Vec<u32> = Vec::new();
+            let mut adaptive_e = f64::INFINITY;
+            for pick in phase_pick.iter_mut().take(phases) {
+                let (mut best_e, mut best_op) = (f64::INFINITY, ops[0].clone());
+                for op in &ops {
+                    let mut t_ops = pre_ops.clone();
+                    t_ops.push(op.clone());
+                    let mut t_sw = pre_sw.clone();
+                    t_sw.push(block);
+                    let e = run(ir, &t_ops, &t_sw);
+                    if e < best_e {
+                        best_e = e;
+                        best_op = op.clone();
+                    }
+                }
+                pre_ops.push(best_op.clone());
+                pre_sw.push(block);
+                adaptive_e = best_e;
+                *pick.entry(best_op).or_insert(0) += 1;
+            }
+            let rel = if best_static.abs() > 1e-9 {
+                (best_static - adaptive_e) / best_static.abs()
+            } else {
+                0.0
+            };
+            if adaptive_e < best_static - 1e-9 {
+                wins += 1;
+            }
+            n += 1;
+            sum_gain += rel;
+            println!(
+                "{id}\t{best_static_op}\t{best_static:.1}\t{adaptive_e:.1}\t{rel:+.4}\t{}",
+                pre_ops.join(">")
+            );
+        }
+        eprintln!(
+            "\nadaptive-oracle beat best-static on {wins}/{n}; mean rel_gain = {:+.4}",
+            sum_gain / n.max(1) as f64
+        );
+        eprintln!("phase-wise best-next-operator selection frequency (state-dependence signal):");
+        for (ph, m) in phase_pick.iter().enumerate() {
+            let mut items: Vec<_> = m.iter().collect();
+            items.sort_by(|a, b| b.1.cmp(a.1));
+            let s: Vec<String> = items.iter().map(|(k, v)| format!("{k}:{v}")).collect();
+            eprintln!("  phase {ph}: {}", s.join("  "));
+        }
         return;
     }
 

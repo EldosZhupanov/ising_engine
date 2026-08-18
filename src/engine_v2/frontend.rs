@@ -71,7 +71,7 @@ pub fn parse_rudy(text: &str) -> Result<(usize, Edges), String> {
 }
 
 /// Lower MaxCut to a QUBO minimization (minimize −cut). Per edge (u,v,w):
-/// linear[u]−=w, linear[v]−=w, pair(u,v)+=2w. Lowest QUBO energy ⇔ highest cut.
+/// `linear[u]−=w`, `linear[v]−=w`, `pair(u,v)+=2w`. Lowest QUBO energy ⇔ highest cut.
 pub fn maxcut_to_qubo(n: usize, edges: &[(u32, u32, f64)]) -> ProblemIR {
     let mut linear = vec![0.0f64; n];
     let mut pairs = Vec::with_capacity(edges.len());

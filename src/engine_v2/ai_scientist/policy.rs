@@ -55,13 +55,13 @@ pub struct OperatorPolicy {
 }
 
 fn features(sig: &InstanceSignature) -> [f64; N_FEATS] {
-    [
-        ((sig.n as f64) + 1.0).ln() / 10.0,
-        sig.density,
-        sig.clustering,
-        sig.mean_degree / 10.0,
-        sig.degree_cv,
-    ]
+    // Shared vocabulary (feature_registry v0), not a private copy. v0 has exactly
+    // N_FEATS entries; a wider vocabulary version would require re-fitting the net.
+    let v = super::feature_registry::v0().encode(sig);
+    debug_assert_eq!(v.len(), N_FEATS);
+    let mut a = [0.0; N_FEATS];
+    a.copy_from_slice(&v[..N_FEATS]);
+    a
 }
 
 fn softmax(logits: &mut [f64]) {

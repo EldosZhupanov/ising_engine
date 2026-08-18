@@ -211,7 +211,7 @@ fn fast_exp(x: f64) -> f64 {
 /// Computes delta energy for flipping variable `v` across all 64 replicas.
 ///
 /// Architecture: All inner loops iterate over contiguous i8 arrays and
-/// accumulate into a contiguous f64[64] array. No bit shifts, no branches,
+/// accumulate into a contiguous `f64[64]` array. No bit shifts, no branches,
 /// no function calls inside the inner loop. LLVM emits AVX2 packed instructions.
 #[inline(always)]
 #[allow(clippy::needless_range_loop)]

@@ -57,6 +57,10 @@ impl OperatorRegistry {
         reg.register(|| Box::new(ops::EliteBroadcast::new()));
         reg.register(|| Box::new(ops::RandomRestartWorst::new()));
         reg.register(|| Box::new(ops::HistoryFieldSweep::new()));
+        reg.register(|| Box::new(ops::EnsembleThermostat::freeze()));
+        reg.register(|| Box::new(ops::EnsembleThermostat::seek()));
+        reg.register(|| Box::new(ops::MoveSynthesizer::population()));
+        reg.register(|| Box::new(ops::MoveSynthesizer::dynamics()));
         reg
     }
 

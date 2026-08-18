@@ -18,6 +18,7 @@
 
 pub mod campaign;
 pub mod cloud;
+pub mod concept;
 pub mod curiosity;
 pub mod dashboard;
 pub mod dataset;
@@ -26,6 +27,7 @@ pub mod dynamics;
 pub mod evaluation;
 pub mod executive;
 pub mod executor;
+pub mod feature_registry;
 pub mod graph;
 pub mod lab;
 pub mod llm;
@@ -48,6 +50,7 @@ pub mod world;
 
 pub use campaign::{CampaignConfig, CampaignManager, CampaignSummary};
 pub use cloud::{deep_analysis_prompt, CloudScientist};
+pub use concept::{discover as discover_concepts, ConceptConfig, ConceptVerdict};
 pub use curiosity::{explore_exploit_priority, CuriosityConfig, CuriosityEngine, CuriousIdeator};
 pub use dashboard::{write_dashboard, write_dashboard_with};
 pub use dataset::FoundationDataset;
@@ -61,6 +64,7 @@ pub use executive::{
     Action, Decision, ExecutiveBrief, ExecutiveConfig, ResearchExecutive, ResourceState,
 };
 pub use executor::{BatchExecutor, ExperimentOutcome, ExperimentTask, RuntimeExecutor};
+pub use feature_registry::{Feature, FeatureRegistry};
 pub use graph::{KnowledgeGraph, Triple};
 pub use lab::{
     ExperimentDesigner, FitnessWeights, HypothesisGenerator, Ideator, KnowledgeManager, LabConfig,

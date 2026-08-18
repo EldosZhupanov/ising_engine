@@ -59,11 +59,9 @@ fn feature_row(
 ) -> Vec<f64> {
     let mut x = Vec::with_capacity(10 + vocab.len());
     x.push(1.0); // bias
-    x.push(((sig.n as f64) + 1.0).ln() / 10.0);
-    x.push(sig.density);
-    x.push(sig.clustering);
-    x.push(sig.mean_degree / 10.0);
-    x.push(sig.degree_cv);
+                 // Instance features come from the shared vocabulary (feature_registry v0),
+                 // not a private copy — so a discovered concept propagates here automatically.
+    super::feature_registry::v0().encode_into(sig, &mut x);
     x.push(ops.len() as f64 / 4.0);
     x.push((sweeps.iter().sum::<u32>() as f64 + 1.0).ln() / 10.0);
     x.push((temp_hi + 1.0).ln());

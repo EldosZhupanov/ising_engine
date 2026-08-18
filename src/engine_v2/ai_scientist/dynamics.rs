@@ -49,13 +49,19 @@ pub struct Trajectory {
 
 fn instance_features(ir: &ProblemIR) -> [f64; N_INSTANCE_FEATS] {
     let s = DecisionEngine::analyze(ir);
-    [
-        ((s.n as f64) + 1.0).ln() / 10.0,
-        s.density,
-        s.clustering,
-        s.mean_degree / 10.0,
-        s.degree_cv,
-    ]
+    // Shared vocabulary (feature_registry v0), not a private copy.
+    let sig = super::predictor::InstanceSignature {
+        n: s.n,
+        density: s.density,
+        clustering: s.clustering,
+        mean_degree: s.mean_degree,
+        degree_cv: s.degree_cv,
+    };
+    let v = super::feature_registry::v0().encode(&sig);
+    debug_assert_eq!(v.len(), N_INSTANCE_FEATS);
+    let mut a = [0.0; N_INSTANCE_FEATS];
+    a.copy_from_slice(&v[..N_INSTANCE_FEATS]);
+    a
 }
 
 /// Run `schedule` on the real Runtime and capture its execution log. Uses only

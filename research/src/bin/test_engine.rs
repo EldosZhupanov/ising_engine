@@ -14,6 +14,10 @@ fn main() {
             col_indices: vec![1, 2, 0, 2, 0, 1],
             row_offsets: vec![0, 2, 4, 6],
         },
+        // This AND-gate penalty is written out by hand with no constant term,
+        // so 0.0 reproduces the behaviour this binary had before `energy_offset`
+        // was added to `QuboModel`.
+        energy_offset: 0.0,
     };
 
     let solver = ParallelTemperingSolver {

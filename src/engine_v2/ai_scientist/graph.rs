@@ -38,7 +38,7 @@ pub struct Triple {
 }
 
 impl Triple {
-    /// Evidence strength in [0,1]: grows with support, shrinks with noise.
+    /// Evidence strength in `[0,1]`: grows with support, shrinks with noise.
     /// confidence = (1 − e^(−support/5)) · 1/(1 + cv), cv = std/|mean|.
     pub fn confidence(&self) -> f64 {
         let sup = 1.0 - (-(self.support as f64) / 5.0).exp();

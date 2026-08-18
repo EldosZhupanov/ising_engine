@@ -2,11 +2,11 @@
 //! into and every backend consumes (Constitution §7, ADR-0005).
 //!
 //! Objective (QUBO, x ∈ {0,1}):
-//!   E(x) = offset + Σ_i linear[i]·x_i + Σ_{i<j} q_ij·x_i·x_j
+//!   E(x) = offset + Σ_i `linear[i]`·x_i + Σ_{i<j} q_ij·x_i·x_j
 //!
 //! The quadratic part is stored as symmetric CSR with BOTH triangles
 //! materialized: `row(i)` holds every neighbor j with the full pair
-//! coefficient q_ij. Local field h_i = linear[i] + Σ_j q_ij·x_j is then a
+//! coefficient q_ij. Local field h_i = `linear[i]` + Σ_j q_ij·x_j is then a
 //! single row scan, and ΔE(flip i) = (1 − 2·x_i)·h_i.
 
 /// Canonical lowered problem. Immutable after construction.

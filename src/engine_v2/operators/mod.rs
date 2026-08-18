@@ -21,24 +21,28 @@
 //! the same contract with zero framework changes.
 
 pub mod cluster;
+pub mod ensemble_thermostat;
 pub mod extremal_metropolis;
 pub mod extremal_optimization;
 pub mod gibbs_color_sweep;
 pub mod greedy_descent;
 pub mod history_field;
 pub mod metropolis_sweep;
+pub mod move_synthesis;
 pub mod population_annealing;
 pub mod random_flip_sweep;
 pub mod replica_exchange;
 pub mod steepest_descent;
 
 pub use cluster::{HoudayerClusterMove, IsoenergeticClusterMove};
+pub use ensemble_thermostat::EnsembleThermostat;
 pub use extremal_metropolis::ExtremalMetropolis;
 pub use extremal_optimization::ExtremalOptimization;
 pub use gibbs_color_sweep::GibbsColorSweep;
 pub use greedy_descent::GreedyDescent;
 pub use history_field::HistoryFieldSweep;
 pub use metropolis_sweep::MetropolisSweep;
+pub use move_synthesis::{MoveSynthesizer, Source as SynthSource};
 pub use population_annealing::{EliteBroadcast, PopulationResample, RandomRestartWorst};
 pub use random_flip_sweep::RandomFlipSweep;
 pub use replica_exchange::ReplicaExchange;
