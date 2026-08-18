@@ -27,10 +27,16 @@ couplings and `T = 0.1`, computed directly:
 
 | `ΔE` | Metropolis accept | heat-bath flip | ratio |
 |---|---|---|---|
-| +1 | 4.540e−05 | 4.540e−05 | **1.0000** |
-| +2 | 2.061e−09 | 2.061e−09 | **1.0000** |
-| **0** | **1.0** | **0.5** | **2.0** |
-| < 0 | ≈1 | ≈1 | ≈1 |
+| +1 | 4.540e−05 | 4.540e−05 | **1.0000454** |
+| +2 | 2.061e−09 | 2.061e−09 | **1.000000002** |
+| **0** | **1.0** | **0.5** | **2** |
+| < 0 | 1 | ≈1 | 1 + e^{−\|ΔE\|/T} |
+
+*(Corrected by `PREREG_RC015_AMENDMENT_1.md` A1.1: the +1/+2 rows read `1.0000`
+here by rounding. The exact closed form, verified to 1e-12, is
+**`p_M/p_G = 1 + e^{−|ΔE|/T}` for every `ΔE`, exactly 2 at `ΔE = 0` at every
+temperature**. The conclusion is unchanged and stronger: the tie ratio is
+temperature-independent while every other channel decays to 1 as `e^{−Δ_min/T}`.)*
 
 At `T = 0.1` the two kernels are **numerically indistinguishable off ties**. So
 essentially *all* of the observed M−G difference at that temperature must flow

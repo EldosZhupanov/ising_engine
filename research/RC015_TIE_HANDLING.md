@@ -50,8 +50,17 @@ is not manufactured by it.
 ## 2. The gradient — the mechanism's quantitative prediction, confirmed
 
 Pre-registered as non-gating: if ties are the channel, their share must **fall as
-`T` rises**, because the off-tie acceptance ratio Metropolis : heat-bath is
-1.0000 at `T = 0.1`, 1.14 at 0.5 and 1.61 at 2.0 (for `ΔE = +1`).
+`T` rises**, because the off-tie acceptance ratio climbs while the tie ratio does
+not. The exact identity (Amendment 1 A1.1, verified to 1e-12) is
+
+> **`p_M(ΔE) / p_G(ΔE) = 1 + e^{−|ΔE|/T}` for every `ΔE`, and exactly `2` at
+> `ΔE = 0` at every temperature.**
+
+So the tie channel's ratio is **temperature-independent at 2**, while every other
+channel decays to 1 as `e^{−Δ_min/T}` — with `Δ_min = 1.0` measured by the
+per-arm census. Off-tie the ratio is 1.0000454 at `T = 0.1`, 1.1353 at 0.5 and
+1.6065 at 2.0. The cold dominance of ties is the `T → 0` limit of a closed form,
+not an approximation.
 
 | T | `I_full` | `I_tie` | `I_off` | tie share |
 |---|---|---|---|---|
@@ -115,7 +124,8 @@ monotone in `q`, and `q = 1` bit-identical to `metropolis_sweep`).
 
 **LIKELY KNOWN — the mechanism.** That Metropolis and heat-bath coincide off ties
 as `T → 0` follows from their acceptance functions and is arithmetic, not
-discovery; that they differ at `ΔE = 0` by `1` versus `½` is a definition. Under
+discovery; that they differ at `ΔE = 0` by `1` versus `½` is a definition. The
+closed form `p_M/p_G = 1 + e^{−|ΔE|/T}` is likewise a derivation, not a finding. Under
 `RESEARCH_GAPS.md` §5c this is at best LIKELY KNOWN.
 
 **What is measured, and was not known here:** that this single convention accounts
