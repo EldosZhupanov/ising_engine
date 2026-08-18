@@ -238,8 +238,60 @@ To be tested at Gate B, listed now so they cannot be invented afterwards:
 
 ## 12. Falsifiable descendant
 
-> **To be written before the held-out seeds are run. Left empty deliberately.
-> An entry added after held-out results are seen invalidates Gate A condition 6.**
+**Written 2026-08-19 after the held-in run, before any held-out seed was
+executed** (Gate A condition 6). Held-in results that motivate it are summarised
+only as far as needed to state the prediction; the held-out arm is unseen.
+
+### What the held-in run showed
+
+`I_replace_work > 0` on all five G-Set instances in both initialisation arms
+(Metropolis better than Gibbs), and **`I < 0` on `be100.1`** (Gibbs better) —
+a sign reversal. The primary named contrast (G22/legacy) is material and
+significant; ten of eleven secondary contrasts reject under BH.
+
+### The honest reading, stated before the confirmation is sought
+
+1. **The direction on sparse instances is KNOWN, not a finding.** Metropolis
+   accepts every `ΔE ≤ 0` move with probability 1, while heat-bath accepts it
+   with `1/(1+exp(−|h|/T)) < 1`. Peskun ordering (Peskun 1973; Tierney 1998)
+   predicts Metropolis dominates heat-bath for the same target. Per
+   `RESEARCH_GAPS.md` PART 5 this must be labelled **KNOWN** and not counted as
+   a contribution.
+2. **The reversal is confounded, and the confound is mine to break.**
+   `be100.1` differs from every G-Set instance on **two** axes at once:
+   weighted (145 distinct weights) *and* dense (density 0.9905 against
+   0.002–0.06). Attributing the reversal to weighting would repeat the exact
+   error that killed the Easy-Information Law — a density effect in another
+   costume (`CHANNEL_EXHAUSTION.md` §7.2).
+3. **The reversal did not meet this pre-registration's own materiality bar.**
+   `be100.1/legacy` is `DEGENERATE_NULL` (zero seed variance in the Metropolis
+   arm) and `be100.1/diverse` has `ρ = 0.313 < 0.5` with `p = 1.0`. By §6 the
+   reversal is an **observation, not a result**.
+
+### D-14 — the descendant
+
+> **The sign of `I_replace_work` is governed by DENSITY, not by weighting.**
+
+- **D-14a.** On an **unweighted** instance at density ≈ 0.99, `I_replace_work < 0`
+  (Gibbs wins), matching `be100.1`.
+- **D-14b.** On a **weighted** instance at G-Set-like density (≤ 0.06),
+  `I_replace_work > 0` (Metropolis wins), matching G-Set.
+
+**Refuted if** the signs follow weighting instead — `D-14a` positive **or**
+`D-14b` negative — or if neither contrast reaches the §6 materiality bar, in
+which case the reversal is noise and is recorded as such.
+
+**Instances, fixed now:** `D-14a` uses a synthetic unweighted (J ∈ {±1}) graph at
+density 0.99, `n = 100`, generated deterministically; `D-14b` uses
+`biqmac/gka1a` or the sparsest available weighted BiqMac instance with density
+≤ 0.06. Same 8 held-in seeds, same schedule, same two arms. Materiality and the
+exact sign-flip test are unchanged.
+
+**Secondary mechanism prediction (not gating).** If the effect is the
+downhill-acceptance gap of §1, the Metropolis advantage must **shrink as T → 0**
+(where heat-bath's downhill acceptance → 1) and be maximal at high `T`. Flat
+ladders at `T ∈ {2.0, 0.5, 0.1}`. Refuted if the advantage is flat in `T` or
+grows as `T` falls.
 
 ---
 
