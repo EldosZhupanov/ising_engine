@@ -8,6 +8,11 @@ results. A missed threshold is a KILL or ARCHIVE, not a revision.
 **Prerequisite:** `RC014_PHASE0_AUDIT.md` (Phase 0, PASS-restricted).
 **Plan:** `RC014_PLAN_CAUSAL_INSTRUMENT.md`.
 
+**Amended before instrument code:** `PREREG_RC014_AMENDMENT_1.md`. Where the
+amendment and this file differ, the amendment controls. The original text is
+left intact so the correction is visible in git history rather than silently
+rewritten.
+
 Commit this file before the first line of instrument code. Its position in git
 history is the evidence that the hypothesis preceded the data.
 
