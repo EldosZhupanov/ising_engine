@@ -168,4 +168,39 @@ remains failed and is not reopened by this cycle.
 
 ## 9. Falsifiable descendant
 
-> **To be written before the held-out seeds are run. Left empty deliberately.**
+**Written 2026-08-19 after the held-in run, before any held-out seed executed.**
+
+### What the held-in run showed
+
+Three of six cells have a **material** `I_full`; in all three the tie term carries
+**96–115%** of it and the off-tie residual is at most ρ = 0.50 with rel ≤ 0.052%.
+**But the sign is instance-specific** — G43 −44.1, G23 +57.0, G24 +45.0 — and
+matched siblings disagree wildly: G43 −44.1 against G44 −0.25 and G45 −5.4, all
+at n=1000, m=9990, all weights +1. **Matching on (n, m, weight) does not
+determine the effect.** Tie *count* does not predict it either (census: G43 368
+ties/replica with the largest set-A effect, G44 453 with none).
+
+### D-15 — dose–response on the tie rule
+
+If ties are genuinely the causal channel, then *dialling the tie rule* must trace
+the effect out, not merely toggle it. Generalise the operator to a tie-acceptance
+probability `q` (flip at `ΔE = 0` iff `u < q`), where `q = 1` is `M` and
+`q = 0.5` is `M½`; one `f64` draw per proposal at every `q`, so all arms stay
+draw-identical.
+
+> **On each instance with a material `I_full` (G43, G23, G24), `Y` is monotone in
+> `q` over `{0, 0.25, 0.5, 0.75, 1.0}`, and `sign(Y(1) − Y(0.5))` equals
+> `sign(−I_tie)` measured here.**
+
+**Refuted if** `Y` is non-monotone in `q` on any of the three, **or** if the
+`q = 0.5` arm does not reproduce the `G` arm's `Y` within seed noise (which would
+mean the tie rule is not what `M½` and `G` share).
+
+This is the RC-001 dose–response discipline: a channel that is real should
+respond to its own dial, and `q = 1` must be bit-identical to `metropolis_sweep`
+as the null-by-construction, exactly as `TieMode::Accept` is here.
+
+**Open, and NOT a prediction:** what instance property sets the *sign*. Nothing
+measured in this cycle predicts it — not n, not m, not weights, not tie count.
+Declared as an open question so that any later answer cannot be presented as
+having been anticipated.

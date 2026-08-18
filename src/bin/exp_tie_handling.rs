@@ -535,6 +535,18 @@ fn report_cell(tag: &str, c: &Cell) {
         "      |I_tie|/|I_full| = {:.3}   decomposition residual = {:.3e}",
         c.share, c.closes
     );
+    // The gate is only meaningful where the effect being decomposed EXISTS.
+    // With |I_full| ~ 0 the share ratio is undefined (it reached 19.0 on a null
+    // cell in the first run) and "residual not material" is trivially true, so
+    // the verdict must not be evaluated there. Materiality is the same two-part
+    // rule as everywhere else: rho >= 0.5 AND rel >= 0.1%.
+    let full_material = !c.full.degenerate()
+        && c.full.rho().is_some_and(|r| r >= 0.5)
+        && c.full.rel() >= 0.001;
+    if !full_material {
+        println!("      verdict: I_full NOT MATERIAL — share undefined, gate not applicable");
+        return;
+    }
     let confirmed = c.share >= 0.80 && !c.off.rho().is_some_and(|r| r >= 0.5);
     let refuted = c.off.rho().is_some_and(|r| r >= 0.5) && c.off.rel() >= 0.001;
     println!(
@@ -544,7 +556,7 @@ fn report_cell(tag: &str, c: &Cell) {
         } else if refuted {
             "H-15 residual is MATERIAL -> refuted pending held-out replication"
         } else {
-            "PARTIAL"
+            "PARTIAL (share ok but residual rho >= 0.5 while rel < 0.1%)"
         }
     );
 }
