@@ -1,6 +1,7 @@
 # RC-014 — Substitution beats deletion: two operators the ablation engine calls equivalent are not
 
-**Status: Gate A PASSED.** Pre-registered in `PREREG_RC014.md` (+ Amendment 1),
+**Status: Gate A PASSED.** Pre-registered in `PREREG_RC014.md`
+(+ Amendments 1 and 2; §4 and follow-up 3 carry Amendment 2's corrections),
 committed before instrument code; descendant D-14 committed before the held-out
 arm. Phase 0 audit: `RC014_PHASE0_AUDIT.md`. Instrument:
 `src/bin/exp_counterfactual.rs`.
@@ -109,11 +110,21 @@ reported as such.**
 Stated before the confirmation was sought (`PREREG_RC014.md` §12, committed
 2026-08-19 before the held-out run).
 
-**KNOWN — the direction.** Metropolis accepts every `ΔE ≤ 0` move with
-probability 1; heat-bath accepts the same move with `1/(1+exp(−|h|/T)) < 1`.
-Peskun ordering (Peskun 1973; Tierney 1998) predicts Metropolis dominates
-heat-bath for the same target. Under `RESEARCH_GAPS.md` PART 5 this is a
-replication, not a contribution, and is labelled so.
+**LIKELY KNOWN — the direction.** *(Corrected by Amendment 2 A2.1; this section
+originally said KNOWN and cited Peskun ordering as predicting the result. It does
+not.)* Metropolis accepts every `ΔE ≤ 0` move with probability 1; heat-bath
+accepts the same move with `1/(1+exp(−|h|/T)) < 1`. Peskun ordering (Peskun 1973;
+Tierney 1998) bounds the asymptotic variance of ergodic averages for *reversible*
+kernels sharing a *common stationary distribution*. What is measured here is a
+**finite-budget best-of-32-replicas** energy after `greedy_descent`, on a ladder
+spanning 4.0 → 0.1 — not an ergodic average, not at stationarity, and not the
+functional Peskun bounds. The theorem is therefore **consistent with** the
+direction and explains the local acceptance advantage, but does **not** predict
+this observable. On `RESEARCH_GAPS.md` §5c's four-level scale the direction is
+**LIKELY KNOWN**: finite-budget Metropolis-vs-heat-bath comparisons are common in
+the annealing literature, but we have not located the exact citation and no
+theorem we can name covers `Y`. The cycle's stated contribution is unchanged and
+remains the methodological one below.
 
 **NOT KNOWN, and the actual deliverable — the method.** That the platform's own
 ablation engine cannot distinguish two operators it separately certifies as
@@ -192,10 +203,12 @@ G22/legacy `I=+37.875, ρ=1.737, p=0.0078` held-in and `+53.375, ρ=4.567` held-
    causal. Trajectory-changing (it changes which facts are published) ⇒ an open
    decision under ADR-0004, not applied here.
 2. **D-14** — the density-vs-weighting disentanglement, instances fixed.
-3. **Secondary mechanism test** (non-gating): if this is the downhill-acceptance
-   gap, the advantage must shrink as `T → 0` and be maximal at high `T`. Flat
-   ladders at `T ∈ {2.0, 0.5, 0.1}`. Refuted if flat in `T` or growing as `T`
-   falls.
+3. **Secondary mechanism test** (non-gating, sharpened by Amendment 2 A2.2): the
+   advantage must shrink as `T → 0` **provided the mass of `ΔE = 0` proposals is
+   small** — at zero local field the kernels differ by a constant (Metropolis
+   accepts, heat-bath flips w.p. ½) that cooling never closes. The tie fraction is
+   a required co-observable; a flat or growing advantage at low `T` is
+   uninterpretable without it. Flat ladders at `T ∈ {2.0, 0.5, 0.1}`.
 4. **`be100.1` produces zero seed variance under Metropolis.** Worth its own look:
    a degenerate null on a dense n=100 instance suggests saturation, which would
    make this instance a poor discriminator for any operator comparison.
