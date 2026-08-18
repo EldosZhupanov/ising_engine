@@ -540,9 +540,8 @@ fn report_cell(tag: &str, c: &Cell) {
     // cell in the first run) and "residual not material" is trivially true, so
     // the verdict must not be evaluated there. Materiality is the same two-part
     // rule as everywhere else: rho >= 0.5 AND rel >= 0.1%.
-    let full_material = !c.full.degenerate()
-        && c.full.rho().is_some_and(|r| r >= 0.5)
-        && c.full.rel() >= 0.001;
+    let full_material =
+        !c.full.degenerate() && c.full.rho().is_some_and(|r| r >= 0.5) && c.full.rel() >= 0.001;
     if !full_material {
         println!("      verdict: I_full NOT MATERIAL — share undefined, gate not applicable");
         return;

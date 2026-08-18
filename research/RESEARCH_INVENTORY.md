@@ -315,6 +315,50 @@ backends, 0 failures, **0 of 18 inert**. Closed the gap that
   re-pointed at G43's cold reversal rather than at density-vs-weighting.
   Record: `RC014_COUNTERFACTUAL_SUBSTITUTION.md`.
 
+### RC-015 — The cold difference between Metropolis and heat-bath is one line about ties
+- **Origin** — RC-014 §10's unexplained cold reversal on G43, and the fact that
+  its dismissal of tie handling ("only 2.3% ties") was wrong on three counts: a
+  fraction was compared where a **count** was required (2.3% of 16 000 proposals
+  is 368 ties/replica ⇒ ~184 divergent decisions); off-tie behaviour at T = 0.1
+  was never checked (the acceptance ratio is **1.0000** at ΔE = +1 and +2, so ties
+  are the ONLY remaining channel there); and the tie statistic was
+  **post-treatment**, counted along one arm's trajectory.
+- **Method** — three draw-identical arms: **M** (tie ⇒ accept), **M½** (tie ⇒ flip
+  w.p. ½, Metropolis elsewhere), **G** (heat-bath). `I_tie = Y(M½) − Y(M)`,
+  `I_off = Y(G) − Y(M½)`, `I_full = I_tie + I_off`. Matched G-Set triples that
+  already exist — G43/G44/G45 (n=1000, m=9990) and G22/G23/G24 (n=2000, m=19990),
+  all weights +1 — so no synthetic generator was needed. Flat T = 0.1, 8 held-in +
+  8 held-out seeds, pre- and post-quench reported separately.
+- **Result — CONFIRMED**, held-in and held-out, on every instance where the effect
+  exists. **Tie handling carries 94–115% of every material `I_full`**; the off-tie
+  residual never reaches materiality (max ρ 0.504, always at rel < 0.06%). G43
+  −44.125 → −40.875 (share 0.963 → 1.058), G23 +57.0 → +54.75, G24 +45.0 → +49.1;
+  all three replicate under the A6 rule (ratios 0.926 / 0.961 / 1.092). The
+  decomposition closes **exactly** in all 24 cells. Same before and after
+  `greedy_descent`, so the divergence exists at the quench's starting point.
+- **Gradient (non-gating, pre-registered)** — the tie share must fall as T rises;
+  measured **0.963 → 0.740 → 0.440** at T = 0.1 → 0.5 → 2.0, and `I_full` flips
+  sign between 0.1 and 0.5. The reversal is specifically cold.
+- **Implication for the operator library** — `metropolis_sweep.rs:117`'s `d <= 0.0`
+  folds ties into the downhill branch. That one convention accounts for
+  essentially the whole cold difference between two registry entries declared as
+  different physical laws. Tie handling is a design axis this repository had never
+  named. Making it an explicit parameter is trajectory-changing ⇒ open decision.
+- **NOT explained — the sign.** G43 negative, G23/G24 positive; matched siblings
+  disagree (G43 −44.1 vs G44 −0.25 vs G45 −5.4 at identical n, m, weights); tie
+  *count* does not predict it (G43 has the fewest ties in set A and the largest
+  effect). Declared open so no later answer can be presented as anticipated.
+- **Novelty** — the mechanism is **LIKELY KNOWN** (it follows from the acceptance
+  functions). What was not known here is that it accounts for ~100% of a material,
+  replicating, instance-specific difference on real instances, with a monotone
+  temperature gradient and a sign nothing measured predicts.
+- **Limitations** — flat T = 0.1 (gradient on G43 only), one schedule, legacy init,
+  six unweighted instances, cache-resident scale.
+- **Follow-up** — D-15 dose–response in the tie probability `q` (pre-registered);
+  what sets the sign; decomposing G11/G32, which carry 13–34% tie mass — an order
+  of magnitude above G43 — and were never decomposed.
+  Record: `RC015_TIE_HANDLING.md`.
+
 ### Non-cycle records
 `AXIOMS_OF_OPTIMIZATION.md` (eight axioms, validated against six historical
 breakthroughs; our operators destroy none), `CHANNEL_EXHAUSTION.md` (**contains a
@@ -363,6 +407,7 @@ experiment that overturned it.
 | RC-012 | CONFIRMED (3 layers) | — | 4 cond × 5 seeds + deployed config verbatim | — | ✅ | — |
 | RC-013 | PARTIAL (P1 refuted, P2 confirmed) | — | 2 topo × 5 sizes × 2 φ + 3 floors | — | ✅ | — |
 | RC-014 | PARTIAL (clause 1 confirmed, clause 2 REFUTED by D-14) | draw-identity measured | 6 inst × 2 arms × 16 seeds + D-14 + T-curve | — | ✅ | — |
+| RC-015 | CONFIRMED | acceptance-ratio derivation | 6 inst × 3 arms × 16 seeds + gradient | — | ✅ | — |
 
 "CI-gated" = an automated gate fails if the property regresses. RC-006 and RC-009
 became tests and therefore run in the CI `test` job.
@@ -386,6 +431,7 @@ Every experiment is an executable in `src/bin/`. All are deterministic.
 | 010 | `cargo run --release --bin exp_world_model_audit` | A 0.9747 / B 0.8984 / C 0.8485 |
 | 011 | `cargo run --release --bin exp_predictor_audit` | max deviation 1.110e-16; 0 violations; 0.7467 |
 | 012 | `cargo run --release --bin exp_dynamics_audit` | 20 firings / 7 false (all thermal); Q2 all-zero predictions; Q3 `fit returned NONE (rows < 20)` |
+| 015 | `cargo run --release --bin exp_tie_handling -- --controls` (then `--science`, `--holdout`, `--gradient`) | 3 controls pass; G43 I_full=−44.125 share 0.963; gradient 0.963→0.740→0.440 |
 | 014 | `cargo run --release --bin exp_counterfactual -- --controls` (then `--science`, `--holdout`, `--d14`, `--tempcurve`) | 648/648 agreement; G22/legacy I=+37.875 ρ=1.737 p=0.0078; D-14a DEGENERATE_NULL; G43 T=0.1 I=−44.13 |
 | 013 | `cargo run --release --bin exp_kernel_floors` | ring rows flat across ladder; random flip ns 2.1× rise; 1.9× ring-vs-random at 134 MB |
 
