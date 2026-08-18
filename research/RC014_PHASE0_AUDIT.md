@@ -66,9 +66,28 @@ interchangeable** even at equal counts.
 
 **Verdict.** `metropolis_sweep ↔ gibbs_color_sweep` at equal `sweeps` is an
 **exactly draw-aligned substitution**: identical count, identical width, so the
-stream state after the step is identical and all downstream randomness is
-preserved. This is a valid exact counterfactual **today**, without touching
-`runtime.rs`.
+generator state after the step is identical. Both call the same `ensure_order`,
+which pushes every site exactly once in colour order (`|order| = n`), so the
+traversal order matches too. This is a valid exact counterfactual **today**,
+without touching `runtime.rs`.
+
+**But exactness needs a second condition.** Draw-identity preserves the stream
+*position*; the substitution still changes the *state*, so any later operator
+whose draw count is state-dependent (`cluster`, `population_annealing`,
+`move_synthesis`, `extremal_*`, `history_field`) would consume a different number
+of draws and divergence would resume. The pre-registered schedule is
+`[X, greedy_descent]` and `greedy_descent` draws nothing, so the condition holds
+trivially. **Both conditions must be stated together; either alone is
+insufficient.**
+
+**Relation to ADR-0009** (proposed in a concurrent session, same day, reaching
+the same conclusion by an independent route). Its consequences section originally
+stated that RC-014 Phase 1 and Gates A/B are blocked outright until addressable
+randomness lands. That is correct for the **general** instrument and too strong
+for this one pair under this one schedule; the ADR carries an amendment recording
+the two conditions above. ADR-0009 remains required for anything wider — a second
+substitution pair, a data-dependent downstream operator, deletion instead of
+substitution, or any claim about longer schedules.
 
 **Deferred to ADR.** General addressable randomness
 (`U = f(seed, run, phase, logical_slot, operator, site, replica, draw_kind, draw_index)`)

@@ -76,9 +76,50 @@ updates to every operator implementation, the executor seam, replay provenance,
 and the golden/cross-backend verification suites.  It must therefore be a
 separate architectural change, not an incidental part of the RC-014 experiment.
 
-Until acceptance and implementation, RC-014 Phase 1 and Gates A/B are blocked:
-reporting `I_delete`, `I_cost-null`, or `I_replace` as causal would be invalid.
-Phase 3's DSL reconstruction gate is the plan-authorized independent fallback.
+Until acceptance and implementation, the **general** counterfactual instrument is
+blocked: for an arbitrary intervention, reporting `I_delete`, `I_cost-null`, or
+`I_replace` as causal would be invalid. Phase 3's DSL reconstruction gate is the
+plan-authorized independent fallback.
+
+### Amendment, 2026-08-19 — the blocking claim is narrowed by measurement
+
+*Added after this ADR was authored, sourced to `research/RC014_PHASE0_AUDIT.md`
+§0.1. The original sentence blocked RC-014 Phase 1 unconditionally; that is
+correct in general and wrong for one specific case, which the audit found.*
+
+A substitution is an **exact** counterfactual under the current stream RNG when
+**both** conditions hold:
+
+1. **The substituted pair is draw-identical** — same number of draws, same draw
+   width. Verified for `metropolis_sweep` ↔ `gibbs_color_sweep`: both call
+   `ensure_order`, which pushes every site exactly once in colour order, so
+   `|order| = n`; both then draw exactly one `f64` per `(sweep, site, replica)`
+   unconditionally — `metropolis_sweep.rs:119` keeps its count data-independent
+   with an explicit discarded draw, `gibbs_color_sweep.rs:152` is unconditional
+   by construction. Total `sweeps·n·r` `f64` draws in both, and the traversal
+   order matches. Under `rand 0.8.5` an `f64` is two 32-bit words in both cases.
+   The generator state after the step is therefore identical.
+2. **Every downstream operator's draw count is state-independent.** Condition 1
+   preserves the stream *position*, but the substitution changes the *state*, so
+   a later data-dependent operator (cluster, population resampling, extremal,
+   move synthesis) would consume a different number of draws and divergence
+   resumes. In `PREREG_RC014.md` the schedule is `[X, greedy_descent]` and
+   `greedy_descent` takes `_rng` — it draws nothing — so condition 2 holds
+   trivially.
+
+`random_flip_sweep` is excluded despite an equal draw *count*: it draws `bool`
+(one word), not `f64` (two words).
+
+**Consequence.** RC-014 Phase 1 and Gates A/B proceed **restricted to that one
+pair under that one schedule**, and the pre-registration is scoped accordingly
+(`PREREG_RC014.md` §3, §13). This ADR remains required for anything wider: a
+second substitution pair, a data-dependent downstream operator, deletion rather
+than substitution, or any claim about longer schedules.
+
+Both conditions are machine-checked rather than assumed — the harness records a
+per-step draw counter and generator fingerprint, and Gate A blocks on a
+null-substitution being bit-identical and on a deliberately injected one-draw
+offset being *detected* (`PREREG_RC014.md` §7).
 
 ## Alternatives rejected
 

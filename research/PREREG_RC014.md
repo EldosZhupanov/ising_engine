@@ -57,6 +57,14 @@ This is the only such pair available (Phase 0 §0.1 table). `random_flip_sweep`
 draws `bool` (one word) and is excluded. All content-dependent operators are
 excluded.
 
+**Exactness needs a second condition, and the schedule is chosen to satisfy it.**
+Draw-identity preserves the stream *position*, but the substitution changes the
+*state* — so any later operator whose draw count depends on state would consume a
+different number of draws and divergence would resume. Here the only downstream
+operator is `greedy_descent`, which takes `_rng` and draws nothing, so the
+condition holds trivially. Introducing a data-dependent operator after the
+substitution point voids the exactness claim and requires ADR-0009.
+
 **Machine-verified alignment, not assumed.** The harness records a per-step draw
 counter and a generator-state fingerprint. Any arm whose post-step fingerprint
 differs from its pair is **discarded, not analysed**.
