@@ -294,9 +294,26 @@ backends, 0 failures, **0 of 18 inert**. Closed the gap that
   pairs not schedules. The real-positive CI (+2.52% [+2.43, +2.64]) does **not**
   contain the historical 2.1%; exact historical reproduction was never available
   because `ExperimentDb` records no code version (Phase 0 §0.2).
-- **Follow-up** — D-14 (density vs weighting, pre-registered before the held-out
-  arm); adding a substitution arm to `theory.rs` (trajectory-changing ⇒ open
-  decision). Record: `RC014_COUNTERFACTUAL_SUBSTITUTION.md`.
+- **Descendant D-14 — REFUTED.** Density-vs-weighting ran as pre-registered and
+  the two arms point opposite ways: the unweighted-dense arm is zero within noise
+  and `DEGENERATE_NULL` in every cell, the weighted-sparse arm is positive but
+  not significant (p = 1.000 / 0.375). **Mechanism of the refutation:** dense
+  n = 100 instances **saturate** — the Metropolis arm returns the same energy for
+  all eight seeds, so `d_seed` collapses and `ρ` is undefined. The `be100.1` sign
+  reversal was therefore measured against a zero-variance arm and is
+  **WITHDRAWN as unmeasurable**, not kept as an open observation. Gate B is not
+  reached; nothing was widened to rescue it.
+- **Non-gating temperature curve.** Tie mass (`ΔE = 0` proposals) is **13–34%** on
+  the two toroidal ±1 lattices against **0–5%** elsewhere and 0.004% on the
+  145-weight `be100.1` — the Amendment 2 A2.2 exploratory prediction confirmed at
+  n = 6. The `T → 0` shrinkage holds where tie mass is low. **Anomaly:** G43
+  *reverses* at T = 0.1 (I = −44.13, ρ = 5.31, p = 0.0078) with only 2.3% ties, so
+  neither the tie mechanism nor the downhill-acceptance gap covers it. Recorded as
+  an anomaly, not a finding; it is the natural next pre-registration.
+- **Follow-up** — adding a substitution arm to `theory.rs` (trajectory-changing ⇒
+  open decision, NOT applied); the matched multi-instance set (Amendment 2 A2.4)
+  re-pointed at G43's cold reversal rather than at density-vs-weighting.
+  Record: `RC014_COUNTERFACTUAL_SUBSTITUTION.md`.
 
 ### Non-cycle records
 `AXIOMS_OF_OPTIMIZATION.md` (eight axioms, validated against six historical
@@ -345,7 +362,7 @@ experiment that overturned it.
 | RC-011 | CONFIRMED | ✅ invariance proof | 18,570-row DB | — | ✅ | — |
 | RC-012 | CONFIRMED (3 layers) | — | 4 cond × 5 seeds + deployed config verbatim | — | ✅ | — |
 | RC-013 | PARTIAL (P1 refuted, P2 confirmed) | — | 2 topo × 5 sizes × 2 φ + 3 floors | — | ✅ | — |
-| RC-014 | PARTIAL (clause 1 confirmed) | draw-identity measured | 6 inst × 2 arms × 16 seeds | — | ✅ | — |
+| RC-014 | PARTIAL (clause 1 confirmed, clause 2 REFUTED by D-14) | draw-identity measured | 6 inst × 2 arms × 16 seeds + D-14 + T-curve | — | ✅ | — |
 
 "CI-gated" = an automated gate fails if the property regresses. RC-006 and RC-009
 became tests and therefore run in the CI `test` job.
@@ -369,7 +386,7 @@ Every experiment is an executable in `src/bin/`. All are deterministic.
 | 010 | `cargo run --release --bin exp_world_model_audit` | A 0.9747 / B 0.8984 / C 0.8485 |
 | 011 | `cargo run --release --bin exp_predictor_audit` | max deviation 1.110e-16; 0 violations; 0.7467 |
 | 012 | `cargo run --release --bin exp_dynamics_audit` | 20 firings / 7 false (all thermal); Q2 all-zero predictions; Q3 `fit returned NONE (rows < 20)` |
-| 014 | `cargo run --release --bin exp_counterfactual -- --controls` (then `--science`, `--holdout`) | 648/648 agreement; G22/legacy I=+37.875 ρ=1.737 p=0.0078 |
+| 014 | `cargo run --release --bin exp_counterfactual -- --controls` (then `--science`, `--holdout`, `--d14`, `--tempcurve`) | 648/648 agreement; G22/legacy I=+37.875 ρ=1.737 p=0.0078; D-14a DEGENERATE_NULL; G43 T=0.1 I=−44.13 |
 | 013 | `cargo run --release --bin exp_kernel_floors` | ring rows flat across ladder; random flip ns 2.1× rise; 1.9× ring-vs-random at 134 MB |
 
 **Interpretation guide.** A *scale-free* metric (relative difference, ρ = ratio to

@@ -938,10 +938,236 @@ fn report(rows: &[Row]) {
     }
 }
 
+/// Fraction of `(sweep, site, replica)` proposals whose local field is exactly
+/// zero, measured along a Metropolis trajectory.
+///
+/// Required co-observable for the T -> 0 mechanism test (Amendment 2 A2.2): at
+/// `dE = 0` the two kernels differ by a CONSTANT — `metropolis_sweep.rs:117`
+/// takes the `d <= 0.0` branch and accepts, heat-bath flips with probability
+/// 1/2 — and cooling never closes that gap. So a flat or growing advantage at
+/// low `T` is uninterpretable without knowing this mass.
+fn tie_fraction(
+    ir: &ProblemIR,
+    order: &[usize],
+    temps: &[f64],
+    sweeps: u32,
+    replicas: usize,
+    rng: &mut ChaCha8Rng,
+) -> f64 {
+    let (n, r) = (ir.n, replicas);
+    let mut x = vec![0u8; n * r];
+    let (mut ties, mut total) = (0u64, 0u64);
+    for _ in 0..sweeps {
+        for &site in order {
+            let (cols, ws) = ir.row(site);
+            let mut flip = vec![false; r];
+            for (rep, f) in flip.iter_mut().enumerate() {
+                let mut h = ir.linear[site];
+                for (&j, &w) in cols.iter().zip(ws) {
+                    if x[j as usize * r + rep] != 0 {
+                        h += w;
+                    }
+                }
+                let xi = x[site * r + rep] != 0;
+                let de = if xi { -h } else { h };
+                total += 1;
+                if de == 0.0 {
+                    ties += 1;
+                }
+                let t = temps[rep % temps.len()];
+                if de <= 0.0 {
+                    let _u: f64 = rng.gen();
+                    *f = true;
+                } else {
+                    let p = if t > 0.0 { (-de / t).exp() } else { 0.0 };
+                    let u: f64 = rng.gen();
+                    *f = u < p;
+                }
+            }
+            for (rep, &f) in flip.iter().enumerate() {
+                if f {
+                    x[site * r + rep] ^= 1;
+                }
+            }
+        }
+    }
+    ties as f64 / total.max(1) as f64
+}
+
+/// A deterministic UNWEIGHTED (J in {+-1}) graph at a target density, emitted as
+/// rudy text and parsed through the SAME frontend as every benchmark instance,
+/// so the QUBO conversion is identical and the comparison is not a parser
+/// artifact. D-14a's instance.
+fn synthetic_unweighted(n: usize, density: f64, seed: u64) -> Result<ProblemIR, String> {
+    let mut rng = ChaCha8Rng::seed_from_u64(seed);
+    let mut edges = Vec::new();
+    for i in 1..=n {
+        for j in (i + 1)..=n {
+            if rng.gen::<f64>() < density {
+                let w = if rng.gen::<bool>() { 1 } else { -1 };
+                edges.push((i, j, w));
+            }
+        }
+    }
+    let mut text = format!("{n} {}\n", edges.len());
+    for (i, j, w) in &edges {
+        text.push_str(&format!("{i} {j} {w}\n"));
+    }
+    rudy_maxcut_ir(&text)
+}
+
+/// One (instance, arm) contrast at a given ladder, returned as the paired table.
+fn contrast(
+    ir: &ProblemIR,
+    reg: &OperatorRegistry,
+    arm: Arm,
+    seeds: &[u64],
+    temps: Option<&[f64]>,
+) -> Option<Paired> {
+    let (mut full, mut repl) = (Vec::new(), Vec::new());
+    for &s in seeds {
+        let mut pa = build_plan(ir, OP_A, SWEEPS, arm, s);
+        let mut pb = build_plan(ir, OP_B, SWEEPS, arm, s);
+        if let Some(t) = temps {
+            pa.temperatures = t.to_vec();
+            pb.temperatures = t.to_vec();
+        }
+        match (execute(ir, reg, &pa), execute(ir, reg, &pb)) {
+            (Ok(a), Ok(b)) => {
+                full.push(a.y);
+                repl.push(b.y);
+            }
+            _ => return None,
+        }
+    }
+    Some(Paired {
+        full,
+        replace: repl,
+    })
+}
+
+fn line(tag: &str, p: &Paired) {
+    println!(
+        "    {tag:<28} I={:+.4}  rho={}  rel={:.4}%  p={:.4}{}",
+        p.mean_effect(),
+        p.rho().map_or("DEGEN".to_string(), |r| format!("{r:.3}")),
+        p.rel() * 100.0,
+        p.signflip_p(),
+        if p.degenerate() {
+            "  DEGENERATE_NULL"
+        } else {
+            ""
+        }
+    );
+}
+
+/// D-14 — is the sign of `I_replace_work` governed by DENSITY or by WEIGHTING?
+///
+/// Pre-registered in `PREREG_RC014.md` §12 before the held-out arm; instance
+/// resolution amended in `PREREG_RC014_AMENDMENT_2.md` A2.3, because NO weighted
+/// BiqMac instance has density <= 0.06 (measured over all 125; the sparsest is
+/// `gka8a` at 0.0814). Run exactly as written on its two points.
+fn d14(reg: &OperatorRegistry) {
+    println!("D-14 — density vs weighting (PREREG §12, instances per AMENDMENT_2 A2.3)\n");
+
+    println!("  D-14a: UNWEIGHTED, dense (synthetic, J in {{+-1}}, n=100, target density 0.99)");
+    println!("         prediction: I < 0 (Gibbs wins) if the sign follows DENSITY");
+    match synthetic_unweighted(100, 0.99, 20260819) {
+        Ok(ir) => {
+            let st = DecisionEngine::analyze(&ir);
+            println!(
+                "    realised n={} density={:.4} pairs={}",
+                ir.n,
+                st.density,
+                ir.num_pairs()
+            );
+            for arm in [Arm::Legacy, Arm::Diverse] {
+                match contrast(&ir, reg, arm, &HELD_IN, None) {
+                    Some(p) => line(arm.tag(), &p),
+                    None => println!("    {} run failed", arm.tag()),
+                }
+            }
+        }
+        Err(e) => println!("    generation failed: {e}"),
+    }
+
+    println!("\n  D-14b: WEIGHTED, sparsest available (gka8a, density 0.0814)");
+    println!("         prediction: I > 0 (Metropolis wins) if the sign follows DENSITY");
+    println!("         NOTE: the pre-registered clause asked for density <= 0.06; no weighted");
+    println!("         BiqMac instance satisfies it (AMENDMENT_2 A2.3). Deviation recorded.");
+    match load("benchmark_suite/data/biqmac/gka8a.sparse") {
+        Ok(ir) => {
+            let st = DecisionEngine::analyze(&ir);
+            println!(
+                "    realised n={} density={:.4} pairs={}",
+                ir.n,
+                st.density,
+                ir.num_pairs()
+            );
+            for arm in [Arm::Legacy, Arm::Diverse] {
+                match contrast(&ir, reg, arm, &HELD_IN, None) {
+                    Some(p) => line(arm.tag(), &p),
+                    None => println!("    {} run failed", arm.tag()),
+                }
+            }
+        }
+        Err(e) => println!("    load failed: {e}"),
+    }
+}
+
+/// Non-gating mechanism probe: flat ladders, with the `dE = 0` tie mass reported
+/// alongside (Amendment 2 A2.2 makes the tie fraction a required co-observable).
+fn temperature_curve(reg: &OperatorRegistry) {
+    println!(
+        "Temperature curve — flat ladders, with dE=0 tie mass (non-gating, AMENDMENT_2 A2.2)\n"
+    );
+    println!("  prediction: the Metropolis advantage shrinks as T -> 0 PROVIDED tie mass is small");
+    println!("  at dE = 0 the kernels differ by a constant (accept vs flip w.p. 1/2), so a flat");
+    println!("  or growing advantage at low T is uninterpretable without the tie column.\n");
+    for (name, path) in INSTANCES {
+        let Ok(ir) = load(path) else { continue };
+        let backend = DecisionEngine::analyze(&ir).select_backend();
+        let init = vec![0u8; ir.n];
+        let probe = boxed_state(&ir, backend, REPLICAS, &init);
+        let order = colour_order(probe.as_ref());
+        drop(probe);
+        println!(
+            "  {name} (n={}, density={:.4})",
+            ir.n,
+            DecisionEngine::analyze(&ir).density
+        );
+        for t in [2.0f64, 0.5, 0.1] {
+            let temps = vec![t];
+            let mut rng = ChaCha8Rng::seed_from_u64(HELD_IN[0]);
+            let ties = tie_fraction(&ir, &order, &temps, SWEEPS, REPLICAS, &mut rng);
+            match contrast(&ir, reg, Arm::Legacy, &HELD_IN, Some(&temps)) {
+                Some(p) => println!(
+                    "    T={t:<4} I={:+10.4}  rho={:<7}  rel={:7.4}%  p={:.4}  dE=0 mass={:6.3}%",
+                    p.mean_effect(),
+                    p.rho().map_or("DEGEN".to_string(), |r| format!("{r:.3}")),
+                    p.rel() * 100.0,
+                    p.signflip_p(),
+                    ties * 100.0
+                ),
+                None => println!("    T={t}: run failed"),
+            }
+        }
+    }
+}
+
 // ---------------------------------------------------------------------- main
 
 fn main() {
     let reg = OperatorRegistry::standard();
+
+    if flag("--d14") {
+        d14(&reg);
+        return;
+    }
+    if flag("--tempcurve") {
+        temperature_curve(&reg);
+        return;
+    }
 
     if flag("--controls") || !(flag("--science") || flag("--holdout") || flag("--transitions")) {
         println!("RC-014 Phase 1 — Gate A controls (PREREG_RC014.md + AMENDMENT_1)\n");

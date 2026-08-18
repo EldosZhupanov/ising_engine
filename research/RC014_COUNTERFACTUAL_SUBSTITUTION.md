@@ -35,9 +35,9 @@ Substitution can, and does. At equal sweeps and equal draws:
 > in both initialisation arms, in both seed sets — by 0.17% to 2.41% of the
 > energy scale, at ρ = 1.6–9.6 against the seed-variance null.**
 
-**The finding is not "Metropolis is better" — that direction is KNOWN (§4). The
-finding is that deletion-based ablation reported the two as equivalently causal
-while substitution separates them cleanly.** `I_delete` answers "would the
+**The finding is not "Metropolis is better" — that direction is LIKELY KNOWN
+(§4). The finding is that deletion-based ablation reported the two as
+equivalently causal while substitution separates them cleanly.** `I_delete` answers "would the
 schedule collapse without this?"; `I_replace` answers "should I use this one or
 that one here?" — and only the second is the question a scheduler faces.
 
@@ -212,3 +212,122 @@ G22/legacy `I=+37.875, ρ=1.737, p=0.0078` held-in and `+53.375, ρ=4.567` held-
 4. **`be100.1` produces zero seed variance under Metropolis.** Worth its own look:
    a degenerate null on a dense n=100 instance suggests saturation, which would
    make this instance a poor discriminator for any operator comparison.
+
+---
+
+## 9. D-14 — REFUTED, and the refutation withdraws the `be100.1` observation
+
+Run exactly as pre-registered (`PREREG_RC014.md` §12, committed before the
+held-out arm), instances resolved per Amendment 2 A2.3. Held-in seeds, both arms.
+
+| Arm | Instance | density | I | ρ | rel | p |
+|---|---|---|---|---|---|---|
+| **D-14a** unweighted, dense | synthetic J∈{±1}, n=100 | 0.9905 | **+0.0000** | **DEGEN** | 0.000% | 1.000 |
+| D-14a | (diverse init) | 0.9905 | **+0.2500** | **DEGEN** | 0.062% | 1.000 |
+| **D-14b** weighted, sparsest | `gka8a` | 0.0614 | **+71.75** | 0.354 | 1.624% | 1.000 |
+| D-14b | (diverse init) | 0.0614 | **+33.38** | 0.547 | 0.745% | 0.375 |
+
+**Predicted:** D-14a `I < 0` and D-14b `I > 0` if the sign follows **density**;
+the reverse if it follows **weighting**.
+
+**Observed:** D-14a is **zero within noise and degenerate**; D-14b is **positive**
+but not significant (p = 1.000 / 0.375) and marginal on materiality (ρ = 0.354
+fails, 0.547 passes).
+
+**Verdict — REFUTED** on the pre-registered clause: the refutation condition
+"`D-14a` positive" fires (+0.25, diverse arm). Stated without lawyering: **the two
+arms point in opposite directions.** D-14b supports density; D-14a, such as it is,
+leans weighting — and is degenerate. Neither hypothesis survives.
+
+### 9.1 The mechanism of the refutation, and what it costs
+
+Every cell of D-14a is `DEGENERATE_NULL` — the Metropolis arm returns the **same
+energy for all eight seeds**. So is every `be100.1` cell, in the Gate-A run and at
+all three flat temperatures (§10). The common factor is not weighting: it is
+**dense, n = 100**. At density ≈ 0.99 with 32 replicas, 16 sweeps and a greedy
+finisher, the search **saturates** — the outcome stops depending on the seed, the
+null scale `d_seed` collapses to zero, and `ρ` becomes undefined.
+
+**Consequence, and it is the point of running D-14:** the `be100.1` sign reversal
+that motivated this descendant was measured **against a zero-variance arm**. It is
+therefore **withdrawn** — not held open as an observation, but recorded as
+**unmeasurable with this design**. The dense n = 100 corner is outside the
+instrument's discriminating range, and the correct response is to say so rather
+than to keep an unexplained reversal in reserve.
+
+This also answers RC-014 follow-up 4 ("`be100.1` produces zero seed variance under
+Metropolis — worth its own look") in the affirmative and closes it: it is
+saturation, it generalises to any dense n = 100 instance weighted or not, and it
+disqualifies the instance as a discriminator.
+
+### 9.2 Correction to Amendment 2 A2.3 — my density figures were header-based
+
+A2.3 reported BiqMac densities computed from each file's header edge count `m`.
+The frontend accumulates duplicate pairs, so the **loaded** instance has fewer
+distinct pairs and a lower density: `gka8a` is **403 header lines → 304 pairs,
+density 0.0614, not 0.0814**. Re-measured over all 125 instances on loaded pair
+counts, every header-based density in A2.3 was high by 20–35%.
+
+**A2.3's conclusion is unaffected:** still **zero** weighted BiqMac instances at
+loaded density ≤ 0.06, and `gka8a` is still the sparsest. But D-14b's instance is
+much closer to the pre-registered `≤ 0.06` clause than the amendment claimed —
+0.0614 against a 0.06 bar — so the recorded deviation is marginal rather than
+substantial. Corrected here rather than left standing.
+
+---
+
+## 10. Temperature curve — the sharpened prediction, and one anomaly it does not cover
+
+Non-gating (Amendment 2 A2.2). Flat ladders, legacy arm, held-in seeds, with the
+`ΔE = 0` tie mass as the required co-observable.
+
+| Instance | density | T=2.0 | T=0.5 | T=0.1 | tie mass 2.0 → 0.1 |
+|---|---|---|---|---|---|
+| G22 | 0.010 | +43.88 (p .008) | +32.75 (p .023) | **+1.88** (p .711) | 5.2% → 2.6% |
+| G1 | 0.060 | +24.00 (p .016) | +35.25 (p .008) | **+6.50** (p .156) | 2.5% → 1.5% |
+| G11 | 0.005 | +3.25 (p .391) | +4.50 (p .055) | +1.75 (p .125) | **33.5% → 13.1%** |
+| G32 | 0.002 | −3.25 (p .648) | +29.50 (p .008) | +12.00 (p .008) | **33.1% → 13.1%** |
+| G43 | 0.020 | +12.50 (p .172) | +15.88 (p .016) | **−44.13** (ρ 5.31, p .008) | 5.2% → 2.3% |
+| `be100.1` | 0.991 | −67.75 (DEGEN) | −26.63 (DEGEN) | **0.00** (DEGEN) | 0.004% → 0.000% |
+
+**Tie mass: the A2.2 exploratory prediction is CONFIRMED.** The two toroidal ±1
+lattices carry **13–34%** zero-field proposals against **0–5%** everywhere else —
+an order of magnitude — exactly as predicted from their degree-4 integer fields.
+`be100.1`, with 145 distinct weights, has essentially **no** ties (0.004%).
+Reported as hypothesis-generating at n = 6, never as a test.
+
+**The `T → 0` prediction is broadly supported where tie mass is low.** G22 falls
++43.9 → +1.9 and loses significance; G1 falls to +6.5; `be100.1` falls to exactly
+0. All three have tie mass ≤ 5%.
+
+**And one anomaly no hypothesis on the table predicts.** **G43 reverses sign at
+T = 0.1 — I = −44.13, ρ = 5.31, p = 0.0078** — material, significant, and
+replicating across all eight seeds. Its tie mass is **2.3%**, so the tie mechanism
+cannot explain it, and the downhill-acceptance gap predicts the advantage should
+*shrink toward zero*, not invert. Gibbs is decisively better than Metropolis on
+G43 at low temperature.
+
+This is the sharpest open question the cycle produced, it is **not** pre-registered,
+and it is recorded as an anomaly rather than a finding. The obvious next
+pre-registration is whether the cold reversal is specific to G43 or appears across
+a matched density band — which is precisely what Amendment 2 A2.4's matched set
+should be pointed at, in preference to re-litigating density-vs-weighting.
+
+---
+
+## 11. Where RC-014 stands after the descendant
+
+| Claim | Status |
+|---|---|
+| The instrument works and is validated | **Stands.** 648/648 reference agreement; alignment measured; all controls pass. |
+| Substitution separates operators deletion cannot | **Stands.** 10/10 G-Set contrasts replicate on the pre-registered ladder. |
+| Direction (Metropolis > Gibbs on the 4.0→0.1 ladder) | **Stands, LIKELY KNOWN** (Amendment 2 A2.1). |
+| Regime-dependent sign (H-14 clause 2) | **REFUTED via D-14.** |
+| The `be100.1` reversal | **WITHDRAWN** — measured against a saturated, zero-variance arm. |
+| The `T → 0` mechanism | **Supported where tie mass is low; contradicted on G43.** |
+| Gate B | **Not reached.** Its condition 1 (descendant confirmed) failed. |
+
+**Gate B is not passed, and nothing is being widened to rescue it.** Per the plan,
+a Gate-A pass with a Gate-B failure means the instrument is useful and the specific
+scientific conclusion is refuted — which is exactly what happened. The instrument
+stays; `theory.rs` semantics stay unchanged; no new fact type is published.
