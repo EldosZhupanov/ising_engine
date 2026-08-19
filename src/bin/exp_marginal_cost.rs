@@ -46,15 +46,15 @@ const HELD_OUT: [u64; 8] = [12001, 12002, 12003, 12004, 12005, 12006, 12007, 120
 /// and `9001-9008` are reserved to other cycles and must not be opened here.
 const FORBIDDEN_LO: [u64; 9] = [1001, 2001, 3001, 4001, 5001, 6001, 7001, 8001, 9001];
 
-/// NOT NAMED BY THE PRE-REGISTRATION. §4 requires controls that execute on a
-/// real instance, but §2 names only pilot, held-in and held-out seeds, so the
-/// controls have no seed of their own. Using a pilot seed would spend pilot
-/// data on controls. This constant sits outside every named block and is used
-/// by controls exclusively.
-///
-/// RECORDED GAP: §2 should name a control seed. This must be settled by an
-/// amendment before the pilot runs; it does not affect controls-only work.
+/// Amendment 1 §A1. §2 named no seed for the controls; this value is now frozen
+/// by `PREREG_RC020_AMENDMENT_1.md` and may not be changed, extended into a
+/// block, or supplemented without a further amendment. Amendment 1 §A3: it seeds
+/// the Runtime-facing controls and the warmup only, never a recorded observation.
 const CONTROL_SEED: u64 = 20001;
+
+/// Amendment 1 §A1 — control-internal deterministic seeds, frozen alongside it.
+const SYNTHETIC_CONTROL_SEED: u64 = 991;
+const CONTROL_BOOTSTRAP_SEED: u64 = 993;
 
 const CI_BASE_SEED: u64 = 20261201;
 const PERM_BASE_SEED: u64 = 20261301;
@@ -677,6 +677,49 @@ fn seed_forbidden(seed: u64) -> bool {
     FORBIDDEN_LO.iter().any(|&lo| seed >= lo && seed <= lo + 7)
 }
 
+/// Amendment 1 §A2 — every seed-valued family RC-020 names, enumerated so the
+/// disjointness claim is checked rather than asserted.
+fn named_seed_values() -> Vec<u64> {
+    let mut v = Vec::new();
+    for lo in FORBIDDEN_LO {
+        v.extend(lo..=lo + 7);
+    }
+    v.extend(PILOT);
+    v.extend(HELD_IN);
+    v.extend(HELD_OUT);
+    for i in CORPUS.iter() {
+        for a in WinArm::ALL {
+            v.push(ci_seed(i.index, a));
+        }
+    }
+    for r in 0..REPETITIONS {
+        v.push(PERM_BASE_SEED + r as u64);
+    }
+    v
+}
+
+/// Amendment 1 §A4.8. A collision is a **Class I** condition — instrument
+/// invalid — never a Class II null. Checked before any control executes.
+fn control_seeds_disjoint() -> Result<(), String> {
+    let named = named_seed_values();
+    for (tag, s) in [
+        ("CONTROL_SEED", CONTROL_SEED),
+        ("SYNTHETIC_CONTROL_SEED", SYNTHETIC_CONTROL_SEED),
+        ("CONTROL_BOOTSTRAP_SEED", CONTROL_BOOTSTRAP_SEED),
+    ] {
+        if named.contains(&s) {
+            return Err(format!("{tag} = {s} collides with a named seed value"));
+        }
+    }
+    if CONTROL_SEED == SYNTHETIC_CONTROL_SEED
+        || CONTROL_SEED == CONTROL_BOOTSTRAP_SEED
+        || SYNTHETIC_CONTROL_SEED == CONTROL_BOOTSTRAP_SEED
+    {
+        return Err("the three control seeds are not pairwise distinct".into());
+    }
+    Ok(())
+}
+
 fn verify_corpus() -> Result<(), String> {
     for i in CORPUS.iter() {
         let bytes = std::fs::read(i.path).map_err(|e| format!("{}: {e}", i.path))?;
@@ -815,6 +858,19 @@ fn run_controls() -> Controls {
     println!("RC-020 controls — PREREG §4, guards §5, environment §3.7\n");
     let mut ok = true;
 
+    // Amendment 1 §A4.8 — before anything else, and Class I on failure.
+    match control_seeds_disjoint() {
+        Ok(()) => println!(
+            "[A1] control seeds {CONTROL_SEED}/{SYNTHETIC_CONTROL_SEED}/{CONTROL_BOOTSTRAP_SEED} \
+             disjoint from all {} named values",
+            named_seed_values().len()
+        ),
+        Err(e) => {
+            println!("[A1] control-seed disjointness: FAIL (Class I) — {e}");
+            ok = false;
+        }
+    }
+
     // ---- environment (§3.7) -----------------------------------------------
     let pinned = pin_cpus(CPU_SET);
     println!(
@@ -851,7 +907,7 @@ fn run_controls() -> Controls {
 
     // ---- P1: synthetic marginal recovery ----------------------------------
     let truth = 0.75_f64;
-    let obs = synthetic_windows(truth, 0.01, 991);
+    let obs = synthetic_windows(truth, 0.01, SYNTHETIC_CONTROL_SEED);
     let mut bs: Vec<f64> = obs.iter().map(|&(w, ms)| b_hat(ms, w)).collect();
     let got = median(&mut bs);
     let err = (got - truth).abs() / truth;
@@ -872,7 +928,7 @@ fn run_controls() -> Controls {
             big - small
         })
         .collect();
-    let (l, u) = bootstrap_ci(&per_rep, BOOTSTRAP_REPS, 993);
+    let (l, u) = bootstrap_ci(&per_rep, BOOTSTRAP_REPS, CONTROL_BOOTSTRAP_SEED);
     let n2 = l <= 0.0 && u >= 0.0;
     println!(
         "[N2] window-label null: CI [{l:.6}, {u:.6}] contains 0 -> {}",
@@ -1016,9 +1072,10 @@ fn run_controls() -> Controls {
 
 /// §10. Every condition is a gate, not a message. Nothing is retained unless all
 /// of them hold — fail closed before any datum.
-fn pilot_gates(dir: &str) -> Result<(), String> {
+fn pilot_gates(dir: &str) -> Result<Env, String> {
     let f = facts();
     prereg_gate(&f).map_err(|e| e.to_string())?;
+    control_seeds_disjoint()?;
     verify_corpus()?;
     for &s in PILOT.iter() {
         if seed_forbidden(s) {
@@ -1042,7 +1099,236 @@ fn pilot_gates(dir: &str) -> Result<(), String> {
             "a pilot artifact already exists; refusing to overwrite frozen evidence".into(),
         );
     }
-    Ok(())
+    if !pin_cpus(CPU_SET) {
+        return Err(format!("§3.7 requires the session pinned to {CPU_SET}"));
+    }
+    Ok(Env {
+        resolution_ms: c.resolution_ms,
+        cpu_set: cpus_allowed(),
+        threads: thread_count(),
+    })
+}
+
+// ============================================================== PILOT BODY
+
+/// §3. The 72 conditions of one repetition, before permutation.
+fn conditions() -> Vec<(usize, Op, f64, WinArm)> {
+    let mut v = Vec::new();
+    for (ii, _) in CORPUS.iter().enumerate() {
+        for op in Op::ALL {
+            for &t in TEMPS.iter() {
+                for arm in WinArm::ALL {
+                    v.push((ii, op, t, arm));
+                }
+            }
+        }
+    }
+    v
+}
+
+/// One directly measured window, before the repetition-level fields are known.
+struct Obs {
+    inst: usize,
+    op: Op,
+    temp: f64,
+    arm: WinArm,
+    w: u32,
+    seed: u64,
+    window_ms: f64,
+}
+
+struct Env {
+    resolution_ms: f64,
+    cpu_set: String,
+    threads: usize,
+}
+
+fn fmt_row(o: &Obs, rep: usize, sf: f64, sl: f64, las: f64, lae: f64, env: &Env) -> String {
+    let inst = &CORPUS[o.inst];
+    format!(
+        "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:.6}\t{:.8}\t{:.6}\t{:.6}\t{:.6}\t{:.6}\t{:.2}\t{:.2}\t{}\t{}\tfalse\t-\t{}\t{}\n",
+        inst.name,
+        inst.index,
+        o.op.tag(),
+        o.temp,
+        o.arm.tag(),
+        o.w,
+        o.seed,
+        rep,
+        o.window_ms,
+        b_hat(o.window_ms, o.w),
+        sf,
+        sl,
+        spread(sf, sl),
+        env.resolution_ms,
+        las,
+        lae,
+        env.cpu_set,
+        env.threads,
+        degenerate_timing(o.window_ms, env.resolution_ms),
+        ci_seed(inst.index, o.arm)
+    )
+}
+
+/// §5. A discarded repetition is written to the artifact with its reason; it is
+/// never silently dropped.
+fn fmt_discard(
+    rep: usize,
+    reason: &str,
+    sf: f64,
+    sl: f64,
+    las: f64,
+    lae: f64,
+    env: &Env,
+) -> String {
+    format!(
+        "-\t-\t-\t-\t-\t0\t0\t{}\t0.0\t0.0\t{:.6}\t{:.6}\t{:.6}\t{:.6}\t{:.2}\t{:.2}\t{}\t{}\ttrue\t{}\tfalse\t0\n",
+        rep, sf, sl, spread(sf, sl), env.resolution_ms, las, lae, env.cpu_set, env.threads, reason
+    )
+}
+
+/// One repetition: sentinel first, the permuted conditions, sentinel last.
+/// Returns its rows, or the reason it must be discarded (§5).
+fn run_repetition(
+    irs: &[ProblemIR],
+    rep: usize,
+    env: &Env,
+) -> Result<Vec<String>, (String, f64, f64, f64, f64)> {
+    let las = load_avg();
+    let sentinel_ir = &irs[SENTINEL_INSTANCE];
+
+    // §5 HOST-LOADED is decided BEFORE execution, not after.
+    if !(las.is_finite() && las < LOAD_BOUND) {
+        return Err(("HOST-LOADED".into(), 0.0, 0.0, las, f64::NAN));
+    }
+
+    let Some(sf) = run_sentinel(sentinel_ir, CONTROL_SEED, 0) else {
+        return Err(("SENTINEL-FAILED".into(), 0.0, 0.0, las, f64::NAN));
+    };
+
+    let conds = conditions();
+    let order = permutation(conds.len(), PERM_BASE_SEED + rep as u64);
+    let mut obs = Vec::with_capacity(conds.len() * PILOT.len() * WINDOWS_A.len());
+    for &ci in order.iter() {
+        let (ii, op, temp, arm) = conds[ci];
+        for &seed in PILOT.iter() {
+            let Some(t) = run_trajectory(&irs[ii], op, seed, temp, arm) else {
+                return Err(("BACKEND-REJECTED".into(), sf, 0.0, las, f64::NAN));
+            };
+            for (slot, &w) in arm.windows().iter().enumerate() {
+                obs.push(Obs {
+                    inst: ii,
+                    op,
+                    temp,
+                    arm,
+                    w,
+                    seed,
+                    window_ms: t.window_ms[slot],
+                });
+            }
+        }
+    }
+
+    let Some(sl) = run_sentinel(sentinel_ir, CONTROL_SEED, 0) else {
+        return Err(("SENTINEL-FAILED".into(), sf, 0.0, las, f64::NAN));
+    };
+    let lae = load_avg();
+
+    // §5 the sentinel rule.
+    if drift_exceeded(sf, sl) {
+        return Err(("SENTINEL-DRIFT".into(), sf, sl, las, lae));
+    }
+
+    Ok(obs
+        .iter()
+        .map(|o| fmt_row(o, rep, sf, sl, las, lae, env))
+        .collect())
+}
+
+/// The pilot session. Every gate has already passed; this only executes.
+fn run_pilot(dir: &str, env: &Env) -> Result<(String, usize, usize), String> {
+    let irs: Vec<ProblemIR> = CORPUS
+        .iter()
+        .map(|i| load(i.path))
+        .collect::<Result<_, _>>()?;
+
+    // §3.3 warmup: one complete trajectory per (instance, operator), discarded.
+    for (ii, _) in CORPUS.iter().enumerate() {
+        for op in Op::ALL {
+            warmup(&irs[ii], op, CONTROL_SEED);
+        }
+    }
+
+    let mut out = header();
+    let mut discarded = 0usize;
+
+    for rep in 0..REPETITIONS {
+        let mut attempt = 0;
+        loop {
+            match run_repetition(&irs, rep, env) {
+                Ok(rows) => {
+                    for r in rows {
+                        out.push_str(&r);
+                    }
+                    break;
+                }
+                Err((reason, sf, sl, las, lae)) => {
+                    discarded += 1;
+                    out.push_str(&fmt_discard(rep, &reason, sf, sl, las, lae, env));
+                    println!("  repetition {rep} discarded: {reason} ({discarded} so far)");
+                    // §5 HOST-UNSTABLE overrides the retry.
+                    if discarded > MAX_DISCARDED_REPS {
+                        return Err(format!(
+                            "HOST-UNSTABLE: {discarded} of {REPETITIONS} repetitions discarded, \
+                             bound is {MAX_DISCARDED_REPS}; aborting before any verdict"
+                        ));
+                    }
+                    attempt += 1;
+                    // §5 re-executed at most once.
+                    if attempt > 1 {
+                        return Err(format!(
+                            "session discarded: repetition {rep} exceeded the bound twice ({reason})"
+                        ));
+                    }
+                }
+            }
+        }
+    }
+
+    // §10.1 written ONLY on successful completion.
+    std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
+    let path = format!("{dir}/rc020_pilot.tsv");
+    std::fs::write(&path, &out).map_err(|e| e.to_string())?;
+
+    // Amendment 1 §A4.10 — session-level provenance, kept OUT of the frozen
+    // 22-column schema, which is unchanged.
+    let rows = out.lines().count() - 1;
+    let prov = format!(
+        "RC-020 pilot provenance\n\
+         pre-registration: {PREREG_PATH}\n\
+         amendment: research/PREREG_RC020_AMENDMENT_1.md\n\
+         CONTROL_SEED: {CONTROL_SEED}\n\
+         SYNTHETIC_CONTROL_SEED: {SYNTHETIC_CONTROL_SEED}\n\
+         CONTROL_BOOTSTRAP_SEED: {CONTROL_BOOTSTRAP_SEED}\n\
+         CI_BASE_SEED: {CI_BASE_SEED}\n\
+         PERM_BASE_SEED: {PERM_BASE_SEED}\n\
+         pilot seeds: {PILOT:?}\n\
+         repetitions: {REPETITIONS}\n\
+         discarded repetitions: {discarded}\n\
+         cpu_set: {}\n\
+         threads: {}\n\
+         timer_resolution_ms: {:.6}\n\
+         artifact: {path}\n\
+         artifact_sha256: {}\n\
+         rows: {rows}\n",
+        env.cpu_set,
+        env.threads,
+        env.resolution_ms,
+        sha256_hex(out.as_bytes())
+    );
+    std::fs::write(format!("{dir}/rc020_pilot_provenance.txt"), prov).map_err(|e| e.to_string())?;
+
+    Ok((path, rows, discarded))
 }
 
 fn main() {
@@ -1062,18 +1348,25 @@ fn main() {
     }
 
     if flag("--pilot") {
-        match pilot_gates(&dir) {
-            Ok(()) => {
-                eprintln!(
-                    "GATES PASSED — but the pilot body is not enabled in this build stage.\n\
-                     Implementation step 10 authorises controls only; running the pilot is a\n\
-                     separate authorised step. No artifact written."
-                );
-                std::process::exit(0);
-            }
+        let env = match pilot_gates(&dir) {
+            Ok(env) => env,
             Err(e) => {
                 eprintln!("PILOT REFUSED — {e}");
                 std::process::exit(2);
+            }
+        };
+        println!("\nRC-020 pilot — seeds {PILOT:?}, {REPETITIONS} repetitions\n");
+        match run_pilot(&dir, &env) {
+            Ok((path, rows, discarded)) => {
+                println!("\n  frozen: {path} ({rows} rows, {discarded} discarded repetitions)");
+                println!("  provenance: {dir}/rc020_pilot_provenance.txt");
+                std::process::exit(0);
+            }
+            Err(e) => {
+                // §10.1: nothing is written unless the session completes.
+                eprintln!("\n  PILOT ABORTED — {e}");
+                eprintln!("  No artifact written. Record this discard in the results document.");
+                std::process::exit(5);
             }
         }
     }
@@ -1081,7 +1374,7 @@ fn main() {
     println!(
         "RC-020 marginal wall cost — calibration instrument\n\
          \n  --controls   run every control and exit\
-         \n  --pilot      seeds {PILOT:?} (gated; body not enabled at this stage)\
+         \n  --pilot      seeds {PILOT:?} (fully gated; writes the §10.1 artifact)\
          \n  --dir <path> artifact directory (default experiments/rc020)\n\
          \nWall time only. No energy or quality is computed or stored.\n\
          Equal-cost and efficacy claims are out of scope (§1)."
@@ -1329,6 +1622,113 @@ mod tests {
         s.sort_unstable();
         assert_eq!(s, (0..36).collect::<Vec<_>>());
         assert_ne!(permutation(36, PERM_BASE_SEED + 1), a);
+    }
+
+    /// Amendment 1 §A4.9 — the frozen-constant test covers the seed set, so a
+    /// change to any control seed fails the suite instead of silently altering
+    /// what the controls did.
+    #[test]
+    fn control_seeds_are_frozen_and_disjoint() {
+        assert_eq!(CONTROL_SEED, 20001);
+        assert_eq!(SYNTHETIC_CONTROL_SEED, 991);
+        assert_eq!(CONTROL_BOOTSTRAP_SEED, 993);
+        control_seeds_disjoint().expect("Amendment 1 §A2 disjointness must hold");
+
+        // Amendment 1 §A2: 72 forbidden + 8 pilot + 8 held-in + 8 held-out
+        // + 12 CI + 9 permutation = 117 enumerated here; the two control
+        // literals of §A1 bring the document's total to 119.
+        let named = named_seed_values();
+        assert_eq!(named.len(), 117);
+        assert_eq!(named.len() + 2, 119);
+
+        // The margins the amendment computed.
+        let below = named
+            .iter()
+            .filter(|&&x| x < CONTROL_SEED)
+            .max()
+            .copied()
+            .unwrap();
+        let above = named
+            .iter()
+            .filter(|&&x| x > CONTROL_SEED)
+            .min()
+            .copied()
+            .unwrap();
+        assert_eq!(below, 12008);
+        assert_eq!(above, 20261201);
+        assert_eq!(CONTROL_SEED - below, 7_993);
+        assert_eq!(above - CONTROL_SEED, 20_241_200);
+    }
+
+    /// The gate must actually be able to fail, or it is decoration.
+    #[test]
+    fn disjointness_gate_catches_a_collision() {
+        let named = named_seed_values();
+        for s in [
+            PILOT[0],
+            HELD_IN[0],
+            HELD_OUT[0],
+            5001,
+            7001,
+            CI_BASE_SEED,
+            PERM_BASE_SEED,
+        ] {
+            assert!(
+                named.contains(&s),
+                "{s} must be a named value the gate would catch"
+            );
+        }
+        assert!(!named.contains(&CONTROL_SEED));
+    }
+
+    /// §3: 72 conditions per repetition, and the artifact row arithmetic.
+    #[test]
+    fn pilot_grid_matches_the_preregistration() {
+        let c = conditions();
+        assert_eq!(
+            c.len(),
+            CORPUS.len() * Op::ALL.len() * TEMPS.len() * WinArm::ALL.len()
+        );
+        assert_eq!(c.len(), 72);
+        // Rows per repetition = conditions x pilot seeds x windows.
+        assert_eq!(c.len() * PILOT.len() * WINDOWS_A.len(), 1_728);
+        assert_eq!(
+            c.len() * PILOT.len() * WINDOWS_A.len() * REPETITIONS,
+            15_552
+        );
+        // Trajectories actually executed per session, excluding sentinels/warmup.
+        assert_eq!(c.len() * PILOT.len() * REPETITIONS, 5_184);
+    }
+
+    /// Every emitted row must have exactly the 22 frozen fields, discards too.
+    #[test]
+    fn emitted_rows_have_exactly_22_fields() {
+        let env = Env {
+            resolution_ms: 1e-5,
+            cpu_set: "0-3".into(),
+            threads: 1,
+        };
+        let o = Obs {
+            inst: 0,
+            op: Op::Metropolis,
+            temp: 0.5,
+            arm: WinArm::A,
+            w: 8,
+            seed: PILOT[0],
+            window_ms: 2.0,
+        };
+        let row = fmt_row(&o, 0, 1.0, 1.01, 0.5, 0.6, &env);
+        assert_eq!(row.trim_end().split('\t').count(), SCHEMA.len());
+        let d = fmt_discard(3, "SENTINEL-DRIFT", 1.0, 2.0, 0.5, 0.6, &env);
+        assert_eq!(d.trim_end().split('\t').count(), SCHEMA.len());
+        // The discard row must carry its reason and the flag, in their columns.
+        let f: Vec<&str> = d.trim_end().split('\t').collect();
+        assert_eq!(f[18], "true");
+        assert_eq!(f[19], "SENTINEL-DRIFT");
+        // A recorded observation is never marked discarded.
+        let g: Vec<&str> = row.trim_end().split('\t').collect();
+        assert_eq!(g[18], "false");
+        assert_eq!(g[19], "-");
     }
 
     #[test]
