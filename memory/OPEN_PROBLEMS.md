@@ -22,7 +22,7 @@ under ADR-0004 (needs approval + A/B at identical seeds). Full detail:
 | 2 | **RC-007** — 28/28 operator pairs commute in distribution (ρ < 1.4) | narrow the Evolution Engine's ordering search | compute spent on distinctions that do not exist at pair level |
 | 3 | **RC-011** — the predictor's LOO Spearman is provably invariant to instance features | add instance×schedule interaction terms, **or** score across folds | no metric currently able to detect instance-conditional transfer |
 | 4 | **RC-002** — all 18,570 runs start all-zeros; diverse init is worth 0.09–0.46% | one `random_flip_sweep` before the thermal phase | measured quality left on the table |
-| 5 | **RC-012** — `--early-stop` cannot activate (6 rows < fit's 20-row floor), and even a fitted model's ε-gate is vacuous (predicts ≡0) | fix bootstrap AND training-target pathology **together**; fixing only the bootstrap ships a silent 50% truncation | a shipped flag that does nothing; ROADMAP Done-item 2 annotated |
+| 5 | **RC-012** — `--early-stop` cannot activate (6 rows < fit's 20-row floor), and even a fitted model's ε-gate is vacuous (predicts ≡0) | **HALF DONE 2026-08-19: the flag now refuses loudly and exits 2** (trajectory-neutral — it never activated). Still open: fix bootstrap AND training-target pathology **together**; fixing only the bootstrap ships a silent 50% truncation | ~~a shipped flag that does nothing~~ **resolved**; the *capability* remains absent |
 
 **Why none was applied:** changing any of them breaks bit-identical replay of the
 recorded corpus, or changes which plans the platform selects. That is the

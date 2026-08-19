@@ -268,7 +268,7 @@ All ten prior-priority tasks are implemented, tested, and committed on
 regression and cross-backend bit-identity firewall pass unchanged):
 
 1. ✅ **World-model filtering** in ideation (`WorldFilteredIdeator`: imagine → rank → run top few).
-2. ✅ **Dynamics early-stop** on the executor's every-run path (opt-in `RuntimeExecutor::with_early_stop`, `--early-stop`). ⚠️ **RC-012: non-functional as shipped.** The deployed bootstrap (2-step schedule × 3 seeds = 6 rows) is below `fit`'s 20-row floor, so the flag *always* skips; and even a fitted model (module-test corpus) predicts ≡0 remaining at every step, making the ε-gate vacuous — behaviourally 'stop at min_frac'. Layers must be fixed together; see `research/RC012_DYNAMICS_EARLY_STOP_AUDIT.md`.
+2. ⚠️ ~~**Dynamics early-stop**~~ **WITHDRAWN 2026-08-19.** `--early-stop` now **refuses loudly and exits 2** instead of silently doing nothing. Trajectory-neutral: the feature never activated, so disabling it changes no run. **RC-012: non-functional as shipped.** The deployed bootstrap (2-step schedule × 3 seeds = 6 rows) is below `fit`'s 20-row floor, so the flag *always* skips; and even a fitted model (module-test corpus) predicts ≡0 remaining at every step, making the ε-gate vacuous — behaviourally 'stop at min_frac'. Layers must be fixed together; see `research/RC012_DYNAMICS_EARLY_STOP_AUDIT.md`.
 3. ✅ **Per-situation model selection** in the Executive (`Action::UseModel`, regime + staleness conditioned).
 4. ✅ **SAT/TSP runnable** (`families::{tsp_instance,max2sat_instance}` + `--family tsp|max2sat`; verified end-to-end).
 5. ✅ **Model Registry** (`model_registry.rs`: versioned weights + lineage; snapshots each campaign/generation).

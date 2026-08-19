@@ -13,10 +13,9 @@
 //! canonical scorer, Operator API) is read-only; this binary only orchestrates.
 
 use ising_engine::engine_v2::ai_scientist::{
-    train_on_instances, write_evaluation, CampaignConfig, CampaignManager, LabConfig, MetaLearner,
-    RuntimeExecutor,
+    write_evaluation, CampaignConfig, CampaignManager, LabConfig, MetaLearner, RuntimeExecutor,
 };
-use ising_engine::engine_v2::evolution::{Evolver, Schedule};
+use ising_engine::engine_v2::evolution::Evolver;
 use ising_engine::engine_v2::frontend::rudy_maxcut_ir;
 use ising_engine::engine_v2::registry::OperatorRegistry;
 use std::process::exit;
@@ -189,7 +188,7 @@ fn main() {
                 "usage: research_platform (--file <rudy>[,...] | --family tsp|max2sat) [--dir D]\n\
        [--campaigns N] [--generations N] [--rounds N] [--hypotheses N] [--batch N] [--seeds N]\n\
        [--replicas N] [--report-every N] [--cloud-every N] [--llm MODEL] [--cloud-model MODEL]\n\
-       [--seed N] [--cities N] [--vars N] [--clauses N] [--early-stop]"
+       [--seed N] [--cities N] [--vars N] [--clauses N]"
             );
             exit(2);
         });
@@ -753,36 +752,36 @@ fn main() {
 
     let reg = OperatorRegistry::standard();
     let evolver = Evolver::new(Default::default());
-    let mut executor = RuntimeExecutor::auto();
-    // --early-stop (opt-in): attach a Dynamics early-stop controller to EVERY
-    // run, so plateaued tasks stop instead of burning their full budget. We
-    // bootstrap a Dynamics model from the first instance; if there is too little
-    // trajectory data to fit one, we skip honestly rather than pretend.
+    let executor = RuntimeExecutor::auto();
+    // --early-stop: DISABLED (RC-012). The flag is refused loudly instead of
+    // silently doing nothing.
+    //
+    // This is trajectory-neutral by construction: the feature never activated,
+    // so refusing it changes no run. Two independent defects, either fatal:
+    //
+    //   1. UNREACHABLE. The bootstrap fitted one Dynamics model from a 2-step
+    //      schedule x 3 seeds = 6 rows, against `fit`'s 20-row floor, so it
+    //      returned None and "skipped honestly" on EVERY invocation. The schedule
+    //      and seed list were compile-time constants, so this was deterministic.
+    //   2. VACUOUS EVEN IF FITTED. On the module-test corpus the model predicts
+    //      exactly 0.0 remaining improvement at every step of every trajectory,
+    //      including step 0 with 16.2% actually remaining, so the epsilon gate
+    //      does no work and the controller degenerates to "stop at min_frac" —
+    //      a silent 50% truncation of every run.
+    //
+    // Repairing 3 alone exposes 2, so the layers must be fixed together; that is
+    // behaviour-changing under ADR-0004 and needs approval plus an identical-seed
+    // A/B. Until then, a flag documented as shipped must not pretend to work.
+    // Record: research/RC012_DYNAMICS_EARLY_STOP_AUDIT.md.
     if std::env::args().any(|a| a == "--early-stop") {
-        if let Some((_, ir0)) = instances.first() {
-            let boot = Schedule {
-                ops: vec!["metropolis_sweep".into(), "greedy_descent".into()],
-                sweeps: vec![24, 24],
-                temp_hi: 4.0,
-                temp_lo: 0.1,
-            };
-            match train_on_instances(
-                &[ir0],
-                &reg,
-                &boot,
-                base_cfg.lab.num_replicas.max(2),
-                &[1, 2, 3],
-                1e-4,
-            ) {
-                Some(model) => {
-                    executor = executor.with_early_stop_default(model);
-                    println!("early-stop: Dynamics controller active on every run (opt-in)");
-                }
-                None => println!(
-                    "early-stop requested but too little trajectory data to fit a Dynamics model — skipping honestly"
-                ),
-            }
-        }
+        eprintln!(
+            "--early-stop is DISABLED (RC-012): it was unreachable (6 bootstrap rows \
+             against fit's 20-row floor) and would be vacuous even if fitted (the model \
+             predicts 0.0 remaining at every step, degenerating to 'stop at min_frac'). \
+             Refusing rather than silently doing nothing. See \
+             research/RC012_DYNAMICS_EARLY_STOP_AUDIT.md."
+        );
+        std::process::exit(2);
     }
 
     // --render-dashboard just (re)generates the dashboard from the persisted
