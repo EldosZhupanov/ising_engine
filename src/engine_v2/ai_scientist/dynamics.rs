@@ -142,6 +142,36 @@ fn step_features(
     ]
 }
 
+/// Deployed 12-coordinate non-bias step features for exact snapshot capture.
+/// Calls the canonical `instance_features` and `step_features` directly so the
+/// transformation is guaranteed identical.
+#[allow(clippy::too_many_arguments)]
+pub fn deployed_non_bias_step_features(
+    ir: &ProblemIR,
+    best_hist: &[f64],
+    k: usize,
+    mean_energy: f64,
+    entropy: f64,
+    diversity: f64,
+    acceptance: f64,
+    frac_elapsed: f64,
+) -> [f64; 12] {
+    let feats = instance_features(ir);
+    let v = step_features(
+        &feats,
+        best_hist,
+        k,
+        mean_energy,
+        entropy,
+        diversity,
+        acceptance,
+        frac_elapsed,
+    );
+    let mut out = [0.0; 12];
+    out.copy_from_slice(&v[..12]);
+    out
+}
+
 /// Remaining-improvement predictor.
 #[derive(Debug, Clone)]
 pub struct DynamicsModel {
@@ -551,5 +581,54 @@ mod tests {
         assert_eq!(early.best_energy.to_bits(), early2.best_energy.to_bits());
         assert_eq!(early.iterations, early2.iterations);
         assert_eq!(early.adaptations, early2.adaptations);
+    }
+
+    #[test]
+    fn deployed_non_bias_step_features_matches_transformation_exactly() {
+        let ir = ring(28, 1.0);
+        let feats = instance_features(&ir);
+        let best_hist = [-100.0];
+        let k = 0;
+        let mean_energy = -95.0;
+        let entropy = 1.25;
+        let diversity = 0.45;
+        let acceptance = 0.15;
+        let frac_elapsed = 1.0 / 3.0;
+
+        let full = step_features(
+            &feats,
+            &best_hist,
+            k,
+            mean_energy,
+            entropy,
+            diversity,
+            acceptance,
+            frac_elapsed,
+        );
+        assert_eq!(full.len(), 13);
+        assert_eq!(full[12], 1.0, "last coordinate is bias");
+
+        let nb = deployed_non_bias_step_features(
+            &ir,
+            &best_hist,
+            k,
+            mean_energy,
+            entropy,
+            diversity,
+            acceptance,
+            frac_elapsed,
+        );
+        assert_eq!(nb.len(), 12);
+        for i in 0..12 {
+            assert_eq!(nb[i].to_bits(), full[i].to_bits());
+        }
+
+        // Structural invariants at k=0:
+        assert_eq!(nb[8], 1.0 / 3.0, "frac_elapsed");
+        assert_eq!(nb[9], 0.0, "recent_progress is 0 at k=0");
+        // spread = (-95.0 - (-100.0)) / 100.0 = 5.0 / 100.0 = 0.05
+        assert!((nb[10] - 0.05).abs() < 1e-12, "spread calculation");
+        // best_norm = -100.0 / (100.0 + 1.0) = -100.0 / 101.0
+        assert!((nb[11] - (-100.0 / 101.0)).abs() < 1e-12, "best_norm calculation");
     }
 }
