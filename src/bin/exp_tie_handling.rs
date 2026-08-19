@@ -794,12 +794,82 @@ fn d15(reg: &OperatorRegistry, seeds: &[u64], label: &str) {
     }
 }
 
+// --------------------------------------------------- held-out provenance gate
+//
+// PREREG_RC015.md Gate A condition 6: the falsifiable descendant must be written
+// into section 9 of that file BEFORE any held-out seed is run. Until RC-019 this
+// was a printed reminder with no executable effect; it is now a refusal.
+
+const PREREG_PATH: &str = "research/PREREG_RC015.md";
+const DESCENDANT_HEADING: &str = "## 9. Falsifiable descendant";
+
+/// The facts the decision needs, gathered separately so the decision itself is
+/// pure and unit-testable without a git tree.
+#[derive(Clone, Copy, Debug)]
+struct PreregFacts {
+    exists: bool,
+    tracked: bool,
+    clean: bool,
+    committed: bool,
+    has_descendant: bool,
+}
+
+/// Pure: same facts -> same verdict. Names the failed condition.
+fn descendant_gate(f: &PreregFacts) -> Result<(), &'static str> {
+    if !f.exists {
+        return Err("pre-registration file is missing");
+    }
+    if !f.tracked {
+        return Err("pre-registration is not tracked by git");
+    }
+    if !f.clean {
+        return Err("pre-registration has uncommitted modifications");
+    }
+    if !f.committed {
+        return Err("pre-registration has never been committed");
+    }
+    if !f.has_descendant {
+        return Err("the falsifiable descendant section is absent");
+    }
+    Ok(())
+}
+
+fn git_ok(args: &[&str]) -> bool {
+    std::process::Command::new("git")
+        .args(args)
+        .status()
+        .map(|s| s.success())
+        .unwrap_or(false)
+}
+
+fn prereg_facts() -> PreregFacts {
+    let text = std::fs::read_to_string(PREREG_PATH).unwrap_or_default();
+    PreregFacts {
+        exists: std::path::Path::new(PREREG_PATH).exists(),
+        tracked: git_ok(&["ls-files", "--error-unmatch", PREREG_PATH]),
+        clean: git_ok(&["diff", "--quiet", "HEAD", "--", PREREG_PATH]),
+        committed: git_ok(&["log", "-1", "--format=%ct", "--", PREREG_PATH]),
+        has_descendant: text.contains(DESCENDANT_HEADING),
+    }
+}
+
+/// Refuse rather than silently inspecting the held-out seeds.
+fn require_descendant(mode: &str) {
+    if let Err(e) = descendant_gate(&prereg_facts()) {
+        eprintln!("\n  {mode} REFUSED — {e} ({PREREG_PATH})");
+        eprintln!("  Gate A condition 6: the descendant must be written into");
+        eprintln!("  section 9 of {PREREG_PATH} before any held-out seed is run.");
+        std::process::exit(3);
+    }
+}
+
 fn main() {
     let reg = local_registry();
-    let ctrl =
-        flag("--controls") || !(flag("--science") || flag("--holdout") || flag("--gradient"));
-
-    if ctrl {
+    // PREREG_RC015.md line 125: "Controls, all blocking." The earlier guard ran
+    // this block only when --controls was passed or when no science mode was, so
+    // `--science` alone SKIPPED every control - the exact inverse of the
+    // requirement (RC-019 audit). Controls now gate unconditionally.
+    {
         println!("RC-015 — Gate controls (PREREG_RC015.md §6)\n");
         let Ok(ir) = load(SET_A[0].1) else {
             println!("cannot load G43");
@@ -845,6 +915,7 @@ fn main() {
     }
     if flag("--holdout") {
         println!("\nRC-015 HELD-OUT (seeds {HELD_OUT:?})");
+        require_descendant("HELD-OUT");
         science(&reg, &HELD_OUT, "out");
     }
     if flag("--gradient") {
@@ -854,6 +925,77 @@ fn main() {
         d15(&reg, &HELD_IN, "held-in");
     }
     if flag("--d15-holdout") {
+        require_descendant("D-15 HELD-OUT");
         d15(&reg, &HELD_OUT, "HELD-OUT");
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// RC-019 recorded this gate as VACUOUS: a printed reminder with no
+    /// executable effect. Each condition must now actually refuse.
+    #[test]
+    fn descendant_gate_refuses_each_missing_condition() {
+        let good = PreregFacts {
+            exists: true,
+            tracked: true,
+            clean: true,
+            committed: true,
+            has_descendant: true,
+        };
+        assert!(descendant_gate(&good).is_ok());
+        for (f, want) in [
+            (
+                PreregFacts {
+                    exists: false,
+                    ..good
+                },
+                "missing",
+            ),
+            (
+                PreregFacts {
+                    tracked: false,
+                    ..good
+                },
+                "tracked",
+            ),
+            (
+                PreregFacts {
+                    clean: false,
+                    ..good
+                },
+                "uncommitted",
+            ),
+            (
+                PreregFacts {
+                    committed: false,
+                    ..good
+                },
+                "never been committed",
+            ),
+            (
+                PreregFacts {
+                    has_descendant: false,
+                    ..good
+                },
+                "descendant section is absent",
+            ),
+        ] {
+            let e = descendant_gate(&f).expect_err("must refuse");
+            assert!(e.contains(want), "message {e:?} should name {want:?}");
+        }
+    }
+
+    /// The heading is the literal the gate greps for; if the pre-registration
+    /// is renamed the gate must fail loudly here, not silently pass forever.
+    #[test]
+    fn descendant_heading_exists_in_the_preregistration() {
+        let text = std::fs::read_to_string(PREREG_PATH).expect("pre-registration readable");
+        assert!(
+            text.contains(DESCENDANT_HEADING),
+            "{DESCENDANT_HEADING} not found in {PREREG_PATH}"
+        );
     }
 }
