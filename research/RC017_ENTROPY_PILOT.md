@@ -68,3 +68,16 @@ One final diagnostic is allowed without widening the evidence search:
 If this exact-context diagnostic is also `NOT REPRODUCED`, stop RC-017 diagnosis:
 the original failure is not reproducible on the frozen pilot block and no
 Runtime change is permitted.
+
+## Amendment 1 result
+
+`NOT REPRODUCED`. Every one of the eight pilot seeds had zero mismatched S1
+coordinates between the exact full M/G execution contexts.
+
+- artifact: `experiments/rc017_entropy_pilot/exact_context_v0.tsv`
+- rows: 8 data rows plus header
+- SHA-256: `40d43ce1da6d1e1a602cf0caeeb72b92ca55ab0291805322859d7eb093f35f3e`
+
+The entropy hypothesis is therefore not established by the frozen pilot
+evidence. Per the kill criterion, ADR-0010 is not accepted, Runtime is not
+changed, and RC-017 diagnosis stops here.

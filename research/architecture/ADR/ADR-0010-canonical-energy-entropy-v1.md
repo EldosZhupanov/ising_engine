@@ -77,6 +77,19 @@ Because this path can affect adaptive trajectories, Runtime throughput is
 measured before/after. A regression greater than 1% rejects this implementation
 or requires a separately justified design.
 
+### Evidence outcome
+
+Both frozen pre-change diagnostics returned `NOT REPRODUCED`:
+
+- prefix-only matrix:
+  `731ce544a9f2e081e093bde0445a1708678760581d3eab00925621ab7e720a9c`;
+- exact full-plan context matrix:
+  `40d43ce1da6d1e1a602cf0caeeb72b92ca55ab0291805322859d7eb093f35f3e`.
+
+All eight exact-context pilot pairs matched on all 12 S1 coordinates. The
+acceptance gate was not met. This ADR remains proposed and unimplemented; it
+does not license a Runtime change.
+
 ## Consequences
 
 - New entropy event bits become stable for a fixed build/target and identical
@@ -98,4 +111,3 @@ or requires a separately justified design.
   than the numerical algorithm and adds node allocation/pointer traversal.
 - Rational entropy or lookup tables: changes the numerical definition and is
   unnecessary for this repair.
-
