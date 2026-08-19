@@ -84,6 +84,14 @@ const COST_RATIO_HI: f64 = 1.05;
 /// Amendment 1 §A6.2 step 6.
 const POWER_BAR: f64 = 0.80;
 
+/// The held-out block may not run until a falsifiable descendant has been
+/// written AND committed, and committed AFTER the held-in results exist
+/// (`PREREG_RC016.md` §5; the discipline RC-014 Gate A condition 6 established).
+const DESCENDANT_PATH: &str = "research/PREREG_RC016_DESCENDANT.md";
+/// …and the operator must say so explicitly, so `--holdout` cannot fire by
+/// accident from a stale shell history.
+const CONFIRM_FLAG: &str = "--confirm-descendant-frozen";
+
 /// Structural family, recorded per instance because SIGN CONSTANT's coverage
 /// requirement is stated over families, not only over matched groups.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -994,20 +1002,50 @@ fn measure_block(reg: &OperatorRegistry, block: Block) -> Vec<Row> {
     rows
 }
 
+/// RC-014 rule A6: matching sign, held-out independently material, ratio in
+/// [0.5, 2.0]. A zero held-in effect or a degenerate arm fails replication.
+fn a6_replicates(hi: &Row, ho: &Row) -> bool {
+    if hi.i == 0.0 || hi.degenerate || ho.degenerate {
+        return false;
+    }
+    hi.i.signum() == ho.i.signum() && ho.material && (0.5..=2.0).contains(&(ho.i / hi.i).abs())
+}
+
 /// STEP 4 — Amendment 1 §A2: BH-reject ∧ material ∧ A6 replication.
 /// A TIE-BLOCKED instance can never satisfy this (Amendment 2 §B4).
 fn qualifies(hi: &Row, ho: &Row, bh_reject: bool) -> bool {
-    if hi.tie_blocked || hi.degenerate || ho.degenerate {
+    if hi.tie_blocked {
         return false;
     }
-    let a6 = hi.i != 0.0 && hi.i.signum() == ho.i.signum() && ho.material && {
-        let ratio = (ho.i / hi.i).abs();
-        (0.5..=2.0).contains(&ratio)
-    };
-    bh_reject && hi.material && a6
+    bh_reject && hi.material && a6_replicates(hi, ho)
 }
 
-fn verdict(held_in: &[Row], held_out: &[Row]) {
+/// STEP 8 — the verdict space. Kept as data so routing is unit-testable; the
+/// printing is separate.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Verdict {
+    /// Kill criterion 2 — overrides the sign question entirely.
+    BenchmarkValidity,
+    SignVaries,
+    SignConstant,
+    /// Amendment 2 §B1 — DESCRIPTIVE only, never an equivalence claim.
+    NoMaterialEffectObserved,
+    QInconclusive,
+}
+
+struct Census {
+    k: usize,
+    k_plus: usize,
+    k_minus: usize,
+    material_unqualified: usize,
+    degenerate_cells: usize,
+    degenerate_fraction: f64,
+    groups: usize,
+    families: usize,
+}
+
+/// Pure routing: no I/O, so every branch is reachable from a unit test.
+fn decide(held_in: &[Row], held_out: &[Row]) -> (Verdict, Census) {
     let ps: Vec<f64> = held_in.iter().map(|r| r.p).collect();
     let rej = benjamini_hochberg(&ps, FDR_Q);
 
@@ -1024,99 +1062,222 @@ fn verdict(held_in: &[Row], held_out: &[Row]) {
         }
     }
 
-    let degen = held_in.iter().filter(|r| r.degenerate).count()
+    let degenerate_cells = held_in.iter().filter(|r| r.degenerate).count()
         + held_out.iter().filter(|r| r.degenerate).count();
-    let degen_frac = degen as f64 / (held_in.len() + held_out.len()).max(1) as f64;
+    let degenerate_fraction =
+        degenerate_cells as f64 / (held_in.len() + held_out.len()).max(1) as f64;
 
     let k_plus = qual.iter().filter(|r| r.i > 0.0).count();
     let k_minus = qual.iter().filter(|r| r.i < 0.0).count();
-    let kq = qual.len();
 
-    println!("\n  --- corpus census (descriptive; NO cross-instance p-value is computed or licensed) ---");
-    println!(
-        "  K = {kq} qualifying of {} enumerated   k+ = {k_plus}   k- = {k_minus}   K/30 = {:.3}",
-        CORPUS.len(),
-        kq as f64 / CORPUS.len() as f64
-    );
-    println!("  material-but-unqualified or tie-blocked: {material_unqualified}   degenerate cells: {degen} ({:.1}%)",
-             degen_frac * 100.0);
+    let mut groups: Vec<char> = qual.iter().filter_map(|r| r.group).collect();
+    groups.sort_unstable();
+    groups.dedup();
+    let families: std::collections::BTreeSet<&str> = qual
+        .iter()
+        .map(|r| match r.family {
+            Family::RandomPlus => "random+1",
+            Family::Toroidal => "toroidal",
+        })
+        .collect();
 
-    // Kill criterion 2 first: it overrides the sign question entirely.
-    if degen_frac >= DEGENERATE_FRACTION_KILL {
-        println!("\n  VERDICT: BENCHMARK-VALIDITY FINDING — >= 50% of cells are DEGENERATE_NULL.");
-        println!("  The configuration is saturated at this budget and cannot discriminate.");
-        println!("  The sign question is NOT answered.");
-        return;
+    let census = Census {
+        k: qual.len(),
+        k_plus,
+        k_minus,
+        material_unqualified,
+        degenerate_cells,
+        degenerate_fraction,
+        groups: groups.len(),
+        families: families.len(),
+    };
+
+    // Kill criterion 2 is checked FIRST: saturation overrides the sign question.
+    if degenerate_fraction >= DEGENERATE_FRACTION_KILL {
+        return (Verdict::BenchmarkValidity, census);
     }
-
     if k_plus >= 1 && k_minus >= 1 {
-        println!("\n  VERDICT: SIGN VARIES");
-        for g in ['A', 'B', 'C', 'D', 'E', 'F'] {
-            let members: Vec<&&Row> = qual.iter().filter(|r| r.group == Some(g)).collect();
-            let has_pos = members.iter().any(|r| r.i > 0.0);
-            let has_neg = members.iter().any(|r| r.i < 0.0);
-            if has_pos && has_neg {
-                println!(
-                    "    matched group {g}: opposite-signed qualifying members — S0 COUNTEREXAMPLE"
-                );
-                for m in &members {
-                    println!("      {} I={:+.4}", m.name, m.i);
+        return (Verdict::SignVaries, census);
+    }
+    if census.k >= MIN_QUALIFYING
+        && (k_plus == 0 || k_minus == 0)
+        && census.groups >= MIN_GROUPS
+        && census.families >= 2
+    {
+        return (Verdict::SignConstant, census);
+    }
+    // Amendment 2 §B1/§B2: K = 0 is NOT sufficient. NO MATERIAL EFFECT OBSERVED
+    // requires the POSITIVE condition over ALL instances in BOTH blocks.
+    let all_clean = held_in.len() == CORPUS.len()
+        && held_out.len() == CORPUS.len()
+        && held_in
+            .iter()
+            .chain(held_out.iter())
+            .all(|r| !r.degenerate && !r.material && !r.tie_blocked);
+    if census.k == 0 && all_clean {
+        return (Verdict::NoMaterialEffectObserved, census);
+    }
+    (Verdict::QInconclusive, census)
+}
+
+/// Presentation only. All routing lives in `decide`.
+fn report_verdict(held_in: &[Row], held_out: &[Row]) {
+    let (v, c) = decide(held_in, held_out);
+
+    println!(
+        "\n  --- corpus census (descriptive; NO cross-instance p-value is computed or licensed) ---"
+    );
+    println!(
+        "  K = {} qualifying of {} enumerated   k+ = {}   k- = {}   K/30 = {:.3}",
+        c.k,
+        CORPUS.len(),
+        c.k_plus,
+        c.k_minus,
+        c.k as f64 / CORPUS.len() as f64
+    );
+    println!(
+        "  material-but-unqualified or tie-blocked: {}   degenerate cells: {} ({:.1}%)",
+        c.material_unqualified,
+        c.degenerate_cells,
+        c.degenerate_fraction * 100.0
+    );
+    println!(
+        "  qualifying coverage: {} matched groups, {} structural families",
+        c.groups, c.families
+    );
+
+    match v {
+        Verdict::BenchmarkValidity => {
+            println!(
+                "\n  VERDICT: BENCHMARK-VALIDITY FINDING — >= 50% of cells are DEGENERATE_NULL."
+            );
+            println!("  The configuration is saturated at this budget and cannot discriminate.");
+            println!("  The sign question is NOT answered.");
+        }
+        Verdict::SignVaries => {
+            println!("\n  VERDICT: SIGN VARIES");
+            let ps: Vec<f64> = held_in.iter().map(|r| r.p).collect();
+            let rej = benjamini_hochberg(&ps, FDR_Q);
+            let qual: Vec<&Row> = held_in
+                .iter()
+                .enumerate()
+                .filter(|(k, hi)| {
+                    held_out
+                        .iter()
+                        .find(|r| r.index == hi.index)
+                        .is_some_and(|ho| qualifies(hi, ho, rej[*k]))
+                })
+                .map(|(_, hi)| hi)
+                .collect();
+            for g in ['A', 'B', 'C', 'D', 'E', 'F'] {
+                let m: Vec<&&Row> = qual.iter().filter(|r| r.group == Some(g)).collect();
+                if m.iter().any(|r| r.i > 0.0) && m.iter().any(|r| r.i < 0.0) {
+                    println!(
+                        "    matched group {g}: opposite-signed qualifying members — S0 COUNTEREXAMPLE"
+                    );
+                    for x in &m {
+                        println!("      {} I={:+.4}", x.name, x.i);
+                    }
                 }
             }
         }
-        return;
-    }
-
-    if kq >= MIN_QUALIFYING && (k_plus == 0 || k_minus == 0) {
-        let mut groups: Vec<char> = qual.iter().filter_map(|r| r.group).collect();
-        groups.sort_unstable();
-        groups.dedup();
-        let fams: std::collections::BTreeSet<&str> = qual
-            .iter()
-            .map(|r| match r.family {
-                Family::RandomPlus => "random+1",
-                Family::Toroidal => "toroidal",
-            })
-            .collect();
-        if groups.len() >= MIN_GROUPS && fams.len() >= 2 {
+        Verdict::SignConstant => {
             println!(
-                "\n  VERDICT: SIGN CONSTANT — {kq} qualifying, {} matched groups, {} families",
-                groups.len(),
-                fams.len()
+                "\n  VERDICT: SIGN CONSTANT — {} qualifying, {} matched groups, {} families",
+                c.k, c.groups, c.families
             );
-            return;
         }
-        println!("\n  VERDICT: Q-INCONCLUSIVE — {kq} qualifying but coverage insufficient ({} groups, {} families; need >= {MIN_GROUPS} and 2)",
-                 groups.len(), fams.len());
-        return;
+        Verdict::NoMaterialEffectObserved => {
+            println!("\n  VERDICT: NO MATERIAL EFFECT OBSERVED");
+            println!(
+                "  A DESCRIPTIVE statement about this design's sensitivity, and nothing more."
+            );
+            println!(
+                "  FORBIDDEN under this verdict: any claim of equivalence, interchangeability"
+            );
+            println!("  or indistinguishability; any claim the effect is zero or negligible; any");
+            println!("  claim bounding what a selector could gain.");
+            let mut hw: Vec<f64> = held_in.iter().map(|r| r.ci_hw_pct).collect();
+            hw.sort_by(f64::total_cmp);
+            println!(
+                "  Mandatory sensitivity: held-in CI half-width {:.4}%..{:.4}% of |mean Y(metropolis)|",
+                hw.first().copied().unwrap_or(f64::NAN),
+                hw.last().copied().unwrap_or(f64::NAN)
+            );
+        }
+        Verdict::QInconclusive => {
+            println!(
+                "\n  VERDICT: Q-INCONCLUSIVE — K = {}; {} material-but-unqualified or tie-blocked; {} degenerate cells.",
+                c.k, c.material_unqualified, c.degenerate_cells
+            );
+            println!("  No post-hoc relaxation of any bar is permitted.");
+        }
     }
+}
 
-    // NO MATERIAL EFFECT OBSERVED requires the POSITIVE condition, not K = 0.
-    let all_clean = held_in
-        .iter()
-        .chain(held_out.iter())
-        .all(|r| !r.degenerate && !r.material && !r.tie_blocked)
-        && held_in.len() == CORPUS.len()
-        && held_out.len() == CORPUS.len();
+// ------------------------------------------------------------- held-out gate
 
-    if kq == 0 && all_clean {
-        println!("\n  VERDICT: NO MATERIAL EFFECT OBSERVED");
-        println!("  A DESCRIPTIVE statement about this design's sensitivity, and nothing more.");
-        println!("  FORBIDDEN under this verdict: any claim of equivalence, interchangeability or");
-        println!("  indistinguishability; any claim the effect is zero or negligible; any claim");
-        println!("  bounding what a selector could gain.");
-        let mut hw: Vec<f64> = held_in.iter().map(|r| r.ci_hw_pct).collect();
-        hw.sort_by(f64::total_cmp);
-        println!(
-            "  Mandatory sensitivity: held-in CI half-width {:.4}%..{:.4}% of |mean Y(metropolis)|",
-            hw.first().copied().unwrap_or(f64::NAN),
-            hw.last().copied().unwrap_or(f64::NAN)
-        );
-        return;
+/// Commit time (unix seconds) of the newest commit touching `path`, or `None`
+/// if the path is untracked / never committed.
+fn git_commit_time(path: &str) -> Option<u64> {
+    let out = std::process::Command::new("git")
+        .args(["log", "-1", "--format=%ct", "--", path])
+        .output()
+        .ok()?;
+    let t = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    if t.is_empty() {
+        None
+    } else {
+        t.parse().ok()
     }
+}
 
-    println!("\n  VERDICT: Q-INCONCLUSIVE — K = {kq}; {material_unqualified} material-but-unqualified or tie-blocked; {degen} degenerate cells.");
-    println!("  No post-hoc relaxation of any bar is permitted.");
+fn mtime_secs(path: &str) -> Option<u64> {
+    std::fs::metadata(path)
+        .ok()?
+        .modified()
+        .ok()?
+        .duration_since(std::time::UNIX_EPOCH)
+        .ok()
+        .map(|d| d.as_secs())
+}
+
+/// Four independent conditions, all required. Held-out is the block that can
+/// still falsify a held-in result, so it must not be reachable by accident.
+fn descendant_gate(dir: &str) -> bool {
+    let heldin = format!("{dir}/rc016_heldin.tsv");
+    let mut ok = true;
+
+    let has_confirm = flag(CONFIRM_FLAG);
+    println!("    [1] explicit confirmation flag {CONFIRM_FLAG}: {has_confirm}");
+    ok &= has_confirm;
+
+    let heldin_done = std::path::Path::new(&heldin).exists();
+    println!("    [2] held-in results present ({heldin}): {heldin_done}");
+    ok &= heldin_done;
+
+    let desc_exists = std::path::Path::new(DESCENDANT_PATH).exists();
+    let desc_commit = git_commit_time(DESCENDANT_PATH);
+    println!(
+        "    [3] descendant {DESCENDANT_PATH} exists={desc_exists} committed={}",
+        desc_commit.is_some()
+    );
+    ok &= desc_exists && desc_commit.is_some();
+
+    match (desc_commit, mtime_secs(&heldin)) {
+        (Some(dc), Some(hm)) => {
+            let after = dc > hm;
+            println!(
+                "    [4] descendant committed AFTER held-in: {after} (commit {dc} vs held-in {hm})"
+            );
+            ok &= after;
+        }
+        _ => {
+            println!("    [4] descendant committed AFTER held-in: cannot verify");
+            ok = false;
+        }
+    }
+    ok
 }
 
 // ------------------------------------------------------------------ persistence
@@ -1266,6 +1427,13 @@ fn main() {
     }
 
     if flag("--holdout") {
+        println!("\nRC-016 held-out gate (PREREG §5: not inspected until controls and held-in are evaluated)");
+        if !descendant_gate(&dir) {
+            println!("\n  HELD-OUT REFUSED — the falsifiable descendant must be written and");
+            println!("  committed AFTER the held-in block, and the run explicitly confirmed.");
+            println!("  Refusing rather than silently inspecting the held-out seeds.");
+            std::process::exit(3);
+        }
         println!("\nRC-016 held-out block, seeds {HELD_OUT:?}\n");
         let rows = measure_block(&reg, Block::HeldOut);
         write_rows(&dir, "heldout", &rows);
@@ -1273,8 +1441,378 @@ fn main() {
 
     if flag("--verdict") {
         match (read_rows(&dir, "heldin"), read_rows(&dir, "heldout")) {
-            (Some(hi), Some(ho)) => verdict(&hi, &ho),
+            (Some(hi), Some(ho)) => report_verdict(&hi, &ho),
             _ => println!("\n  verdict needs both rc016_heldin.tsv and rc016_heldout.tsv in {dir}"),
+        }
+    }
+}
+
+// ---------------------------------------------------------------------- tests
+//
+// These validate the analysis layer WITHOUT the Runtime, so an attribution bug
+// and an absent effect cannot look alike, and every pre-registered predicate has
+// a reachable failing case.
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn row(index: usize, i: f64, p: f64, material: bool, group: Option<char>, fam: Family) -> Row {
+        Row {
+            index,
+            name: format!("I{index}"),
+            group,
+            family: fam,
+            i,
+            rho: Some(3.0),
+            rel: 0.01,
+            p,
+            zeros: 0,
+            degenerate: false,
+            tie_blocked: false,
+            material,
+            ci_lo: i - 1.0,
+            ci_hi: i + 1.0,
+            ci_hw_pct: 0.05,
+        }
+    }
+
+    /// The synthetic arithmetic positive: analytically known effects, so the
+    /// attribution layer is checked with no solver in the loop.
+    #[test]
+    fn arithmetic_positive_recovers_known_effects() {
+        let p = Paired {
+            base: vec![-10.0, -20.0, -30.0, -40.0],
+            other: vec![-9.0, -18.0, -27.0, -36.0],
+        };
+        assert_eq!(p.effects(), vec![1.0, 2.0, 3.0, 4.0]);
+        assert!((p.mean_effect() - 2.5).abs() < 1e-12);
+        assert!((p.d_seed() - (500.0f64 / 3.0).sqrt()).abs() < 1e-12);
+        assert!(!p.degenerate());
+
+        // A constant reference arm must FLAG, never divide by zero.
+        let flat = Paired {
+            base: vec![-10.0; 4],
+            other: vec![-9.0, -18.0, -27.0, -36.0],
+        };
+        assert!(flat.degenerate());
+        assert!(flat.rho().is_none());
+    }
+
+    /// Amendment 2 §B4: `p_floor(z) = 2^(z+1)/2^k`, and `z >= 3` at `k = 8`
+    /// cannot reject at alpha whatever the other differences are.
+    #[test]
+    fn zero_ties_raise_the_p_floor_and_block_at_three() {
+        for z in 0..=4usize {
+            let mut other = vec![0.0; 8];
+            for (j, o) in other.iter_mut().enumerate() {
+                *o = if j < z { 0.0 } else { 10.0 };
+            }
+            let p = Paired {
+                base: vec![0.0; 8],
+                other,
+            };
+            assert_eq!(p.zeros(), z, "zero count");
+            let floor = 2f64.powi(z as i32 + 1) / 256.0;
+            assert!(
+                (p.signflip_p() - floor).abs() < 1e-12,
+                "z={z}: p={} expected floor {floor}",
+                p.signflip_p()
+            );
+            assert_eq!(p.tie_blocked(), z >= TIE_BLOCK_Z);
+            // The operational consequence: at z >= 3 rejection is impossible.
+            if z >= TIE_BLOCK_Z {
+                assert!(p.signflip_p() >= ALPHA);
+            }
+        }
+    }
+
+    /// A TIE-BLOCKED instance can never QUALIFY, even with a BH rejection and a
+    /// perfect replication — the whole point of routing it to Q-INCONCLUSIVE.
+    #[test]
+    fn tie_blocked_never_qualifies() {
+        let mut hi = row(0, 10.0, 0.0078, true, Some('A'), Family::Toroidal);
+        let ho = row(0, 10.0, 0.0078, true, Some('A'), Family::Toroidal);
+        assert!(qualifies(&hi, &ho, true));
+        hi.tie_blocked = true;
+        assert!(!qualifies(&hi, &ho, true));
+    }
+
+    #[test]
+    fn benjamini_hochberg_step_up_is_monotone_and_correct() {
+        // All tiny p-values reject; all large ones do not.
+        assert_eq!(
+            benjamini_hochberg(&[0.001, 0.002, 0.003], 0.10),
+            vec![true; 3]
+        );
+        assert_eq!(benjamini_hochberg(&[0.9, 0.8, 0.7], 0.10), vec![false; 3]);
+        // Step-up: the largest surviving rank pulls in every smaller p-value.
+        let r = benjamini_hochberg(&[0.001, 0.06, 0.9], 0.10);
+        assert_eq!(r, vec![true, true, false]);
+        // Order of the input must not matter to WHICH entries reject.
+        let r2 = benjamini_hochberg(&[0.9, 0.06, 0.001], 0.10);
+        assert_eq!(r2, vec![false, true, true]);
+    }
+
+    /// QUALIFIES requires BH rejection — the hole Amendment 1 §A2 closed.
+    #[test]
+    fn qualification_requires_bh_rejection() {
+        let hi = row(0, 10.0, 0.30, true, Some('A'), Family::Toroidal);
+        let ho = row(0, 10.0, 0.30, true, Some('A'), Family::Toroidal);
+        assert!(a6_replicates(&hi, &ho) && hi.material);
+        assert!(
+            !qualifies(&hi, &ho, false),
+            "material + A6 must NOT suffice"
+        );
+        assert!(qualifies(&hi, &ho, true));
+    }
+
+    /// A6: sign match, held-out independently material, ratio in [0.5, 2.0].
+    #[test]
+    fn a6_replication_rule() {
+        let hi = row(0, 10.0, 0.008, true, None, Family::RandomPlus);
+
+        let same = row(0, 12.0, 0.008, true, None, Family::RandomPlus);
+        assert!(a6_replicates(&hi, &same));
+
+        let flipped = row(0, -12.0, 0.008, true, None, Family::RandomPlus);
+        assert!(!a6_replicates(&hi, &flipped), "sign must match");
+
+        let too_big = row(0, 30.0, 0.008, true, None, Family::RandomPlus);
+        assert!(
+            !a6_replicates(&hi, &too_big),
+            "ratio 3.0 is outside [0.5,2]"
+        );
+
+        let too_small = row(0, 2.0, 0.008, true, None, Family::RandomPlus);
+        assert!(
+            !a6_replicates(&hi, &too_small),
+            "ratio 0.2 is outside [0.5,2]"
+        );
+
+        let immaterial = row(0, 12.0, 0.008, false, None, Family::RandomPlus);
+        assert!(
+            !a6_replicates(&hi, &immaterial),
+            "held-out must be independently material"
+        );
+
+        let mut degen = row(0, 12.0, 0.008, true, None, Family::RandomPlus);
+        degen.degenerate = true;
+        assert!(!a6_replicates(&hi, &degen));
+    }
+
+    fn clean_corpus() -> (Vec<Row>, Vec<Row>) {
+        let mk = |_b: usize| {
+            CORPUS
+                .iter()
+                .enumerate()
+                .map(|(k, (_, _, g, f))| {
+                    let mut r = row(k, 0.01, 0.9, false, *g, *f);
+                    r.rho = Some(0.01);
+                    r.rel = 0.0;
+                    r
+                })
+                .collect::<Vec<Row>>()
+        };
+        (mk(0), mk(1))
+    }
+
+    /// Amendment 2 §B1/§B2 — the correction that mattered most: `K = 0` alone
+    /// must NOT reach NO MATERIAL EFFECT OBSERVED.
+    #[test]
+    fn verdict_routing_k_zero_is_not_interchangeability() {
+        let (hi, ho) = clean_corpus();
+        assert_eq!(decide(&hi, &ho).0, Verdict::NoMaterialEffectObserved);
+
+        // World 2: one material-but-unqualified instance ⇒ Q-INCONCLUSIVE.
+        let (mut hi2, ho2) = clean_corpus();
+        hi2[0].material = true;
+        hi2[0].p = 0.9; // material, but nowhere near BH rejection
+        assert_eq!(decide(&hi2, &ho2).0, Verdict::QInconclusive);
+
+        // World 3: a single isolated DEGENERATE_NULL, far below the 50% kill.
+        let (mut hi3, ho3) = clean_corpus();
+        hi3[0].degenerate = true;
+        assert_eq!(decide(&hi3, &ho3).0, Verdict::QInconclusive);
+
+        // A single TIE-BLOCKED instance likewise blocks the descriptive verdict.
+        let (mut hi4, ho4) = clean_corpus();
+        hi4[0].tie_blocked = true;
+        assert_eq!(decide(&hi4, &ho4).0, Verdict::QInconclusive);
+    }
+
+    #[test]
+    fn verdict_routing_sign_varies_and_constant_and_saturation() {
+        // SIGN VARIES: qualifying instances of BOTH signs inside one matched
+        // group. FOUR are used, not two, because of the BH/p-floor interaction
+        // proved in `bh_floor_needs_three_instances_to_reject_anything` below.
+        let (mut hi, mut ho) = clean_corpus();
+        for (k, sign) in [(17usize, 1.0f64), (18, -1.0), (19, 1.0), (0, -1.0)] {
+            let (_, _, g, f) = CORPUS[k];
+            hi[k] = row(k, 10.0 * sign, 0.0078, true, g, f);
+            ho[k] = row(k, 11.0 * sign, 0.0078, true, g, f);
+        }
+        let (v, c) = decide(&hi, &ho);
+        assert!(c.k_plus >= 1 && c.k_minus >= 1, "both signs must qualify");
+        assert_eq!(v, Verdict::SignVaries);
+
+        // SIGN CONSTANT needs >= 6 qualifying across >= 3 groups AND both families.
+        let (mut hi2, mut ho2) = clean_corpus();
+        for k in [0usize, 1, 3, 4, 9, 10] {
+            let (_, _, g, f) = CORPUS[k];
+            hi2[k] = row(k, 10.0, 0.0078, true, g, f);
+            ho2[k] = row(k, 11.0, 0.0078, true, g, f);
+        }
+        let (v2, c2) = decide(&hi2, &ho2);
+        assert_eq!(c2.k, 6);
+        assert!(c2.groups >= MIN_GROUPS && c2.families >= 2);
+        assert_eq!(v2, Verdict::SignConstant);
+
+        // Same-sign but only ONE structural family ⇒ coverage fails.
+        let (mut hi3, mut ho3) = clean_corpus();
+        for k in [0usize, 1, 2, 9, 10, 11] {
+            let (_, _, g, f) = CORPUS[k];
+            hi3[k] = row(k, 10.0, 0.0078, true, g, f);
+            ho3[k] = row(k, 11.0, 0.0078, true, g, f);
+        }
+        let (v3, c3) = decide(&hi3, &ho3);
+        assert_eq!(c3.families, 1);
+        assert_eq!(v3, Verdict::QInconclusive);
+
+        // Kill criterion 2 is checked FIRST and overrides everything.
+        let (mut hi4, ho4) = clean_corpus();
+        for r in hi4.iter_mut() {
+            r.degenerate = true;
+        }
+        assert_eq!(decide(&hi4, &ho4).0, Verdict::BenchmarkValidity);
+    }
+
+    /// An operational consequence of the pre-registration, proved here so it is
+    /// known BEFORE data rather than discovered during analysis: with 30
+    /// instances at FDR 0.10, the exact sign-flip p-FLOOR of `2/256 = 0.0078125`
+    /// only clears the BH threshold `k/30 · 0.10` from rank 3 onward. So **at
+    /// least three instances must attain the floor before BH rejects any of
+    /// them** — a lone maximally-significant instance cannot qualify.
+    #[test]
+    fn bh_floor_needs_three_instances_to_reject_anything() {
+        let floor = 2.0 / 256.0;
+        let mk = |n_at_floor: usize| {
+            let mut ps = vec![0.9; CORPUS.len()];
+            for slot in ps.iter_mut().take(n_at_floor) {
+                *slot = floor;
+            }
+            benjamini_hochberg(&ps, FDR_Q)
+        };
+        assert_eq!(mk(1).iter().filter(|b| **b).count(), 0, "one is not enough");
+        assert_eq!(mk(2).iter().filter(|b| **b).count(), 0, "two is not enough");
+        assert_eq!(mk(3).iter().filter(|b| **b).count(), 3, "three rejects");
+        // The arithmetic behind it.
+        assert!(floor > 2.0 / 30.0 * FDR_Q);
+        assert!(floor <= 3.0 / 30.0 * FDR_Q);
+    }
+
+    /// Amendment 3 §C1: the seed formula must be collision-free across the
+    /// corpus and must never meet the power seed.
+    #[test]
+    fn ci_seed_formula_is_injective_and_disjoint_from_power_seed() {
+        let mut seeds = Vec::new();
+        for i in 0..CORPUS.len() as u64 {
+            for b in 0..2u64 {
+                seeds.push(CI_BOOTSTRAP_BASE_SEED + 2 * i + b);
+            }
+        }
+        assert_eq!(seeds.len(), 60);
+        let mut u = seeds.clone();
+        u.sort_unstable();
+        u.dedup();
+        assert_eq!(u.len(), 60, "seeds must be distinct");
+        assert_eq!(*u.first().unwrap(), CI_BOOTSTRAP_BASE_SEED);
+        assert!(!seeds.contains(&POWER_BOOTSTRAP_SEED));
+        // Block index must actually change the stream.
+        let xs = [1.0, -2.0, 3.0, -4.0, 5.0, -6.0, 7.0, -8.0];
+        assert_ne!(
+            bootstrap_ci(&xs, 2000, CI_BOOTSTRAP_BASE_SEED),
+            bootstrap_ci(&xs, 2000, CI_BOOTSTRAP_BASE_SEED + 1)
+        );
+    }
+
+    /// Determinism: the same seed must reproduce the interval exactly, and the
+    /// percentile indices must be the 2.5th/97.5th order statistics.
+    #[test]
+    fn bootstrap_is_deterministic_and_uses_the_declared_percentiles() {
+        let xs = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0];
+        let a = bootstrap_ci(&xs, 4000, 12345);
+        let b = bootstrap_ci(&xs, 4000, 12345);
+        assert_eq!(a.0.to_bits(), b.0.to_bits());
+        assert_eq!(a.1.to_bits(), b.1.to_bits());
+        assert!(a.0 <= a.1);
+        // reps/40 and reps-1-reps/40 are the 2.5% and 97.5% indices.
+        let reps = 100_000usize;
+        assert_eq!(reps / 40, 2_500);
+        assert_eq!(reps - 1 - reps / 40, 97_499);
+    }
+
+    /// Power is model-conditional but must still be deterministic, monotone in
+    /// the shift, and bounded.
+    #[test]
+    fn power_rate_is_deterministic_and_monotone_in_delta() {
+        let resid = [-3.0, -1.0, -0.5, 0.0, 0.5, 1.0, 2.0, 3.0];
+        let lo = power_rate(&resid, 0.1);
+        let lo2 = power_rate(&resid, 0.1);
+        let hi = power_rate(&resid, 50.0);
+        assert_eq!(lo.to_bits(), lo2.to_bits(), "same seed ⇒ same rate");
+        assert!((0.0..=1.0).contains(&lo) && (0.0..=1.0).contains(&hi));
+        assert!(hi > lo, "a far larger shift must be easier to detect");
+        assert!(hi > POWER_BAR);
+    }
+
+    /// Amendment 2 §B3: Delta is the BINDING component of a conjunctive bar,
+    /// not the relative half alone.
+    #[test]
+    fn delta_is_the_binding_materiality_component() {
+        // rel component binds
+        let (y_ref, d_seed) = (1_000_000.0f64, 1.0f64);
+        assert!((REL_BAR * y_ref).max(RHO_BAR * d_seed) - REL_BAR * y_ref < 1e-12);
+        // rho component binds
+        let (y_ref2, d_seed2) = (10.0f64, 1000.0f64);
+        let delta2 = (REL_BAR * y_ref2).max(RHO_BAR * d_seed2);
+        assert!((delta2 - RHO_BAR * d_seed2).abs() < 1e-12);
+        assert!(delta2 > REL_BAR * y_ref2);
+    }
+
+    /// Mode guard: the held-out gate must refuse when nothing is in place.
+    #[test]
+    fn held_out_gate_refuses_without_a_frozen_descendant() {
+        let dir = std::env::temp_dir().join("rc016_gate_test_empty");
+        let _ = std::fs::create_dir_all(&dir);
+        assert!(
+            !descendant_gate(dir.to_str().unwrap()),
+            "held-out must not be runnable without confirmation, held-in and a committed descendant"
+        );
+    }
+
+    /// The corpus is the pre-registered one, in order, and the array position is
+    /// the index the CI seed binds to.
+    #[test]
+    fn corpus_is_the_preregistered_thirty_in_order() {
+        assert_eq!(CORPUS.len(), 30);
+        assert_eq!(CORPUS[0].0, "G1");
+        assert_eq!(CORPUS[29].0, "G70");
+        let mut names: Vec<&str> = CORPUS.iter().map(|c| c.0).collect();
+        let n = names.len();
+        names.sort_unstable();
+        names.dedup();
+        assert_eq!(names.len(), n, "no duplicate instances");
+        // Both structural families are represented, as SIGN CONSTANT requires.
+        assert!(CORPUS.iter().any(|c| c.3 == Family::Toroidal));
+        assert!(CORPUS.iter().any(|c| c.3 == Family::RandomPlus));
+        // Six matched groups, three members each.
+        for g in ['A', 'B', 'C', 'D', 'E', 'F'] {
+            assert_eq!(
+                CORPUS.iter().filter(|c| c.2 == Some(g)).count(),
+                3,
+                "group {g} must have three members"
+            );
         }
     }
 }
