@@ -41,6 +41,7 @@ use ising_engine::engine_v2::operator::Budget;
 use ising_engine::engine_v2::plan::{Phase, Plan, PlanStep};
 use ising_engine::engine_v2::registry::OperatorRegistry;
 use ising_engine::engine_v2::runtime::{Runtime, RuntimeView};
+use ising_engine::engine_v2::state::SpinState;
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 use std::time::Instant;
@@ -108,187 +109,232 @@ enum Family {
 ///
 /// `(name, path, matched-group id, family)` — group ids A..F match §4's table;
 /// `None` means the instance is in no matched group.
-const CORPUS: &[(&str, &str, Option<char>, Family)] = &[
-    (
-        "G1",
-        "benchmark_suite/data/gset/G1",
-        Some('B'),
-        Family::RandomPlus,
-    ),
-    (
-        "G2",
-        "benchmark_suite/data/gset/G2",
-        Some('B'),
-        Family::RandomPlus,
-    ),
-    (
-        "G3",
-        "benchmark_suite/data/gset/G3",
-        Some('B'),
-        Family::RandomPlus,
-    ),
-    (
-        "G11",
-        "benchmark_suite/data/gset/G11",
-        Some('A'),
-        Family::Toroidal,
-    ),
-    (
-        "G12",
-        "benchmark_suite/data/gset/G12",
-        Some('A'),
-        Family::Toroidal,
-    ),
-    (
-        "G13",
-        "benchmark_suite/data/gset/G13",
-        Some('A'),
-        Family::Toroidal,
-    ),
-    (
-        "G14",
-        "benchmark_suite/data/gset/G14",
-        None,
-        Family::RandomPlus,
-    ),
-    (
-        "G15",
-        "benchmark_suite/data/gset/G15",
-        None,
-        Family::RandomPlus,
-    ),
-    (
-        "G16",
-        "benchmark_suite/data/gset/G16",
-        None,
-        Family::RandomPlus,
-    ),
-    (
-        "G22",
-        "benchmark_suite/data/gset/G22",
-        Some('E'),
-        Family::RandomPlus,
-    ),
-    (
-        "G23",
-        "benchmark_suite/data/gset/G23",
-        Some('E'),
-        Family::RandomPlus,
-    ),
-    (
-        "G24",
-        "benchmark_suite/data/gset/G24",
-        Some('E'),
-        Family::RandomPlus,
-    ),
-    (
-        "G32",
-        "benchmark_suite/data/gset/G32",
-        Some('D'),
-        Family::Toroidal,
-    ),
-    (
-        "G33",
-        "benchmark_suite/data/gset/G33",
-        Some('D'),
-        Family::Toroidal,
-    ),
-    (
-        "G34",
-        "benchmark_suite/data/gset/G34",
-        Some('D'),
-        Family::Toroidal,
-    ),
-    (
-        "G35",
-        "benchmark_suite/data/gset/G35",
-        None,
-        Family::RandomPlus,
-    ),
-    (
-        "G36",
-        "benchmark_suite/data/gset/G36",
-        None,
-        Family::RandomPlus,
-    ),
-    (
-        "G43",
-        "benchmark_suite/data/gset/G43",
-        Some('C'),
-        Family::RandomPlus,
-    ),
-    (
-        "G44",
-        "benchmark_suite/data/gset/G44",
-        Some('C'),
-        Family::RandomPlus,
-    ),
-    (
-        "G45",
-        "benchmark_suite/data/gset/G45",
-        Some('C'),
-        Family::RandomPlus,
-    ),
-    (
-        "G48",
-        "benchmark_suite/data/gset/G48",
-        Some('F'),
-        Family::RandomPlus,
-    ),
-    (
-        "G49",
-        "benchmark_suite/data/gset/G49",
-        Some('F'),
-        Family::RandomPlus,
-    ),
-    (
-        "G50",
-        "benchmark_suite/data/gset/G50",
-        Some('F'),
-        Family::RandomPlus,
-    ),
-    (
-        "G51",
-        "benchmark_suite/data/gset/G51",
-        None,
-        Family::RandomPlus,
-    ),
-    (
-        "G52",
-        "benchmark_suite/data/gset/G52",
-        None,
-        Family::RandomPlus,
-    ),
-    (
-        "G53",
-        "benchmark_suite/data/gset/G53",
-        None,
-        Family::RandomPlus,
-    ),
-    (
-        "G55",
-        "benchmark_suite/data/gset/G55",
-        None,
-        Family::RandomPlus,
-    ),
-    (
-        "G60",
-        "benchmark_suite/data/gset/G60",
-        None,
-        Family::RandomPlus,
-    ),
-    (
-        "G63",
-        "benchmark_suite/data/gset/G63",
-        None,
-        Family::RandomPlus,
-    ),
-    (
-        "G70",
-        "benchmark_suite/data/gset/G70",
-        None,
-        Family::RandomPlus,
-    ),
+/// One pre-registered instance. `sha12` is the first 12 hex chars of the file's
+/// SHA-256, transcribed from `PREREG_RC016.md` §4 — recorded there because
+/// Phase 0 §0.2 established that `ExperimentDb` stores `instance_id` as a NAME,
+/// not a hash, so a changed benchmark file is otherwise undetectable.
+struct Inst {
+    name: &'static str,
+    path: &'static str,
+    group: Option<char>,
+    family: Family,
+    sha12: &'static str,
+}
+
+/// The corpus, in the EXACT order of `PREREG_RC016.md` §4. The array position
+/// IS the zero-based corpus index Amendment 3 §C1 binds the CI seed to, so the
+/// index is fixed by construction and cannot drift.
+const CORPUS: &[Inst] = &[
+    Inst {
+        name: "G1",
+        path: "benchmark_suite/data/gset/G1",
+        group: Some('B'),
+        family: Family::RandomPlus,
+        sha12: "73bf704d8ffc",
+    },
+    Inst {
+        name: "G2",
+        path: "benchmark_suite/data/gset/G2",
+        group: Some('B'),
+        family: Family::RandomPlus,
+        sha12: "732d57480a01",
+    },
+    Inst {
+        name: "G3",
+        path: "benchmark_suite/data/gset/G3",
+        group: Some('B'),
+        family: Family::RandomPlus,
+        sha12: "999e49b5e093",
+    },
+    Inst {
+        name: "G11",
+        path: "benchmark_suite/data/gset/G11",
+        group: Some('A'),
+        family: Family::Toroidal,
+        sha12: "c2a760d2926d",
+    },
+    Inst {
+        name: "G12",
+        path: "benchmark_suite/data/gset/G12",
+        group: Some('A'),
+        family: Family::Toroidal,
+        sha12: "a8628108d95d",
+    },
+    Inst {
+        name: "G13",
+        path: "benchmark_suite/data/gset/G13",
+        group: Some('A'),
+        family: Family::Toroidal,
+        sha12: "44af0d3aa232",
+    },
+    Inst {
+        name: "G14",
+        path: "benchmark_suite/data/gset/G14",
+        group: None,
+        family: Family::RandomPlus,
+        sha12: "dc769b978a40",
+    },
+    Inst {
+        name: "G15",
+        path: "benchmark_suite/data/gset/G15",
+        group: None,
+        family: Family::RandomPlus,
+        sha12: "2f1808f074bc",
+    },
+    Inst {
+        name: "G16",
+        path: "benchmark_suite/data/gset/G16",
+        group: None,
+        family: Family::RandomPlus,
+        sha12: "5a70eec4649a",
+    },
+    Inst {
+        name: "G22",
+        path: "benchmark_suite/data/gset/G22",
+        group: Some('E'),
+        family: Family::RandomPlus,
+        sha12: "9baeee06eb14",
+    },
+    Inst {
+        name: "G23",
+        path: "benchmark_suite/data/gset/G23",
+        group: Some('E'),
+        family: Family::RandomPlus,
+        sha12: "3669c719ebbc",
+    },
+    Inst {
+        name: "G24",
+        path: "benchmark_suite/data/gset/G24",
+        group: Some('E'),
+        family: Family::RandomPlus,
+        sha12: "9aff2abd74d1",
+    },
+    Inst {
+        name: "G32",
+        path: "benchmark_suite/data/gset/G32",
+        group: Some('D'),
+        family: Family::Toroidal,
+        sha12: "9760fce6b601",
+    },
+    Inst {
+        name: "G33",
+        path: "benchmark_suite/data/gset/G33",
+        group: Some('D'),
+        family: Family::Toroidal,
+        sha12: "4791e1bd9ac2",
+    },
+    Inst {
+        name: "G34",
+        path: "benchmark_suite/data/gset/G34",
+        group: Some('D'),
+        family: Family::Toroidal,
+        sha12: "e84c77938fcd",
+    },
+    Inst {
+        name: "G35",
+        path: "benchmark_suite/data/gset/G35",
+        group: None,
+        family: Family::RandomPlus,
+        sha12: "3df35a2abbe8",
+    },
+    Inst {
+        name: "G36",
+        path: "benchmark_suite/data/gset/G36",
+        group: None,
+        family: Family::RandomPlus,
+        sha12: "022423749f4e",
+    },
+    Inst {
+        name: "G43",
+        path: "benchmark_suite/data/gset/G43",
+        group: Some('C'),
+        family: Family::RandomPlus,
+        sha12: "9af5445b4b06",
+    },
+    Inst {
+        name: "G44",
+        path: "benchmark_suite/data/gset/G44",
+        group: Some('C'),
+        family: Family::RandomPlus,
+        sha12: "929e7687b9a0",
+    },
+    Inst {
+        name: "G45",
+        path: "benchmark_suite/data/gset/G45",
+        group: Some('C'),
+        family: Family::RandomPlus,
+        sha12: "e1514f22a23c",
+    },
+    Inst {
+        name: "G48",
+        path: "benchmark_suite/data/gset/G48",
+        group: Some('F'),
+        family: Family::RandomPlus,
+        sha12: "2c2daba39d1f",
+    },
+    Inst {
+        name: "G49",
+        path: "benchmark_suite/data/gset/G49",
+        group: Some('F'),
+        family: Family::RandomPlus,
+        sha12: "01733a64e25e",
+    },
+    Inst {
+        name: "G50",
+        path: "benchmark_suite/data/gset/G50",
+        group: Some('F'),
+        family: Family::RandomPlus,
+        sha12: "d3f5f31c5089",
+    },
+    Inst {
+        name: "G51",
+        path: "benchmark_suite/data/gset/G51",
+        group: None,
+        family: Family::RandomPlus,
+        sha12: "23b7111e929f",
+    },
+    Inst {
+        name: "G52",
+        path: "benchmark_suite/data/gset/G52",
+        group: None,
+        family: Family::RandomPlus,
+        sha12: "48ab066f1a3b",
+    },
+    Inst {
+        name: "G53",
+        path: "benchmark_suite/data/gset/G53",
+        group: None,
+        family: Family::RandomPlus,
+        sha12: "10ebfc718012",
+    },
+    Inst {
+        name: "G55",
+        path: "benchmark_suite/data/gset/G55",
+        group: None,
+        family: Family::RandomPlus,
+        sha12: "7537bbb613a6",
+    },
+    Inst {
+        name: "G60",
+        path: "benchmark_suite/data/gset/G60",
+        group: None,
+        family: Family::RandomPlus,
+        sha12: "b6480c1716ec",
+    },
+    Inst {
+        name: "G63",
+        path: "benchmark_suite/data/gset/G63",
+        group: None,
+        family: Family::RandomPlus,
+        sha12: "a1d08e1eed7a",
+    },
+    Inst {
+        name: "G70",
+        path: "benchmark_suite/data/gset/G70",
+        group: None,
+        family: Family::RandomPlus,
+        sha12: "0d965a2ff144",
+    },
 ];
 
 /// Held-in is block 0, held-out block 1 (Amendment 3 §C1).
@@ -548,6 +594,85 @@ fn contrast(
     Some(Paired { base, other })
 }
 
+// --------------------------------------------------------------- sha256
+//
+// Implemented inline rather than added as a dependency: `sha2` is only a
+// TRANSITIVE dep (via ethers) and `Cargo.toml` is out of scope, while shelling
+// out to `sha256sum` would make a replayable research artifact depend on the
+// environment. A known-answer test pins it, so it is verified rather than
+// trusted.
+
+const SHA_K: [u32; 64] = [
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+    0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
+];
+
+fn sha256_hex(data: &[u8]) -> String {
+    let mut h: [u32; 8] = [
+        0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab,
+        0x5be0cd19,
+    ];
+    let mut msg = data.to_vec();
+    let bitlen = (data.len() as u64) * 8;
+    msg.push(0x80);
+    while msg.len() % 64 != 56 {
+        msg.push(0);
+    }
+    msg.extend_from_slice(&bitlen.to_be_bytes());
+
+    for chunk in msg.chunks_exact(64) {
+        let mut w = [0u32; 64];
+        for (i, word) in w.iter_mut().take(16).enumerate() {
+            *word = u32::from_be_bytes([
+                chunk[4 * i],
+                chunk[4 * i + 1],
+                chunk[4 * i + 2],
+                chunk[4 * i + 3],
+            ]);
+        }
+        for i in 16..64 {
+            let s0 = w[i - 15].rotate_right(7) ^ w[i - 15].rotate_right(18) ^ (w[i - 15] >> 3);
+            let s1 = w[i - 2].rotate_right(17) ^ w[i - 2].rotate_right(19) ^ (w[i - 2] >> 10);
+            w[i] = w[i - 16]
+                .wrapping_add(s0)
+                .wrapping_add(w[i - 7])
+                .wrapping_add(s1);
+        }
+        let (mut a, mut b, mut c, mut d) = (h[0], h[1], h[2], h[3]);
+        let (mut e, mut f, mut g, mut hh) = (h[4], h[5], h[6], h[7]);
+        for i in 0..64 {
+            let s1 = e.rotate_right(6) ^ e.rotate_right(11) ^ e.rotate_right(25);
+            let ch = (e & f) ^ ((!e) & g);
+            let t1 = hh
+                .wrapping_add(s1)
+                .wrapping_add(ch)
+                .wrapping_add(SHA_K[i])
+                .wrapping_add(w[i]);
+            let s0 = a.rotate_right(2) ^ a.rotate_right(13) ^ a.rotate_right(22);
+            let maj = (a & b) ^ (a & c) ^ (b & c);
+            let t2 = s0.wrapping_add(maj);
+            hh = g;
+            g = f;
+            f = e;
+            e = d.wrapping_add(t1);
+            d = c;
+            c = b;
+            b = a;
+            a = t1.wrapping_add(t2);
+        }
+        for (slot, v) in h.iter_mut().zip([a, b, c, d, e, f, g, hh]) {
+            *slot = slot.wrapping_add(v);
+        }
+    }
+    h.iter().map(|v| format!("{v:08x}")).collect()
+}
+
 // ================================================================ STEP 9
 // Controls, cited from RC-014/RC-015 and RE-RUN here because corpus, instance
 // sizes and code state differ. Any failure ⇒ kill criterion 3: the instrument is
@@ -721,22 +846,286 @@ fn control_ci_seed_space() -> bool {
 
 /// The corpus must be exactly the 30 enumerated files, all present, in §4 order.
 fn control_corpus() -> bool {
-    let mut missing = Vec::new();
-    for (name, path, _, _) in CORPUS {
-        if !std::path::Path::new(path).exists() {
-            missing.push(*name);
+    let mut bad: Vec<String> = Vec::new();
+    for inst in CORPUS {
+        match std::fs::read(inst.path) {
+            Ok(bytes) => {
+                let got = &sha256_hex(&bytes)[..12];
+                if got != inst.sha12 {
+                    bad.push(format!(
+                        "{} sha {} != prereg {}",
+                        inst.name, got, inst.sha12
+                    ));
+                }
+            }
+            Err(e) => bad.push(format!("{} unreadable: {e}", inst.name)),
         }
     }
     let count_ok = CORPUS.len() == 30;
     println!(
-        "    {} instances declared, {} missing on disk",
+        "    {} instances declared, {} hash/read failures",
         CORPUS.len(),
-        missing.len()
+        bad.len()
     );
-    if !missing.is_empty() {
-        println!("    MISSING: {missing:?}");
+    for b in &bad {
+        println!("    FAIL: {b}");
     }
-    count_ok && missing.is_empty()
+    count_ok && bad.is_empty()
+}
+
+/// Inert control B (RC-014): from all-zeros every replica is identical, so a
+/// `replica_exchange` step can only permute identical states and is
+/// STATE-INERT. Deleting it must leave best state and energy untouched — and it
+/// can only do so because the sole downstream operator draws nothing, so the
+/// stream shift the deletion causes reaches nobody.
+fn control_inert_replica_exchange(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
+    let mk = |with: bool| {
+        let mut steps = Vec::new();
+        if with {
+            steps.push(PlanStep {
+                operator: "replica_exchange".into(),
+                phase: Phase::Exploit,
+                sweeps: SWEEPS,
+                repeat: 1,
+            });
+        }
+        steps.push(PlanStep {
+            operator: "greedy_descent".into(),
+            phase: Phase::Exploit,
+            sweeps: SWEEPS,
+            repeat: 1,
+        });
+        Plan {
+            name: "rc016-inertB".into(),
+            backend: DecisionEngine::analyze(ir).select_backend(),
+            num_replicas: REPLICAS,
+            temperatures: geometric_ladder(REPLICAS, TEMP_HI, TEMP_LO),
+            steps,
+            seed: HELD_IN[0],
+            rationale: Default::default(),
+        }
+    };
+    let (a, b) = match (execute(ir, reg, &mk(true)), execute(ir, reg, &mk(false))) {
+        (Ok(a), Ok(b)) => (a, b),
+        _ => return false,
+    };
+    let ok = a.y.to_bits() == b.y.to_bits() && a.best_state == b.best_state;
+    println!(
+        "    with={:.4} without={:.4} state-identical={} -> {}",
+        a.y,
+        b.y,
+        a.best_state == b.best_state,
+        if ok { "pass" } else { "FAIL" }
+    );
+    ok
+}
+
+// --------------------------- synthetic operator positive (RC-014, ported)
+//
+// An INDEPENDENT reference written against `ProblemIR` alone, sharing no code
+// with the operators, so agreement is evidence rather than tautology. This is
+// the only control that can catch a wrong operator implementation.
+
+fn small_instance(n: usize, seed: u64) -> ProblemIR {
+    let mut rng = ChaCha8Rng::seed_from_u64(seed);
+    let mut pairs = Vec::new();
+    for i in 0..n as u32 {
+        for j in (i + 1)..n as u32 {
+            // Integer weights only: SparseBitSlice rejects non-integral couplings.
+            let w: i32 = rng.gen_range(-2..=2);
+            if w != 0 {
+                pairs.push((i, j, w as f64));
+            }
+        }
+    }
+    let linear: Vec<f64> = (0..n).map(|_| rng.gen_range(-2..=2) as f64).collect();
+    ProblemIR::from_pairs(n, 0.0, linear, &pairs)
+}
+
+/// The colour order both operators walk: colours ascending, sites ascending
+/// within a colour. Derived from the IR only, never from the operator.
+fn colour_order(state: &dyn SpinState) -> Vec<usize> {
+    let colors = state.coloring();
+    let ncolors = colors.iter().copied().max().map_or(0, |c| c as usize + 1);
+    let mut order = Vec::with_capacity(colors.len());
+    for c in 0..ncolors as u32 {
+        for (site, &col) in colors.iter().enumerate() {
+            if col == c {
+                order.push(site);
+            }
+        }
+    }
+    order
+}
+
+#[allow(clippy::too_many_arguments)]
+fn reference_apply(
+    ir: &ProblemIR,
+    order: &[usize],
+    temps: &[f64],
+    gibbs: bool,
+    sweeps: u32,
+    replicas: usize,
+    rng: &mut ChaCha8Rng,
+) -> f64 {
+    let (n, r) = (ir.n, replicas);
+    let mut x = vec![0u8; n * r]; // site-major: x[site*r + rep]
+    for _ in 0..sweeps {
+        for &site in order {
+            let (cols, ws) = ir.row(site);
+            let mut flip = vec![false; r];
+            for (rep, f) in flip.iter_mut().enumerate() {
+                // Local field h = l_i + sum_j q_ij x_j, recomputed from scratch.
+                let mut h = ir.linear[site];
+                for (&j, &w) in cols.iter().zip(ws) {
+                    if x[j as usize * r + rep] != 0 {
+                        h += w;
+                    }
+                }
+                let xi = x[site * r + rep] != 0;
+                let de = if xi { -h } else { h };
+                let t = temps[rep % temps.len()];
+                if gibbs {
+                    let bh = if t > 0.0 {
+                        h / t
+                    } else if h > 0.0 {
+                        f64::INFINITY
+                    } else if h < 0.0 {
+                        f64::NEG_INFINITY
+                    } else {
+                        0.0
+                    };
+                    let p1 = 1.0 / (1.0 + bh.exp());
+                    let u: f64 = rng.gen();
+                    *f = (u < p1) != xi;
+                } else if de <= 0.0 {
+                    let _u: f64 = rng.gen(); // alignment draw, discarded
+                    *f = true;
+                } else {
+                    let p = if t > 0.0 { (-de / t).exp() } else { 0.0 };
+                    let u: f64 = rng.gen();
+                    *f = u < p;
+                }
+            }
+            for (rep, &f) in flip.iter().enumerate() {
+                if f {
+                    x[site * r + rep] ^= 1;
+                }
+            }
+        }
+    }
+    let mut best = f64::INFINITY;
+    let mut buf = vec![0u8; n];
+    for rep in 0..r {
+        for (i, b) in buf.iter_mut().enumerate() {
+            *b = x[i * r + rep];
+        }
+        let e = ir.energy(&buf);
+        if e < best {
+            best = e;
+        }
+    }
+    best
+}
+
+/// Two separable claims, reported separately: AGREEMENT on every candidate
+/// (the actual check, which no choice of fixture can make pass), and
+/// NON-VACUITY — at least one fixture with a non-zero reference difference,
+/// without which agreement is trivially satisfied by both operators landing on
+/// the same optimum (the RC-009 lesson).
+fn control_synthetic_operator(reg: &OperatorRegistry) -> bool {
+    let mut checked = 0usize;
+    let mut agreed = 0usize;
+    let mut accepted: Option<(usize, u64, u32, usize, f64, f64, f64)> = None;
+    let mut first_disagreement: Option<String> = None;
+
+    'grid: for &replicas in &[2usize, 4, 8] {
+        let temps = geometric_ladder(replicas, TEMP_HI, TEMP_LO);
+        for &sweeps in &[1u32, 2, 4] {
+            for n in [12usize, 16, 20] {
+                for seed in 1..25u64 {
+                    let ir = small_instance(n, seed);
+                    if ir.num_pairs() == 0 {
+                        continue;
+                    }
+                    let backend = DecisionEngine::analyze(&ir).select_backend();
+                    let init = vec![0u8; ir.n];
+                    let probe = boxed_state(&ir, backend, replicas, &init);
+                    let order = colour_order(probe.as_ref());
+                    drop(probe);
+
+                    let mut r1 = ChaCha8Rng::seed_from_u64(seed);
+                    let mut r2 = ChaCha8Rng::seed_from_u64(seed);
+                    let ref_a =
+                        reference_apply(&ir, &order, &temps, false, sweeps, replicas, &mut r1);
+                    let ref_b =
+                        reference_apply(&ir, &order, &temps, true, sweeps, replicas, &mut r2);
+
+                    let single = |op: &str| Plan {
+                        name: "rc016-synth".into(),
+                        backend,
+                        num_replicas: replicas,
+                        temperatures: temps.clone(),
+                        steps: vec![PlanStep {
+                            operator: op.into(),
+                            phase: Phase::Exploit,
+                            sweeps,
+                            repeat: 1,
+                        }],
+                        seed,
+                        rationale: Default::default(),
+                    };
+                    let (pa, pb) = match (
+                        execute(&ir, reg, &single(OP_A)),
+                        execute(&ir, reg, &single(OP_B)),
+                    ) {
+                        (Ok(a), Ok(b)) => (a, b),
+                        _ => continue,
+                    };
+
+                    checked += 1;
+                    let ok = pa.y == ref_a && pb.y == ref_b;
+                    if ok {
+                        agreed += 1;
+                    } else if first_disagreement.is_none() {
+                        first_disagreement = Some(format!(
+                            "n={n} seed={seed} sweeps={sweeps} r={replicas}: reference \
+                             (m={ref_a:.6}, g={ref_b:.6}) vs production (m={:.6}, g={:.6})",
+                            pa.y, pb.y
+                        ));
+                    }
+
+                    let ref_i = ref_b - ref_a;
+                    if accepted.is_none() && ref_i != 0.0 && ok && pb.y - pa.y == ref_i {
+                        accepted = Some((n, seed, sweeps, replicas, ref_a, ref_b, ref_i));
+                        if checked >= 40 {
+                            break 'grid;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    println!("    agreement: {agreed}/{checked} fixtures reproduce the independent reference");
+    if let Some(d) = &first_disagreement {
+        println!("    FIRST DISAGREEMENT: {d}");
+    }
+    match accepted {
+        Some((n, seed, sweeps, replicas, a, b, i)) => {
+            println!(
+                "    accepted non-vacuous fixture: n={n} seed={seed} sweeps={sweeps} \
+                 replicas={replicas}  metropolis={a:.6} gibbs={b:.6} I={i:+.6}"
+            );
+            agreed == checked
+        }
+        None => {
+            println!(
+                "    no fixture with a non-zero reference difference — control VACUOUS (FAIL)"
+            );
+            false
+        }
+    }
 }
 
 fn run_controls(reg: &OperatorRegistry) -> bool {
@@ -752,10 +1141,10 @@ fn run_controls(reg: &OperatorRegistry) -> bool {
     println!("\n[arithmetic] synthetic arithmetic positive + TIE-BLOCKED guard");
     pass &= control_synthetic_arithmetic();
 
-    let probe_ir = match load(CORPUS[0].1) {
+    let probe_ir = match load(CORPUS[0].path) {
         Ok(ir) => ir,
         Err(e) => {
-            println!("\ncannot load {}: {e}", CORPUS[0].1);
+            println!("\ncannot load {}: {e}", CORPUS[0].path);
             return false;
         }
     };
@@ -766,8 +1155,14 @@ fn run_controls(reg: &OperatorRegistry) -> bool {
     println!("\n[null] metropolis -> metropolis is bit-identical");
     pass &= control_null(&probe_ir, reg);
 
-    println!("\n[inert] substitution at sweeps=0 gives exactly 0");
+    println!("\n[inert A] substitution at sweeps=0 gives exactly 0");
     pass &= control_inert_zero_budget(&probe_ir, reg);
+
+    println!("\n[inert B] structurally inert replica_exchange deletion");
+    pass &= control_inert_replica_exchange(&probe_ir, reg);
+
+    println!("\n[operator positive] production operators vs an independent reference");
+    pass &= control_synthetic_operator(reg);
 
     println!(
         "\nCONTROLS: {}",
@@ -805,7 +1200,8 @@ struct Calibration {
 }
 
 fn calibrate_one(idx: usize, reg: &OperatorRegistry) -> Option<Calibration> {
-    let (name, path, _, _) = CORPUS[idx];
+    let inst = &CORPUS[idx];
+    let (name, path) = (inst.name, inst.path);
     let ir = load(path).ok()?;
 
     // Interleaved within each repetition, so monotonic host drift cannot
@@ -952,24 +1348,28 @@ struct Row {
 
 fn measure_block(reg: &OperatorRegistry, block: Block) -> Vec<Row> {
     let mut rows = Vec::new();
-    for (index, (name, path, group, family)) in CORPUS.iter().enumerate() {
+    for (index, inst) in CORPUS.iter().enumerate() {
+        let (name, path, group, family) = (inst.name, inst.path, inst.group, inst.family);
+        // FAIL-CLOSED. A skipped instance would shrink `m` in the BH step-up,
+        // and the threshold k/m·q RISES as m falls — a partial corpus silently
+        // LOOSENS the multiplicity control. Abort instead.
         let ir = match load(path) {
             Ok(ir) => ir,
             Err(e) => {
-                println!("  {name}: SKIP ({e})");
-                continue;
+                eprintln!("  {name}: FATAL load failure ({e}) — aborting the block");
+                std::process::exit(4);
             }
         };
         let Some(p) = contrast(&ir, reg, block.seeds(), SWEEPS) else {
-            println!("  {name}: SKIP (run failed)");
-            continue;
+            eprintln!("  {name}: FATAL run failure — aborting the block");
+            std::process::exit(4);
         };
         let s = sensitivity_ci(&p, index, block);
         let row = Row {
             index,
             name: (*name).to_string(),
-            group: *group,
-            family: *family,
+            group,
+            family,
             i: p.mean_effect(),
             rho: p.rho(),
             rel: p.rel(),
@@ -999,6 +1399,11 @@ fn measure_block(reg: &OperatorRegistry, block: Block) -> Vec<Row> {
         );
         rows.push(row);
     }
+    assert_eq!(
+        rows.len(),
+        CORPUS.len(),
+        "a block must cover the whole enumerated corpus"
+    );
     rows
 }
 
@@ -1046,6 +1451,15 @@ struct Census {
 
 /// Pure routing: no I/O, so every branch is reachable from a unit test.
 fn decide(held_in: &[Row], held_out: &[Row]) -> (Verdict, Census) {
+    // No verdict may be computed from a partial corpus: BH's threshold k/m·q
+    // rises as m falls, so a short block would loosen the multiplicity control.
+    assert_eq!(held_in.len(), CORPUS.len(), "held-in must cover the corpus");
+    assert_eq!(
+        held_out.len(),
+        CORPUS.len(),
+        "held-out must cover the corpus"
+    );
+
     let ps: Vec<f64> = held_in.iter().map(|r| r.p).collect();
     let rej = benjamini_hochberg(&ps, FDR_Q);
 
@@ -1062,10 +1476,19 @@ fn decide(held_in: &[Row], held_out: &[Row]) -> (Verdict, Census) {
         }
     }
 
-    let degenerate_cells = held_in.iter().filter(|r| r.degenerate).count()
-        + held_out.iter().filter(|r| r.degenerate).count();
-    let degenerate_fraction =
-        degenerate_cells as f64 / (held_in.len() + held_out.len()).max(1) as f64;
+    // Amendment 1 §A4 criterion 2 is stated over INSTANCES, not block-cells.
+    // An instance counts as degenerate iff EITHER block is degenerate.
+    let degenerate_cells = held_in
+        .iter()
+        .filter(|hi| {
+            hi.degenerate
+                || held_out
+                    .iter()
+                    .find(|ho| ho.index == hi.index)
+                    .is_some_and(|ho| ho.degenerate)
+        })
+        .count();
+    let degenerate_fraction = degenerate_cells as f64 / CORPUS.len() as f64;
 
     let k_plus = qual.iter().filter(|r| r.i > 0.0).count();
     let k_minus = qual.iter().filter(|r| r.i < 0.0).count();
@@ -1095,6 +1518,18 @@ fn decide(held_in: &[Row], held_out: &[Row]) -> (Verdict, Census) {
     // Kill criterion 2 is checked FIRST: saturation overrides the sign question.
     if degenerate_fraction >= DEGENERATE_FRACTION_KILL {
         return (Verdict::BenchmarkValidity, census);
+    }
+    // Amendment 1 §A4 kill criterion 1 lists `1 <= K < 6` UNCONDITIONALLY, so it
+    // is applied BEFORE any verdict branch.
+    //
+    // MAINTAINER NOTE, recorded rather than silently resolved: §A3's SIGN VARIES
+    // condition carries NO `K` floor, and the `>= 6` threshold was introduced in
+    // §A3 for SIGN CONSTANT as the deleted binomial's replacement. Enforcing the
+    // kill here therefore makes an existence-style S0 counterexample unreachable
+    // below K = 6 even when one demonstrably exists. If that is not intended, the
+    // route is an amendment exempting SIGN VARIES — not a code change.
+    if (1..MIN_QUALIFYING).contains(&census.k) {
+        return (Verdict::QInconclusive, census);
     }
     if k_plus >= 1 && k_minus >= 1 {
         return (Verdict::SignVaries, census);
@@ -1215,6 +1650,55 @@ fn report_verdict(held_in: &[Row], held_out: &[Row]) {
     }
 }
 
+/// §8.1 requires the calibration table frozen "before any science seed runs".
+/// Complete means: parses, and carries exactly one row per corpus index 0..29
+/// with no non-finite field.
+fn require_frozen_calibration(dir: &str) -> bool {
+    let path = format!("{dir}/rc016_calibration.tsv");
+    let Ok(text) = std::fs::read_to_string(&path) else {
+        println!("    calibration artifact missing: {path}");
+        return false;
+    };
+    let mut seen = vec![false; CORPUS.len()];
+    for line in text.lines().skip(1) {
+        let f: Vec<&str> = line.split('\t').collect();
+        if f.len() < 9 {
+            println!("    malformed calibration row: {line}");
+            return false;
+        }
+        let Ok(idx) = f[0].parse::<usize>() else {
+            println!("    unparseable index: {}", f[0]);
+            return false;
+        };
+        if idx >= CORPUS.len() || f[1] != CORPUS[idx].name {
+            println!("    calibration row {idx} does not match the corpus order");
+            return false;
+        }
+        for col in &f[2..7] {
+            match col.parse::<f64>() {
+                Ok(v) if v.is_finite() => {}
+                _ => {
+                    println!("    non-finite calibration value on row {idx}: {col}");
+                    return false;
+                }
+            }
+        }
+        seen[idx] = true;
+    }
+    let missing: Vec<&str> = seen
+        .iter()
+        .enumerate()
+        .filter(|(_, ok)| !**ok)
+        .map(|(i, _)| CORPUS[i].name)
+        .collect();
+    if !missing.is_empty() {
+        println!("    calibration incomplete, missing rows for: {missing:?}");
+        return false;
+    }
+    println!("    frozen calibration complete: {} rows", CORPUS.len());
+    true
+}
+
 // ------------------------------------------------------------- held-out gate
 
 /// Commit time (unix seconds) of the newest commit touching `path`, or `None`
@@ -1308,7 +1792,10 @@ fn write_rows(dir: &str, tag: &str, rows: &[Row]) {
     let path = format!("{dir}/rc016_{tag}.tsv");
     match std::fs::write(&path, s) {
         Ok(()) => println!("\n  written: {path}"),
-        Err(e) => println!("\n  write failed: {e}"),
+        Err(e) => {
+            eprintln!("\n  FATAL write failure for {path}: {e}");
+            std::process::exit(5);
+        }
     }
 }
 
@@ -1354,15 +1841,15 @@ fn main() {
     let any_science =
         flag("--calibrate") || flag("--science") || flag("--holdout") || flag("--verdict");
 
-    // STEP 9 — controls gate everything.
-    if flag("--controls") || !any_science {
-        let ok = run_controls(&reg);
-        if !ok {
-            std::process::exit(1);
-        }
-        if !any_science {
-            return;
-        }
+    // STEP 9 — controls gate EVERYTHING, unconditionally. The earlier guard
+    // `flag("--controls") || !any_science` skipped them whenever a science mode
+    // was invoked without `--controls`, which is the exact inverse of the
+    // pre-registration's requirement (§9).
+    if !run_controls(&reg) {
+        std::process::exit(1);
+    }
+    if !any_science {
+        return;
     }
 
     if flag("--calibrate") {
@@ -1409,18 +1896,27 @@ fn main() {
                         c.cost_arm_needed
                     ));
                 }
-                None => println!("  {:>5} calibration failed", entry.0),
+                None => println!("  {:>5} calibration failed", entry.name),
             }
         }
         let _ = std::fs::create_dir_all(&dir);
         let path = format!("{dir}/rc016_calibration.tsv");
         match std::fs::write(&path, out) {
             Ok(()) => println!("\n  frozen: {path}"),
-            Err(e) => println!("\n  write failed: {e}"),
+            Err(e) => {
+                eprintln!("\n  FATAL write failure for {path}: {e}");
+                std::process::exit(5);
+            }
         }
     }
 
     if flag("--science") {
+        println!("\nRC-016 held-in block — frozen-calibration precondition (§8.1)");
+        if !require_frozen_calibration(&dir) {
+            eprintln!("\n  HELD-IN REFUSED — §8.1 requires the calibration table frozen");
+            eprintln!("  before ANY science seed runs. Run --calibrate first.");
+            std::process::exit(2);
+        }
         println!("\nRC-016 held-in block, seeds {HELD_IN:?}\n");
         let rows = measure_block(&reg, Block::HeldIn);
         write_rows(&dir, "heldin", &rows);
@@ -1428,6 +1924,10 @@ fn main() {
 
     if flag("--holdout") {
         println!("\nRC-016 held-out gate (PREREG §5: not inspected until controls and held-in are evaluated)");
+        if !require_frozen_calibration(&dir) {
+            eprintln!("\n  HELD-OUT REFUSED — no complete frozen calibration (§8.1).");
+            std::process::exit(2);
+        }
         if !descendant_gate(&dir) {
             println!("\n  HELD-OUT REFUSED — the falsifiable descendant must be written and");
             println!("  committed AFTER the held-in block, and the run explicitly confirmed.");
@@ -1606,8 +2106,8 @@ mod tests {
             CORPUS
                 .iter()
                 .enumerate()
-                .map(|(k, (_, _, g, f))| {
-                    let mut r = row(k, 0.01, 0.9, false, *g, *f);
+                .map(|(k, inst)| {
+                    let mut r = row(k, 0.01, 0.9, false, inst.group, inst.family);
                     r.rho = Some(0.01);
                     r.rel = 0.0;
                     r
@@ -1648,18 +2148,39 @@ mod tests {
         // proved in `bh_floor_needs_three_instances_to_reject_anything` below.
         let (mut hi, mut ho) = clean_corpus();
         for (k, sign) in [(17usize, 1.0f64), (18, -1.0), (19, 1.0), (0, -1.0)] {
-            let (_, _, g, f) = CORPUS[k];
+            let (g, f) = (CORPUS[k].group, CORPUS[k].family);
             hi[k] = row(k, 10.0 * sign, 0.0078, true, g, f);
             ho[k] = row(k, 11.0 * sign, 0.0078, true, g, f);
         }
         let (v, c) = decide(&hi, &ho);
         assert!(c.k_plus >= 1 && c.k_minus >= 1, "both signs must qualify");
-        assert_eq!(v, Verdict::SignVaries);
+        // Fix 5: `1 <= K < 6` now fires FIRST, so four qualifying instances land
+        // in Q-INCONCLUSIVE even with both signs present.
+        assert_eq!(c.k, 4);
+        assert_eq!(v, Verdict::QInconclusive);
+
+        // SIGN VARIES becomes reachable only at K >= 6 with both signs.
+        let (mut hi6, mut ho6) = clean_corpus();
+        for (k, sign) in [
+            (17usize, 1.0f64),
+            (18, -1.0),
+            (19, 1.0),
+            (0, -1.0),
+            (1, 1.0),
+            (2, -1.0),
+        ] {
+            let (g, f) = (CORPUS[k].group, CORPUS[k].family);
+            hi6[k] = row(k, 10.0 * sign, 0.0078, true, g, f);
+            ho6[k] = row(k, 11.0 * sign, 0.0078, true, g, f);
+        }
+        let (v6, c6) = decide(&hi6, &ho6);
+        assert_eq!(c6.k, 6);
+        assert_eq!(v6, Verdict::SignVaries);
 
         // SIGN CONSTANT needs >= 6 qualifying across >= 3 groups AND both families.
         let (mut hi2, mut ho2) = clean_corpus();
         for k in [0usize, 1, 3, 4, 9, 10] {
-            let (_, _, g, f) = CORPUS[k];
+            let (g, f) = (CORPUS[k].group, CORPUS[k].family);
             hi2[k] = row(k, 10.0, 0.0078, true, g, f);
             ho2[k] = row(k, 11.0, 0.0078, true, g, f);
         }
@@ -1671,7 +2192,7 @@ mod tests {
         // Same-sign but only ONE structural family ⇒ coverage fails.
         let (mut hi3, mut ho3) = clean_corpus();
         for k in [0usize, 1, 2, 9, 10, 11] {
-            let (_, _, g, f) = CORPUS[k];
+            let (g, f) = (CORPUS[k].group, CORPUS[k].family);
             hi3[k] = row(k, 10.0, 0.0078, true, g, f);
             ho3[k] = row(k, 11.0, 0.0078, true, g, f);
         }
@@ -1709,6 +2230,87 @@ mod tests {
         // The arithmetic behind it.
         assert!(floor > 2.0 / 30.0 * FDR_Q);
         assert!(floor <= 3.0 / 30.0 * FDR_Q);
+    }
+
+    /// Fix 6: the benchmark-validity denominator is INSTANCES, not block-cells.
+    /// An instance counts as degenerate iff EITHER block is degenerate.
+    #[test]
+    fn benchmark_validity_counts_instances_not_cells() {
+        // 20 of 30 instances degenerate in the held-in block ONLY.
+        // Cells: 20/60 = 33% (would NOT fire). Instances: 20/30 = 67% (fires).
+        let (mut hi, ho) = clean_corpus();
+        for r in hi.iter_mut().take(20) {
+            r.degenerate = true;
+        }
+        let (v, c) = decide(&hi, &ho);
+        assert_eq!(c.degenerate_cells, 20, "counted per instance");
+        assert!((c.degenerate_fraction - 20.0 / 30.0).abs() < 1e-12);
+        assert_eq!(v, Verdict::BenchmarkValidity);
+
+        // 14 of 30 in both blocks: 28/60 = 47% of cells, 14/30 = 47% of
+        // instances — below the bar either way, so it must NOT fire.
+        let (mut hi2, mut ho2) = clean_corpus();
+        for k in 0..14 {
+            hi2[k].degenerate = true;
+            ho2[k].degenerate = true;
+        }
+        let (v2, c2) = decide(&hi2, &ho2);
+        assert_eq!(c2.degenerate_cells, 14);
+        assert_ne!(v2, Verdict::BenchmarkValidity);
+    }
+
+    /// Fix 8's primitive, pinned against published vectors so the inline
+    /// SHA-256 is verified rather than trusted.
+    #[test]
+    fn sha256_matches_known_answers() {
+        assert_eq!(
+            sha256_hex(b""),
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        );
+        assert_eq!(
+            sha256_hex(b"abc"),
+            "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+        );
+        // The corpus table stores the first 12 hex chars.
+        assert_eq!(&sha256_hex(b"abc")[..12], "ba7816bf8f01");
+    }
+
+    /// Fix 8: every corpus entry carries a 12-hex-char pre-registered hash.
+    #[test]
+    fn corpus_carries_preregistered_hashes() {
+        for inst in CORPUS {
+            assert_eq!(inst.sha12.len(), 12, "{} hash length", inst.name);
+            assert!(
+                inst.sha12.chars().all(|c| c.is_ascii_hexdigit()),
+                "{} hash is not hex",
+                inst.name
+            );
+        }
+        let mut hs: Vec<&str> = CORPUS.iter().map(|c| c.sha12).collect();
+        let n = hs.len();
+        hs.sort_unstable();
+        hs.dedup();
+        assert_eq!(hs.len(), n, "hashes must be distinct");
+    }
+
+    /// Fix 3: science refuses without a complete frozen calibration.
+    #[test]
+    fn science_requires_a_complete_frozen_calibration() {
+        let dir = std::env::temp_dir().join("rc016_calib_missing");
+        let _ = std::fs::create_dir_all(&dir);
+        let _ = std::fs::remove_file(dir.join("rc016_calibration.tsv"));
+        assert!(!require_frozen_calibration(dir.to_str().unwrap()));
+
+        // A partial table (one row) must also be refused.
+        let dir2 = std::env::temp_dir().join("rc016_calib_partial");
+        let _ = std::fs::create_dir_all(&dir2);
+        std::fs::write(
+            dir2.join("rc016_calibration.tsv"),
+            "index\tinstance\tR\tY_ref\td_seed_pilot\tdelta\tpower\tpowered\tcost_arm_needed\n\
+             0\tG1\t1.0\t100.0\t1.0\t0.5\t0.9\ttrue\tfalse\n",
+        )
+        .unwrap();
+        assert!(!require_frozen_calibration(dir2.to_str().unwrap()));
     }
 
     /// Amendment 3 §C1: the seed formula must be collision-free across the
@@ -1796,20 +2398,20 @@ mod tests {
     #[test]
     fn corpus_is_the_preregistered_thirty_in_order() {
         assert_eq!(CORPUS.len(), 30);
-        assert_eq!(CORPUS[0].0, "G1");
-        assert_eq!(CORPUS[29].0, "G70");
-        let mut names: Vec<&str> = CORPUS.iter().map(|c| c.0).collect();
+        assert_eq!(CORPUS[0].name, "G1");
+        assert_eq!(CORPUS[29].name, "G70");
+        let mut names: Vec<&str> = CORPUS.iter().map(|c| c.name).collect();
         let n = names.len();
         names.sort_unstable();
         names.dedup();
         assert_eq!(names.len(), n, "no duplicate instances");
         // Both structural families are represented, as SIGN CONSTANT requires.
-        assert!(CORPUS.iter().any(|c| c.3 == Family::Toroidal));
-        assert!(CORPUS.iter().any(|c| c.3 == Family::RandomPlus));
+        assert!(CORPUS.iter().any(|c| c.family == Family::Toroidal));
+        assert!(CORPUS.iter().any(|c| c.family == Family::RandomPlus));
         // Six matched groups, three members each.
         for g in ['A', 'B', 'C', 'D', 'E', 'F'] {
             assert_eq!(
-                CORPUS.iter().filter(|c| c.2 == Some(g)).count(),
+                CORPUS.iter().filter(|c| c.group == Some(g)).count(),
                 3,
                 "group {g} must have three members"
             );
