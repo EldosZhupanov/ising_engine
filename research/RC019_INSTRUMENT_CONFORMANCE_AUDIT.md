@@ -61,6 +61,11 @@ chronology would otherwise look for a binary that does not exist.
 
 ## 3. Conformance matrix
 
+**This table is the state at audit time, 2026-08-19, and is preserved unchanged.**
+Two of its rows were subsequently remediated; see the addendum in §8. No
+classification below has been edited, because the audit's value is the record of
+what the code contained when it was examined.
+
 Classifications: **I+E** implemented and evidenced · **I-NE** implemented but not
 evidenced · **ABSENT** · **VACUOUS** (present as text or output, without
 executable effect) · **N/A**.
@@ -175,3 +180,73 @@ scope and its absence is recorded rather than resolved.
 
 It proposes no repair, recommends no backport, retracts no result, and names no
 next cycle. It records what is in the code and what is not.
+
+---
+
+# 8. Remediation addendum — 2026-08-20
+
+**Written after the audit, recording a change to the code the audit examined.
+The matrix in §3 is deliberately not edited; this section is the delta.**
+
+## 8.1 What was closed
+
+Commit **`afd765c`** — *fix(bin): make RC-014 and RC-015 science entrypoints
+fail-closed* — closed the four gap rows of §3 that concerned RC-014 and RC-015.
+
+| §3 row | audit class (2026-08-19) | state after `afd765c` |
+|---|---|---|
+| RC-014 "Controls — all four are Gate-A blocking" | **ABSENT** | the control block runs before any mode and already exited non-zero on failure; `--science` can no longer skip it |
+| RC-014 held-out descendant condition | **VACUOUS** | a gate: the pre-registration must be present, tracked, clean, committed, and contain its `## 12. Falsifiable descendant` section, else refusal with exit 3 naming the failed condition |
+| RC-015 "Controls, all blocking" | **ABSENT** | same unconditional change |
+| RC-015 held-out descendant condition | not a separate row; RC-015 had **no check at all** | the same gate, applied to **both** `--holdout` and `--d15-holdout` |
+
+The gate decision is a pure function over gathered facts and is unit-tested
+without a git tree; those were the first tests in either file. A behavioural
+check confirmed the fail-closed property rather than only compilation: a
+deliberately dirtied `PREREG_RC014.md` made `--holdout` refuse with exit 3, and
+the file was restored.
+
+**Form note.** The check greps a heading rather than comparing timestamps,
+because RC-014's and RC-015's descendants live **inside** their own
+pre-registrations (§12 and §9) rather than in a separate file as RC-016's does,
+and because neither binary writes a science artifact whose mtime could anchor a
+chronology comparison. This is recorded so the difference from RC-016's
+five-condition gate is not mistaken for an oversight.
+
+## 8.2 No claim is retracted, and the audit's open question is resolved
+
+§6 recorded one unperformed check as the determinant of severity: whether the
+reproduction commands cited in `RESEARCH_INVENTORY.md` pass `--controls`
+together with `--science`.
+
+**That check has now been performed.** `RESEARCH_INVENTORY.md:453-454` records
+both recipes as `--controls` **first, then** `--science`, `--holdout` and the
+remaining modes. Controls therefore did precede the science invocations of the
+recorded runs.
+
+The consequence is the milder of the two branches §6 set out: the RC-014 and
+RC-015 gating gaps were **documentary in effect**, not a defect in what was run.
+**No RC-014 or RC-015 result is retracted or weakened.** RC-014's
+`I = +37.875, ρ = 1.737, p = 0.0078`, its 648/648 agreement and D-14a, and
+RC-015's `I_full = −44.125` with share 0.963 and the 0.963 → 0.740 → 0.440
+gradient all stand exactly as published.
+
+What changed is the guarantee, not the evidence: what was previously an operator
+convention backed by a written recipe is now enforced by the instruments
+themselves.
+
+## 8.3 What remains open in §3
+
+The RC-018 rows are unchanged and remain **ABSENT**. RC-018 was not repaired and
+was not re-run; its disposition is the one recorded in
+`RC018_PILOT_ABORT_RECORD.md`. RC-016 and RC-017 required no remediation.
+
+The §5 pattern statement stands as written, and `afd765c` does not erase it: the
+class recurred four times before it was closed in two of the four places.
+
+## 8.4 Consistency with §7
+
+§7 states that the audit proposes no repair and names no next cycle. That remains
+true of the audit. This addendum reports a repair that was carried out
+afterwards under separate direction; it is a record of what happened to the code,
+not a recommendation the audit made.
