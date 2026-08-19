@@ -65,6 +65,7 @@ const PILOT: [u64; 8] = [3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008];
 /// RC-017 frozen seed blocks (PREREG_RC017.md §3), completely disjoint from RC-016.
 const RC017_PILOT: [u64; 8] = [4001, 4002, 4003, 4004, 4005, 4006, 4007, 4008];
 const RC017_HELD_IN: [u64; 8] = [5001, 5002, 5003, 5004, 5005, 5006, 5007, 5008];
+const RC017_CONTROL_SEEDS: &[u64; 8] = &RC017_PILOT;
 const RC017_HELD_OUT: [u64; 8] = [6001, 6002, 6003, 6004, 6005, 6006, 6007, 6008];
 const RC017_CI_BOOTSTRAP_BASE_SEED: u64 = 20260901;
 const RC017_PREREG_PATH: &str = "research/PREREG_RC017.md";
@@ -650,7 +651,7 @@ fn plan_for_rc017(ir: &ProblemIR, x: &str, seed: u64) -> Plan {
                 repeat: 1,
             },
             PlanStep {
-                operator: x.into(),    // slot 2 substitution
+                operator: x.into(), // slot 2 substitution
                 phase: Phase::Exploit,
                 sweeps: SWEEPS,
                 repeat: 1,
@@ -730,28 +731,7 @@ fn contrast_rc017(
         let a = execute_rc017(ir, reg, &plan_for_rc017(ir, OP_A, s)).ok()?;
         let b = execute_rc017(ir, reg, &plan_for_rc017(ir, OP_B, s)).ok()?;
 
-        // Prefix identity check:
-        assert_eq!(
-            a.event0.best_energy.to_bits(),
-            b.event0.best_energy.to_bits(),
-            "prefix energy must match across arms"
-        );
-        assert_eq!(
-            a.event0.metrics.energy_entropy.to_bits(),
-            b.event0.metrics.energy_entropy.to_bits(),
-            "prefix entropy must match across arms"
-        );
-        assert_eq!(
-            a.event0.metrics.diversity.to_bits(),
-            b.event0.metrics.diversity.to_bits(),
-            "prefix diversity must match across arms"
-        );
-
-        let delta = b.y - a.y;
-        base.push(a.y);
-        other.push(b.y);
-
-        let s1 = deployed_non_bias_step_features(
+        let s1_a = deployed_non_bias_step_features(
             ir,
             &[a.event0.best_energy],
             0,
@@ -761,13 +741,33 @@ fn contrast_rc017(
             a.event0.acceptance,
             1.0 / 3.0,
         );
+        let s1_b = deployed_non_bias_step_features(
+            ir,
+            &[b.event0.best_energy],
+            0,
+            b.event0.metrics.mean_energy,
+            b.event0.metrics.energy_entropy,
+            b.event0.metrics.diversity,
+            b.event0.acceptance,
+            1.0 / 3.0,
+        );
+        assert!(
+            s1_a.iter()
+                .zip(&s1_b)
+                .all(|(x, y)| x.to_bits() == y.to_bits()),
+            "all 12 common-prefix S1 coordinates must match across arms"
+        );
+
+        let delta = b.y - a.y;
+        base.push(a.y);
+        other.push(b.y);
 
         snapshots.push(SnapshotRc017 {
             instance_index: inst_idx,
             instance_name: inst_name.to_string(),
             seed: s,
             delta,
-            s1,
+            s1: s1_a,
         });
     }
 
@@ -1061,7 +1061,7 @@ fn control_corpus() -> bool {
 /// STATE-INERT. Deleting it must leave best state and energy untouched — and it
 /// can only do so because the sole downstream operator draws nothing, so the
 /// stream shift the deletion causes reaches nobody.
-fn control_inert_replica_exchange(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
+fn control_inert_replica_exchange(ir: &ProblemIR, reg: &OperatorRegistry, seed: u64) -> bool {
     let mk = |with: bool| {
         let mut steps = Vec::new();
         if with {
@@ -1084,7 +1084,7 @@ fn control_inert_replica_exchange(ir: &ProblemIR, reg: &OperatorRegistry) -> boo
             num_replicas: REPLICAS,
             temperatures: geometric_ladder(REPLICAS, TEMP_HI, TEMP_LO),
             steps,
-            seed: HELD_IN[0],
+            seed,
             rationale: Default::default(),
         }
     };
@@ -1342,7 +1342,7 @@ fn run_controls(reg: &OperatorRegistry) -> bool {
     pass &= control_inert_zero_budget(&probe_ir, reg);
 
     println!("\n[inert B] structurally inert replica_exchange deletion");
-    pass &= control_inert_replica_exchange(&probe_ir, reg);
+    pass &= control_inert_replica_exchange(&probe_ir, reg, HELD_IN[0]);
 
     println!("\n[operator positive] production operators vs an independent reference");
     pass &= control_synthetic_operator(reg);
@@ -1395,7 +1395,7 @@ fn control_ci_seed_space_rc017() -> bool {
 /// RC-017 Control 1: Null replacement — substituting reference for itself in full 3-step plan.
 fn control_null_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
     let mut ok = true;
-    for &s in RC017_HELD_IN.iter().take(3) {
+    for &s in RC017_CONTROL_SEEDS.iter().take(3) {
         let (a, b) = match (
             execute_rc017(ir, reg, &plan_for_rc017(ir, OP_A, s)),
             execute_rc017(ir, reg, &plan_for_rc017(ir, OP_A, s)),
@@ -1418,7 +1418,7 @@ fn control_prefix_identity_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool
     let init = vec![0u8; ir.n];
     let temps = geometric_ladder(REPLICAS, TEMP_HI, TEMP_LO);
 
-    for &s in RC017_HELD_IN.iter().take(3) {
+    for &s in RC017_CONTROL_SEEDS.iter().take(3) {
         let prefix_plan = Plan {
             name: "rc017-prefix".into(),
             backend,
@@ -1471,8 +1471,18 @@ fn control_prefix_identity_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool
         };
         let mut probe_st_m = boxed_state(ir, backend, REPLICAS, &init);
         let mut probe_st_g = boxed_state(ir, backend, REPLICAS, &init);
-        op.apply(probe_st_m.as_mut(), &view, &mut rng_m, Budget { sweeps: SWEEPS });
-        op.apply(probe_st_g.as_mut(), &view, &mut rng_g, Budget { sweeps: SWEEPS });
+        op.apply(
+            probe_st_m.as_mut(),
+            &view,
+            &mut rng_m,
+            Budget { sweeps: SWEEPS },
+        );
+        op.apply(
+            probe_st_g.as_mut(),
+            &view,
+            &mut rng_g,
+            Budget { sweeps: SWEEPS },
+        );
         let probe_m: u64 = rng_m.gen();
         let probe_g: u64 = rng_g.gen();
         let rng_same = probe_m == probe_g;
@@ -1526,7 +1536,7 @@ fn control_alignment_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
     };
     let probe = |op: &str, shift: bool| -> u64 {
         let mut st = boxed_state(ir, backend, REPLICAS, &init);
-        let mut rng = ChaCha8Rng::seed_from_u64(RC017_HELD_IN[0]);
+        let mut rng = ChaCha8Rng::seed_from_u64(RC017_CONTROL_SEEDS[0]);
         // Prefix metropolis@16:
         let mut prefix_op = reg.lookup(OP_A).expect("registered");
         let prefix_view = RuntimeView {
@@ -1536,7 +1546,12 @@ fn control_alignment_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
             recent_acceptance: 0.0,
             remaining_ms: f64::INFINITY,
         };
-        prefix_op.apply(st.as_mut(), &prefix_view, &mut rng, Budget { sweeps: SWEEPS });
+        prefix_op.apply(
+            st.as_mut(),
+            &prefix_view,
+            &mut rng,
+            Budget { sweeps: SWEEPS },
+        );
 
         if shift {
             let _: u32 = rng.gen();
@@ -1594,7 +1609,7 @@ fn control_inert_zero_budget_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bo
                 repeat: 1,
             },
         ],
-        seed: RC017_HELD_IN[0],
+        seed: RC017_CONTROL_SEEDS[0],
         rationale: Default::default(),
     };
     let (a, b) = match (
@@ -1620,7 +1635,7 @@ fn control_inert_zero_budget_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bo
 /// and energy bit-identical compared to an unrecorded execution.
 fn control_recorder_non_interference_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
     let mut ok = true;
-    for &s in RC017_HELD_IN.iter().take(3) {
+    for &s in RC017_CONTROL_SEEDS.iter().take(3) {
         let plan_m = plan_for_rc017(ir, OP_A, s);
         let plan_g = plan_for_rc017(ir, OP_B, s);
 
@@ -1663,8 +1678,10 @@ fn control_recorder_non_interference_rc017(ir: &ProblemIR, reg: &OperatorRegistr
             Err(_) => return false,
         };
 
-        let m_same = out_m.y.to_bits() == base_m.y.to_bits() && out_m.best_state == base_m.best_state;
-        let g_same = out_g.y.to_bits() == base_g.y.to_bits() && out_g.best_state == base_g.best_state;
+        let m_same =
+            out_m.y.to_bits() == base_m.y.to_bits() && out_m.best_state == base_m.best_state;
+        let g_same =
+            out_g.y.to_bits() == base_g.y.to_bits() && out_g.best_state == base_g.best_state;
         let same = m_same && g_same;
         println!("    seed {s}: recorder_m_same={m_same} recorder_g_same={g_same}");
         ok &= same;
@@ -1676,6 +1693,17 @@ fn control_recorder_non_interference_rc017(ir: &ProblemIR, reg: &OperatorRegistr
 /// from its frozen TSV/hash and exact seed replay.
 fn control_rc016_historical_regression(reg: &OperatorRegistry) -> bool {
     let dir = "experiments/rc016";
+    let heldin_path = format!("{dir}/rc016_heldin.tsv");
+    let heldout_path = format!("{dir}/rc016_heldout.tsv");
+    let hashes_ok = match (std::fs::read(&heldin_path), std::fs::read(&heldout_path)) {
+        (Ok(hi_bytes), Ok(ho_bytes)) => {
+            sha256_hex(&hi_bytes)
+                == "7ab1e47ad187d1f91ee003cb5cfb090a3d420b369ce2460d9f4cfbaf3a9d904e"
+                && sha256_hex(&ho_bytes)
+                    == "8e028f509110742980c268862a38babd67e181ea074562a13e50c8a74068862c"
+        }
+        _ => false,
+    };
     let Some(hi) = read_rows(dir, "heldin") else {
         eprintln!("    rc016_heldin.tsv unreadable in {dir}");
         return false;
@@ -1703,14 +1731,16 @@ fn control_rc016_historical_regression(reg: &OperatorRegistry) -> bool {
         Some(p) => p,
         None => return false,
     };
-    let replay_ok = (p.mean_effect() - 30.8750).abs() < 1e-4 && (p.d_seed() - 11.45098).abs() < 1e-3;
+    let replay_ok =
+        (p.mean_effect() - 30.8750).abs() < 1e-4 && (p.d_seed() - 11.45098).abs() < 1e-3;
 
     let (v, c) = decide(&hi, &ho);
     let verdict_ok = v == Verdict::SignConstant && c.k == 25;
 
-    let ok = g1_hi_ok && g1_ho_ok && replay_ok && verdict_ok;
+    let ok = hashes_ok && g1_hi_ok && g1_ho_ok && replay_ok && verdict_ok;
     println!(
-        "    rc016 frozen census K={}/30 verdict={:?} G1_replay_pass={} -> {}",
+        "    rc016 hashes_ok={} frozen census K={}/30 verdict={:?} G1_replay_pass={} -> {}",
+        hashes_ok,
         c.k,
         v,
         replay_ok,
@@ -1726,7 +1756,9 @@ fn run_controls_rc017(reg: &OperatorRegistry) -> bool {
     println!("[corpus] 30 enumerated instances present, in §4 order");
     pass &= control_corpus();
 
-    println!("\n[ci-seeds] RC-017 seed space is collision-free and disjoint from RC-016 & run seeds");
+    println!(
+        "\n[ci-seeds] RC-017 seed space is collision-free and disjoint from RC-016 & run seeds"
+    );
     pass &= control_ci_seed_space_rc017();
 
     println!("\n[arithmetic] synthetic arithmetic positive + TIE-BLOCKED guard");
@@ -1753,7 +1785,7 @@ fn run_controls_rc017(reg: &OperatorRegistry) -> bool {
     pass &= control_inert_zero_budget_rc017(&probe_ir, reg);
 
     println!("\n[clause 5b: structurally inert] replica_exchange deletion from all-zeros returns identical state/energy");
-    pass &= control_inert_replica_exchange(&probe_ir, reg);
+    pass &= control_inert_replica_exchange(&probe_ir, reg, RC017_CONTROL_SEEDS[0]);
 
     println!("\n[clause 6: operator positive] production operators vs independent reference (648 fixtures)");
     pass &= control_synthetic_operator(reg);
@@ -1761,7 +1793,9 @@ fn run_controls_rc017(reg: &OperatorRegistry) -> bool {
     println!("\n[clause 7: recorder non-interference] StepEvent[0] sensor read leaves final state and energy bit-identical");
     pass &= control_recorder_non_interference_rc017(&probe_ir, reg);
 
-    println!("\n[clause 8: historical RC-016 regression] frozen RC-016 TSV/replay reproduces baseline");
+    println!(
+        "\n[clause 8: historical RC-016 regression] frozen RC-016 TSV/replay reproduces baseline"
+    );
     pass &= control_rc016_historical_regression(reg);
 
     println!(
@@ -2633,8 +2667,8 @@ fn write_instance_means_rc017(dir: &str, tag: &str, snapshots: &[SnapshotRc017])
         let count = matching.len() as f64;
         let mean_delta = matching.iter().map(|sn| sn.delta).sum::<f64>() / count;
         let mut mean_s1 = [0.0; 12];
-        for k in 0..12 {
-            mean_s1[k] = matching.iter().map(|sn| sn.s1[k]).sum::<f64>() / count;
+        for (k, value) in mean_s1.iter_mut().enumerate() {
+            *value = matching.iter().map(|sn| sn.s1[k]).sum::<f64>() / count;
         }
         s.push_str(&format!(
             "{}\t{}\t{}\t{:.8}\t\
@@ -2766,9 +2800,9 @@ fn read_rows_rc017(dir: &str, filename: &str) -> Option<Vec<Row>> {
     Some(out)
 }
 
-fn find_exact_collisions_rc017<'a>(
-    snapshots: &'a [SnapshotRc017],
-) -> Vec<(&'a SnapshotRc017, &'a SnapshotRc017)> {
+fn find_exact_collisions_rc017(
+    snapshots: &[SnapshotRc017],
+) -> Vec<(&SnapshotRc017, &SnapshotRc017)> {
     let mut collisions = Vec::new();
     for i in 0..snapshots.len() {
         for j in (i + 1)..snapshots.len() {
@@ -2835,12 +2869,14 @@ fn descendant_gate_rc017(dir: &str) -> bool {
     ok &= heldin_done;
 
     let desc_exists = std::path::Path::new(RC017_DESCENDANT_PATH).exists();
+    let desc_tracked = git_succeeds(&["ls-files", "--error-unmatch", RC017_DESCENDANT_PATH]);
+    let desc_clean = git_succeeds(&["diff", "--quiet", "HEAD", "--", RC017_DESCENDANT_PATH]);
     let desc_commit = git_commit_time(RC017_DESCENDANT_PATH);
     println!(
-        "    [3] descendant {RC017_DESCENDANT_PATH} exists={desc_exists} committed={}",
+        "    [3] descendant {RC017_DESCENDANT_PATH} exists={desc_exists} tracked={desc_tracked} clean={desc_clean} committed={}",
         desc_commit.is_some()
     );
-    ok &= desc_exists && desc_commit.is_some();
+    ok &= desc_exists && desc_tracked && desc_clean && desc_commit.is_some();
 
     match (desc_commit, mtime_secs(&heldin)) {
         (Some(dc), Some(hm)) => {
@@ -2914,9 +2950,7 @@ fn report_verdict_rc017(
             for g in ['A', 'B', 'C', 'D', 'E', 'F'] {
                 let m: Vec<&&Row> = qual.iter().filter(|r| r.group == Some(g)).collect();
                 if m.iter().any(|r| r.i > 0.0) && m.iter().any(|r| r.i < 0.0) {
-                    println!(
-                        "    matched group {g}: opposite-signed qualifying members"
-                    );
+                    println!("    matched group {g}: opposite-signed qualifying members");
                     for x in &m {
                         println!("      {} I={:+.4}", x.name, x.i);
                     }
@@ -3745,7 +3779,9 @@ mod tests {
     /// non-zero delta is detected as a counterexample.
     #[test]
     fn rc017_exact_collision_detection_finds_bit_identical_opposite_signs() {
-        let s1: [f64; 12] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0];
+        let s1: [f64; 12] = [
+            1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0,
+        ];
         let snaps = vec![
             SnapshotRc017 {
                 instance_index: 0,
@@ -3772,7 +3808,9 @@ mod tests {
     /// must NOT count as exact collisions.
     #[test]
     fn rc017_exact_collision_ignores_same_sign_or_near_collisions() {
-        let s1: [f64; 12] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0];
+        let s1: [f64; 12] = [
+            1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0,
+        ];
         let mut s2 = s1;
         // Flip 1 LSB in coordinate 5:
         s2[5] = f64::from_bits(s1[5].to_bits() ^ 1);
@@ -3825,6 +3863,24 @@ mod tests {
         );
     }
 
+    #[test]
+    fn rc017_controls_cannot_consume_science_seeds_and_descendant_requires_clean_git_state() {
+        assert_eq!(RC017_CONTROL_SEEDS, &RC017_PILOT);
+        assert!(RC017_CONTROL_SEEDS
+            .iter()
+            .all(|s| !RC017_HELD_IN.contains(s) && !RC017_HELD_OUT.contains(s)));
+
+        let source = include_str!("exp_sensor_sufficiency.rs");
+        let gate = source
+            .split("fn descendant_gate_rc017")
+            .nth(1)
+            .and_then(|s| s.split("fn report_verdict_rc017").next())
+            .expect("RC-017 descendant gate source section");
+        assert!(gate.contains("ls-files"));
+        assert!(gate.contains("diff"));
+        assert!(gate.contains("--quiet"));
+    }
+
     /// Provenance gate: prereg must be committed before any existing held-in artifact.
     #[test]
     fn rc017_prereg_gate_verifies_provenance() {
@@ -3864,7 +3920,7 @@ mod tests {
                 instance_index: 29,
                 instance_name: "G70".into(),
                 seed: 5008,
-                delta: -9.8765432109876543e20,
+                delta: -9.876_543_210_987_654e20,
                 s1,
             },
         ];

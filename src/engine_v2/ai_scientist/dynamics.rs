@@ -629,6 +629,9 @@ mod tests {
         // spread = (-95.0 - (-100.0)) / 100.0 = 5.0 / 100.0 = 0.05
         assert!((nb[10] - 0.05).abs() < 1e-12, "spread calculation");
         // best_norm = -100.0 / (100.0 + 1.0) = -100.0 / 101.0
-        assert!((nb[11] - (-100.0 / 101.0)).abs() < 1e-12, "best_norm calculation");
+        assert!(
+            (nb[11] - (-100.0 / 101.0)).abs() < 1e-12,
+            "best_norm calculation"
+        );
     }
 }
