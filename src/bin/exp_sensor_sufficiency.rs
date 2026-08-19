@@ -70,6 +70,8 @@ const RC017_HELD_OUT: [u64; 8] = [6001, 6002, 6003, 6004, 6005, 6006, 6007, 6008
 const RC017_CI_BOOTSTRAP_BASE_SEED: u64 = 20260901;
 const RC017_PREREG_PATH: &str = "research/PREREG_RC017.md";
 const RC017_DESCENDANT_PATH: &str = "research/PREREG_RC017_DESCENDANT.md";
+const RC017_ENTROPY_PILOT_REPEATS: usize = 16;
+const RC017_ENTROPY_PILOT_DIR: &str = "experiments/rc017_entropy_pilot";
 
 /// Amendment 1 §A6.2.
 const POWER_BOOTSTRAP_SEED: u64 = 20260819;
@@ -775,6 +777,132 @@ fn contrast_rc017(
         paired: Paired { base, other },
         snapshots,
     })
+}
+
+fn stable_digest_u64s(values: &[u64]) -> String {
+    let mut bytes = Vec::with_capacity(values.len() * 8);
+    for value in values {
+        bytes.extend_from_slice(&value.to_le_bytes());
+    }
+    sha256_hex(&bytes)
+}
+
+fn entropy_pilot_row(
+    ir: &ProblemIR,
+    reg: &OperatorRegistry,
+    seed: u64,
+) -> Result<(u64, String, String, u64), String> {
+    assert!(RC017_PILOT.contains(&seed));
+    assert!(!RC017_HELD_IN.contains(&seed) && !RC017_HELD_OUT.contains(&seed));
+    let plan = Plan {
+        name: "rc017-entropy-pilot".into(),
+        backend: DecisionEngine::analyze(ir).select_backend(),
+        num_replicas: REPLICAS,
+        temperatures: geometric_ladder(REPLICAS, TEMP_HI, TEMP_LO),
+        steps: vec![PlanStep {
+            operator: OP_A.into(),
+            phase: Phase::Exploit,
+            sweeps: SWEEPS,
+            repeat: 1,
+        }],
+        seed,
+        rationale: Default::default(),
+    };
+    let init = vec![0u8; ir.n];
+    let mut state = boxed_state(ir, plan.backend, REPLICAS, &init);
+    let mut rt = Runtime::new(RunContext::new(seed), &plan);
+    let rec = rt.run(&plan, state.as_mut(), reg, ir)?;
+    let event = rec.events.first().ok_or("pilot prefix emitted no event")?;
+
+    let mut energies = vec![0.0; REPLICAS];
+    state.energies_into(&mut energies);
+    let ledger_bits: Vec<u64> = energies.iter().map(|e| e.to_bits()).collect();
+    let ledger_digest = stable_digest_u64s(&ledger_bits);
+
+    let mut sorted = ledger_bits;
+    sorted.sort_unstable();
+    let mut histogram = Vec::new();
+    let mut i = 0;
+    while i < sorted.len() {
+        let key = sorted[i];
+        let mut j = i + 1;
+        while j < sorted.len() && sorted[j] == key {
+            j += 1;
+        }
+        histogram.push(key);
+        histogram.push((j - i) as u64);
+        i = j;
+    }
+    let histogram_digest = stable_digest_u64s(&histogram);
+    Ok((
+        state.digest().0,
+        ledger_digest,
+        histogram_digest,
+        event.metrics.energy_entropy.to_bits(),
+    ))
+}
+
+fn run_entropy_pilot(reg: &OperatorRegistry) -> bool {
+    let inst = CORPUS.iter().find(|x| x.name == "G15").expect("G15 frozen");
+    let ir = match load(inst.path) {
+        Ok(ir) => ir,
+        Err(e) => {
+            eprintln!("entropy pilot cannot load G15: {e}");
+            return false;
+        }
+    };
+    let mut out = String::from(
+        "seed\trepetition\tstate_digest\tledger_sha256\thistogram_sha256\tentropy_bits\n",
+    );
+    let mut reproduced = false;
+    for &seed in &RC017_PILOT {
+        let mut rows = Vec::new();
+        for repetition in 0..RC017_ENTROPY_PILOT_REPEATS {
+            let row = match entropy_pilot_row(&ir, reg, seed) {
+                Ok(row) => row,
+                Err(e) => {
+                    eprintln!("entropy pilot failed seed={seed} rep={repetition}: {e}");
+                    return false;
+                }
+            };
+            out.push_str(&format!(
+                "{seed}\t{repetition}\t{:016x}\t{}\t{}\t{:016x}\n",
+                row.0, row.1, row.2, row.3
+            ));
+            rows.push(row);
+        }
+        for a in 0..rows.len() {
+            for b in (a + 1)..rows.len() {
+                let same_inputs =
+                    rows[a].0 == rows[b].0 && rows[a].1 == rows[b].1 && rows[a].2 == rows[b].2;
+                reproduced |= same_inputs && rows[a].3 != rows[b].3;
+            }
+        }
+        let unique_entropy: std::collections::BTreeSet<u64> =
+            rows.iter().map(|row| row.3).collect();
+        println!(
+            "  seed {seed}: {} entropy bit patterns",
+            unique_entropy.len()
+        );
+    }
+    if let Err(e) = std::fs::create_dir_all(RC017_ENTROPY_PILOT_DIR) {
+        eprintln!("cannot create pilot directory: {e}");
+        return false;
+    }
+    let path = format!("{RC017_ENTROPY_PILOT_DIR}/legacy_v0.tsv");
+    if let Err(e) = std::fs::write(&path, out) {
+        eprintln!("cannot write {path}: {e}");
+        return false;
+    }
+    println!(
+        "  RC-017 entropy pilot: {} ({path})",
+        if reproduced {
+            "REPRODUCED"
+        } else {
+            "NOT REPRODUCED"
+        }
+    );
+    reproduced
 }
 
 // --------------------------------------------------------------- sha256
@@ -3018,6 +3146,13 @@ fn main() {
     let dir: String = arg("--dir", "experiments/rc016".to_string());
     let rc017_dir: String = arg("--rc017-dir", "experiments/rc017".to_string());
 
+    if flag("--rc017-entropy-pilot") {
+        if !run_entropy_pilot(&reg) {
+            std::process::exit(6);
+        }
+        return;
+    }
+
     let is_rc017 = flag("--rc017")
         || flag("--rc017-controls")
         || flag("--rc017-science")
@@ -3879,6 +4014,23 @@ mod tests {
         assert!(gate.contains("ls-files"));
         assert!(gate.contains("diff"));
         assert!(gate.contains("--quiet"));
+    }
+
+    #[test]
+    fn rc017_entropy_pilot_is_frozen_to_pilot_seeds() {
+        assert_eq!(RC017_ENTROPY_PILOT_REPEATS, 16);
+        assert!(RC017_PILOT
+            .iter()
+            .all(|s| !RC017_HELD_IN.contains(s) && !RC017_HELD_OUT.contains(s)));
+        let source = include_str!("exp_sensor_sufficiency.rs");
+        let pilot = source
+            .split("fn entropy_pilot_row")
+            .nth(1)
+            .and_then(|s| s.split("fn run_entropy_pilot").next())
+            .expect("entropy pilot source section");
+        assert!(pilot.contains("RC017_PILOT.contains"));
+        assert!(pilot.contains("!RC017_HELD_IN.contains"));
+        assert!(pilot.contains("!RC017_HELD_OUT.contains"));
     }
 
     /// Provenance gate: prereg must be committed before any existing held-in artifact.
