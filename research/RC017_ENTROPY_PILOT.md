@@ -81,3 +81,18 @@ coordinates between the exact full M/G execution contexts.
 The entropy hypothesis is therefore not established by the frozen pilot
 evidence. Per the kill criterion, ADR-0010 is not accepted, Runtime is not
 changed, and RC-017 diagnosis stops here.
+
+### Amendment 2 — protocol-correct exact-context replay
+
+Written after independent review and before Amendment-2 code or output. The
+first exact-context harness instantiated the required full plans but allowed
+them to finish, transiently extracting their final `RunRecord` fields. It did
+not print or persist those outcomes, but this violated Amendment 1's stronger
+ban on computing/storing final-horizon outcomes. Therefore
+`exact_context_v0.tsv` is retained as `PROTOCOL-INVALID` and cannot support the
+verdict above.
+
+One correction is permitted: instantiate the same full M/G plans, attach a
+deterministic controller returning `Stop` after `StepEvent[0]`, and return only
+that event. Use the same G15 and seeds `4001–4008`; write a new artifact without
+overwriting the invalid one. No further amendment or widening is permitted.
