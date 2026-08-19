@@ -32,6 +32,7 @@
 //! cargo run --release --bin exp_sensor_sufficiency -- --verdict
 //! ```
 
+use ising_engine::engine_v2::ai_scientist::dynamics::deployed_non_bias_step_features;
 use ising_engine::engine_v2::context::RunContext;
 use ising_engine::engine_v2::decision::{geometric_ladder, DecisionEngine};
 use ising_engine::engine_v2::evolution::boxed_state;
@@ -40,7 +41,7 @@ use ising_engine::engine_v2::ir::ProblemIR;
 use ising_engine::engine_v2::operator::Budget;
 use ising_engine::engine_v2::plan::{Phase, Plan, PlanStep};
 use ising_engine::engine_v2::registry::OperatorRegistry;
-use ising_engine::engine_v2::runtime::{Runtime, RuntimeView};
+use ising_engine::engine_v2::runtime::{Runtime, RuntimeView, StepEvent};
 use ising_engine::engine_v2::state::SpinState;
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
@@ -60,6 +61,14 @@ const HELD_IN: [u64; 8] = [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008];
 const HELD_OUT: [u64; 8] = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008];
 /// Disjoint from both, so calibration cannot contaminate either block.
 const PILOT: [u64; 8] = [3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008];
+
+/// RC-017 frozen seed blocks (PREREG_RC017.md §3), completely disjoint from RC-016.
+const RC017_PILOT: [u64; 8] = [4001, 4002, 4003, 4004, 4005, 4006, 4007, 4008];
+const RC017_HELD_IN: [u64; 8] = [5001, 5002, 5003, 5004, 5005, 5006, 5007, 5008];
+const RC017_HELD_OUT: [u64; 8] = [6001, 6002, 6003, 6004, 6005, 6006, 6007, 6008];
+const RC017_CI_BOOTSTRAP_BASE_SEED: u64 = 20260901;
+const RC017_PREREG_PATH: &str = "research/PREREG_RC017.md";
+const RC017_DESCENDANT_PATH: &str = "research/PREREG_RC017_DESCENDANT.md";
 
 /// Amendment 1 §A6.2.
 const POWER_BOOTSTRAP_SEED: u64 = 20260819;
@@ -368,6 +377,34 @@ impl Block {
     }
 }
 
+/// RC-017 blocks: held-in is block 0, held-out block 1 (PREREG_RC017.md §3).
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum BlockRc017 {
+    HeldIn,
+    HeldOut,
+}
+
+impl BlockRc017 {
+    fn index(self) -> u64 {
+        match self {
+            BlockRc017::HeldIn => 0,
+            BlockRc017::HeldOut => 1,
+        }
+    }
+    fn seeds(self) -> &'static [u64; 8] {
+        match self {
+            BlockRc017::HeldIn => &RC017_HELD_IN,
+            BlockRc017::HeldOut => &RC017_HELD_OUT,
+        }
+    }
+    fn tag(self) -> &'static str {
+        match self {
+            BlockRc017::HeldIn => "rc017_heldin",
+            BlockRc017::HeldOut => "rc017_heldout",
+        }
+    }
+}
+
 // ================================================================ STEP 2 + 3
 // Statistics, copied verbatim from the RC-014 instrument (validated there by the
 // synthetic arithmetic positive), plus the zero-difference count and
@@ -595,6 +632,149 @@ fn contrast(
         other.push(b.y);
     }
     Some(Paired { base, other })
+}
+
+/// RC-017 pre-registered plan: `[metropolis@16, X@16, greedy_descent@16]`,
+/// deployed ladder, legacy all-zeros init (PREREG_RC017.md §1).
+fn plan_for_rc017(ir: &ProblemIR, x: &str, seed: u64) -> Plan {
+    Plan {
+        name: "rc017".into(),
+        backend: DecisionEngine::analyze(ir).select_backend(),
+        num_replicas: REPLICAS,
+        temperatures: geometric_ladder(REPLICAS, TEMP_HI, TEMP_LO),
+        steps: vec![
+            PlanStep {
+                operator: OP_A.into(), // metropolis_sweep@16 prefix
+                phase: Phase::Exploit,
+                sweeps: SWEEPS,
+                repeat: 1,
+            },
+            PlanStep {
+                operator: x.into(),    // slot 2 substitution
+                phase: Phase::Exploit,
+                sweeps: SWEEPS,
+                repeat: 1,
+            },
+            PlanStep {
+                operator: "greedy_descent".into(),
+                phase: Phase::Exploit,
+                sweeps: SWEEPS,
+                repeat: 1,
+            },
+        ],
+        seed,
+        rationale: Default::default(),
+    }
+}
+
+#[allow(dead_code)]
+struct RunOutRc017 {
+    y: f64,
+    best_state: Vec<u8>,
+    ms: f64,
+    event0: StepEvent,
+}
+
+fn execute_rc017(
+    ir: &ProblemIR,
+    reg: &OperatorRegistry,
+    plan: &Plan,
+) -> Result<RunOutRc017, String> {
+    let init = vec![0u8; ir.n];
+    let mut state = boxed_state(ir, plan.backend, plan.num_replicas, &init);
+    let mut rt = Runtime::new(RunContext::new(plan.seed), plan);
+    let t0 = Instant::now();
+    let rec = rt.run(plan, state.as_mut(), reg, ir)?;
+    let ms = t0.elapsed().as_secs_f64() * 1000.0;
+    let event0 = rec
+        .events
+        .first()
+        .cloned()
+        .ok_or_else(|| "missing step 0 event in rc017 execution".to_string())?;
+    Ok(RunOutRc017 {
+        y: rec.best_energy,
+        best_state: rec.best_state.clone(),
+        ms,
+        event0,
+    })
+}
+
+#[derive(Debug, Clone)]
+struct SnapshotRc017 {
+    instance_index: usize,
+    instance_name: String,
+    seed: u64,
+    delta: f64,
+    s1: [f64; 12],
+}
+
+struct ContrastRc017Out {
+    paired: Paired,
+    snapshots: Vec<SnapshotRc017>,
+}
+
+/// One RC-017 contrast: evaluates Arm M and Arm G, verifies common prefix event0
+/// identity, records individual per-seed deltas and extracts the deployed S1 vector.
+fn contrast_rc017(
+    ir: &ProblemIR,
+    reg: &OperatorRegistry,
+    inst_idx: usize,
+    inst_name: &str,
+    seeds: &[u64],
+) -> Option<ContrastRc017Out> {
+    let mut base = Vec::new();
+    let mut other = Vec::new();
+    let mut snapshots = Vec::new();
+
+    for &s in seeds {
+        let a = execute_rc017(ir, reg, &plan_for_rc017(ir, OP_A, s)).ok()?;
+        let b = execute_rc017(ir, reg, &plan_for_rc017(ir, OP_B, s)).ok()?;
+
+        // Prefix identity check:
+        assert_eq!(
+            a.event0.best_energy.to_bits(),
+            b.event0.best_energy.to_bits(),
+            "prefix energy must match across arms"
+        );
+        assert_eq!(
+            a.event0.metrics.energy_entropy.to_bits(),
+            b.event0.metrics.energy_entropy.to_bits(),
+            "prefix entropy must match across arms"
+        );
+        assert_eq!(
+            a.event0.metrics.diversity.to_bits(),
+            b.event0.metrics.diversity.to_bits(),
+            "prefix diversity must match across arms"
+        );
+
+        let delta = b.y - a.y;
+        base.push(a.y);
+        other.push(b.y);
+
+        let s1 = deployed_non_bias_step_features(
+            ir,
+            &[a.event0.best_energy],
+            0,
+            a.event0.metrics.mean_energy,
+            a.event0.metrics.energy_entropy,
+            a.event0.metrics.diversity,
+            a.event0.acceptance,
+            1.0 / 3.0,
+        );
+
+        snapshots.push(SnapshotRc017 {
+            instance_index: inst_idx,
+            instance_name: inst_name.to_string(),
+            seed: s,
+            delta,
+            s1,
+        });
+    }
+
+    Some(ContrastRc017Out {
+        paired: Paired { base, other },
+        snapshots,
+    })
 }
 
 // --------------------------------------------------------------- sha256
@@ -1174,6 +1354,419 @@ fn run_controls(reg: &OperatorRegistry) -> bool {
         } else {
             "FAILED — kill criterion 3: instrument invalid; nothing is evidence about H-16"
         }
+    );
+    pass
+}
+
+// ------------------------------------------------------------- RC-017 controls
+
+fn control_ci_seed_space_rc017() -> bool {
+    let mut seeds: Vec<u64> = Vec::new();
+    for i in 0..CORPUS.len() as u64 {
+        for b in 0..2u64 {
+            seeds.push(RC017_CI_BOOTSTRAP_BASE_SEED + 2 * i + b);
+        }
+    }
+    let mut uniq = seeds.clone();
+    uniq.sort_unstable();
+    uniq.dedup();
+    let distinct = uniq.len() == seeds.len();
+    let disjoint_rc016 = !seeds.contains(&CI_BOOTSTRAP_BASE_SEED)
+        && !seeds.contains(&POWER_BOOTSTRAP_SEED)
+        && seeds.iter().all(|s| {
+            !RC017_HELD_IN.contains(s)
+                && !RC017_HELD_OUT.contains(s)
+                && !RC017_PILOT.contains(s)
+                && !HELD_IN.contains(s)
+                && !HELD_OUT.contains(s)
+                && !PILOT.contains(s)
+        });
+    println!(
+        "    {} seeds, {} distinct, range {}..{}, disjoint: {}",
+        seeds.len(),
+        uniq.len(),
+        uniq.first().copied().unwrap_or(0),
+        uniq.last().copied().unwrap_or(0),
+        disjoint_rc016
+    );
+    distinct && disjoint_rc016
+}
+
+/// RC-017 Control 1: Null replacement — substituting reference for itself in full 3-step plan.
+fn control_null_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
+    let mut ok = true;
+    for &s in RC017_HELD_IN.iter().take(3) {
+        let (a, b) = match (
+            execute_rc017(ir, reg, &plan_for_rc017(ir, OP_A, s)),
+            execute_rc017(ir, reg, &plan_for_rc017(ir, OP_A, s)),
+        ) {
+            (Ok(a), Ok(b)) => (a, b),
+            _ => return false,
+        };
+        let same = a.y.to_bits() == b.y.to_bits() && a.best_state == b.best_state;
+        println!("    seed {s}: Y={:.4} replay-identical={}", a.y, same);
+        ok &= same;
+    }
+    ok
+}
+
+/// RC-017 Control 2: Prefix identity — independently executed common prefixes
+/// have identical state digest, ledger digest & audit, RNG probe, and StepEvent[0] sensor bits.
+fn control_prefix_identity_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
+    let mut ok = true;
+    let backend = DecisionEngine::analyze(ir).select_backend();
+    let init = vec![0u8; ir.n];
+    let temps = geometric_ladder(REPLICAS, TEMP_HI, TEMP_LO);
+
+    for &s in RC017_HELD_IN.iter().take(3) {
+        let prefix_plan = Plan {
+            name: "rc017-prefix".into(),
+            backend,
+            num_replicas: REPLICAS,
+            temperatures: temps.clone(),
+            steps: vec![PlanStep {
+                operator: OP_A.into(),
+                phase: Phase::Exploit,
+                sweeps: SWEEPS,
+                repeat: 1,
+            }],
+            seed: s,
+            rationale: Default::default(),
+        };
+
+        let mut st_m = boxed_state(ir, backend, REPLICAS, &init);
+        let mut rt_m = Runtime::new(RunContext::new(s), &prefix_plan);
+        let rec_m = rt_m.run(&prefix_plan, st_m.as_mut(), reg, ir).unwrap();
+
+        let mut st_g = boxed_state(ir, backend, REPLICAS, &init);
+        let mut rt_g = Runtime::new(RunContext::new(s), &prefix_plan);
+        let rec_g = rt_g.run(&prefix_plan, st_g.as_mut(), reg, ir).unwrap();
+
+        // 1. State digest:
+        let state_same = st_m.digest() == st_g.digest();
+
+        // 2. Ledger digest & audit:
+        let mut energies_m = vec![0.0; REPLICAS];
+        let mut energies_g = vec![0.0; REPLICAS];
+        st_m.energies_into(&mut energies_m);
+        st_g.energies_into(&mut energies_g);
+        let ledger_same = energies_m
+            .iter()
+            .zip(&energies_g)
+            .all(|(a, b)| a.to_bits() == b.to_bits())
+            && rec_m.best_energy.to_bits() == rec_g.best_energy.to_bits()
+            && st_m.audit() == 0.0
+            && st_g.audit() == 0.0;
+
+        // 3. RNG probe:
+        let mut rng_m = ChaCha8Rng::seed_from_u64(s);
+        let mut rng_g = ChaCha8Rng::seed_from_u64(s);
+        let mut op = reg.lookup(OP_A).unwrap();
+        let view = RuntimeView {
+            iteration: 0,
+            temperatures: &temps,
+            num_replicas: REPLICAS,
+            recent_acceptance: 0.0,
+            remaining_ms: f64::INFINITY,
+        };
+        let mut probe_st_m = boxed_state(ir, backend, REPLICAS, &init);
+        let mut probe_st_g = boxed_state(ir, backend, REPLICAS, &init);
+        op.apply(probe_st_m.as_mut(), &view, &mut rng_m, Budget { sweeps: SWEEPS });
+        op.apply(probe_st_g.as_mut(), &view, &mut rng_g, Budget { sweeps: SWEEPS });
+        let probe_m: u64 = rng_m.gen();
+        let probe_g: u64 = rng_g.gen();
+        let rng_same = probe_m == probe_g;
+
+        // 4. StepEvent[0] sensor bits:
+        let ev_m = &rec_m.events[0];
+        let ev_g = &rec_g.events[0];
+        let s1_m = deployed_non_bias_step_features(
+            ir,
+            &[ev_m.best_energy],
+            0,
+            ev_m.metrics.mean_energy,
+            ev_m.metrics.energy_entropy,
+            ev_m.metrics.diversity,
+            ev_m.acceptance,
+            1.0 / 3.0,
+        );
+        let s1_g = deployed_non_bias_step_features(
+            ir,
+            &[ev_g.best_energy],
+            0,
+            ev_g.metrics.mean_energy,
+            ev_g.metrics.energy_entropy,
+            ev_g.metrics.diversity,
+            ev_g.acceptance,
+            1.0 / 3.0,
+        );
+        let sensor_same = (0..12).all(|k| s1_m[k].to_bits() == s1_g[k].to_bits());
+
+        let same = state_same && ledger_same && rng_same && sensor_same;
+        println!(
+            "    seed {s}: state_digest={:?} ledger_same={ledger_same} rng_same={rng_same} sensor_same={sensor_same}",
+            st_m.digest()
+        );
+        ok &= same;
+    }
+    ok
+}
+
+/// RC-017 Control 3: Slot-2 draw alignment & shift detection after metropolis@16 prefix.
+fn control_alignment_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
+    let backend = DecisionEngine::analyze(ir).select_backend();
+    let init = vec![0u8; ir.n];
+    let temps = geometric_ladder(REPLICAS, TEMP_HI, TEMP_LO);
+    let view = RuntimeView {
+        iteration: 1,
+        temperatures: &temps,
+        num_replicas: REPLICAS,
+        recent_acceptance: 0.0,
+        remaining_ms: f64::INFINITY,
+    };
+    let probe = |op: &str, shift: bool| -> u64 {
+        let mut st = boxed_state(ir, backend, REPLICAS, &init);
+        let mut rng = ChaCha8Rng::seed_from_u64(RC017_HELD_IN[0]);
+        // Prefix metropolis@16:
+        let mut prefix_op = reg.lookup(OP_A).expect("registered");
+        let prefix_view = RuntimeView {
+            iteration: 0,
+            temperatures: &temps,
+            num_replicas: REPLICAS,
+            recent_acceptance: 0.0,
+            remaining_ms: f64::INFINITY,
+        };
+        prefix_op.apply(st.as_mut(), &prefix_view, &mut rng, Budget { sweeps: SWEEPS });
+
+        if shift {
+            let _: u32 = rng.gen();
+        }
+        let mut o = reg.lookup(op).expect("registered");
+        o.apply(st.as_mut(), &view, &mut rng, Budget { sweeps: SWEEPS });
+        rng.gen()
+    };
+    let (pa, pb, ps) = (probe(OP_A, false), probe(OP_B, false), probe(OP_B, true));
+    let aligned = pa == pb;
+    let detected = ps != pa;
+    println!(
+        "    slot-2 metropolis={pa:#018x} gibbs={pb:#018x} -> {}",
+        if aligned {
+            "EQUAL (pass)"
+        } else {
+            "DIFFER (FAIL)"
+        }
+    );
+    println!(
+        "    shifted slot-2 gibbs={ps:#018x} -> {}",
+        if detected {
+            "DETECTED (pass)"
+        } else {
+            "MISSED (FAIL)"
+        }
+    );
+    aligned && detected
+}
+
+/// RC-017 Control 4: Zero-budget substitution at slot 2 yields exact zero difference.
+fn control_inert_zero_budget_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
+    let mk = |x: &str| Plan {
+        name: "rc017-inert".into(),
+        backend: DecisionEngine::analyze(ir).select_backend(),
+        num_replicas: REPLICAS,
+        temperatures: geometric_ladder(REPLICAS, TEMP_HI, TEMP_LO),
+        steps: vec![
+            PlanStep {
+                operator: OP_A.into(),
+                phase: Phase::Exploit,
+                sweeps: SWEEPS,
+                repeat: 1,
+            },
+            PlanStep {
+                operator: x.into(),
+                phase: Phase::Exploit,
+                sweeps: 0,
+                repeat: 1,
+            },
+            PlanStep {
+                operator: "greedy_descent".into(),
+                phase: Phase::Exploit,
+                sweeps: SWEEPS,
+                repeat: 1,
+            },
+        ],
+        seed: RC017_HELD_IN[0],
+        rationale: Default::default(),
+    };
+    let (a, b) = match (
+        execute_rc017(ir, reg, &mk(OP_A)),
+        execute_rc017(ir, reg, &mk(OP_B)),
+    ) {
+        (Ok(a), Ok(b)) => (a, b),
+        _ => return false,
+    };
+    let i = b.y - a.y;
+    println!(
+        "    I(slot2_sweeps=0) = {i:.17e} -> {}",
+        if i == 0.0 {
+            "exactly 0 (pass)"
+        } else {
+            "NONZERO (FAIL)"
+        }
+    );
+    i == 0.0
+}
+
+/// RC-017 Control 7: A recorder that only reads StepEvent[0] leaves final state
+/// and energy bit-identical compared to an unrecorded execution.
+fn control_recorder_non_interference_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
+    let mut ok = true;
+    for &s in RC017_HELD_IN.iter().take(3) {
+        let plan_m = plan_for_rc017(ir, OP_A, s);
+        let plan_g = plan_for_rc017(ir, OP_B, s);
+
+        let out_m = match execute_rc017(ir, reg, &plan_m) {
+            Ok(o) => o,
+            Err(_) => return false,
+        };
+        let _s1_m = deployed_non_bias_step_features(
+            ir,
+            &[out_m.event0.best_energy],
+            0,
+            out_m.event0.metrics.mean_energy,
+            out_m.event0.metrics.energy_entropy,
+            out_m.event0.metrics.diversity,
+            out_m.event0.acceptance,
+            1.0 / 3.0,
+        );
+
+        let out_g = match execute_rc017(ir, reg, &plan_g) {
+            Ok(o) => o,
+            Err(_) => return false,
+        };
+        let _s1_g = deployed_non_bias_step_features(
+            ir,
+            &[out_g.event0.best_energy],
+            0,
+            out_g.event0.metrics.mean_energy,
+            out_g.event0.metrics.energy_entropy,
+            out_g.event0.metrics.diversity,
+            out_g.event0.acceptance,
+            1.0 / 3.0,
+        );
+
+        let base_m = match execute(ir, reg, &plan_m) {
+            Ok(b) => b,
+            Err(_) => return false,
+        };
+        let base_g = match execute(ir, reg, &plan_g) {
+            Ok(b) => b,
+            Err(_) => return false,
+        };
+
+        let m_same = out_m.y.to_bits() == base_m.y.to_bits() && out_m.best_state == base_m.best_state;
+        let g_same = out_g.y.to_bits() == base_g.y.to_bits() && out_g.best_state == base_g.best_state;
+        let same = m_same && g_same;
+        println!("    seed {s}: recorder_m_same={m_same} recorder_g_same={g_same}");
+        ok &= same;
+    }
+    ok
+}
+
+/// RC-017 Control 8: Historical RC-016 first-slot control remains reproducible
+/// from its frozen TSV/hash and exact seed replay.
+fn control_rc016_historical_regression(reg: &OperatorRegistry) -> bool {
+    let dir = "experiments/rc016";
+    let Some(hi) = read_rows(dir, "heldin") else {
+        eprintln!("    rc016_heldin.tsv unreadable in {dir}");
+        return false;
+    };
+    let Some(ho) = read_rows(dir, "heldout") else {
+        eprintln!("    rc016_heldout.tsv unreadable in {dir}");
+        return false;
+    };
+    if hi.len() != CORPUS.len() || ho.len() != CORPUS.len() {
+        eprintln!("    rc016 rows count mismatch");
+        return false;
+    }
+    // Verify frozen G1 row:
+    let g1_hi = &hi[0];
+    let g1_ho = &ho[0];
+    let g1_hi_ok = g1_hi.name == "G1" && (g1_hi.i - 30.8750).abs() < 1e-4;
+    let g1_ho_ok = g1_ho.name == "G1" && (g1_ho.i - 23.6250).abs() < 1e-4;
+
+    // Verify exact replay on G1 heldin seeds:
+    let g1_ir = match load(CORPUS[0].path) {
+        Ok(ir) => ir,
+        Err(_) => return false,
+    };
+    let p = match contrast(&g1_ir, reg, &HELD_IN, SWEEPS) {
+        Some(p) => p,
+        None => return false,
+    };
+    let replay_ok = (p.mean_effect() - 30.8750).abs() < 1e-4 && (p.d_seed() - 11.45098).abs() < 1e-3;
+
+    let (v, c) = decide(&hi, &ho);
+    let verdict_ok = v == Verdict::SignConstant && c.k == 25;
+
+    let ok = g1_hi_ok && g1_ho_ok && replay_ok && verdict_ok;
+    println!(
+        "    rc016 frozen census K={}/30 verdict={:?} G1_replay_pass={} -> {}",
+        c.k,
+        v,
+        replay_ok,
+        if ok { "pass" } else { "FAIL" }
+    );
+    ok
+}
+
+fn run_controls_rc017(reg: &OperatorRegistry) -> bool {
+    println!("RC-017 controls (PREREG_RC017.md §2 — mandatory pre-flight controls)\n");
+    let mut pass = true;
+
+    println!("[corpus] 30 enumerated instances present, in §4 order");
+    pass &= control_corpus();
+
+    println!("\n[ci-seeds] RC-017 seed space is collision-free and disjoint from RC-016 & run seeds");
+    pass &= control_ci_seed_space_rc017();
+
+    println!("\n[arithmetic] synthetic arithmetic positive + TIE-BLOCKED guard");
+    pass &= control_synthetic_arithmetic();
+
+    let probe_ir = match load(CORPUS[0].path) {
+        Ok(ir) => ir,
+        Err(e) => {
+            println!("\ncannot load {}: {e}", CORPUS[0].path);
+            return false;
+        }
+    };
+
+    println!("\n[clause 1: null replacement] RC-017 metropolis -> metropolis 3-step replay is bit-identical");
+    pass &= control_null_rc017(&probe_ir, reg);
+
+    println!("\n[clause 2: prefix identity] independent common prefix has identical state, ledger, RNG probe, and sensor bits");
+    pass &= control_prefix_identity_rc017(&probe_ir, reg);
+
+    println!("\n[clause 3 & 4: slot-2 alignment & shift] slot-2 operator draws aligned after prefix; shift detected");
+    pass &= control_alignment_rc017(&probe_ir, reg);
+
+    println!("\n[clause 5a: zero-sweep inert] slot-2 substitution at sweeps=0 gives exactly 0");
+    pass &= control_inert_zero_budget_rc017(&probe_ir, reg);
+
+    println!("\n[clause 5b: structurally inert] replica_exchange deletion from all-zeros returns identical state/energy");
+    pass &= control_inert_replica_exchange(&probe_ir, reg);
+
+    println!("\n[clause 6: operator positive] production operators vs independent reference (648 fixtures)");
+    pass &= control_synthetic_operator(reg);
+
+    println!("\n[clause 7: recorder non-interference] StepEvent[0] sensor read leaves final state and energy bit-identical");
+    pass &= control_recorder_non_interference_rc017(&probe_ir, reg);
+
+    println!("\n[clause 8: historical RC-016 regression] frozen RC-016 TSV/replay reproduces baseline");
+    pass &= control_rc016_historical_regression(reg);
+
+    println!(
+        "\nRC-017 CONTROLS: {}",
+        if pass { "ALL PASS" } else { "FAIL" }
     );
     pass
 }
@@ -1891,11 +2484,572 @@ fn read_rows(dir: &str, tag: &str) -> Option<Vec<Row>> {
     Some(out)
 }
 
+// ------------------------------------------------------------- RC-017 persistence & gates
+
+fn sensitivity_ci_rc017(p: &Paired, index: usize, block: BlockRc017) -> Sensitivity {
+    let seed = RC017_CI_BOOTSTRAP_BASE_SEED + 2 * index as u64 + block.index();
+    let (lo, hi) = bootstrap_ci(&p.effects(), BOOTSTRAP_REPS, seed);
+    let denom = (p.base.iter().sum::<f64>() / p.base.len() as f64)
+        .abs()
+        .max(1e-12);
+    Sensitivity {
+        lo,
+        hi,
+        half_width_pct: 0.5 * (hi - lo) / denom * 100.0,
+    }
+}
+
+fn measure_block_rc017(
+    reg: &OperatorRegistry,
+    block: BlockRc017,
+) -> (Vec<Row>, Vec<SnapshotRc017>) {
+    let mut rows = Vec::new();
+    let mut all_snapshots = Vec::new();
+    for (index, inst) in CORPUS.iter().enumerate() {
+        let (name, path, group, family) = (inst.name, inst.path, inst.group, inst.family);
+        let ir = match load(path) {
+            Ok(ir) => ir,
+            Err(e) => {
+                eprintln!("  {name}: FATAL load failure ({e}) — aborting the block");
+                std::process::exit(4);
+            }
+        };
+        let Some(c) = contrast_rc017(&ir, reg, index, name, block.seeds()) else {
+            eprintln!("  {name}: FATAL run failure — aborting the block");
+            std::process::exit(4);
+        };
+        let s = sensitivity_ci_rc017(&c.paired, index, block);
+        let row = Row {
+            index,
+            name: (*name).to_string(),
+            group,
+            family,
+            i: c.paired.mean_effect(),
+            rho: c.paired.rho(),
+            rel: c.paired.rel(),
+            p: c.paired.signflip_p(),
+            zeros: c.paired.zeros(),
+            degenerate: c.paired.degenerate(),
+            tie_blocked: c.paired.tie_blocked(),
+            material: c.paired.material(),
+            ci_lo: s.lo,
+            ci_hi: s.hi,
+            ci_hw_pct: s.half_width_pct,
+        };
+        println!(
+            "  [{}] {:>5} I={:+10.4} rho={:<7} rel={:7.4}% p={:.4} z={} {}{}CI=[{:+.3},{:+.3}] hw={:.4}%",
+            block.tag(),
+            row.name,
+            row.i,
+            row.rho.map_or("DEGEN".to_string(), |r| format!("{r:.3}")),
+            row.rel * 100.0,
+            row.p,
+            row.zeros,
+            if row.tie_blocked { "TIE-BLOCKED " } else { "" },
+            if row.degenerate { "DEGENERATE_NULL " } else { "" },
+            row.ci_lo,
+            row.ci_hi,
+            row.ci_hw_pct
+        );
+        rows.push(row);
+        all_snapshots.extend(c.snapshots);
+    }
+    assert_eq!(
+        rows.len(),
+        CORPUS.len(),
+        "a block must cover the whole enumerated corpus"
+    );
+    (rows, all_snapshots)
+}
+
+fn write_snapshots_rc017(dir: &str, tag: &str, snapshots: &[SnapshotRc017]) {
+    let mut s = String::from(
+        "instance_index\tinstance\tseed\tdelta_hex\tdelta_dec\t\
+         f0_hex\tf1_hex\tf2_hex\tf3_hex\tf4_hex\tf5_hex\tf6_hex\tf7_hex\tf8_hex\tf9_hex\tf10_hex\tf11_hex\t\
+         f0_dec\tf1_dec\tf2_dec\tf3_dec\tf4_dec\tf5_dec\tf6_dec\tf7_dec\tf8_dec\tf9_dec\tf10_dec\tf11_dec\n",
+    );
+    for sn in snapshots {
+        s.push_str(&format!(
+            "{}\t{}\t{}\t{:016x}\t{:.17e}\t\
+             {:016x}\t{:016x}\t{:016x}\t{:016x}\t{:016x}\t{:016x}\t{:016x}\t{:016x}\t{:016x}\t{:016x}\t{:016x}\t{:016x}\t\
+             {:.17e}\t{:.17e}\t{:.17e}\t{:.17e}\t{:.17e}\t{:.17e}\t{:.17e}\t{:.17e}\t{:.17e}\t{:.17e}\t{:.17e}\t{:.17e}\n",
+            sn.instance_index,
+            sn.instance_name,
+            sn.seed,
+            sn.delta.to_bits(),
+            sn.delta,
+            sn.s1[0].to_bits(),
+            sn.s1[1].to_bits(),
+            sn.s1[2].to_bits(),
+            sn.s1[3].to_bits(),
+            sn.s1[4].to_bits(),
+            sn.s1[5].to_bits(),
+            sn.s1[6].to_bits(),
+            sn.s1[7].to_bits(),
+            sn.s1[8].to_bits(),
+            sn.s1[9].to_bits(),
+            sn.s1[10].to_bits(),
+            sn.s1[11].to_bits(),
+            sn.s1[0],
+            sn.s1[1],
+            sn.s1[2],
+            sn.s1[3],
+            sn.s1[4],
+            sn.s1[5],
+            sn.s1[6],
+            sn.s1[7],
+            sn.s1[8],
+            sn.s1[9],
+            sn.s1[10],
+            sn.s1[11],
+        ));
+    }
+    let _ = std::fs::create_dir_all(dir);
+    let path = format!("{dir}/rc017_snapshots_{tag}.tsv");
+    match std::fs::write(&path, s) {
+        Ok(()) => println!("  written: {path}"),
+        Err(e) => {
+            eprintln!("  FATAL write failure for {path}: {e}");
+            std::process::exit(5);
+        }
+    }
+}
+
+fn write_instance_means_rc017(dir: &str, tag: &str, snapshots: &[SnapshotRc017]) {
+    let mut s = String::from(
+        "instance_index\tinstance\tcount\tmean_delta\t\
+         mean_f0_log_n\tmean_f1_density\tmean_f2_clustering\tmean_f3_mean_deg\tmean_f4_deg_cv\t\
+         mean_f5_entropy\tmean_f6_diversity\tmean_f7_acceptance\tmean_f8_frac_elapsed\t\
+         mean_f9_progress\tmean_f10_spread\tmean_f11_best_norm\n",
+    );
+    for (idx, inst) in CORPUS.iter().enumerate() {
+        let matching: Vec<&SnapshotRc017> = snapshots
+            .iter()
+            .filter(|sn| sn.instance_index == idx)
+            .collect();
+        if matching.is_empty() {
+            continue;
+        }
+        let count = matching.len() as f64;
+        let mean_delta = matching.iter().map(|sn| sn.delta).sum::<f64>() / count;
+        let mut mean_s1 = [0.0; 12];
+        for k in 0..12 {
+            mean_s1[k] = matching.iter().map(|sn| sn.s1[k]).sum::<f64>() / count;
+        }
+        s.push_str(&format!(
+            "{}\t{}\t{}\t{:.8}\t\
+             {:.8}\t{:.8}\t{:.8}\t{:.8}\t{:.8}\t\
+             {:.8}\t{:.8}\t{:.8}\t{:.8}\t\
+             {:.8}\t{:.8}\t{:.8}\n",
+            idx,
+            inst.name,
+            matching.len(),
+            mean_delta,
+            mean_s1[0],
+            mean_s1[1],
+            mean_s1[2],
+            mean_s1[3],
+            mean_s1[4],
+            mean_s1[5],
+            mean_s1[6],
+            mean_s1[7],
+            mean_s1[8],
+            mean_s1[9],
+            mean_s1[10],
+            mean_s1[11],
+        ));
+    }
+    let _ = std::fs::create_dir_all(dir);
+    let path = format!("{dir}/rc017_means_{tag}.tsv");
+    match std::fs::write(&path, s) {
+        Ok(()) => println!("  written: {path}"),
+        Err(e) => {
+            eprintln!("  FATAL write failure for {path}: {e}");
+            std::process::exit(5);
+        }
+    }
+}
+
+fn read_snapshots_rc017(dir: &str, tag: &str) -> Option<Vec<SnapshotRc017>> {
+    let path = format!("{dir}/rc017_snapshots_{tag}.tsv");
+    let text = std::fs::read_to_string(&path).ok()?;
+    let mut out = Vec::new();
+    for line in text.lines().skip(1) {
+        let f: Vec<&str> = line.split('\t').collect();
+        if f.len() < 17 {
+            continue;
+        }
+        let instance_index = f[0].parse().ok()?;
+        let instance_name = f[1].to_string();
+        let seed = f[2].parse().ok()?;
+        let delta_bits = u64::from_str_radix(f[3].trim_start_matches("0x"), 16).ok()?;
+        let delta = f64::from_bits(delta_bits);
+        let mut s1 = [0.0; 12];
+        for (i, slot) in s1.iter_mut().enumerate() {
+            let bits = u64::from_str_radix(f[5 + i].trim_start_matches("0x"), 16).ok()?;
+            *slot = f64::from_bits(bits);
+        }
+        out.push(SnapshotRc017 {
+            instance_index,
+            instance_name,
+            seed,
+            delta,
+            s1,
+        });
+    }
+    Some(out)
+}
+
+fn write_rows_rc017(dir: &str, filename: &str, rows: &[Row]) {
+    let mut s = String::from("index\tinstance\tgroup\tfamily\tI\trho\trel\tp\tzeros\tdegenerate\ttie_blocked\tmaterial\tci_lo\tci_hi\tci_hw_pct\n");
+    for r in rows {
+        s.push_str(&format!(
+            "{}\t{}\t{}\t{:?}\t{:.6}\t{}\t{:.8}\t{:.8}\t{}\t{}\t{}\t{}\t{:.6}\t{:.6}\t{:.6}\n",
+            r.index,
+            r.name,
+            r.group.map_or("-".to_string(), |g| g.to_string()),
+            r.family,
+            r.i,
+            r.rho.map_or("NA".to_string(), |v| format!("{v:.6}")),
+            r.rel,
+            r.p,
+            r.zeros,
+            r.degenerate,
+            r.tie_blocked,
+            r.material,
+            r.ci_lo,
+            r.ci_hi,
+            r.ci_hw_pct
+        ));
+    }
+    let _ = std::fs::create_dir_all(dir);
+    let path = format!("{dir}/{filename}.tsv");
+    match std::fs::write(&path, s) {
+        Ok(()) => println!("\n  written: {path}"),
+        Err(e) => {
+            eprintln!("\n  FATAL write failure for {path}: {e}");
+            std::process::exit(5);
+        }
+    }
+}
+
+fn read_rows_rc017(dir: &str, filename: &str) -> Option<Vec<Row>> {
+    let text = std::fs::read_to_string(format!("{dir}/{filename}.tsv")).ok()?;
+    let mut out = Vec::new();
+    for line in text.lines().skip(1) {
+        let f: Vec<&str> = line.split('\t').collect();
+        if f.len() < 15 {
+            continue;
+        }
+        out.push(Row {
+            index: f[0].parse().ok()?,
+            name: f[1].to_string(),
+            group: f[2].chars().next().filter(|c| *c != '-'),
+            family: if f[3] == "Toroidal" {
+                Family::Toroidal
+            } else {
+                Family::RandomPlus
+            },
+            i: f[4].parse().ok()?,
+            rho: f[5].parse().ok(),
+            rel: f[6].parse().ok()?,
+            p: f[7].parse().ok()?,
+            zeros: f[8].parse().ok()?,
+            degenerate: f[9] == "true",
+            tie_blocked: f[10] == "true",
+            material: f[11] == "true",
+            ci_lo: f[12].parse().ok()?,
+            ci_hi: f[13].parse().ok()?,
+            ci_hw_pct: f[14].parse().ok()?,
+        });
+    }
+    Some(out)
+}
+
+fn find_exact_collisions_rc017<'a>(
+    snapshots: &'a [SnapshotRc017],
+) -> Vec<(&'a SnapshotRc017, &'a SnapshotRc017)> {
+    let mut collisions = Vec::new();
+    for i in 0..snapshots.len() {
+        for j in (i + 1)..snapshots.len() {
+            let s1 = &snapshots[i];
+            let s2 = &snapshots[j];
+            // Nonzero delta with opposite signs:
+            if s1.delta * s2.delta < 0.0 {
+                let bit_match = (0..12).all(|k| s1.s1[k].to_bits() == s2.s1[k].to_bits());
+                if bit_match {
+                    collisions.push((s1, s2));
+                }
+            }
+        }
+    }
+    collisions
+}
+
+fn require_prereg_rc017(dir: &str) -> bool {
+    let exists = std::path::Path::new(RC017_PREREG_PATH).exists();
+    let tracked = git_succeeds(&["ls-files", "--error-unmatch", RC017_PREREG_PATH]);
+    let clean = git_succeeds(&["diff", "--quiet", "HEAD", "--", RC017_PREREG_PATH]);
+    let commit_time = git_commit_time(RC017_PREREG_PATH);
+
+    if !exists {
+        eprintln!("    RC-017 prereg file is missing: {RC017_PREREG_PATH}");
+        return false;
+    }
+    if !tracked {
+        eprintln!("    RC-017 prereg is not tracked by git");
+        return false;
+    }
+    if !clean {
+        eprintln!("    RC-017 prereg has uncommitted modifications");
+        return false;
+    }
+    let Some(ct) = commit_time else {
+        eprintln!("    RC-017 prereg has no committing commit");
+        return false;
+    };
+
+    // If held-in artifact exists, verify prereg was committed before or when held-in was created:
+    let heldin_path = format!("{dir}/rc017_heldin.tsv");
+    if let Some(hm) = mtime_secs(&heldin_path) {
+        if ct > hm {
+            eprintln!("    RC-017 prereg commit ({ct}) is newer than held-in artifact ({hm})");
+            return false;
+        }
+    }
+
+    println!("    RC-017 prereg provenance gate: PASS (commit {ct})");
+    true
+}
+
+fn descendant_gate_rc017(dir: &str) -> bool {
+    let heldin = format!("{dir}/rc017_heldin.tsv");
+    let mut ok = true;
+
+    let has_confirm = flag(CONFIRM_FLAG);
+    println!("    [1] explicit confirmation flag {CONFIRM_FLAG}: {has_confirm}");
+    ok &= has_confirm;
+
+    let heldin_done = std::path::Path::new(&heldin).exists();
+    println!("    [2] held-in results present ({heldin}): {heldin_done}");
+    ok &= heldin_done;
+
+    let desc_exists = std::path::Path::new(RC017_DESCENDANT_PATH).exists();
+    let desc_commit = git_commit_time(RC017_DESCENDANT_PATH);
+    println!(
+        "    [3] descendant {RC017_DESCENDANT_PATH} exists={desc_exists} committed={}",
+        desc_commit.is_some()
+    );
+    ok &= desc_exists && desc_commit.is_some();
+
+    match (desc_commit, mtime_secs(&heldin)) {
+        (Some(dc), Some(hm)) => {
+            let after = dc > hm;
+            println!(
+                "    [4] descendant committed AFTER held-in: {after} (commit {dc} vs held-in {hm})"
+            );
+            ok &= after;
+        }
+        _ => {
+            println!("    [4] descendant committed AFTER held-in: cannot verify");
+            ok = false;
+        }
+    }
+    ok
+}
+
+fn report_verdict_rc017(
+    held_in: &[Row],
+    held_out: &[Row],
+    snapshots_hi: &[SnapshotRc017],
+    snapshots_ho: &[SnapshotRc017],
+) {
+    let (v, c) = decide(held_in, held_out);
+
+    println!(
+        "\n  --- RC-017 corpus census (descriptive; NO cross-instance p-value is computed or licensed) ---"
+    );
+    println!(
+        "  K = {} qualifying of {} enumerated   k+ = {}   k- = {}   K/30 = {:.3}",
+        c.k,
+        CORPUS.len(),
+        c.k_plus,
+        c.k_minus,
+        c.k as f64 / CORPUS.len() as f64
+    );
+    println!(
+        "  material-but-unqualified or tie-blocked: {}   degenerate cells: {} ({:.1}%)",
+        c.material_unqualified,
+        c.degenerate_cells,
+        c.degenerate_fraction * 100.0
+    );
+    println!(
+        "  qualifying coverage: {} matched groups, {} structural families",
+        c.groups, c.families
+    );
+
+    match v {
+        Verdict::BenchmarkValidity => {
+            println!(
+                "\n  VERDICT: BENCHMARK-VALIDITY FINDING — >= 50% of cells are DEGENERATE_NULL."
+            );
+            println!("  The configuration is saturated at this budget and cannot discriminate.");
+            println!("  The sign question is NOT answered.");
+        }
+        Verdict::SignVaries => {
+            println!("\n  VERDICT: SIGN VARIES");
+            let ps: Vec<f64> = held_in.iter().map(|r| r.p).collect();
+            let rej = benjamini_hochberg(&ps, FDR_Q);
+            let qual: Vec<&Row> = held_in
+                .iter()
+                .enumerate()
+                .filter(|(k, hi)| {
+                    held_out
+                        .iter()
+                        .find(|r| r.index == hi.index)
+                        .is_some_and(|ho| qualifies(hi, ho, rej[*k]))
+                })
+                .map(|(_, hi)| hi)
+                .collect();
+            for g in ['A', 'B', 'C', 'D', 'E', 'F'] {
+                let m: Vec<&&Row> = qual.iter().filter(|r| r.group == Some(g)).collect();
+                if m.iter().any(|r| r.i > 0.0) && m.iter().any(|r| r.i < 0.0) {
+                    println!(
+                        "    matched group {g}: opposite-signed qualifying members"
+                    );
+                    for x in &m {
+                        println!("      {} I={:+.4}", x.name, x.i);
+                    }
+                }
+            }
+
+            // Secondary exact S1 collision probe:
+            let mut all_sn = snapshots_hi.to_vec();
+            all_sn.extend_from_slice(snapshots_ho);
+            let collisions = find_exact_collisions_rc017(&all_sn);
+            if !collisions.is_empty() {
+                println!("\n  SENSOR INFERENCE: EXACT BIT-IDENTICAL S1 COUNTEREXAMPLE FOUND");
+                for (s1, s2) in &collisions {
+                    println!(
+                        "    Snapshot ({}, seed {}) delta={:+.4} vs ({}, seed {}) delta={:+.4}",
+                        s1.instance_name, s1.seed, s1.delta, s2.instance_name, s2.seed, s2.delta
+                    );
+                }
+            } else {
+                println!(
+                    "\n  SENSOR INFERENCE: NO EXACT BIT-IDENTICAL S1 COLLISION OBSERVED among {} snapshots",
+                    all_sn.len()
+                );
+            }
+        }
+        Verdict::SignConstant => {
+            println!(
+                "\n  VERDICT: SIGN CONSTANT — {} qualifying, {} matched groups, {} families",
+                c.k, c.groups, c.families
+            );
+            println!("  (Scoped strictly to [metropolis@16, X@16, greedy@16] on G-Set; not invariant generally)");
+        }
+        Verdict::NoMaterialEffectObserved => {
+            println!("\n  VERDICT: NO MATERIAL EFFECT OBSERVED");
+            println!(
+                "  A DESCRIPTIVE statement about this design's sensitivity, and nothing more."
+            );
+            println!(
+                "  FORBIDDEN under this verdict: any claim of equivalence, interchangeability"
+            );
+            println!("  or indistinguishability; any claim the effect is zero or negligible; any");
+            println!("  claim bounding what a selector could gain.");
+            let mut hw: Vec<f64> = held_in.iter().map(|r| r.ci_hw_pct).collect();
+            hw.sort_by(f64::total_cmp);
+            println!(
+                "  Mandatory sensitivity: held-in CI half-width {:.4}%..{:.4}% of |mean Y(metropolis)|",
+                hw.first().copied().unwrap_or(f64::NAN),
+                hw.last().copied().unwrap_or(f64::NAN)
+            );
+        }
+        Verdict::QInconclusive => {
+            println!(
+                "\n  VERDICT: Q-INCONCLUSIVE — K = {}; {} material-but-unqualified or tie-blocked; {} degenerate cells.",
+                c.k, c.material_unqualified, c.degenerate_cells
+            );
+            println!("  No post-hoc relaxation of any bar is permitted.");
+        }
+    }
+}
+
 // ---------------------------------------------------------------------- main
 
 fn main() {
     let reg = OperatorRegistry::standard();
     let dir: String = arg("--dir", "experiments/rc016".to_string());
+    let rc017_dir: String = arg("--rc017-dir", "experiments/rc017".to_string());
+
+    let is_rc017 = flag("--rc017")
+        || flag("--rc017-controls")
+        || flag("--rc017-science")
+        || flag("--rc017-holdout")
+        || flag("--rc017-verdict");
+
+    if is_rc017 {
+        let any_rc017_science =
+            flag("--rc017-science") || flag("--rc017-holdout") || flag("--rc017-verdict");
+
+        if !run_controls_rc017(&reg) {
+            std::process::exit(1);
+        }
+        if !any_rc017_science {
+            return;
+        }
+
+        if flag("--rc017-science") {
+            println!("\nRC-017 held-in block — provenance precondition (PREREG_RC017.md §3)");
+            if !require_prereg_rc017(&rc017_dir) {
+                eprintln!("\n  HELD-IN REFUSED — PREREG_RC017.md provenance gate failed");
+                std::process::exit(2);
+            }
+            println!("\nRC-017 held-in block, seeds {RC017_HELD_IN:?}\n");
+            let (rows, snapshots) = measure_block_rc017(&reg, BlockRc017::HeldIn);
+            write_rows_rc017(&rc017_dir, "rc017_heldin", &rows);
+            write_snapshots_rc017(&rc017_dir, "heldin", &snapshots);
+            write_instance_means_rc017(&rc017_dir, "heldin", &snapshots);
+        }
+
+        if flag("--rc017-holdout") {
+            println!("\nRC-017 held-out gate (PREREG §7: not inspected until controls and held-in are evaluated)");
+            if !require_prereg_rc017(&rc017_dir) {
+                eprintln!("\n  HELD-OUT REFUSED — PREREG_RC017.md provenance gate failed");
+                std::process::exit(2);
+            }
+            if !descendant_gate_rc017(&rc017_dir) {
+                println!("\n  HELD-OUT REFUSED — the falsifiable descendant must be written and");
+                println!("  committed AFTER the held-in block, and the run explicitly confirmed.");
+                println!("  Refusing rather than silently inspecting the held-out seeds.");
+                std::process::exit(3);
+            }
+            println!("\nRC-017 held-out block, seeds {RC017_HELD_OUT:?}\n");
+            let (rows, snapshots) = measure_block_rc017(&reg, BlockRc017::HeldOut);
+            write_rows_rc017(&rc017_dir, "rc017_heldout", &rows);
+            write_snapshots_rc017(&rc017_dir, "heldout", &snapshots);
+            write_instance_means_rc017(&rc017_dir, "heldout", &snapshots);
+        }
+
+        if flag("--rc017-verdict") {
+            match (
+                read_rows_rc017(&rc017_dir, "rc017_heldin"),
+                read_rows_rc017(&rc017_dir, "rc017_heldout"),
+                read_snapshots_rc017(&rc017_dir, "heldin"),
+                read_snapshots_rc017(&rc017_dir, "heldout"),
+            ) {
+                (Some(hi), Some(ho), Some(sn_hi), Some(sn_ho)) => {
+                    report_verdict_rc017(&hi, &ho, &sn_hi, &sn_ho);
+                }
+                _ => println!(
+                    "\n  verdict needs rc017_heldin.tsv, rc017_heldout.tsv and snapshot files in {rc017_dir}"
+                ),
+            }
+        }
+        return;
+    }
 
     let any_science =
         flag("--calibrate") || flag("--science") || flag("--holdout") || flag("--verdict");
@@ -2550,6 +3704,188 @@ mod tests {
                 3,
                 "group {g} must have three members"
             );
+        }
+    }
+
+    /// PREREG_RC017.md §3: RC-017 CI seeds must be collision-free and disjoint
+    /// from all RC-016 seeds and RC-017 run seeds.
+    #[test]
+    fn rc017_ci_seed_formula_is_injective_and_disjoint() {
+        let mut seeds = Vec::new();
+        for i in 0..CORPUS.len() as u64 {
+            for b in 0..2u64 {
+                seeds.push(RC017_CI_BOOTSTRAP_BASE_SEED + 2 * i + b);
+            }
+        }
+        assert_eq!(seeds.len(), 60);
+        let mut u = seeds.clone();
+        u.sort_unstable();
+        u.dedup();
+        assert_eq!(u.len(), 60, "seeds must be distinct");
+        assert_eq!(*u.first().unwrap(), RC017_CI_BOOTSTRAP_BASE_SEED);
+
+        // Disjointness from RC-016:
+        assert!(!seeds.contains(&POWER_BOOTSTRAP_SEED));
+        assert!(!seeds.contains(&CI_BOOTSTRAP_BASE_SEED));
+        for s in HELD_IN.iter().chain(HELD_OUT.iter()).chain(PILOT.iter()) {
+            assert!(!seeds.contains(s));
+        }
+
+        // Disjointness from RC-017 run seeds:
+        for s in RC017_HELD_IN
+            .iter()
+            .chain(RC017_HELD_OUT.iter())
+            .chain(RC017_PILOT.iter())
+        {
+            assert!(!seeds.contains(s));
+        }
+    }
+
+    /// PREREG_RC017.md §4: Bit-identical 12-coordinate collision with opposite
+    /// non-zero delta is detected as a counterexample.
+    #[test]
+    fn rc017_exact_collision_detection_finds_bit_identical_opposite_signs() {
+        let s1: [f64; 12] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0];
+        let snaps = vec![
+            SnapshotRc017 {
+                instance_index: 0,
+                instance_name: "G1".into(),
+                seed: 5001,
+                delta: 5.0,
+                s1,
+            },
+            SnapshotRc017 {
+                instance_index: 1,
+                instance_name: "G2".into(),
+                seed: 5002,
+                delta: -3.0,
+                s1,
+            },
+        ];
+        let collisions = find_exact_collisions_rc017(&snaps);
+        assert_eq!(collisions.len(), 1);
+        assert_eq!(collisions[0].0.seed, 5001);
+        assert_eq!(collisions[0].1.seed, 5002);
+    }
+
+    /// PREREG_RC017.md §4: Same sign deltas or even 1-bit coordinate divergence
+    /// must NOT count as exact collisions.
+    #[test]
+    fn rc017_exact_collision_ignores_same_sign_or_near_collisions() {
+        let s1: [f64; 12] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0];
+        let mut s2 = s1;
+        // Flip 1 LSB in coordinate 5:
+        s2[5] = f64::from_bits(s1[5].to_bits() ^ 1);
+
+        let snaps_same_sign = vec![
+            SnapshotRc017 {
+                instance_index: 0,
+                instance_name: "G1".into(),
+                seed: 5001,
+                delta: 5.0,
+                s1,
+            },
+            SnapshotRc017 {
+                instance_index: 1,
+                instance_name: "G2".into(),
+                seed: 5002,
+                delta: 3.0, // same positive sign
+                s1,
+            },
+        ];
+        assert_eq!(find_exact_collisions_rc017(&snaps_same_sign).len(), 0);
+
+        let snaps_near_collision = vec![
+            SnapshotRc017 {
+                instance_index: 0,
+                instance_name: "G1".into(),
+                seed: 5001,
+                delta: 5.0,
+                s1,
+            },
+            SnapshotRc017 {
+                instance_index: 1,
+                instance_name: "G2".into(),
+                seed: 5002,
+                delta: -3.0,
+                s1: s2, // near, but NOT bit-identical
+            },
+        ];
+        assert_eq!(find_exact_collisions_rc017(&snaps_near_collision).len(), 0);
+    }
+
+    /// Mode guard: RC-017 held-out gate must refuse when no descendant is present.
+    #[test]
+    fn rc017_held_out_gate_refuses_without_a_frozen_descendant() {
+        let dir = std::env::temp_dir().join("rc017_gate_test_empty");
+        let _ = std::fs::create_dir_all(&dir);
+        assert!(
+            !descendant_gate_rc017(dir.to_str().unwrap()),
+            "rc017 held-out must not be runnable without confirmation, held-in and a committed descendant"
+        );
+    }
+
+    /// Provenance gate: prereg must be committed before any existing held-in artifact.
+    #[test]
+    fn rc017_prereg_gate_verifies_provenance() {
+        // Real PREREG_RC017.md is committed and clean:
+        assert!(require_prereg_rc017("experiments/rc017_nonexistent_dir"));
+    }
+
+    /// PREREG_RC017.md §4: Snapshot serialization and deserialization must be
+    /// 100% bit-identical losslessly preserving all coordinates and delta.
+    #[test]
+    fn rc017_snapshot_roundtrip_preserves_bit_identity() {
+        let dir = std::env::temp_dir().join("rc017_roundtrip_test");
+        let _ = std::fs::create_dir_all(&dir);
+        let s1: [f64; 12] = [
+            std::f64::consts::PI,
+            std::f64::consts::E,
+            1e-300,
+            -1e-300,
+            1e300,
+            -1e300,
+            0.0,
+            -0.0,
+            f64::from_bits(0x7ff0000000000001), // quiet NaN with payload
+            f64::from_bits(0x0000000000000001), // subnormal min
+            f64::from_bits(0x000fffffffffffff), // subnormal max
+            f64::from_bits(0x7fefffffffffffff), // normal max
+        ];
+        let original = vec![
+            SnapshotRc017 {
+                instance_index: 0,
+                instance_name: "G1".into(),
+                seed: 5001,
+                delta: 1.2345678901234567e-15,
+                s1,
+            },
+            SnapshotRc017 {
+                instance_index: 29,
+                instance_name: "G70".into(),
+                seed: 5008,
+                delta: -9.8765432109876543e20,
+                s1,
+            },
+        ];
+
+        write_snapshots_rc017(dir.to_str().unwrap(), "roundtrip", &original);
+        let recovered = read_snapshots_rc017(dir.to_str().unwrap(), "roundtrip")
+            .expect("read snapshots must succeed");
+
+        assert_eq!(recovered.len(), original.len());
+        for (orig, rec) in original.iter().zip(&recovered) {
+            assert_eq!(orig.instance_index, rec.instance_index);
+            assert_eq!(orig.instance_name, rec.instance_name);
+            assert_eq!(orig.seed, rec.seed);
+            assert_eq!(orig.delta.to_bits(), rec.delta.to_bits());
+            for k in 0..12 {
+                assert_eq!(
+                    orig.s1[k].to_bits(),
+                    rec.s1[k].to_bits(),
+                    "coordinate {k} bit identity failed"
+                );
+            }
         }
     }
 }
