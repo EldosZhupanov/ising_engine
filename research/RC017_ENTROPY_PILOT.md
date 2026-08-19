@@ -96,3 +96,17 @@ One correction is permitted: instantiate the same full M/G plans, attach a
 deterministic controller returning `Stop` after `StepEvent[0]`, and return only
 that event. Use the same G15 and seeds `4001–4008`; write a new artifact without
 overwriting the invalid one. No further amendment or widening is permitted.
+
+## Amendment 2 result — final
+
+`NOT REPRODUCED`. The protocol-correct controller stopped both full-plan
+contexts immediately after the prefix event. All 12 S1 coordinates matched for
+all eight pilot seeds.
+
+- valid artifact: `experiments/rc017_entropy_pilot/exact_context_v0_valid.tsv`
+- rows: 8 data rows plus header
+- SHA-256: `40d43ce1da6d1e1a602cf0caeeb72b92ca55ab0291805322859d7eb093f35f3e`
+
+The equality with the invalid artifact's bytes is incidental: neither contains
+final outcomes. Only this Amendment-2 execution satisfies the computation
+constraint. Diagnosis is closed; Runtime remains unchanged.

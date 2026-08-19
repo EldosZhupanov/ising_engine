@@ -90,6 +90,12 @@ All eight exact-context pilot pairs matched on all 12 S1 coordinates. The
 acceptance gate was not met. This ADR remains proposed and unimplemented; it
 does not license a Runtime change.
 
+Independent review found that the first exact-context harness allowed full
+plans to finish. Amendment 2 repeated the matrix with a controller stopping
+after the prefix event; the valid artifact has SHA-256
+`40d43ce1da6d1e1a602cf0caeeb72b92ca55ab0291805322859d7eb093f35f3e`
+and again found zero mismatches. The acceptance decision is unchanged.
+
 ## Consequences
 
 - New entropy event bits become stable for a fixed build/target and identical
