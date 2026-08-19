@@ -41,7 +41,9 @@ use ising_engine::engine_v2::ir::ProblemIR;
 use ising_engine::engine_v2::operator::Budget;
 use ising_engine::engine_v2::plan::{Phase, Plan, PlanStep};
 use ising_engine::engine_v2::registry::OperatorRegistry;
-use ising_engine::engine_v2::runtime::{Runtime, RuntimeView, StepEvent};
+use ising_engine::engine_v2::runtime::{
+    RunControl, RunController, Runtime, RuntimeView, StepEvent, StepSensors,
+};
 use ising_engine::engine_v2::state::SpinState;
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
@@ -905,6 +907,33 @@ fn run_entropy_pilot(reg: &OperatorRegistry) -> bool {
     reproduced
 }
 
+struct StopAfterFirstEvent;
+
+impl RunController for StopAfterFirstEvent {
+    fn decide(&mut self, _sensors: &StepSensors) -> RunControl {
+        RunControl::Stop
+    }
+}
+
+fn execute_event0_only(
+    ir: &ProblemIR,
+    reg: &OperatorRegistry,
+    plan: &Plan,
+) -> Result<StepEvent, String> {
+    let init = vec![0u8; ir.n];
+    let mut state = boxed_state(ir, plan.backend, plan.num_replicas, &init);
+    let mut rt = Runtime::new(RunContext::new(plan.seed), plan)
+        .with_controller(Box::new(StopAfterFirstEvent));
+    let rec = rt.run(plan, state.as_mut(), reg, ir)?;
+    if rec.events.len() != 1 {
+        return Err(format!(
+            "event0-only controller emitted {} events",
+            rec.events.len()
+        ));
+    }
+    rec.events.into_iter().next().ok_or("missing event0".into())
+}
+
 fn run_entropy_exact_context_pilot(reg: &OperatorRegistry) -> bool {
     let inst = CORPUS.iter().find(|x| x.name == "G15").expect("G15 frozen");
     let ir = match load(inst.path) {
@@ -927,15 +956,15 @@ fn run_entropy_exact_context_pilot(reg: &OperatorRegistry) -> bool {
                 return false;
             }
         };
-        let m = match execute_rc017(&ir, reg, &plan_for_rc017(&ir, OP_A, seed)) {
-            Ok(run) => run,
+        let m = match execute_event0_only(&ir, reg, &plan_for_rc017(&ir, OP_A, seed)) {
+            Ok(event) => event,
             Err(e) => {
                 eprintln!("exact-context M arm failed seed={seed}: {e}");
                 return false;
             }
         };
-        let g = match execute_rc017(&ir, reg, &plan_for_rc017(&ir, OP_B, seed)) {
-            Ok(run) => run,
+        let g = match execute_event0_only(&ir, reg, &plan_for_rc017(&ir, OP_B, seed)) {
+            Ok(event) => event,
             Err(e) => {
                 eprintln!("exact-context G arm failed seed={seed}: {e}");
                 return false;
@@ -953,8 +982,8 @@ fn run_entropy_exact_context_pilot(reg: &OperatorRegistry) -> bool {
                 1.0 / 3.0,
             )
         };
-        let s1_m = extract(&m.event0);
-        let s1_g = extract(&g.event0);
+        let s1_m = extract(&m);
+        let s1_g = extract(&g);
         let mismatches: Vec<usize> = (0..12)
             .filter(|&k| s1_m[k].to_bits() != s1_g[k].to_bits())
             .collect();
@@ -985,7 +1014,7 @@ fn run_entropy_exact_context_pilot(reg: &OperatorRegistry) -> bool {
         eprintln!("cannot create pilot directory: {e}");
         return false;
     }
-    let path = format!("{RC017_ENTROPY_PILOT_DIR}/exact_context_v0.tsv");
+    let path = format!("{RC017_ENTROPY_PILOT_DIR}/exact_context_v0_valid.tsv");
     if let Err(e) = std::fs::write(&path, out) {
         eprintln!("cannot write {path}: {e}");
         return false;
