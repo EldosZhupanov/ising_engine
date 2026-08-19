@@ -269,3 +269,250 @@ time on held-out better than the shipped shape-only model by the stated margin.*
 Neither licenses a claim that the proposed model is **correct**, that it is the
 best available model, that either operator should be preferred, or that the
 scheduler should be changed. The last of these requires an ADR.
+
+---
+
+# Amendment 1 — repair of the estimands before instrumentation
+
+**Status:** binding amendment to the pre-registration above. Written **before any
+RC-018 instrument code exists and before any RC-018 datum.** Documentation only.
+
+**Reason.** Independent review returned FAIL with seven binding defects. All seven
+are verified below and all seven are **accepted**. The root defect is §A7: the
+body above froze a single geometric ladder, along which φ varies continuously, so
+a whole-ladder timing yields exactly **one** aggregate φ per cell and the φ law is
+**not identifiable at all** by the design as written. Every other defect either
+follows from that or is an independent estimator error.
+
+## Clauses superseded — and only these
+
+| clause | status |
+|---|---|
+| §2, the `budgets k` row and the single-ladder assumption | **SUPERSEDED** by §A1 |
+| §4, control **P1** | **SUPERSEDED** by §A6 |
+| §4, control **N2** | **SUPERSEDED** by §A5 |
+| §5, `DEGENERATE-TIMING` (scope) | **EXTENDED** by §A1.4 |
+| §6, estimation procedure | **EXTENDED** by §A2 (§6 continues to govern Design L) |
+| §7, criterion **A4** | **SUPERSEDED** by §A4 |
+| §8, in its entirety | **SUPERSEDED** by §A3 |
+| §9, kill criterion **K3** | **EXTENDED** by §A1.4 |
+
+Everything else stands: §1's timing-only scope and the identification/efficacy
+separation, §2's corpus, seeds and hash verification, §3's interleaving and
+randomisation, §4's N1/N3/P2/P3, §5's drift bar and `HOST-UNSTABLE`, §6's median
+and bootstrap conventions, §7's A1–A3 and the ≥5-of-6 rule, §9's K1/K2/K4/K5/K6,
+§10's prohibitions, §11's licensing limits.
+
+## A7 — Two designs, named and kept apart
+
+The cycle now has **two disjoint measurement designs**. Which design supplies
+which gate is fixed here and may not be crossed.
+
+**Design L — ladder.** The geometric ladder `4.0 -> 0.1`, budgets
+`k ∈ {4, 8, 16, 24}`, per operator. Yields whole-policy `T_o(k)`. **Design L is
+the sole data source for Gate A.**
+
+**Design T — isothermal.** A **constant** temperature per cell, from the frozen
+set
+
+```
+T_cell ∈ {0.05, 0.1, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0}
+```
+
+eight cells, per operator. Within one cell the acceptance rate — and therefore
+φ — is stationary rather than swept, which is precisely what makes the φ law
+identifiable. **Design T is the sole data source for Gate B.**
+
+**Binding consequence, stated because it is easy to violate:** Gate A's `k′` is
+established on the ladder and is **not** validated by Gate B, and Gate B's φ law
+is established isothermally and is **not** validated by Gate A. Neither transfers
+to the other's regime without a new pre-registration. In particular `T_cell = 8.0`
+lies **above** the ladder's hot end of `4.0`, so the φ law is fitted over a wider
+φ range than the ladder ever traverses; any use of the fitted law to explain
+ladder timings is extrapolation and is prohibited in this cycle.
+
+## A1 — Design T, specified
+
+1. **Budgets, two per cell.** Each isothermal cell is timed at
+   `k ∈ {4, 12}`. Per-sweep time is the **difference quotient**
+
+   ```
+   ms_per_sweep(i, o, T_cell, s) = [ T_meas(12) − T_meas(4) ] / 8
+   ```
+
+   Differencing removes the `k`-independent floor **by construction**, so Design T
+   never depends on estimating an intercept. This is the same lesson as §A6: an
+   intercept that is not modelled must be cancelled, not ignored.
+
+2. **φ, defined and measured.** `φ = accepted flips / (r · n)` per sweep, averaged
+   over the eight sweeps in the differenced window `(4, 12]`. Per RC-005, φ **is**
+   the acceptance rate; the instrument records it from the operator's own
+   acceptance counters.
+
+3. **New control — φ recovery (P4).** Measured φ must agree with the acceptance
+   rate independently computed from `StepEvent` to within 1% relative, on every
+   pilot cell. Failure means the quantity being modelled is not the quantity being
+   measured, and kills the cycle under K1.
+
+4. **`DEGENERATE-TIMING`, extended.** A Design T cell is degenerate when
+   `T_meas(12) − T_meas(4)` is below **100×** the measured timer resolution; a
+   Design L cell is degenerate as already defined in §5. **K3, extended:** if more
+   than **2 of 6** instances are degenerate at `k = 4` (Design L) **or** more than
+   **2 of the 8** temperature cells are degenerate on any instance (Design T), the
+   corresponding grid is invalid and that design stops. Neither grid may be
+   silently widened.
+
+5. **Run count, stated honestly.** Design L is `6 × 2 × 4 × 8 × 9 = 3,456` runs;
+   Design T is `6 × 2 × 8 × 2 × 8 × 9 = 13,824` runs; **17,280 short runs total**
+   across pilot, held-in and held-out blocks combined. This is recorded so the
+   cost of the cycle is visible before it is authorised, not discovered during it.
+
+## A2 — The exact Gate B estimator, with shape normalisation
+
+The shipped shape-only work is
+
+```
+S_i = (n_i + 2·m_i) · r
+```
+
+with `m_i = num_pairs` and `r = 32`, exactly as `work_per_sweep` computes it.
+`S_i` is dimensionless and instance-only; it carries no temperature and no
+operator.
+
+**Response and regressor**, per observation `(i, o, T_cell, s)`:
+
+```
+y = ms_per_sweep(i, o, T_cell, s) / S_i        [ms per unit shape-work]
+x = min( φ(i, o, T_cell, s), 1/3 )             [clipped flip density]
+```
+
+**Estimator.** Ordinary least squares of `y` on `x`, **fitted separately for each
+operator**, pooled over the held-in observations of that operator:
+`6 instances × 8 temperatures × 8 seeds = 384 observations per operator`.
+
+```
+ŷ(o) = c_scan(o) + c_flip(o) · x
+```
+
+The intercept is `W_scan` and the slope is `W_flip`, both in ms per unit
+shape-work. Pooling instances is what identifies the law as instance-independent;
+pooling operators is **forbidden**, since the whole hypothesis is that the two
+operators have different flip costs. Coefficients are frozen from **held-in
+only** and written into the descendant document before held-out is touched.
+
+**The clip at 1/3 is part of the frozen model**, not a fitting choice: it encodes
+the `apply_flips` dense/scattered dispatch at `flips·3 ≥ r`.
+
+## A3 — Gate B, restated exactly
+
+**Baseline conversion — the defect this repairs.** The shipped model emits the
+abstract, dimensionless `S_i`. Comparing it to milliseconds without a scale would
+make the baseline lose on units alone, which would rig the test. The baseline is
+therefore given its **own free scale parameter**, fitted on held-in by the same
+rule:
+
+```
+λ(o) = median over the 384 held-in observations of o of  ( ms_per_sweep / S_i )
+ms_hat_shape(i, o, T_cell) = λ(o) · S_i
+```
+
+`λ(o)` has no temperature and no φ dependence — that is exactly the blindness
+RC-005 measured — but the baseline is otherwise a fair steelman.
+
+**Proposed prediction:**
+
+```
+ms_hat_prop(i, o, T_cell, s) = S_i · [ c_scan(o) + c_flip(o) · min(φ, 1/3) ]
+```
+
+**Evaluation set, exactly.** Per `(instance, operator)`: the held-out block gives
+`8 temperatures × 8 seeds = 64` observations. There are `6 × 2 = 12` such cells,
+hence **768 held-out observations in total**. Degenerate cells (§A1.4) are
+excluded and their count reported; if exclusions reduce any `(instance, operator)`
+cell below **48** of its 64 observations, that cell is reported `INSUFFICIENT` and
+counts as a failure for that cell rather than being silently dropped.
+
+**Metric.** Median absolute relative error over exactly those 64 observations:
+
+```
+MdARE(i, o, model) = median_{64 obs}  | ms_hat − ms_meas | / ms_meas
+```
+
+**Gate B passes** iff
+
+```
+MdARE(i, o, proposed) ≤ MdARE(i, o, shape) − 0.05
+```
+
+on **at least 10 of the 12** `(instance, operator)` cells. Otherwise the verdict
+is `EFFICACY NOT ESTABLISHED`, with the consequences already fixed in §8 of the
+body and in K5: no adoption, and **no additional term, interaction or regime
+split may be added to the formula in this cycle.**
+
+## A4 — `k′` solves equal total time, not equal slope
+
+The body's `k′ = round(16 · b_M / b_G)` equates **slopes** and silently assumes
+`a_M = a_G`. That is the same `k`-independent-floor error the cycle exists to
+expose. Equal cost means equal **total** time:
+
+```
+a_M + b_M · 16  =  a_G + b_G · k′
+```
+
+hence
+
+```
+k′ = round( ( a_M − a_G + 16 · b_M ) / b_G )
+```
+
+with `a_o, b_o` from Design L. **Criterion A4, restated:** this integer must be
+identical across all eight pilot seeds and across the central 95% of the
+bootstrap, and must satisfy `k′ ≥ 1`. A `k′` that moves with the seed, or that is
+non-positive, is not an equal-cost budget and fails A4.
+
+## A5 — N2 replaced by a valid zero-slope null
+
+The body's N2 proposed to fit a slope from `k = 0` cells alone. With every
+regressor value identical the OLS slope is undefined; the control could not have
+passed or failed meaningfully.
+
+**N2′ — synthetic zero-slope null.** A synthetic workload whose duration is
+constructed to be **independent of the `k` label** is executed under the four
+distinct labels `k ∈ {4, 8, 16, 24}` and fitted by the §6 procedure. The 95% CI on
+the fitted `b` must **contain zero**. This is a genuine two-sided null: a harness
+that manufactures slope from labels alone fails it.
+
+## A6 — P1 was not a harness positive
+
+`T(k) = a + b·k` with `a > 0` gives `T(24)/T(4) < 6` always, and the ratio tends
+to 1 as `a` dominates. The body's "> 2.0 on every instance" therefore tested each
+instance's `a/b` ratio, not the harness, and a perfectly sound harness could fail
+it on a floor-dominated instance.
+
+**P1′ — synthetic known-effect positive.** Against a synthetic workload with
+**constructed, known** `a` and `b`, the §6 fitting procedure recovers both within
+**5%**, and recovers the implied `k′` of §A4 exactly. This is the cycle's
+known-effect positive control and it is independent of the Runtime.
+
+**D1 — real-instance monotonicity, a diagnostic.** On every real Design L cell the
+medians must satisfy `T(4) < T(8) < T(16) < T(24)` **strictly**. This is a valid
+requirement — `b > 0` implies strict monotonicity regardless of `a` — and it fails
+loudly on a broken harness. The **ratio** `T(24)/T(4)` is **reported, not
+thresholded**; any threshold on it may only be set from the §A6 synthetic
+calibration, never chosen after seeing real data.
+
+## Internal consistency check
+
+| item | resolution |
+|---|---|
+| Gate A data source | Design L only; §6 estimation unchanged and still applies to it |
+| Gate B data source | Design T only; §A2 estimator |
+| φ identifiable? | yes — 8 isothermal cells per (instance, operator), vs 1 aggregate point under the superseded design |
+| intercept handling | Design L models it (`a`); Design T cancels it by differencing |
+| operators pooled? | never — separate fits in both designs |
+| baseline fairness | `λ(o)` free scale fitted on held-in only |
+| observation count | Gate B: exactly 64 per cell, 768 total; `INSUFFICIENT` below 48 |
+| `k′` | solves equal total time; `≥ 1`; seed-stable |
+| controls | N1, N3, P2, P3 stand; N2′, P1′ replace N2, P1; P4 added; D1 is a diagnostic |
+| kill criteria able to fail | K1–K6 stand, K3 extended to both grids; A4 and Gate B both have concrete two-sided thresholds |
+| adoption | still prohibited; scheduler change still requires a separate accepted ADR (§10) |
