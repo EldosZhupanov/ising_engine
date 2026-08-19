@@ -905,6 +905,102 @@ fn run_entropy_pilot(reg: &OperatorRegistry) -> bool {
     reproduced
 }
 
+fn run_entropy_exact_context_pilot(reg: &OperatorRegistry) -> bool {
+    let inst = CORPUS.iter().find(|x| x.name == "G15").expect("G15 frozen");
+    let ir = match load(inst.path) {
+        Ok(ir) => ir,
+        Err(e) => {
+            eprintln!("exact-context pilot cannot load G15: {e}");
+            return false;
+        }
+    };
+    let mut out = String::from(
+        "seed\tstate_digest\tledger_sha256\thistogram_sha256\tmismatch_indices\ts1_m_bits\ts1_g_bits\n",
+    );
+    let mut reproduced = false;
+    for &seed in &RC017_PILOT {
+        assert!(!RC017_HELD_IN.contains(&seed) && !RC017_HELD_OUT.contains(&seed));
+        let prefix = match entropy_pilot_row(&ir, reg, seed) {
+            Ok(row) => row,
+            Err(e) => {
+                eprintln!("exact-context prefix control failed seed={seed}: {e}");
+                return false;
+            }
+        };
+        let m = match execute_rc017(&ir, reg, &plan_for_rc017(&ir, OP_A, seed)) {
+            Ok(run) => run,
+            Err(e) => {
+                eprintln!("exact-context M arm failed seed={seed}: {e}");
+                return false;
+            }
+        };
+        let g = match execute_rc017(&ir, reg, &plan_for_rc017(&ir, OP_B, seed)) {
+            Ok(run) => run,
+            Err(e) => {
+                eprintln!("exact-context G arm failed seed={seed}: {e}");
+                return false;
+            }
+        };
+        let extract = |event: &StepEvent| {
+            deployed_non_bias_step_features(
+                &ir,
+                &[event.best_energy],
+                0,
+                event.metrics.mean_energy,
+                event.metrics.energy_entropy,
+                event.metrics.diversity,
+                event.acceptance,
+                1.0 / 3.0,
+            )
+        };
+        let s1_m = extract(&m.event0);
+        let s1_g = extract(&g.event0);
+        let mismatches: Vec<usize> = (0..12)
+            .filter(|&k| s1_m[k].to_bits() != s1_g[k].to_bits())
+            .collect();
+        reproduced |= !mismatches.is_empty();
+        let bits = |s1: &[f64; 12]| {
+            s1.iter()
+                .map(|x| format!("{:016x}", x.to_bits()))
+                .collect::<Vec<_>>()
+                .join(",")
+        };
+        let mismatch_text = mismatches
+            .iter()
+            .map(usize::to_string)
+            .collect::<Vec<_>>()
+            .join(",");
+        println!("  seed {seed}: mismatched S1 coordinates {mismatch_text:?}");
+        out.push_str(&format!(
+            "{seed}\t{:016x}\t{}\t{}\t{}\t{}\t{}\n",
+            prefix.0,
+            prefix.1,
+            prefix.2,
+            mismatch_text,
+            bits(&s1_m),
+            bits(&s1_g)
+        ));
+    }
+    if let Err(e) = std::fs::create_dir_all(RC017_ENTROPY_PILOT_DIR) {
+        eprintln!("cannot create pilot directory: {e}");
+        return false;
+    }
+    let path = format!("{RC017_ENTROPY_PILOT_DIR}/exact_context_v0.tsv");
+    if let Err(e) = std::fs::write(&path, out) {
+        eprintln!("cannot write {path}: {e}");
+        return false;
+    }
+    println!(
+        "  RC-017 exact-context pilot: {} ({path})",
+        if reproduced {
+            "REPRODUCED"
+        } else {
+            "NOT REPRODUCED"
+        }
+    );
+    reproduced
+}
+
 // --------------------------------------------------------------- sha256
 //
 // Implemented inline rather than added as a dependency: `sha2` is only a
@@ -3148,6 +3244,12 @@ fn main() {
 
     if flag("--rc017-entropy-pilot") {
         if !run_entropy_pilot(&reg) {
+            std::process::exit(6);
+        }
+        return;
+    }
+    if flag("--rc017-entropy-exact-context-pilot") {
+        if !run_entropy_exact_context_pilot(&reg) {
             std::process::exit(6);
         }
         return;
