@@ -516,3 +516,171 @@ calibration, never chosen after seeing real data.
 | controls | N1, N3, P2, P3 stand; N2′, P1′ replace N2, P1; P4 added; D1 is a diagnostic |
 | kill criteria able to fail | K1–K6 stand, K3 extended to both grids; A4 and Gate B both have concrete two-sided thresholds |
 | adoption | still prohibited; scheduler change still requires a separate accepted ADR (§10) |
+
+---
+
+# Amendment 2 — paired timing windows and corrected run accounting
+
+**Status:** binding amendment to this pre-registration as amended by Amendment 1.
+Written **before any RC-018 instrument code exists and before any RC-018 datum.**
+Documentation only.
+
+**Reason.** Independent review returned two further binding defects. Both are
+verified below and both are **accepted**.
+
+## Clauses superseded — and only these
+
+| clause | status |
+|---|---|
+| §A1.1, the difference quotient over two budgets | **SUPERSEDED** by §B1 |
+| §A1.2, the φ averaging window | **SUPERSEDED** by §B1.3 |
+| §A1.4, `DEGENERATE-TIMING` for Design T | **SUPERSEDED** by §B3 |
+| §A1.5, run count | **SUPERSEDED** by §B2 |
+| §4, control **N3** | **EXTENDED** by §B1.4 |
+
+Nothing else changes. Design L is untouched. §A2's estimator, §A3's Gate B
+metric, evaluation set of 64 observations per cell and 0.05 margin, §A4's `k′`
+equation, §A5's N2′, §A6's P1′ and D1, and every threshold anywhere in this
+document stand exactly as written. **This amendment changes no threshold.**
+
+## B1 — Design T is a paired nested execution
+
+### The defect, verified
+
+§A1.1 defined per-sweep time as `[T_meas(12) − T_meas(4)] / 8` without saying
+that the two timings come from the **same** run. Read literally it permits two
+**independent** executions at budgets 12 and 4. That would be invalid for three
+independent reasons:
+
+1. The two runs would occupy **different RNG positions and different states**, so
+   their difference is not the cost of any single trajectory's sweeps 5–12.
+2. The subtraction would combine **two independent wall-time noises**, inflating
+   variance and admitting negative differences.
+3. The `k`-independent floor would cancel only in expectation, not per
+   observation, so the intercept-free property §A1.1 claimed by construction
+   would not actually hold.
+
+**The finding is accepted.**
+
+### The specification
+
+Each Design T observation is **one paired nested execution**: a single Runtime
+execution, one state, one RNG stream, at one constant `T_cell`.
+
+1. **Prefix — sweeps 1–4.** Executed normally. A timing boundary is taken at the
+   end of sweep 4.
+2. **Measurement window — sweeps 5–12, exactly eight sweeps.** `incremental_ms`
+   is measured **directly around this window**: one clock read immediately before
+   sweep 5 and one immediately after sweep 12.
+
+   ```
+   ms_per_sweep(i, o, T_cell, s) = incremental_ms / 8
+   ```
+
+   **This is a direct measurement, never a subtraction of two independent wall
+   times.** No arithmetic combines timings from different executions anywhere in
+   Design T.
+
+3. **φ from the same window only.** `φ = accepted / proposals`, counted over
+   **sweeps 5–12 exclusively**. Proposals and acceptances from the prefix are not
+   included, and no acceptance figure from any other execution may enter. This
+   keeps the regressor and the response measured over the identical interval of
+   the identical trajectory — the property that makes the pairing meaningful.
+
+4. **Prefix timing is diagnostic only.** The prefix interval may be timed and
+   recorded as `prefix_ms` for host-behaviour diagnostics. It is **not** a Gate B
+   response, is **not** used in any fit, and may not be subtracted from anything.
+   The Gate B response is the incremental window and nothing else.
+
+5. **N3′ — non-invasiveness under pairing.** The paired instrumented trajectory
+   must be **bit-identical** to an **uninterrupted 12-sweep trajectory** at the
+   same instance, operator, temperature and seed, on all three of: final state
+   digest, energy bits, and RNG probe. This supersedes §4's N3 by testing the
+   specific hazard pairing introduces — that a mid-run timing boundary or
+   checkpoint perturbs the run it is measuring. A mismatch kills the cycle under
+   K1.
+
+## B2 — Run count, corrected and per block
+
+### The defect, verified
+
+§A1.5 computed `6 × 2 × 4 × 8 × 9 = 3,456` using **eight seeds, which is one
+block**, and then labelled the sum "across pilot, held-in and held-out blocks
+combined". Those numbers are **per block**, so the stated total understated the
+cycle by a factor of three. **The finding is accepted.**
+
+### Terminology, fixed
+
+- **Operator execution** — one Runtime execution of one plan at one budget. The
+  unit of Design L.
+- **Paired trajectory** — one Runtime execution carrying a 4-sweep prefix and an
+  8-sweep measurement window, yielding exactly one `incremental_ms` and one φ.
+  The unit of Design T. A paired trajectory is **one** Runtime execution, not two.
+
+Both are Runtime executions; the two names distinguish what each unit yields.
+
+### The corrected accounting
+
+Per block — each block has eight seeds:
+
+| design | factors | per block |
+|---|---|---|
+| Design L | `6 instances × 2 operators × 4 budgets × 8 seeds × 9 repetitions` | **3,456 operator executions** |
+| Design T | `6 instances × 2 operators × 8 temperatures × 8 seeds × 9 repetitions` | **6,912 paired trajectories** |
+| **total** | | **10,368 Runtime executions per block** |
+
+Across the three science blocks — pilot, held-in, held-out:
+
+```
+3 × 10,368 = 31,104 Runtime executions
+```
+
+**Controls are additional and are not included in this figure.** The controls of
+§4 (N1, N3′, P2, P3), §A1.3 (P4), §A5 (N2′) and §A6 (P1′, D1) carry their own
+executions, several of them synthetic rather than Runtime, and are accounted for
+separately in the results document.
+
+Design T is now **6,912** paired trajectories per block rather than the 13,824
+executions implied by the superseded two-budget scheme, because pairing folds
+both budgets into a single execution. The corrected cycle total of **31,104** is
+recorded here so the true cost is visible before authorisation.
+
+## B3 — Positive-duration and denominator guards
+
+A Design T observation is `DEGENERATE-TIMING`, excluded from fitting and counted
+in the exclusion report, unless **both** hold:
+
+1. `incremental_ms > 0` **strictly.** A non-positive interval is physically
+   impossible and indicates timer wrap, insufficient resolution, or a clock
+   source that is not monotonic. It is never clamped, floored, or treated as a
+   small positive value.
+2. `incremental_ms ≥ 100 × timer_resolution`, with the resolution measured by the
+   instrument and recorded.
+
+**Denominator safety, stated explicitly.** §A3's MdARE divides by `ms_meas`, and
+`ms_meas = incremental_ms / 8`. Guard 1 makes that denominator strictly positive
+for every observation that reaches the metric, so MdARE is always well-defined and
+no observation can be silently rescued by a clamp.
+
+Design L's degeneracy rule and §A1.4's `K3` counting rule are unchanged in every
+other respect: more than **2 of 6** instances degenerate at `k = 4` invalidates
+Design L, and more than **2 of the 8** temperature cells degenerate on any
+instance invalidates Design T. The §A3 `INSUFFICIENT` rule — a
+`(instance, operator)` cell falling below 48 of its 64 observations fails rather
+than being dropped — continues to apply unchanged.
+
+## Internal consistency check
+
+| item | resolution |
+|---|---|
+| Design T unit | one paired trajectory = one Runtime execution, one state, one RNG stream |
+| Gate B response | `incremental_ms / 8`, measured directly around sweeps 5–12 |
+| subtraction of independent runs | **eliminated** — no cross-execution arithmetic remains in Design T |
+| φ window | sweeps 5–12 only, same trajectory, same interval as the response |
+| prefix timing | diagnostic only; never a response, never subtracted |
+| intercept | cancelled by construction — the window excludes the startup floor rather than estimating it |
+| N3 | superseded by N3′: paired instrumented vs uninterrupted 12-sweep, exact state/energy/RNG |
+| Design L | untouched by this amendment |
+| run count | 10,368 per block; 31,104 across three blocks; controls separate |
+| degeneracy | `incremental_ms > 0` and `≥ 100×` resolution; MdARE denominator provably positive |
+| thresholds | **none changed by this amendment** |
