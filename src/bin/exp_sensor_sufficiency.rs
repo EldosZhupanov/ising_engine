@@ -79,7 +79,9 @@ const MIN_QUALIFYING: usize = 6;
 const MIN_GROUPS: usize = 3;
 /// Amendment 1 §A4 kill criterion 2.
 const DEGENERATE_FRACTION_KILL: f64 = 0.50;
-/// Amendment 1 §A5.3: equal sweeps is equal cost inside this band.
+/// Legacy Amendment 1 §A5.3 diagnostic band. Amendment 4 §D2 withdraws every
+/// equal-cost inference from this ratio; the bounds remain only in the frozen
+/// calibration record.
 const COST_RATIO_LO: f64 = 0.95;
 const COST_RATIO_HI: f64 = 1.05;
 /// Amendment 1 §A6.2 step 6.
@@ -1940,7 +1942,7 @@ fn main() {
                         if c.cost_arm_needed {
                             "cost-arm-needed"
                         } else {
-                            "R in band: equal sweeps IS equal cost"
+                            "legacy R band; equal-cost inference withdrawn (Amendment 4)"
                         }
                     );
                     out.push_str(&format!(
@@ -2439,9 +2441,11 @@ mod tests {
     fn rc016_exposes_no_cost_arm_mode() {
         let forbidden_flag = ["flag(\"--", "cost"].concat();
         let forbidden_equal_cost = ["--equal", "-cost"].concat();
+        let forbidden_claim = ["equal sweeps IS", " equal cost"].concat();
         let source = include_str!("exp_sensor_sufficiency.rs");
         assert!(!source.contains(&forbidden_flag));
         assert!(!source.contains(&forbidden_equal_cost));
+        assert!(!source.contains(&forbidden_claim));
     }
 
     /// Amendment 3 §C1: the seed formula must be collision-free across the
