@@ -92,6 +92,7 @@ const DESCENDANT_PATH: &str = "research/PREREG_RC016_DESCENDANT.md";
 /// …and the operator must say so explicitly, so `--holdout` cannot fire by
 /// accident from a stale shell history.
 const CONFIRM_FLAG: &str = "--confirm-descendant-frozen";
+const AMENDMENT4_PATH: &str = "research/PREREG_RC016_AMENDMENT_4.md";
 
 /// Structural family, recorded per instance because SIGN CONSTANT's coverage
 /// requirement is stated over families, not only over matched groups.
@@ -1519,18 +1520,9 @@ fn decide(held_in: &[Row], held_out: &[Row]) -> (Verdict, Census) {
     if degenerate_fraction >= DEGENERATE_FRACTION_KILL {
         return (Verdict::BenchmarkValidity, census);
     }
-    // Amendment 1 §A4 kill criterion 1 lists `1 <= K < 6` UNCONDITIONALLY, so it
-    // is applied BEFORE any verdict branch.
-    //
-    // MAINTAINER NOTE, recorded rather than silently resolved: §A3's SIGN VARIES
-    // condition carries NO `K` floor, and the `>= 6` threshold was introduced in
-    // §A3 for SIGN CONSTANT as the deleted binomial's replacement. Enforcing the
-    // kill here therefore makes an existence-style S0 counterexample unreachable
-    // below K = 6 even when one demonstrably exists. If that is not intended, the
-    // route is an amendment exempting SIGN VARIES — not a code change.
-    if (1..MIN_QUALIFYING).contains(&census.k) {
-        return (Verdict::QInconclusive, census);
-    }
+    // Amendment 4 §D4: SIGN VARIES is an existence claim and needs one qualified
+    // witness of each sign. The K>=6 and coverage floors apply only to the
+    // population-style SIGN CONSTANT claim.
     if k_plus >= 1 && k_minus >= 1 {
         return (Verdict::SignVaries, census);
     }
@@ -1683,6 +1675,11 @@ fn require_frozen_calibration(dir: &str) -> bool {
                 }
             }
         }
+        let degenerate_power =
+            f[7] == "true" && f[4].parse::<f64>().is_ok_and(|d_seed| d_seed < 1e-9);
+        if degenerate_power {
+            println!("    DEGENERATE-POWER: {} (raw powered=true)", f[1]);
+        }
         seen[idx] = true;
     }
     let missing: Vec<&str> = seen
@@ -1724,6 +1721,66 @@ fn mtime_secs(path: &str) -> Option<u64> {
         .duration_since(std::time::UNIX_EPOCH)
         .ok()
         .map(|d| d.as_secs())
+}
+
+/// Pure Amendment 4 §D6 Gate 1 predicate. Keeping policy separate from git and
+/// filesystem I/O makes every refusal branch deterministic in unit tests.
+fn amendment4_gate_ok(
+    exists: bool,
+    tracked: bool,
+    clean: bool,
+    commit_time: Option<u64>,
+    calibration_mtime: Option<u64>,
+) -> Result<(), &'static str> {
+    if !exists {
+        return Err("Amendment 4 file is missing");
+    }
+    if !tracked {
+        return Err("Amendment 4 is not tracked by git");
+    }
+    if !clean {
+        return Err("Amendment 4 has uncommitted modifications");
+    }
+    match (commit_time, calibration_mtime) {
+        (Some(commit), Some(calibration)) if commit > calibration => Ok(()),
+        (Some(_), Some(_)) => Err("Amendment 4 was not committed after calibration"),
+        (None, _) => Err("Amendment 4 has no committing commit"),
+        (_, None) => Err("calibration artifact mtime is unavailable"),
+    }
+}
+
+fn git_succeeds(args: &[&str]) -> bool {
+    std::process::Command::new("git")
+        .args(args)
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .status()
+        .is_ok_and(|status| status.success())
+}
+
+/// Hard precondition for held-in and held-out. Calibration and controls remain
+/// reachable because they do not inspect either science seed block.
+fn require_amendment4(dir: &str) -> bool {
+    let calibration = format!("{dir}/rc016_calibration.tsv");
+    let exists = std::path::Path::new(AMENDMENT4_PATH).exists();
+    let tracked = git_succeeds(&["ls-files", "--error-unmatch", AMENDMENT4_PATH]);
+    let clean = git_succeeds(&["diff", "--quiet", "HEAD", "--", AMENDMENT4_PATH]);
+    match amendment4_gate_ok(
+        exists,
+        tracked,
+        clean,
+        git_commit_time(AMENDMENT4_PATH),
+        mtime_secs(&calibration),
+    ) {
+        Ok(()) => {
+            println!("    Amendment 4 provenance gate: PASS");
+            true
+        }
+        Err(reason) => {
+            eprintln!("    Amendment 4 provenance gate: FAIL — {reason}");
+            false
+        }
+    }
 }
 
 /// Four independent conditions, all required. Held-out is the block that can
@@ -1864,6 +1921,13 @@ fn main() {
         for (idx, entry) in CORPUS.iter().enumerate() {
             match calibrate_one(idx, &reg) {
                 Some(c) => {
+                    let power_label = if c.powered && c.d_seed_pilot < 1e-9 {
+                        "DEGENERATE-POWER (raw powered=true)"
+                    } else if c.powered {
+                        "POWERED"
+                    } else {
+                        "UNDERPOWERED (cost arm NOT run)"
+                    };
                     println!(
                         "  {:>5} R={:.4} Y_ref={:.2} d_seed={:.4} delta={:.4} power={:.4} {} {}",
                         c.name,
@@ -1872,11 +1936,7 @@ fn main() {
                         c.d_seed_pilot,
                         c.delta,
                         c.power,
-                        if c.powered {
-                            "POWERED"
-                        } else {
-                            "UNDERPOWERED (cost arm NOT run)"
-                        },
+                        power_label,
                         if c.cost_arm_needed {
                             "cost-arm-needed"
                         } else {
@@ -1912,6 +1972,10 @@ fn main() {
 
     if flag("--science") {
         println!("\nRC-016 held-in block — frozen-calibration precondition (§8.1)");
+        if !require_amendment4(&dir) {
+            eprintln!("\n  HELD-IN REFUSED — Amendment 4 §D6 Gate 1 failed");
+            std::process::exit(2);
+        }
         if !require_frozen_calibration(&dir) {
             eprintln!("\n  HELD-IN REFUSED — §8.1 requires the calibration table frozen");
             eprintln!("  before ANY science seed runs. Run --calibrate first.");
@@ -1924,6 +1988,10 @@ fn main() {
 
     if flag("--holdout") {
         println!("\nRC-016 held-out gate (PREREG §5: not inspected until controls and held-in are evaluated)");
+        if !require_amendment4(&dir) {
+            eprintln!("\n  HELD-OUT REFUSED — Amendment 4 §D6 Gate 1 failed");
+            std::process::exit(2);
+        }
         if !require_frozen_calibration(&dir) {
             eprintln!("\n  HELD-OUT REFUSED — no complete frozen calibration (§8.1).");
             std::process::exit(2);
@@ -2154,12 +2222,32 @@ mod tests {
         }
         let (v, c) = decide(&hi, &ho);
         assert!(c.k_plus >= 1 && c.k_minus >= 1, "both signs must qualify");
-        // Fix 5: `1 <= K < 6` now fires FIRST, so four qualifying instances land
-        // in Q-INCONCLUSIVE even with both signs present.
+        // Amendment 4 §D4: opposite qualified signs are an existence proof and
+        // carry no K>=6 or structural-coverage floor.
         assert_eq!(c.k, 4);
-        assert_eq!(v, Verdict::QInconclusive);
+        assert_eq!(v, Verdict::SignVaries);
 
-        // SIGN VARIES becomes reachable only at K >= 6 with both signs.
+        // The minimum constructive case is one qualified witness of each sign.
+        let (mut hi_min, mut ho_min) = clean_corpus();
+        for (k, sign) in [(17usize, 1.0f64), (18, -1.0)] {
+            let (g, f) = (CORPUS[k].group, CORPUS[k].family);
+            hi_min[k] = row(k, 10.0 * sign, 0.001, true, g, f);
+            ho_min[k] = row(k, 11.0 * sign, 0.001, true, g, f);
+        }
+        let (v_min, c_min) = decide(&hi_min, &ho_min);
+        assert_eq!((c_min.k_plus, c_min.k_minus), (1, 1));
+        assert_eq!(v_min, Verdict::SignVaries);
+
+        // A one-sign pattern below K=6 remains inconclusive.
+        let (mut hi_short, mut ho_short) = clean_corpus();
+        for k in [17usize, 18] {
+            let (g, f) = (CORPUS[k].group, CORPUS[k].family);
+            hi_short[k] = row(k, 10.0, 0.001, true, g, f);
+            ho_short[k] = row(k, 11.0, 0.001, true, g, f);
+        }
+        assert_eq!(decide(&hi_short, &ho_short).0, Verdict::QInconclusive);
+
+        // The larger opposite-sign case remains SIGN VARIES as well.
         let (mut hi6, mut ho6) = clean_corpus();
         for (k, sign) in [
             (17usize, 1.0f64),
@@ -2311,6 +2399,49 @@ mod tests {
         )
         .unwrap();
         assert!(!require_frozen_calibration(dir2.to_str().unwrap()));
+    }
+
+    #[test]
+    fn amendment4_gate_reports_every_refusal_branch() {
+        assert_eq!(
+            amendment4_gate_ok(false, true, true, Some(20), Some(10)),
+            Err("Amendment 4 file is missing")
+        );
+        assert_eq!(
+            amendment4_gate_ok(true, false, true, Some(20), Some(10)),
+            Err("Amendment 4 is not tracked by git")
+        );
+        assert_eq!(
+            amendment4_gate_ok(true, true, false, Some(20), Some(10)),
+            Err("Amendment 4 has uncommitted modifications")
+        );
+        assert_eq!(
+            amendment4_gate_ok(true, true, true, Some(10), Some(10)),
+            Err("Amendment 4 was not committed after calibration")
+        );
+        assert_eq!(
+            amendment4_gate_ok(true, true, true, None, Some(10)),
+            Err("Amendment 4 has no committing commit")
+        );
+        assert_eq!(
+            amendment4_gate_ok(true, true, true, Some(20), None),
+            Err("calibration artifact mtime is unavailable")
+        );
+        assert_eq!(
+            amendment4_gate_ok(true, true, true, Some(20), Some(10)),
+            Ok(())
+        );
+    }
+
+    /// Amendment 4 §D2 withdraws the cost arm. This source-level invariant
+    /// prevents a future CLI flag from silently making that arm reachable.
+    #[test]
+    fn rc016_exposes_no_cost_arm_mode() {
+        let forbidden_flag = ["flag(\"--", "cost"].concat();
+        let forbidden_equal_cost = ["--equal", "-cost"].concat();
+        let source = include_str!("exp_sensor_sufficiency.rs");
+        assert!(!source.contains(&forbidden_flag));
+        assert!(!source.contains(&forbidden_equal_cost));
     }
 
     /// Amendment 3 §C1: the seed formula must be collision-free across the
