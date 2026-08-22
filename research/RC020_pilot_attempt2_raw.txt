@@ -1,0 +1,41 @@
+RC-020 controls — PREREG §4, guards §5, environment §3.7
+
+[A1] control seeds 20001/991/993 disjoint from all 117 named values
+[env] cpu pin 0-3: ok (allowed now: 0-3)
+[env] timer resolution: 0.000020 ms (degenerate below 0.002000 ms)
+[env] load average 0.11 < 2: ok
+[env] threads: 1
+[P2] corpus hashes: all 6 match PREREG_RC016 §4
+[P1] synthetic marginal: b=0.751288 (truth 0.75, err 0.0017); k'_real err 0.000000 -> PASS
+[N2] window-label null: CI [-0.006817, 0.002340] contains 0 -> PASS
+[N1] same-code null: 2.415 vs 2.597 ms, spread 0.0755 <= 0.09 -> PASS
+[N3] metropolis_sweep   state match energy match rng match -> PASS
+[N3] gibbs_color_sweep  state match energy match rng match -> PASS
+[P3] sentinel liveness: clean 2.463/2.369 spread 0.0397 not flagged=true; injected 4.621 spread 0.8764 flagged=true -> PASS
+[P4] arm A: W=16 4.710 ms > W=4 1.119 ms -> PASS
+[P4] arm B: W=16 4.313 ms > W=4 1.101 ms -> PASS
+[§10] pre-registration tracked, clean and committed
+[§10.7] descendant §9 blank, reserved blocks locked: true
+[§10.1] artifact schema: 22 columns
+
+[§5/§7] frozen decision rules, exercised
+    degenerate below 0.002000 ms: at 0.001000 ms -> true, at 0.004000 ms -> false
+    drift bound 0.09: 5% -> flagged false, 10% -> flagged true
+    session aborts above 2 discarded of 9 repetitions
+    A1 precision <= 0.1, A2 stationarity <= 0.1: tight+stationary -> Qualifies, tight+drifting -> Unstable, imprecise -> NotIdentified
+    feasibility by CI width in sweeps: 0.5 -> Feasible, 2.0 -> ReducedResolution, 3.0 -> NotFeasible
+    CI seeds 20261201..20261236 over 6 instances x 2 arms
+    interleave: 72 conditions per repetition, permuted from seed 20261301
+    repetition 0 order begins [3, 0, 5, 11, 7, 65]
+    schema header: 22 columns, 21 tab separators
+
+CONTROLS: ALL PASS
+
+RC-020 pilot — seeds [10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008], 9 repetitions
+
+  repetition 1 discarded: SENTINEL-DRIFT (1 so far)
+  repetition 1 discarded: SENTINEL-DRIFT (2 so far)
+
+  PILOT ABORTED — session discarded: repetition 1 exceeded the bound twice (SENTINEL-DRIFT)
+  No artifact written. Record this discard in the results document.
+EXIT=5

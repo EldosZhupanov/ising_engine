@@ -21,7 +21,7 @@ of them may be softened in a summary, a commit message, or a report.
 | **RC-016** | `RC016_CYCLE_RECORD.md`: `K = 25`, `k+ = 25`, `k- = 0`, **`VERDICT = SIGN CONSTANT`**. H-16 — the `S0`-matched opposite-action pair — is **REFUTED**, and **no causal `S0` counterexample was found**. What this establishes is a **stable causal equal-sweep outcome ordering for this operator pair, slot, initialization, corpus and equal-sweep budget** — and nothing wider. It is **not** an equal-cost result, **not** a policy, **not** general `S₁` sufficiency, and **not** a universal ordering of Markov kernels. Amendment 4 withdrew the cost arm; only 1 of 30 arms was genuinely powered. |
 | **RC-017** | **No scientific result.** Aborted as an invalid-instrument attempt (`RC017_ABORT_RECORD.md`). Seeds `5001–5008` are burned and permanently unusable. |
 | **RC-018** | **Instrument invalid** (`RC018_PILOT_ABORT_RECORD.md`): a mandatory pre-registered guard was asserted in prose but absent from executable code. Closed, not repaired. No RC-018 datum, seed, threshold or verdict is evidence for anything. |
-| **RC-020** | Measures **one quantity only**: marginal wall cost `b(i,o) = d(wall)/d(sweeps)`, in ms/sweep. It is a **calibration** cycle. It does **not** license an efficacy claim, an equal-cost comparison, a deployment claim, or any statement about which operator is better. |
+| **RC-020** | **CLOSED WITHOUT A SCIENTIFIC VERDICT.** `RC020_PILOT_ABORT_RECORD.md`: two pilot attempts, no artifact from either, **Gate A = NO VERDICT**. Attempt 1 was refused at the gate (K1, exit 2, body never ran). Attempt 2 ran the body, then §5 discarded the session when repetition 1 exceeded the sentinel bound twice (exit 5); **`K3` did NOT fire** — **failed executions = 2; unique discarded repetition IDs = 1; internal discard counter = 2.** `K3` cannot fire under any reading, because no value exceeds 2, while `K3` requires more than 2; both failures were of the *same* repetition. Seeds `10001–10008` are **burned** conservatively. Held-in `11001–11008` and held-out `12001–12008` are **untouched**; §9 is still blank. RC-020 measured **nothing that survived** and licenses no claim about cost, ordering, equal cost or any cost model. |
 
 Consequence: the project currently holds **no** general claim about operator
 selection, cost models, or superiority over `UltimateSolver`. Nothing downstream
@@ -34,33 +34,85 @@ may assume one.
 Strictly ordered. A stage may not begin until the one before it has returned a
 verdict that permits it.
 
-### Stage S1 — RC-020 pilot, Gate A — **ACTIVE, THE ONLY TASK IN FLIGHT**
+### Stage S1 — RC-020 pilot, Gate A — **CLOSED, NO VERDICT**
 
-Scope: pilot block `10001–10008` only. Gate A asks one question — *is `b`
-identifiable on this host at this precision?* Held-in and held-out are not
-RC-020's to spend.
+Scope was pilot block `10001–10008` only. Gate A asked one question — *is `b`
+identifiable on this host at this precision?* **It was never answered.**
 
 Binding documents: `research/PREREG_RC020_MARGINAL_WALL_COST.md` and
 `research/PREREG_RC020_AMENDMENT_1.md` (`CONTROL_SEED = 20001` frozen).
 Instrument: `src/bin/exp_marginal_cost.rs`, commit `567dd7e`.
+Outcome record: **`research/RC020_PILOT_ABORT_RECORD.md`**.
 
-Current position: controls **ALL PASS**. The pilot was invoked once and the
-frozen P3 host gate **rejected** it. Seeds `10001–10008` did **not** execute; no
-artifact was written; `experiments/rc020/` does not exist. This is a
-**host-condition refusal**, not a result and not a failure of the instrument.
+**Final position.** Two attempts, neither producing an artifact.
 
-> **Provenance caveat — terminal-observed, pending record.** The refusal figure
-> in circulation, *host drift 16.1% against the frozen 9% bound*, has **no
-> committed source**. Its only provenance is the orchestration message
-> `msg_c57fccbbc13f` ("PILOT REFUSED at K1 — host drift 16.1% failed P3 clean
-> half"), read from a terminal. No `RC020_*_RECORD.md` exists. Under
-> `AGENTS.md`'s recording rule, **an unrecorded run did not happen**: the number
-> may not be cited as evidence, entered into a threshold, or carried into a
-> descendant until a record is written. Treat it as a reason the pilot must be
-> re-attempted under observation, not as a measurement.
+| | attempt 1 | attempt 2 |
+|---|---|---|
+| stopped at | control gate, K1 (P3 clean half) | §5 session discard, repetition 1 twice |
+| exit | 2 | 5 |
+| pilot body | did not run | **ran** — repetition 0 completed |
+| seeds `10001–10008` | not executed | **executed** |
+| artifact | none | none |
 
-Precondition to retry: a host quiet enough that the P3 sentinel spread stays
-under `0.09`. Do not lower the bound. Do not retry on a loaded host.
+`experiments/rc020/` does not exist. **Gate A has no verdict**, so none of S2's
+four branches fires and **S3 is unreachable**. Held-in, held-out and the §9
+descendant are untouched.
+
+**Three findings carried forward, each binding on the successor.**
+
+1. **§8 does not classify this outcome.** It matches none of `K1`–`K8`: controls
+   passed, the sentinel was present, `K3` needs more than 2 while failed
+   executions were 2 and unique discarded repetitions 1, no degeneracy bound was
+   crossed, no forbidden seed ran,
+   provenance passed, and `K7`/`K8` both presuppose a Gate-A verdict.
+   Substantively Class I; unclassified as written. The successor must close the
+   gap.
+2. **§5 and §10.1 contradict each other on an aborted session.** §5 requires the
+   discard to be written to the artifact; §10.1 forbids writing the artifact
+   unless the session completes. The instrument obeyed §10.1 and violated §5, so
+   every discard row accumulated in memory and died with the process. The
+   successor must separate the guard/discard journal from the observation
+   artifact.
+3. **Cause is not established, and the three hypotheses are not distinguished.**
+   Elevated paired spread existed already in the control phase — in-process `N1`
+   `0.0755`, 84% of the bound, versus `0.0012` standalone two minutes earlier —
+   so warming from repetition 0 alone is insufficient. But the control phase
+   itself loads the CPU (a warmup trajectory, two 100 000-resample bootstraps,
+   then twelve more warmups), so thermal, bursty-host and CPU-contention
+   explanations are **not separated** by these data. See the record's §4.
+
+**Method rule, binding.** The pilot may **not** be retried until it happens to
+pass. Repeating a run until a drift guard admits it selects an atypically quiet
+moment and biases the very timing quantity being measured. **The instrument must
+work reliably, not pass once by luck.** Do not lower the `0.09` bound.
+
+### Stage S1b — RC-021 host/instrument successor — **ACTIVE, THE ONLY TASK IN FLIGHT**
+
+Gate A returned nothing, so S2 cannot fire and S3 is unreachable. The sequence
+does not resume at RC-020; it resumes at a **fresh pre-registered successor**,
+provisionally **RC-021**, whose subject is the *host and the instrument*, not
+marginal cost.
+
+RC-021 must, in its pre-registration and before any code:
+
+1. **Characterise the host's timing distribution as its own object of study**,
+   with a pass criterion fixed in advance — rather than assuming a quiet moment
+   exists and sampling until one appears.
+2. **Resolve the §5 / §10.1 contradiction** by separating the guard and discard
+   journal from the observation artifact, so a session that yields no
+   observations still leaves a complete record of why it yielded none.
+3. **Close the §8 taxonomy gap**, giving the session-discard path an explicit
+   kill criterion and class.
+4. **Name fresh, disjoint seed blocks.** `10001–10008` are burned;
+   `11001–11008` and `12001–12008` stay reserved and unopened. No successor
+   seed number is chosen in this plan.
+5. State what would make the successor **stop** — including the outcome that
+   this host cannot support ms/sweep timing at all, which is a legitimate and
+   publishable conclusion.
+
+**Not permitted as the next step:** retrying the RC-020 pilot, repairing the
+RC-020 instrument in place, lowering the `0.09` bound, opening any reserved
+block, or writing the §9 descendant.
 
 ### Stage S2 — the four branches out of Gate A
 
