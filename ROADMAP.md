@@ -5,6 +5,10 @@
 > what exists, what is being built, what is planned, and where we are going.
 > Philosophy lives in `SOUL.md`; working rules in `CLAUDE.md`; architecture
 > decisions in `research/architecture/ADR/`.
+>
+> **The active sequence lives in `PROJECT_PLAN.md`** — the current gate, its
+> branches, and the ordered path to a verifiable product. This roadmap stays the
+> stage inventory; it does not track what is in flight.
 
 The project is two things at once:
 

@@ -1,5 +1,10 @@
 # Ising Engine — Development Operating System
 
+**READ FIRST — every new agent, before anything else.** Read `PROJECT_PLAN.md`
+(the active sequence and its gates), then `memory/CURRENT_HANDOFF.md` (the one
+atomic task in flight), then only the files the handoff names. **Do not scan the
+repository and do not read every `.md`** — see `PROJECT_PLAN.md` §7 TOKEN ECONOMY.
+
 This file is how work gets done here. It is the operational layer.
 
 **Governance order (higher outranks lower):**
