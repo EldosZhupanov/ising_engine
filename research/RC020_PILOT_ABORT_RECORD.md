@@ -196,11 +196,12 @@ warm-up-then-throttle mechanism would produce.
 whereas a standalone check two minutes earlier gave `0.0012` and `0.0000`.
 
 **This is weaker evidence than it first appears, and the weakening is recorded
-rather than glossed.** The control phase is not an idle period: by the time `N1`
-is measured the process has already executed a warmup trajectory
-(`exp_marginal_cost.rs:947`), two 100 000-resample bootstraps (P1, N2), and it
-goes on to run N3, P3 and P4; `run_pilot` then executes twelve further full
-warmup trajectories (`:1258`) before repetition 0. So these figures were *not*
+rather than glossed.** The control phase is not an idle period. By the time `N1`
+is measured the process has already run P1's synthetic recovery, N2's single
+100 000-resample bootstrap (`exp_marginal_cost.rs:931`, the sole `bootstrap_ci`
+call site in the binary) and a warmup trajectory (`:947`), in that order; it then
+goes on to N3, P3 and P4, and `run_pilot` executes twelve further full warmup
+trajectories (`:1258`) before repetition 0 begins. So these figures were *not*
 taken without sustained load.
 
 The correct statement is therefore: **elevated spread existed already in the

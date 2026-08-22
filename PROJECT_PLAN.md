@@ -77,7 +77,7 @@ descendant are untouched.
    Elevated paired spread existed already in the control phase — in-process `N1`
    `0.0755`, 84% of the bound, versus `0.0012` standalone two minutes earlier —
    so warming from repetition 0 alone is insufficient. But the control phase
-   itself loads the CPU (a warmup trajectory, two 100 000-resample bootstraps,
+   itself loads the CPU (a warmup trajectory, one 100 000-resample bootstrap,
    then twelve more warmups), so thermal, bursty-host and CPU-contention
    explanations are **not separated** by these data. See the record's §4.
 
