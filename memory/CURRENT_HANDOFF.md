@@ -53,9 +53,11 @@ written to the artifact, §10.1 forbids writing it unless the session completes.
 
 ## Next atomic task
 
-**RC-021 is PRE-REGISTERED ONLY.** The document is
-`research/PREREG_RC021_HOST_INSTRUMENT.md`. **No instrument, no data, no
-`experiments/rc021/`.**
+**RC-021 is PRE-REGISTERED ONLY.** The documents are
+`research/PREREG_RC021_HOST_INSTRUMENT.md` **and its binding
+`research/PREREG_RC021_AMENDMENT_1.md`** — read both; Amendment 1 supersedes
+parts of §7, §8 and §9, and the gate is an **engineering acceptance rule, not a
+statistical certification**. **No instrument, no data, no `experiments/rc021/`.**
 
 The next atomic step is the Explorer/Planner pass for the RC-021 instrument,
 following that document's §12 ten-step plan — **and only on a separate explicit

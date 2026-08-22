@@ -102,11 +102,20 @@ Its frozen design: primary estimand is the **paired wall-time spread** of one
 deterministic sentinel workload; **6 sessions × 3 phases × 5 pairs = 90**
 measurements against the **inherited** `0.09` bound; `QUALIFIED` iff every
 session completes, failures ≤ 2 of 90, no session contributes more than 1, and
-every control passes. `p ≥ 0.9023` is what a successor session needs, and the
-**minimum** sample size clearing it at `k ≤ 2` is `N = 63`; RC-021 fixes `N = 90`
-as a **choice above that minimum**, for protocol symmetry (`6 × 3 × 5`) and
-margin (lower bound `0.9317` against `0.9034`). Diagnostic seeds `31001–31004`,
-band `[31001, 31099]`, disjoint from every prior family.
+every control passes.
+
+**Amendment 1 (`research/PREREG_RC021_AMENDMENT_1.md`) narrows what this means.**
+The gate is a **frozen engineering acceptance rule**, not a statistical
+certification: the 90 measurements are clustered in 6 sessions and three
+deliberately heterogeneous phases, so the Clopper–Pearson binomial model is not
+established and **no claim that the protocol certifies `p ≥ 0.9317` may be
+made.** The binomial arithmetic survives only as an explicitly **idealised
+i.i.d. sensitivity calculation**, which supplies only the floor `N ≥ 63` above
+which `6 × 3 × 5` was chosen — `N = 90` was **not** forced by the arithmetic.
+`HOST-QUALIFIED` means only "passed this frozen protocol on this configuration";
+`HOST-NOT-QUALIFIED` means only "did not pass it" — never that true `p` is below
+any value. Diagnostic seeds `31001–31004`, band `[31001, 31099]`, disjoint from
+every prior family.
 
 RC-021 required, in its pre-registration and before any code:
 
