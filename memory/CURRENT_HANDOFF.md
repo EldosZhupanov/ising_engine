@@ -53,15 +53,18 @@ written to the artifact, §10.1 forbids writing it unless the session completes.
 
 ## Next atomic task
 
-**A fresh pre-registered RC-021 host/instrument successor** — see
-`PROJECT_PLAN.md` Stage S1b. Its subject is the *host and the instrument*, not
-marginal cost: characterise the host's timing distribution with a pass criterion
-fixed in advance, resolve the §5/§10.1 contradiction, close the §8 taxonomy gap,
-and name fresh disjoint seed blocks.
+**RC-021 is PRE-REGISTERED ONLY.** The document is
+`research/PREREG_RC021_HOST_INSTRUMENT.md`. **No instrument, no data, no
+`experiments/rc021/`.**
 
-**Binding method rule:** do **not** retry until a run happens to pass. Repeating
-until a drift guard admits the run selects an atypically quiet moment and biases
-the measured quantity. The instrument must work reliably, not pass once by luck.
+The next atomic step is the Explorer/Planner pass for the RC-021 instrument,
+following that document's §12 ten-step plan — **and only on a separate explicit
+user decision.** Nothing about RC-021 may be executed before that.
+
+**Binding method rule, unchanged:** do not retry until a run happens to pass.
+Repeating until a drift guard admits the run selects an atypically quiet moment
+and biases the measured quantity. The instrument must work reliably, not pass
+once by luck.
 
 ## Gates
 
@@ -74,6 +77,9 @@ descendant, which must be **committed before any held-in seed opens**.
 
 ## Forbidden
 
+- Writing or running ANY RC-021 instrument code before a separate explicit
+  user decision; creating `experiments/rc021/`; using any seed outside the
+  RC-021 band `[31001, 31099]` for RC-021.
 - Retrying the RC-020 pilot at all — its single authorised attempt is spent;
   repairing the RC-020 instrument in place; reusing burned `5001–5008`,
   `7001–7008` or `10001–10008`; opening reserved `6001–6008`, `11001–11008` or

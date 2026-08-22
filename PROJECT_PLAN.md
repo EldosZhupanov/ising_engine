@@ -93,7 +93,22 @@ does not resume at RC-020; it resumes at a **fresh pre-registered successor**,
 provisionally **RC-021**, whose subject is the *host and the instrument*, not
 marginal cost.
 
-RC-021 must, in its pre-registration and before any code:
+**Status: pre-registered. The document is
+`research/PREREG_RC021_HOST_INSTRUMENT.md`. Implementation remains BLOCKED and
+requires a separate explicit decision.** No RC-021 instrument exists, no RC-021
+datum exists, and `experiments/rc021/` does not exist.
+
+Its frozen design: primary estimand is the **paired wall-time spread** of one
+deterministic sentinel workload; **6 sessions × 3 phases × 5 pairs = 90**
+measurements against the **inherited** `0.09` bound; `QUALIFIED` iff every
+session completes, failures ≤ 2 of 90, no session contributes more than 1, and
+every control passes. `p ≥ 0.9023` is what a successor session needs, and the
+**minimum** sample size clearing it at `k ≤ 2` is `N = 63`; RC-021 fixes `N = 90`
+as a **choice above that minimum**, for protocol symmetry (`6 × 3 × 5`) and
+margin (lower bound `0.9317` against `0.9034`). Diagnostic seeds `31001–31004`,
+band `[31001, 31099]`, disjoint from every prior family.
+
+RC-021 required, in its pre-registration and before any code:
 
 1. **Characterise the host's timing distribution as its own object of study**,
    with a pass criterion fixed in advance — rather than assuming a quiet moment
@@ -104,8 +119,10 @@ RC-021 must, in its pre-registration and before any code:
 3. **Close the §8 taxonomy gap**, giving the session-discard path an explicit
    kill criterion and class.
 4. **Name fresh, disjoint seed blocks.** `10001–10008` are burned;
-   `11001–11008` and `12001–12008` stay reserved and unopened. No successor
-   seed number is chosen in this plan.
+   `11001–11008` and `12001–12008` stay reserved and unopened. RC-021's own
+   diagnostic seeds are `31001–31004` in the reserved band `[31001, 31099]`,
+   fixed by its pre-registration §3.2 — they are diagnostic, not science seeds,
+   and no *science* seed number is chosen by this plan.
 5. State what would make the successor **stop** — including the outcome that
    this host cannot support ms/sweep timing at all, which is a legitimate and
    publishable conclusion.
