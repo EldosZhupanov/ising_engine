@@ -555,6 +555,173 @@ pub fn read_freq_khz(sys_cpu_dir: &Path, cpu_ids: &[u32]) -> Option<u64> {
     Some(sum / cpu_ids.len() as u64)
 }
 
+// ------------------------------------------- the operational layer (§C6.1)
+
+/// Every `/proc` and `/sys` read the diagnostics perform goes through this, so
+/// a test can substitute the whole filesystem *and count the reads*. The count
+/// is the only way to prove the frozen sampling moments: CPU ticks and context
+/// switches at both ends of the window, each frequency file exactly once at the
+/// end, and nothing at all for a channel declared unavailable.
+pub trait ProcReader {
+    fn read_text(&self, path: &Path) -> Result<String, HostError>;
+}
+
+/// The real one. The instrument uses nothing else.
+pub struct FsReader;
+
+impl ProcReader for FsReader {
+    fn read_text(&self, path: &Path) -> Result<String, HostError> {
+        std::fs::read_to_string(path).map_err(|e| HostError::Read {
+            path: path.display().to_string(),
+            why: e.to_string(),
+        })
+    }
+}
+
+/// The three diagnostic sources, injectable so no test touches the real host.
+#[derive(Clone, Copy)]
+pub struct DiagPaths<'a> {
+    pub self_stat: &'a Path,
+    pub self_status: &'a Path,
+    pub sys_cpu_dir: &'a Path,
+}
+
+/// §C7 missing mask. A `diag_*` column is `NA` **iff** its bit is set.
+pub const CPU_TIME_MISSING: u8 = 1;
+pub const CTX_SWITCH_MISSING: u8 = 2;
+pub const FREQ_MISSING: u8 = 4;
+
+/// §C6.1: the availability probe, **once per process invocation**.
+///
+/// Each boolean is `true` only when the probe succeeds completely. `freq` in
+/// particular is `true` only when every CPU in `cpu_set` yields a parsable
+/// value — partial availability is `false`, because §C6 forbids partial
+/// aggregation.
+///
+/// **`freq == false` is expected on the target host** — no `cpufreq` directory
+/// exists for any CPU in this WSL2 environment — and is not a fault.
+pub fn probe_availability(r: &dyn ProcReader, p: &DiagPaths, cpu_ids: &[u32]) -> DiagProbe {
+    DiagProbe {
+        cpu_time: r
+            .read_text(p.self_stat)
+            .ok()
+            .is_some_and(|t| probe_cpu_time(&t)),
+        ctx_switches: r
+            .read_text(p.self_status)
+            .ok()
+            .is_some_and(|t| probe_ctx_switches(&t)),
+        freq: read_freq_khz_with(r, p.sys_cpu_dir, cpu_ids).is_some(),
+    }
+}
+
+/// [`read_freq_khz`] over an injected reader. `None` — never a partial mean —
+/// if any required file is missing, unparsable, or overflows the sum.
+pub fn read_freq_khz_with(r: &dyn ProcReader, sys_cpu_dir: &Path, cpu_ids: &[u32]) -> Option<u64> {
+    if cpu_ids.is_empty() {
+        return None;
+    }
+    let mut sum: u64 = 0;
+    for id in cpu_ids {
+        let p = sys_cpu_dir
+            .join(format!("cpu{id}"))
+            .join("cpufreq")
+            .join("scaling_cur_freq");
+        let v: u64 = r.read_text(&p).ok()?.trim().parse().ok()?;
+        sum = sum.checked_add(v)?;
+    }
+    // Truncated toward zero, per §C6.
+    Some(sum / cpu_ids.len() as u64)
+}
+
+/// The counters taken at the **start** of a measurement window. A channel the
+/// invocation declared unavailable is not read at all, so it cannot contribute
+/// a value to a row that must carry `NA`.
+#[derive(Clone, Copy, PartialEq, Eq, Debug, Default)]
+pub struct WindowStart {
+    pub cpu_time_ticks: Option<u64>,
+    pub ctx_switches: Option<u64>,
+}
+
+pub fn window_start(r: &dyn ProcReader, p: &DiagPaths, avail: DiagProbe) -> WindowStart {
+    WindowStart {
+        cpu_time_ticks: avail
+            .cpu_time
+            .then(|| r.read_text(p.self_stat).ok())
+            .flatten()
+            .and_then(|t| parse_cpu_time_ticks(&t)),
+        ctx_switches: avail
+            .ctx_switches
+            .then(|| r.read_text(p.self_status).ok())
+            .flatten()
+            .and_then(|t| parse_nonvoluntary_ctxt_switches(&t)),
+    }
+}
+
+/// What one measurement window contributes to a row: three optional values and
+/// the mask that must agree with them exactly.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub struct DiagSample {
+    pub cpu_time_ticks: Option<u64>,
+    pub ctx_switches: Option<u64>,
+    pub freq_khz: Option<u64>,
+    pub flags: u8,
+}
+
+/// Close the window: **checked** deltas for the two counters, and frequency
+/// sampled exactly once, here at the end.
+///
+/// A counter that went backwards yields `None` — a monotone counter that
+/// decreased is a broken channel, not a negative amount of work — and a failing
+/// channel costs its own value and its own bit, never the measurement.
+pub fn window_end(
+    r: &dyn ProcReader,
+    p: &DiagPaths,
+    avail: DiagProbe,
+    cpu_ids: &[u32],
+    start: &WindowStart,
+) -> DiagSample {
+    let delta = |on: bool, path: &Path, s: Option<u64>, parse: fn(&str) -> Option<u64>| {
+        if !on {
+            return None;
+        }
+        let end = r.read_text(path).ok().and_then(|t| parse(&t))?;
+        end.checked_sub(s?)
+    };
+    let cpu_time_ticks = delta(
+        avail.cpu_time,
+        p.self_stat,
+        start.cpu_time_ticks,
+        parse_cpu_time_ticks,
+    );
+    let ctx_switches = delta(
+        avail.ctx_switches,
+        p.self_status,
+        start.ctx_switches,
+        parse_nonvoluntary_ctxt_switches,
+    );
+    let freq_khz = if avail.freq {
+        read_freq_khz_with(r, p.sys_cpu_dir, cpu_ids)
+    } else {
+        None
+    };
+    let mut flags = 0u8;
+    if cpu_time_ticks.is_none() {
+        flags |= CPU_TIME_MISSING;
+    }
+    if ctx_switches.is_none() {
+        flags |= CTX_SWITCH_MISSING;
+    }
+    if freq_khz.is_none() {
+        flags |= FREQ_MISSING;
+    }
+    DiagSample {
+        cpu_time_ticks,
+        ctx_switches,
+        freq_khz,
+        flags,
+    }
+}
+
 /// The largest CPU list this instrument will expand. A malformed
 /// `Cpus_allowed_list` such as `0-4294967295` is evidence of a broken source
 /// and must produce an error, never an allocation attempt.
@@ -1058,6 +1225,361 @@ mod tests {
         assert_eq!(parse_cpu_list("7").unwrap(), vec![7]);
         for bad in ["", "3-1", "a", "0,", "0-", "-2"] {
             assert!(parse_cpu_list(bad).is_err(), "{bad:?}");
+        }
+    }
+
+    // ---------------------------------- operational diagnostics (§C6.1)
+
+    /// An injected filesystem that also **counts** every read, which is the
+    /// only way to prove the frozen sampling moments.
+    struct FakeProc {
+        files: std::collections::HashMap<String, Result<String, ()>>,
+        reads: std::cell::RefCell<Vec<String>>,
+    }
+
+    impl FakeProc {
+        fn new() -> FakeProc {
+            FakeProc {
+                files: std::collections::HashMap::new(),
+                reads: std::cell::RefCell::new(Vec::new()),
+            }
+        }
+        fn with(mut self, path: &str, body: &str) -> FakeProc {
+            self.files.insert(path.to_string(), Ok(body.to_string()));
+            self
+        }
+        /// Present but unreadable, as distinct from absent.
+        fn unreadable(mut self, path: &str) -> FakeProc {
+            self.files.insert(path.to_string(), Err(()));
+            self
+        }
+        fn count(&self, path: &str) -> usize {
+            self.reads.borrow().iter().filter(|p| *p == path).count()
+        }
+        fn total(&self) -> usize {
+            self.reads.borrow().len()
+        }
+    }
+
+    impl ProcReader for FakeProc {
+        fn read_text(&self, path: &Path) -> Result<String, HostError> {
+            let key = path.to_str().unwrap().to_string();
+            self.reads.borrow_mut().push(key.clone());
+            match self.files.get(&key) {
+                Some(Ok(body)) => Ok(body.clone()),
+                Some(Err(())) => Err(HostError::Read {
+                    path: key,
+                    why: "injected read failure".into(),
+                }),
+                None => Err(HostError::Read {
+                    path: key,
+                    why: "injected: absent".into(),
+                }),
+            }
+        }
+    }
+
+    const STAT_OK: &str = "42 (proc) S 1 2 3 4 5 6 7 8 9 10 100 200 13 14";
+    const STAT_LATER: &str = "42 (proc) S 1 2 3 4 5 6 7 8 9 10 130 220 13 14";
+    const STATUS_OK: &str = "Threads:\t1\nnonvoluntary_ctxt_switches:\t7\n";
+    const STATUS_LATER: &str = "Threads:\t1\nnonvoluntary_ctxt_switches:\t19\n";
+
+    fn paths() -> DiagPaths<'static> {
+        DiagPaths {
+            self_stat: Path::new("/p/stat"),
+            self_status: Path::new("/p/status"),
+            sys_cpu_dir: Path::new("/s/cpu"),
+        }
+    }
+
+    fn freq_path(id: u32) -> String {
+        format!("/s/cpu/cpu{id}/cpufreq/scaling_cur_freq")
+    }
+
+    /// All eight combinations of the three channels, each produced by a source
+    /// that genuinely has or lacks the channel.
+    #[test]
+    fn availability_probe_covers_all_eight_combinations() {
+        for bits in 0u8..8 {
+            let (want_cpu, want_ctx, want_freq) = (bits & 1 != 0, bits & 2 != 0, bits & 4 != 0);
+            let mut fp = FakeProc::new();
+            fp = if want_cpu {
+                fp.with("/p/stat", STAT_OK)
+            } else {
+                fp.with("/p/stat", "garbage with no parens")
+            };
+            fp = if want_ctx {
+                fp.with("/p/status", STATUS_OK)
+            } else {
+                fp.with("/p/status", "Threads:\t1\n")
+            };
+            if want_freq {
+                fp = fp
+                    .with(&freq_path(0), "2400000\n")
+                    .with(&freq_path(1), "2600000\n");
+            }
+            let got = probe_availability(&fp, &paths(), &[0, 1]);
+            assert_eq!(
+                got,
+                DiagProbe {
+                    cpu_time: want_cpu,
+                    ctx_switches: want_ctx,
+                    freq: want_freq,
+                },
+                "bits {bits}"
+            );
+        }
+    }
+
+    /// §C6: partial availability is `false`. One missing or unparsable CPU is
+    /// enough, and no partial mean is ever produced.
+    #[test]
+    fn frequency_is_all_or_nothing() {
+        let all = FakeProc::new()
+            .with(&freq_path(0), "2000000\n")
+            .with(&freq_path(1), "3000001\n");
+        // truncated toward zero: (2000000 + 3000001) / 2 = 2500000
+        assert_eq!(
+            read_freq_khz_with(&all, Path::new("/s/cpu"), &[0, 1]),
+            Some(2500000)
+        );
+        assert!(probe_availability(&all, &paths(), &[0, 1]).freq);
+
+        // cpu1 absent
+        let partial = FakeProc::new().with(&freq_path(0), "2000000\n");
+        assert_eq!(
+            read_freq_khz_with(&partial, Path::new("/s/cpu"), &[0, 1]),
+            None
+        );
+        // cpu1 present but unparsable
+        let garbled = FakeProc::new()
+            .with(&freq_path(0), "2000000\n")
+            .with(&freq_path(1), "not a number\n");
+        assert_eq!(
+            read_freq_khz_with(&garbled, Path::new("/s/cpu"), &[0, 1]),
+            None
+        );
+        // cpu1 present but unreadable
+        let denied = FakeProc::new()
+            .with(&freq_path(0), "2000000\n")
+            .unreadable(&freq_path(1));
+        assert_eq!(
+            read_freq_khz_with(&denied, Path::new("/s/cpu"), &[0, 1]),
+            None
+        );
+        // an empty cpu_set has no mean to take
+        assert_eq!(read_freq_khz_with(&all, Path::new("/s/cpu"), &[]), None);
+        // the sum is checked, not wrapped
+        let huge = FakeProc::new()
+            .with(&freq_path(0), &u64::MAX.to_string())
+            .with(&freq_path(1), "1");
+        assert_eq!(
+            read_freq_khz_with(&huge, Path::new("/s/cpu"), &[0, 1]),
+            None
+        );
+    }
+
+    /// The target host: no `cpufreq` directory at all. Expected, and not a
+    /// fault — it costs the channel and its bit, nothing else.
+    #[test]
+    fn absent_cpufreq_is_expected_and_not_a_failure() {
+        let fp = FakeProc::new()
+            .with("/p/stat", STAT_OK)
+            .with("/p/status", STATUS_OK);
+        let avail = probe_availability(&fp, &paths(), &[0, 1, 2, 3]);
+        assert_eq!(
+            avail,
+            DiagProbe {
+                cpu_time: true,
+                ctx_switches: true,
+                freq: false
+            }
+        );
+        let fp2 = FakeProc::new()
+            .with("/p/stat", STAT_OK)
+            .with("/p/status", STATUS_OK);
+        let start = window_start(&fp2, &paths(), avail);
+        let fp3 = FakeProc::new()
+            .with("/p/stat", STAT_LATER)
+            .with("/p/status", STATUS_LATER);
+        let s = window_end(&fp3, &paths(), avail, &[0, 1, 2, 3], &start);
+        assert_eq!(s.cpu_time_ticks, Some(50));
+        assert_eq!(s.ctx_switches, Some(12));
+        assert_eq!(s.freq_khz, None);
+        assert_eq!(s.flags, FREQ_MISSING);
+    }
+
+    /// The frozen sampling moments, proved by counting injected reads.
+    #[test]
+    fn sampling_moments_are_exactly_start_start_end_end_and_one_freq_read() {
+        let avail = DiagProbe {
+            cpu_time: true,
+            ctx_switches: true,
+            freq: true,
+        };
+        let fp = FakeProc::new()
+            .with("/p/stat", STAT_OK)
+            .with("/p/status", STATUS_OK)
+            .with(&freq_path(0), "2400000\n")
+            .with(&freq_path(1), "2400000\n");
+        let start = window_start(&fp, &paths(), avail);
+        assert_eq!(fp.count("/p/stat"), 1, "one read at the start");
+        assert_eq!(fp.count("/p/status"), 1);
+        assert_eq!(
+            fp.count(&freq_path(0)),
+            0,
+            "frequency is not sampled at the start"
+        );
+        assert_eq!(fp.count(&freq_path(1)), 0);
+
+        let s = window_end(&fp, &paths(), avail, &[0, 1], &start);
+        assert_eq!(fp.count("/p/stat"), 2, "start and end, no more");
+        assert_eq!(fp.count("/p/status"), 2);
+        assert_eq!(fp.count(&freq_path(0)), 1, "exactly one end-sample per CPU");
+        assert_eq!(fp.count(&freq_path(1)), 1);
+        assert_eq!(fp.total(), 6);
+        // identical texts at both ends: a zero delta, not a missing channel
+        assert_eq!(s.cpu_time_ticks, Some(0));
+        assert_eq!(s.ctx_switches, Some(0));
+        assert_eq!(s.freq_khz, Some(2400000));
+        assert_eq!(s.flags, 0);
+    }
+
+    /// A channel the invocation declared unavailable must not be read at all,
+    /// so no row can carry a value for it.
+    #[test]
+    fn an_unavailable_channel_is_never_read_and_never_carries_a_value() {
+        let avail = DiagProbe {
+            cpu_time: false,
+            ctx_switches: false,
+            freq: false,
+        };
+        // Every source is present and perfectly readable — only the
+        // declaration says otherwise.
+        let fp = FakeProc::new()
+            .with("/p/stat", STAT_OK)
+            .with("/p/status", STATUS_OK)
+            .with(&freq_path(0), "2400000\n");
+        let start = window_start(&fp, &paths(), avail);
+        assert_eq!(start, WindowStart::default());
+        let s = window_end(&fp, &paths(), avail, &[0], &start);
+        assert_eq!(fp.total(), 0, "a declared-unavailable channel is not read");
+        assert_eq!(s.cpu_time_ticks, None);
+        assert_eq!(s.ctx_switches, None);
+        assert_eq!(s.freq_khz, None);
+        assert_eq!(
+            s.flags,
+            CPU_TIME_MISSING | CTX_SWITCH_MISSING | FREQ_MISSING
+        );
+    }
+
+    /// A counter that went backwards is a broken channel, not negative work.
+    #[test]
+    fn a_backwards_counter_makes_the_channel_missing() {
+        let avail = DiagProbe {
+            cpu_time: true,
+            ctx_switches: true,
+            freq: false,
+        };
+        let hi = FakeProc::new()
+            .with("/p/stat", STAT_LATER)
+            .with("/p/status", STATUS_LATER);
+        let start = window_start(&hi, &paths(), avail);
+        assert_eq!(start.cpu_time_ticks, Some(350));
+        assert_eq!(start.ctx_switches, Some(19));
+        // …and the end reads *lower* values
+        let lo = FakeProc::new()
+            .with("/p/stat", STAT_OK)
+            .with("/p/status", STATUS_OK);
+        let s = window_end(&lo, &paths(), avail, &[], &start);
+        assert_eq!(s.cpu_time_ticks, None);
+        assert_eq!(s.ctx_switches, None);
+        assert_eq!(
+            s.flags,
+            CPU_TIME_MISSING | CTX_SWITCH_MISSING | FREQ_MISSING
+        );
+    }
+
+    /// One failing channel costs its own value and its own bit — never the
+    /// measurement, and never another channel.
+    #[test]
+    fn each_channel_fails_independently() {
+        let avail = DiagProbe {
+            cpu_time: true,
+            ctx_switches: true,
+            freq: true,
+        };
+        let good_start = FakeProc::new()
+            .with("/p/stat", STAT_OK)
+            .with("/p/status", STATUS_OK);
+        let start = window_start(&good_start, &paths(), avail);
+
+        // stat missing at the end
+        let a = FakeProc::new()
+            .with("/p/status", STATUS_LATER)
+            .with(&freq_path(0), "1000\n");
+        let s = window_end(&a, &paths(), avail, &[0], &start);
+        assert_eq!(s.cpu_time_ticks, None);
+        assert_eq!(s.ctx_switches, Some(12));
+        assert_eq!(s.freq_khz, Some(1000));
+        assert_eq!(s.flags, CPU_TIME_MISSING);
+
+        // status unparsable at the end
+        let b = FakeProc::new()
+            .with("/p/stat", STAT_LATER)
+            .with(
+                "/p/status",
+                "Threads:\t1\nnonvoluntary_ctxt_switches:\tmany\n",
+            )
+            .with(&freq_path(0), "1000\n");
+        let s = window_end(&b, &paths(), avail, &[0], &start);
+        assert_eq!(s.cpu_time_ticks, Some(50));
+        assert_eq!(s.ctx_switches, None);
+        assert_eq!(s.flags, CTX_SWITCH_MISSING);
+
+        // stat unreadable at the *start*: no baseline, so the delta is missing
+        // even though the end is fine
+        let denied = FakeProc::new()
+            .unreadable("/p/stat")
+            .with("/p/status", STATUS_OK);
+        let no_base = window_start(&denied, &paths(), avail);
+        assert_eq!(no_base.cpu_time_ticks, None);
+        let c = FakeProc::new()
+            .with("/p/stat", STAT_LATER)
+            .with("/p/status", STATUS_LATER)
+            .with(&freq_path(0), "1000\n");
+        let s = window_end(&c, &paths(), avail, &[0], &no_base);
+        assert_eq!(s.cpu_time_ticks, None);
+        assert_eq!(s.flags, CPU_TIME_MISSING);
+    }
+
+    /// §C7: a `diag_*` value is `NA` **iff** its bit is set.
+    #[test]
+    fn the_mask_agrees_with_the_values_exactly() {
+        let avail = DiagProbe {
+            cpu_time: true,
+            ctx_switches: true,
+            freq: true,
+        };
+        for bits in 0u8..8 {
+            let mut fp = FakeProc::new();
+            if bits & 1 != 0 {
+                fp = fp.with("/p/stat", STAT_LATER);
+            }
+            if bits & 2 != 0 {
+                fp = fp.with("/p/status", STATUS_LATER);
+            }
+            if bits & 4 != 0 {
+                fp = fp.with(&freq_path(0), "1000\n");
+            }
+            let start = WindowStart {
+                cpu_time_ticks: Some(0),
+                ctx_switches: Some(0),
+            };
+            let s = window_end(&fp, &paths(), avail, &[0], &start);
+            assert_eq!(s.cpu_time_ticks.is_none(), s.flags & CPU_TIME_MISSING != 0);
+            assert_eq!(s.ctx_switches.is_none(), s.flags & CTX_SWITCH_MISSING != 0);
+            assert_eq!(s.freq_khz.is_none(), s.flags & FREQ_MISSING != 0);
         }
     }
 }

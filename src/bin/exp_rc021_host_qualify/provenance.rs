@@ -23,11 +23,12 @@ pub const BINDING_DOCS: [&str; 3] = [
 pub const BIRTH_PATH: &str = "src/bin/exp_rc021_host_qualify/main.rs";
 
 /// Every file the instrument is made of; all must be tracked and clean.
-pub const INSTRUMENT_FILES: [&str; 5] = [
+pub const INSTRUMENT_FILES: [&str; 6] = [
     "src/bin/exp_rc021_host_qualify/main.rs",
     "src/bin/exp_rc021_host_qualify/journal.rs",
     "src/bin/exp_rc021_host_qualify/host.rs",
     "src/bin/exp_rc021_host_qualify/manifest.rs",
+    "src/bin/exp_rc021_host_qualify/protocol.rs",
     "src/bin/exp_rc021_host_qualify/provenance.rs",
 ];
 
@@ -520,12 +521,16 @@ mod tests {
             f.commit(d, &format!("doc {d}\n"), d);
         }
         f.commit(BIRTH_PATH, "// main\n", "birth");
-        for i in INSTRUMENT_FILES.iter().skip(1).take(3) {
+        // Every instrument file but the last, which stays untracked. Indexed
+        // from the end so adding a module cannot silently leave two untracked
+        // and turn this into a different test.
+        let last = INSTRUMENT_FILES.len() - 1;
+        for i in INSTRUMENT_FILES.iter().take(last).skip(1) {
             f.commit(i, &format!("// {i}\n"), i);
         }
-        f.write(INSTRUMENT_FILES[4], "// never added\n");
+        f.write(INSTRUMENT_FILES[last], "// never added\n");
         let facts = gather(f.path()).unwrap();
-        assert_eq!(facts.untracked, vec![INSTRUMENT_FILES[4].to_string()]);
+        assert_eq!(facts.untracked, vec![INSTRUMENT_FILES[last].to_string()]);
         assert!(matches!(decide(&facts), Err(ProvError::Untracked(_))));
 
         // tracked but modified
