@@ -9,6 +9,7 @@
 
 #![allow(dead_code)] // Consumers arrive in later commits of the §12 plan.
 
+use crate::controls::RunStatus;
 use crate::journal::Phase;
 use crate::manifest::RunManifest;
 use crate::protocol::{order_seed, ProtocolError, WorkBlock, MAX_SESSION_INDEX};
@@ -410,16 +411,43 @@ pub enum SessionOutcome {
 }
 
 impl SessionOutcome {
-    /// §C12.3's exit codes, which are part of the frozen semantics.
-    pub fn exit_code(&self) -> i32 {
+    pub fn variant_name(&self) -> &'static str {
         match self {
-            SessionOutcome::Proceed { .. } => 0,
-            SessionOutcome::ShortGap { .. }
-            | SessionOutcome::PredecessorNotClosed { .. }
-            | SessionOutcome::InvalidRequest { .. } => 2,
-            SessionOutcome::Terminal { .. } | SessionOutcome::AlreadyInvalid => 3,
-            SessionOutcome::DamagedRunInvalid { .. } => 4,
+            SessionOutcome::Proceed { .. } => "Proceed",
+            SessionOutcome::ShortGap { .. } => "ShortGap",
+            SessionOutcome::Terminal { .. } => "Terminal",
+            SessionOutcome::AlreadyInvalid => "AlreadyInvalid",
+            SessionOutcome::DamagedRunInvalid { .. } => "DamagedRunInvalid",
+            SessionOutcome::PredecessorNotClosed { .. } => "PredecessorNotClosed",
+            SessionOutcome::InvalidRequest { .. } => "InvalidRequest",
         }
+    }
+
+    /// Whether this ends the run. `Proceed` does not: the session is cleared to
+    /// begin, and §8 has no status for work still in progress.
+    pub fn is_terminal(&self) -> bool {
+        self.terminal_run_status().is_some()
+    }
+
+    /// **The** classification, exhaustive over every variant.
+    pub fn terminal_run_status(&self) -> Option<RunStatus> {
+        match self {
+            SessionOutcome::Proceed { .. } => None,
+            // Nothing about the host is wrong; the operator waits.
+            SessionOutcome::ShortGap { .. } => Some(RunStatus::RefusedBeforeMeasurement),
+            SessionOutcome::InvalidRequest { .. } => Some(RunStatus::RefusedBeforeMeasurement),
+            SessionOutcome::Terminal { .. } => Some(RunStatus::InstrumentInvalid),
+            SessionOutcome::AlreadyInvalid => Some(RunStatus::InstrumentInvalid),
+            SessionOutcome::DamagedRunInvalid { .. } => Some(RunStatus::JournalInvalid),
+            // §5.2 leaves the predecessor `ABORTED` or `NOT STARTED`, and §8.2
+            // makes its unwritten measurements count as failures.
+            SessionOutcome::PredecessorNotClosed { .. } => Some(RunStatus::HostNotQualified),
+        }
+    }
+
+    /// The exit code, **only** through §8.
+    pub fn terminal_exit_code(&self) -> Option<i32> {
+        self.terminal_run_status().map(RunStatus::exit_code)
     }
     /// Whether this outcome requires a durable `run_invalid.json` (§C12.3).
     /// `AlreadyInvalid` is deliberately `false`: the record exists already.
@@ -644,12 +672,18 @@ impl std::fmt::Display for RunInvalidError {
 }
 
 impl RunInvalidError {
-    /// §C12.4: a durable-write failure is `JOURNAL-INVALID`, exit 4.
+    /// §C12.4: a durable-write failure is `JOURNAL-INVALID`.
     ///
-    /// A refused malformed record is exit 4 too: the instrument could not
-    /// durably record why it is stopping, which §C12.4 says must stop it.
+    /// A refused malformed record carries the same class: the instrument could
+    /// not durably record why it is stopping, which §C12.4 says must stop it.
+    pub fn run_status(&self) -> RunStatus {
+        RunStatus::JournalInvalid
+    }
+
+    /// The code, **only** through §8. A literal here would be a second table,
+    /// free to drift from [`RunStatus::exit_code`] in silence.
     pub fn exit_code(&self) -> i32 {
-        4
+        self.run_status().exit_code()
     }
 }
 
@@ -1275,7 +1309,7 @@ mod tests {
                 required_ms: MIN_GAP_MS
             }
         );
-        assert_eq!(out.exit_code(), 2);
+        assert_eq!(out.terminal_exit_code(), Some(2));
         assert!(out.may_retry_after_waiting());
         assert!(!out.writes_run_invalid());
         assert_eq!(entries(d.path()), empty, "short gap created nothing");
@@ -1285,7 +1319,7 @@ mod tests {
         p.observed.cpus_allowed_list = "0-1".into();
         let out = session_preflight(&p);
         assert!(matches!(out, SessionOutcome::Terminal { .. }), "{out:?}");
-        assert_eq!(out.exit_code(), 3);
+        assert_eq!(out.terminal_exit_code(), Some(3));
         assert!(out.writes_run_invalid());
         assert!(!out.may_retry_after_waiting());
         assert_eq!(entries(d.path()), empty, "the gate created nothing");
@@ -1314,7 +1348,7 @@ mod tests {
         p.observed.host_fingerprint = "f".repeat(64);
         let out = session_preflight(&p);
         assert!(matches!(out, SessionOutcome::Terminal { .. }), "{out:?}");
-        assert_eq!(out.exit_code(), 3);
+        assert_eq!(out.terminal_exit_code(), Some(3));
 
         let mut p = preflight_for(&m, 1_000);
         p.observed_boot_id = "boot-2".into();
@@ -1431,7 +1465,7 @@ mod tests {
         p.run_invalid = RunInvalidState::Valid(Box::new(run_invalid_for(&m)));
         let out = session_preflight(&p);
         assert_eq!(out, SessionOutcome::AlreadyInvalid);
-        assert_eq!(out.exit_code(), 3);
+        assert_eq!(out.terminal_exit_code(), Some(3));
         assert!(!out.writes_run_invalid(), "the record already exists");
         assert!(!out.may_retry_after_waiting());
 
@@ -1466,7 +1500,7 @@ mod tests {
                 why: "truncated".into()
             }
         );
-        assert_eq!(out.exit_code(), 4);
+        assert_eq!(out.terminal_exit_code(), Some(4));
         assert!(
             !out.writes_run_invalid(),
             "never write over a damaged record"
@@ -1529,7 +1563,7 @@ mod tests {
             p.run_invalid = RunInvalidState::Valid(Box::new(foreign.clone()));
             let out = session_preflight(&p);
             assert_eq!(out, SessionOutcome::DamagedRunInvalid { why }, "{field}");
-            assert_eq!(out.exit_code(), 4);
+            assert_eq!(out.terminal_exit_code(), Some(4));
             assert!(!out.writes_run_invalid(), "{field}");
             assert!(!out.may_retry_after_waiting());
             assert_eq!(dir_bytes(d.path()), before, "{field}: directory changed");
@@ -1636,7 +1670,7 @@ mod tests {
                 matches!(out, SessionOutcome::InvalidRequest { .. }),
                 "session {bad}: {out:?}"
             );
-            assert_eq!(out.exit_code(), 2);
+            assert_eq!(out.terminal_exit_code(), Some(2));
             assert!(!out.writes_run_invalid(), "nothing about the host changed");
         }
     }
@@ -1672,15 +1706,17 @@ mod tests {
 
         for (what, p) in cases {
             let out = session_preflight(&p);
-            writes.push((what, out.writes_run_invalid(), out.exit_code()));
+            writes.push((what, out.writes_run_invalid(), out.terminal_exit_code()));
         }
         assert_eq!(
             writes,
             vec![
-                ("predecessor not closed", false, 2),
-                ("bad session number", false, 2),
-                ("damaged record", false, 4),
-                ("configuration mismatch", true, 3),
+                // §8.2: the predecessor's unwritten measurements count as
+                // failures, so this is Class II HOST-NOT-QUALIFIED, code 1.
+                ("predecessor not closed", false, Some(1)),
+                ("bad session number", false, Some(2)),
+                ("damaged record", false, Some(4)),
+                ("configuration mismatch", true, Some(3)),
             ]
         );
         assert_eq!(entries(d.path()), 0, "the gate created nothing");
@@ -1766,7 +1802,15 @@ mod tests {
             // permanently unrecordable.
             assert!(run_invalid_for(&m).write(d.path()).is_ok());
         }
-        assert_eq!(RunInvalidError::Invalid("utc").exit_code(), 4);
+        // §C12.4, through §8 — never a literal compared to a literal.
+        for e in [
+            RunInvalidError::Invalid("utc"),
+            RunInvalidError::Write("x".into()),
+            RunInvalidError::AlreadyPresent,
+        ] {
+            assert_eq!(e.run_status(), RunStatus::JournalInvalid, "{e}");
+            assert_eq!(e.exit_code(), RunStatus::JournalInvalid.exit_code(), "{e}");
+        }
     }
 
     // ------------------------------------------------------------ no retry

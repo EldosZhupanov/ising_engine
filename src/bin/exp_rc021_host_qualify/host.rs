@@ -898,6 +898,27 @@ mod tests {
         }
     }
 
+    /// `tests/test_rc021_p2_child.rs` cannot reach this module, so it pins the
+    /// fixture's digest as a constant. This is the other half of that pin: if
+    /// the canonical input or the hash ever changed, the two would disagree
+    /// here rather than silently in an integration fixture.
+    #[test]
+    fn the_integration_fixture_fingerprint_is_pinned() {
+        let f = HostFields {
+            kernel_release: "6.6.0".into(),
+            kernel_version: "#1 SMP".into(),
+            available_processors: "4".into(),
+            mem_total_kb: "10185860".into(),
+            cpus_allowed_list: "0-3".into(),
+            cpu_model: "Test CPU".into(),
+        };
+        assert_eq!(
+            f.fingerprint(),
+            "89b369a2f89e24862187ecc55056b61baccda7d83813804994e8c38fbc6fba33",
+            "tests/test_rc021_p2_child.rs::FIXTURE_FINGERPRINT must be updated too"
+        );
+    }
+
     #[test]
     fn host_field_normalisation_is_exact() {
         let f = fixture_fields();
