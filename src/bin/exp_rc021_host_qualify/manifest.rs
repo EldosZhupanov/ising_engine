@@ -574,6 +574,12 @@ pub fn preflight_run_dir(dir: &Path) -> Result<PathBuf, ManifestError> {
     Ok(canon)
 }
 
+/// Shared with the other durable writers so the durability sequence exists in
+/// exactly one place.
+pub fn fsync_dir_at(dir: &Path) -> Result<(), ManifestError> {
+    fsync_dir(dir)
+}
+
 fn fsync_dir(dir: &Path) -> Result<(), ManifestError> {
     File::open(dir)
         .and_then(|f| f.sync_all())

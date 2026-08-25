@@ -15,6 +15,7 @@ mod journal;
 mod manifest;
 mod protocol;
 mod provenance;
+mod session;
 
 fn main() {
     println!(

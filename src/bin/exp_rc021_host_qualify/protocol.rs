@@ -519,6 +519,113 @@ fn execute_sentinel(
     })
 }
 
+// ============================================== §4.1 THE UNMEASURED WORK
+
+/// §4.1 phase-B warmup: **32 sentinel-equivalents, `32 × 8 = 256 sweeps`**,
+/// with [`RC021_SENTINEL_SEED`], executed and discarded before phase B's pairs.
+pub const WARMUP_SWEEPS: u32 = 256;
+
+/// §4.1 phase-C load block: **256 sentinel-equivalents, `2048 sweeps`**, with
+/// [`RC021_LOAD_SEED`], executed immediately before **each** phase-C pair.
+pub const LOAD_BLOCK_SWEEPS: u32 = 2048;
+
+/// §4.1's two blocks of unmeasured work — a **closed set of exactly two**.
+///
+/// There is no free-form constructor and no public field, so a caller cannot
+/// substitute a sweep count or a seed: the only two blocks the protocol defines
+/// are the ones it names. An open struct with public `sweeps` and `seed` would
+/// let any caller drive the operator with an arbitrary seed and an arbitrary
+/// amount of work — the same hole the sentinel closed with
+/// [`VerifiedSentinelInstance`].
+///
+/// §4.1 freezes each block's **total sweep count** and its seed, and nothing
+/// else: it gives `32 × 8 = 256` and `2048` as counts of sweeps, and calls the
+/// warmup "32× one sentinel" while its own arithmetic excludes the untimed
+/// 4-sweep prefix. It does **not** say whether those sweeps arrive as one
+/// `apply` or as thirty-two, nor whether each unit would get a fresh state and
+/// a fresh RNG stream. [`run_work_block`] runs the frozen count as a single
+/// `apply` on one state and one stream — the reading that adds no structure the
+/// documents do not state. Decomposing would require choosing that structure.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum WorkBlock {
+    /// §4.1 phase-B: executed once, before the phase's five pairs.
+    Warmup,
+    /// §4.1 phase-C: executed immediately before **each** of the five pairs.
+    Load,
+}
+
+impl WorkBlock {
+    pub const fn sweeps(self) -> u32 {
+        match self {
+            WorkBlock::Warmup => WARMUP_SWEEPS,
+            WorkBlock::Load => LOAD_BLOCK_SWEEPS,
+        }
+    }
+    /// **[`RC021_LOAD_SEED`] appears here and nowhere else.** No sentinel, no
+    /// measurement and no other block may reach for it.
+    pub const fn seed(self) -> u64 {
+        match self {
+            WorkBlock::Warmup => RC021_SENTINEL_SEED,
+            WorkBlock::Load => RC021_LOAD_SEED,
+        }
+    }
+    pub const fn name(self) -> &'static str {
+        match self {
+            WorkBlock::Warmup => "warmup",
+            WorkBlock::Load => "load",
+        }
+    }
+}
+
+/// What a block of unmeasured work reports: the count it actually ran and how
+/// long it took.
+///
+/// The duration is here because §6 P7 checks that a phase-C load block exceeds
+/// `1000 ×` the timer resolution. It is **not** a measurement: no block's
+/// duration ever reaches a journal row or a `paired_spread`.
+#[derive(Clone, Copy, PartialEq, Debug)]
+pub struct WorkBlockRun {
+    pub sweeps: u32,
+    pub wall_ms: f64,
+}
+
+/// Execute a block and discard everything it produced.
+///
+/// Like the sentinel, the operator's return value is dropped without
+/// inspection: an outcome-blind instrument stays blind in its warmup too.
+pub fn run_work_block(
+    instance: &VerifiedSentinelInstance,
+    block: WorkBlock,
+) -> Result<WorkBlockRun, ProtocolError> {
+    let temps = vec![SENTINEL_TEMP; SENTINEL_REPLICAS];
+    let ir = &instance.0;
+    let init = vec![0u8; ir.n];
+    let mut st = SparseBitSlice::new(ir, SENTINEL_REPLICAS, &init)
+        .map_err(|e| ProtocolError::StateInit(format!("{e:?}")))?;
+    let v = RuntimeView {
+        iteration: 0,
+        temperatures: &temps,
+        num_replicas: SENTINEL_REPLICAS,
+        recent_acceptance: 0.0,
+        remaining_ms: f64::INFINITY,
+    };
+    let mut op = MetropolisSweep::new();
+    let mut rng = ChaCha8Rng::seed_from_u64(block.seed());
+    let t0 = Instant::now();
+    let _ = op.apply(
+        &mut st,
+        &v,
+        &mut rng,
+        Budget {
+            sweeps: block.sweeps(),
+        },
+    );
+    Ok(WorkBlockRun {
+        sweeps: block.sweeps(),
+        wall_ms: t0.elapsed().as_secs_f64() * 1000.0,
+    })
+}
+
 // ============================================= §1 / §6 PAIRED MEASUREMENT
 
 /// §6 P8: `DEGENERATE_RESOLUTION_MULT`, inherited from
@@ -587,6 +694,24 @@ pub fn classify_measurement(first_ms: f64, last_ms: f64, timer_resolution_ms: f6
     match paired_spread(first_ms, last_ms) {
         Some(spread) if spread.is_finite() => Measurement::Ok { spread },
         _ => Measurement::Lost(LostReason::NonFiniteDuration),
+    }
+}
+
+/// A verified-instance constructor for **tests in sibling modules only**.
+///
+/// `VerifiedSentinelInstance`'s field is private to this module, so a sibling
+/// test cannot build one; without this it could not exercise the work blocks at
+/// all except on G11, which no test may execute. It is `#[cfg(test)]`, so it
+/// does not exist in any build the instrument actually runs.
+#[cfg(test)]
+pub mod tests_support {
+    use super::*;
+
+    pub fn synthetic_verified() -> VerifiedSentinelInstance {
+        VerifiedSentinelInstance(
+            ising_engine::engine_v2::frontend::rudy_maxcut_ir("4 4\n1 2 1\n2 3 1\n3 4 1\n4 1 1\n")
+                .expect("synthetic rudy must parse"),
+        )
     }
 }
 

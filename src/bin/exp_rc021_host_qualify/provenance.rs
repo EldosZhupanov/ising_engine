@@ -23,13 +23,14 @@ pub const BINDING_DOCS: [&str; 3] = [
 pub const BIRTH_PATH: &str = "src/bin/exp_rc021_host_qualify/main.rs";
 
 /// Every file the instrument is made of; all must be tracked and clean.
-pub const INSTRUMENT_FILES: [&str; 6] = [
+pub const INSTRUMENT_FILES: [&str; 7] = [
     "src/bin/exp_rc021_host_qualify/main.rs",
     "src/bin/exp_rc021_host_qualify/journal.rs",
     "src/bin/exp_rc021_host_qualify/host.rs",
     "src/bin/exp_rc021_host_qualify/manifest.rs",
     "src/bin/exp_rc021_host_qualify/protocol.rs",
     "src/bin/exp_rc021_host_qualify/provenance.rs",
+    "src/bin/exp_rc021_host_qualify/session.rs",
 ];
 
 // ======================================================================= ERROR
