@@ -10,7 +10,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-07-14 | `d3bd6be` | Project direction ratified | [`ISING_ENGINE_CONSTITUTION.md`](../research/ISING_ENGINE_CONSTITUTION.md) |
 | 2026-07-15 | `e28fe3b` | Mission recorded | [`SOUL.md`](../SOUL.md) |
 | 2026-08-19 | `d18af54` | First repository memory/index layer committed | [`INDEX.md`](INDEX.md) |
-| 2026-08-26 | pending on `docs/memory-architecture` | Durable-memory authority, catalogue, and startup path established | [`ADR-0011`](../research/architecture/ADR/ADR-0011-durable-project-memory.md) |
+| 2026-08-26 | `e3669be` and descendants on `docs/memory-architecture` | Durable-memory authority, catalogue, and startup path established | [`ADR-0011`](../research/architecture/ADR/ADR-0011-durable-project-memory.md) |
 
 ## Research-cycle chronology
 

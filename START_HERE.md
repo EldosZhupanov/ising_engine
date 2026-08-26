@@ -37,8 +37,8 @@ cost on an independently replicated domain.
 | Stage inventory | [`ROADMAP.md`](ROADMAP.md) |
 | Current task and next action | [`memory/NOW.md`](memory/NOW.md) |
 | Research evidence | binding preregistrations, amendments, and cycle records under [`research/`](research/) |
-| Documentation catalogue | [`memory/CATALOG.md`](memory/CATALOG.md) once generated |
-| Chronology | [`memory/TIMELINE.md`](memory/TIMELINE.md) once generated |
+| Documentation catalogue | [`memory/CATALOG.md`](memory/CATALOG.md) |
+| Chronology | [`memory/TIMELINE.md`](memory/TIMELINE.md) |
 
 ## Non-negotiable distinctions
 

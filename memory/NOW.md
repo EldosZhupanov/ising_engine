@@ -54,9 +54,10 @@ sentinel, or experiment may run as part of this task.
 
 ## Next action
 
-Complete the six planned memory commits, run documentation checks, and request
-an independent review. Only after PASS may work return to the paused RC-021 Step
-6 review/amend sequence.
+The six-commit memory series is built and its memory-integrity gate passes.
+Request an independent read-only review. Only after PASS and an explicit
+integration decision may work return to the paused RC-021 Step 6 review/amend
+sequence.
 
 ## Forbidden during this task
 

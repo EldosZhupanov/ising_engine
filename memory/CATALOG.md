@@ -16,13 +16,25 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 - `closed`: 24
 - `historical`: 1
 - `proposed`: 2
-- `reference`: 47
+- `reference`: 60
 - `superseded`: 4
 
 ## Registry
 
 | Path | Kind | Authority | Lifecycle | Created | Last changed | Immutable | Canonical scope |
 |---|---|---:|---|---|---|---|---|
+| `.claude/agents/doc-keeper.md` | agent-role | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
+| `.claude/agents/explorer.md` | agent-role | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
+| `.claude/agents/implementer.md` | agent-role | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
+| `.claude/agents/perf-verifier.md` | agent-role | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
+| `.claude/agents/planner.md` | agent-role | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
+| `.claude/agents/reviewer.md` | agent-role | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
+| `.claude/commands/benchmark.md` | agent-command | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
+| `.claude/commands/explore.md` | agent-command | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
+| `.claude/commands/implement.md` | agent-command | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
+| `.claude/commands/plan.md` | agent-command | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
+| `.claude/commands/review.md` | agent-command | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
+| `.claude/commands/verify.md` | agent-command | A3 | reference | 2026-07-05 | 2026-07-07 | false | agent-tooling |
 | `AGENTS.md` | engineering-rules | A0 | active | 2026-07-05 | 2026-08-26 | false | engineering-workflow |
 | `anls_design_spec.md` | design-spec | A2 | reference | 2026-03-12 | 2026-03-12 | false | design |
 | `architecture_spec.md` | reference | A3 | reference | 2026-03-12 | 2026-03-12 | false | none |
@@ -47,7 +59,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `memory/INDEX.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
 | `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-08-26 | false | current-task |
 | `memory/OBSIDIAN.md` | workspace-guide | A3 | reference | 2026-08-26 | 2026-08-26 | false | navigation |
-| `memory/OPEN_PROBLEMS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
+| `memory/OPEN_PROBLEMS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
 | `memory/PERFORMANCE.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
 | `memory/RESEARCH.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
 | `memory/ROADMAP.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
@@ -146,6 +158,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `website/PRODUCT_SPEC.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
 | `website/README.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
 | `website/references/analysis.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
+| `website/.claude/skills/run-ising-website/SKILL.md` | publication-tool | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
 | `YC_APPLICATION_FALL_2026.md` | reference | A3 | reference | 2026-08-19 | 2026-08-19 | false | none |
 
 ## Maintenance rule

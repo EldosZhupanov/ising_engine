@@ -117,8 +117,9 @@ functional form, not a free parameter.
 **Consequence:** the declared model is the corrected law with φ ≡ 1/3 hard-coded,
 so it **overcharges by up to 2.1×, worst in the cold regime**. The Decision
 Engine ranks plans by utility per unit cost, so low-temperature refinement is
-systematically penalised — the same regime where
-[[state-dependent-operator-selection]] says the best operator changes.
+systematically penalised — the same regime where the
+[RC-001 evidence](../research/RC001_ENSEMBLE_THERMOSTAT.md) says the best
+operator changes.
 
 **Not fixed.** Correcting `cost_model` changes plan ranking and therefore
 trajectories → behaviour-changing under ADR-0004, needs approval + A/B at
