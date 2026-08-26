@@ -1,0 +1,151 @@
+# Document catalogue
+
+This sidecar catalogue classifies every Markdown document without modifying frozen evidence. Paths are the stable identifiers. Dates come from Git history; they describe chronology but do not establish authority.
+
+## Field meanings
+
+- **Authority:** A0 governs a named scope; A1 is a primary supporting source; A2 is a reviewed design or analysis; A3 is a pointer/publication/reference; A4 is historical only.
+- **Lifecycle:** defined in [AUTHORITY.md](AUTHORITY.md).
+- **Immutable:** the file must not be edited, moved, or renamed. Corrections require a new linked artifact.
+- **Canonical scope:** the question for which the file may be authoritative. `none` means it cannot decide current work.
+
+## Summary
+
+- `active`: 16
+- `binding`: 30
+- `closed`: 24
+- `proposed`: 2
+- `reference`: 46
+- `superseded`: 5
+
+## Registry
+
+| Path | Kind | Authority | Lifecycle | Created | Last changed | Immutable | Canonical scope |
+|---|---|---:|---|---|---|---|---|
+| `AGENTS.md` | engineering-rules | A0 | active | 2026-07-05 | 2026-07-05 | false | engineering-workflow |
+| `anls_design_spec.md` | design-spec | A2 | reference | 2026-03-12 | 2026-03-12 | false | design |
+| `architecture_spec.md` | reference | A3 | reference | 2026-03-12 | 2026-03-12 | false | none |
+| `ARCHITECTURE.md` | engineering-reference | A1 | active | 2026-03-11 | 2026-03-11 | false | engineering |
+| `bayesian_design_spec.md` | design-spec | A2 | reference | 2026-03-12 | 2026-03-12 | false | design |
+| `benchmark_suite/README.md` | reference | A3 | reference | 2026-07-07 | 2026-07-07 | false | none |
+| `benchmarks/report.md` | reference | A3 | reference | 2026-07-06 | 2026-07-07 | false | none |
+| `CLAUDE.md` | agent-operations | A1 | active | 2026-07-05 | 2026-08-22 | false | claude-operation |
+| `CONTEXT.md` | historical-summary | A4 | superseded | 2026-07-05 | 2026-08-19 | false | none |
+| `design_spec.md` | design-spec | A2 | reference | 2026-03-12 | 2026-03-12 | false | design |
+| `gnn_design_spec.md` | design-spec | A2 | reference | 2026-03-12 | 2026-03-12 | false | design |
+| `INDEX.md` | navigation | A2 | superseded | 2026-07-05 | 2026-08-19 | false | compatibility |
+| `MEMORY.md` | historical-summary | A4 | superseded | 2026-07-05 | 2026-08-19 | false | none |
+| `memory/ARCHITECTURE.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
+| `memory/AUTHORITY.md` | governance-map | A0 | active | 2026-08-26 | 2026-08-26 | false | document-governance |
+| `memory/BENCHMARKS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
+| `memory/CATALOG.md` | document-registry | A1 | active | 2026-08-26 | 2026-08-26 | false | document-catalogue |
+| `memory/CLAUDE_PRODUCT_COMPARISON_TASK.md` | memory-pointer | A3 | reference | 2026-08-22 | 2026-08-22 | false | navigation |
+| `memory/CURRENT_HANDOFF.md` | historical-handoff | A4 | superseded | 2026-08-22 | 2026-08-23 | false | compatibility |
+| `memory/CURRENT_TASK.md` | historical-handoff | A4 | superseded | 2026-08-19 | 2026-08-19 | false | compatibility |
+| `memory/DECISIONS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
+| `memory/INDEX.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
+| `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-08-26 | false | current-task |
+| `memory/OPEN_PROBLEMS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
+| `memory/PERFORMANCE.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
+| `memory/RESEARCH.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
+| `memory/ROADMAP.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
+| `memory/TIMELINE.md` | chronology | A1 | active | 2026-08-26 | 2026-08-26 | false | project-chronology |
+| `PERF.md` | engineering-reference | A1 | active | 2026-07-05 | 2026-07-06 | false | engineering |
+| `portfolio_design_spec.md` | design-spec | A2 | reference | 2026-03-13 | 2026-03-13 | false | design |
+| `PRODUCT_SPEC.md` | product-spec | A0 | active | 2026-08-22 | 2026-08-22 | false | finished-product |
+| `PROJECT_PLAN.md` | active-plan | A0 | active | 2026-08-22 | 2026-08-23 | false | ordered-gates |
+| `README.md` | public-overview | A2 | active | 2026-03-11 | 2026-07-06 | false | public-overview |
+| `research/adversarial_architecture_review.md` | research-reference | A2 | reference | 2026-07-07 | 2026-07-07 | false | research-context |
+| `research/architecture/ADR/ADR-0000-adr-system-and-knowledge-graph.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
+| `research/architecture/ADR/ADR-0001-operators-not-algorithms.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
+| `research/architecture/ADR/ADR-0002-two-state-backends.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
+| `research/architecture/ADR/ADR-0003-cache-locality-outranks-flops.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
+| `research/architecture/ADR/ADR-0004-reproducibility-mandatory.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
+| `research/architecture/ADR/ADR-0005-deterministic-certified-lowering.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
+| `research/architecture/ADR/ADR-0006-amendment-presumed-fixed.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
+| `research/architecture/ADR/ADR-0007-four-track-program.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
+| `research/architecture/ADR/ADR-0008-experiment-infrastructure.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
+| `research/architecture/ADR/ADR-0009-addressable-randomness-for-counterfactuals.md` | architecture-decision | A2 | proposed | 2026-08-19 | 2026-08-19 | false | architecture |
+| `research/architecture/ADR/ADR-0010-canonical-energy-entropy-v1.md` | architecture-decision | A2 | proposed | 2026-08-19 | 2026-08-19 | false | architecture |
+| `research/architecture/ADR/ADR-0011-durable-project-memory.md` | architecture-decision | A1 | binding | 2026-08-26 | 2026-08-26 | true | architecture |
+| `research/AUTONOMOUS_SCIENTIST_ARCHITECTURE.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
+| `research/AXIOMS_OF_OPTIMIZATION.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
+| `research/CHANNEL_EXHAUSTION.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
+| `research/CHIEF_SCIENTIST_ASSESSMENT.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
+| `research/COMPETITIVE_ANALYSIS.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
+| `research/CONCEPT_DISCOVERY_AND_INTEGRATIONS.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
+| `research/CONCEPT_EVOLUTION_CONSTITUTION.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
+| `research/EXTERNAL_COMPARISON_PROTOCOL.md` | research-protocol | A0 | binding | 2026-08-22 | 2026-08-22 | true | external-comparison |
+| `research/EXTERNAL_PROJECTS_BACKLOG.md` | research-reference | A2 | reference | 2026-08-20 | 2026-08-20 | false | research-context |
+| `research/ISING_ENGINE_CONSTITUTION.md` | constitution | A0 | binding | 2026-07-14 | 2026-07-14 | true | project-direction |
+| `research/OPTIMIZATION_ENGINE_BLUEPRINT.md` | research-reference | A2 | reference | 2026-07-14 | 2026-07-14 | false | research-context |
+| `research/optimization_plan_rank135.md` | research-reference | A2 | reference | 2026-07-07 | 2026-07-07 | false | research-context |
+| `research/PLATFORM_BLUEPRINT.md` | research-reference | A2 | reference | 2026-07-14 | 2026-07-14 | false | research-context |
+| `research/PREREG_RC014_AMENDMENT_1.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC014 |
+| `research/PREREG_RC014_AMENDMENT_2.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC014 |
+| `research/PREREG_RC014.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC014 |
+| `research/PREREG_RC015_AMENDMENT_1.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC015 |
+| `research/PREREG_RC015.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC015 |
+| `research/PREREG_RC016_AMENDMENT_1.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC016 |
+| `research/PREREG_RC016_AMENDMENT_2.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC016 |
+| `research/PREREG_RC016_AMENDMENT_3.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC016 |
+| `research/PREREG_RC016_AMENDMENT_4.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC016 |
+| `research/PREREG_RC016_DESCENDANT.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC016 |
+| `research/PREREG_RC016.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC016 |
+| `research/PREREG_RC017.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC017 |
+| `research/PREREG_RC018_COST_IDENTIFICATION.md` | research-protocol | A0 | binding | 2026-08-19 | 2026-08-19 | true | RC018 |
+| `research/PREREG_RC020_AMENDMENT_1.md` | research-protocol | A0 | binding | 2026-08-20 | 2026-08-20 | true | RC020 |
+| `research/PREREG_RC020_MARGINAL_WALL_COST.md` | research-protocol | A0 | binding | 2026-08-20 | 2026-08-20 | true | RC020 |
+| `research/PREREG_RC021_AMENDMENT_1.md` | research-protocol | A0 | binding | 2026-08-23 | 2026-08-23 | true | RC021 |
+| `research/PREREG_RC021_AMENDMENT_2.md` | research-protocol | A0 | binding | 2026-08-25 | 2026-08-25 | true | RC021 |
+| `research/PREREG_RC021_HOST_INSTRUMENT.md` | research-protocol | A0 | binding | 2026-08-23 | 2026-08-23 | true | RC021 |
+| `research/RC001_ENSEMBLE_THERMOSTAT.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC001 |
+| `research/RC002_INITIALIZATION_ERASURE.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC002 |
+| `research/RC003_ARCHITECTURE_AUDIT.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC003 |
+| `research/RC004_ARCHITECTURE_SPACE.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC004 |
+| `research/RC005_COST_MODEL_BLINDNESS.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC005 |
+| `research/RC006_GRADIENT_LEDGER.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC006 |
+| `research/RC007_OPERATOR_COMMUTATIVITY.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC007 |
+| `research/RC008_MIXING_AND_ENSEMBLE_COLLAPSE.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC008 |
+| `research/RC009_BACKEND_PASSPORT.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC009 |
+| `research/RC010_WORLD_MODEL_AUDIT.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC010 |
+| `research/RC011_PREDICTOR_METRIC_INVARIANCE.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC011 |
+| `research/RC012_DYNAMICS_EARLY_STOP_AUDIT.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC012 |
+| `research/RC013_KERNEL_FLOORS.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC013 |
+| `research/RC014_COUNTERFACTUAL_SUBSTITUTION.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC014 |
+| `research/RC014_PHASE0_AUDIT.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC014 |
+| `research/RC014_PLAN_CAUSAL_INSTRUMENT.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC014 |
+| `research/RC015_TIE_HANDLING.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC015 |
+| `research/RC016_CYCLE_RECORD.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC016 |
+| `research/RC016_NOVELTY_REVIEW.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC016 |
+| `research/RC017_ABORT_RECORD.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC017 |
+| `research/RC017_ENTROPY_PILOT.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC017 |
+| `research/RC018_PILOT_ABORT_RECORD.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC018 |
+| `research/RC019_INSTRUMENT_CONFORMANCE_AUDIT.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-20 | true | RC019 |
+| `research/RC020_PILOT_ABORT_RECORD.md` | research-record | A1 | closed | 2026-08-22 | 2026-08-22 | true | RC020 |
+| `research/RELATIONAL_PRIMITIVE.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
+| `research/RESEARCH_GAPS.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
+| `research/RESEARCH_HISTORY.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
+| `research/RESEARCH_INVENTORY.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
+| `research/ROADMAP_AUTONOMOUS_SCIENTIST.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
+| `research/STAGE_7_RESEARCH_PLATFORM.md` | research-reference | A2 | reference | 2026-07-14 | 2026-07-14 | false | research-context |
+| `research/STAGE_8_KNOWLEDGE_OS.md` | research-reference | A2 | reference | 2026-07-14 | 2026-07-14 | false | research-context |
+| `ROADMAP.md` | stage-inventory | A1 | active | 2026-07-05 | 2026-08-22 | false | implementation-status |
+| `SECURITY.md` | engineering-reference | A1 | active | 2026-03-11 | 2026-03-11 | false | engineering |
+| `SKILL.md` | reference | A3 | reference | 2026-03-11 | 2026-03-11 | false | none |
+| `SOUL.md` | mission | A0 | active | 2026-07-15 | 2026-07-15 | false | project-mission |
+| `START_HERE.md` | navigation | A0 | active | 2026-08-26 | 2026-08-26 | false | startup |
+| `VERIFY.md` | engineering-reference | A1 | active | 2026-07-05 | 2026-07-05 | false | engineering |
+| `website/AGENTS.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
+| `website/ARCHITECTURE_REVIEW.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
+| `website/ARCHITECTURE_V2.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
+| `website/ARCHITECTURE_V3_ADDENDUM.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
+| `website/CLAUDE.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
+| `website/PRODUCT_SPEC.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
+| `website/README.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
+| `website/references/analysis.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
+| `YC_APPLICATION_FALL_2026.md` | reference | A3 | reference | 2026-08-19 | 2026-08-19 | false | none |
+
+## Maintenance rule
+
+Every added, moved, or lifecycle-changing Markdown file updates this catalogue in the same commit. Automated validation compares this table with `rg --files -g '*.md'`; missing and duplicate paths fail the gate.
