@@ -19,9 +19,9 @@ The project is two things at once:
    optimization OS that discovers, explains, and transfers solver strategies,
    and is growing toward a **Research Foundation Model**.
 
-Scale as of this writing: ~20.6k lines in `engine_v2`, 28 `ai_scientist`
-modules, **280 tests**, 8 committed feature waves this session. Accumulated
-research data: **18,570 recorded experiments** on G-Set.
+Scale-sensitive counts (lines, tests, modules, registry size) are intentionally
+not frozen in this roadmap: query the code and test runner when they matter.
+The committed research corpus contains **18,570 recorded experiments** on G-Set.
 
 Legend: 🟢 Completed · 🟡 In Progress · 🔵 Planned · 🔬 Research · 🔭 Future Vision
 
@@ -33,7 +33,7 @@ Legend: 🟢 Completed · 🟡 In Progress · 🔵 Planned · 🔬 Research · �
 |---|---|---|---|
 | 0 | Production solver (`UltimateSolver`, legacy solvers, core) | 🟢 | 100% |
 | 1 | Benchmark framework (parsers, stats, TTS, A/B, portability) | 🟢 | 90% |
-| 2 | engine_v2 substrate (IR, 3 backends, 14 operators, Runtime) | 🟢 | 95% |
+| 2 | engine_v2 substrate (IR, verified backends, operator registry, Runtime) | 🟢 | 95% |
 | 3 | Generation (Decision Engine, Evolution, capability selection) | 🟢 | 90% |
 | 4 | Knowledge system (append-only DB, Knowledge Graph, Meta-Learner) | 🟢 | 90% |
 | 5 | AI Scientist (multi-agent Lab, LLM ideator, novelty, reports) | 🟢 | 90% |
@@ -76,7 +76,7 @@ drop-in only; live external baselines depend on the machine.
 `ProblemIR` + `SpinState` trait; three verified backends —
 `ReferenceState` (f64 oracle), `SparseBitSlice` (exact integer, >100k
 cross-checks), `DenseByte` (production-shaped, **4.8× vs oracle**, bit-identical).
-**14 operators** selected by capability passport, all cross-validated
+Registered operators are selected by capability passport and cross-validated
 bit-identical on every backend. Deterministic `Runtime` with adaptive
 controllers (`maybe_adapt`: ladder heat/cool, UCB1 operator bandit, ensemble-
 collapse phase-skip) and a learned `RunController` early-stop hook — all opt-in
@@ -118,12 +118,13 @@ Meta-Learner → graph → reports every N → cloud review every M → operator
 proposals → Predictor refit → dashboard, all persisted and resumable. Verified:
 18,570 experiments across 23 G-Set instances.
 
-### 6b — Learned Models 🟡 80%
+### 6b — Learned Models 🟢 90%
 - **Predictor** (ridge) — schedule → expected improvement; used as a filter.
 - **Policy** (`policy.rs`) — neural next-operator model; supervised on history +
   REINFORCE against the Runtime. Held-out on G-Set: **wins 5/5 vs default & random**.
-- **Dynamics** (`dynamics.rs`) — remaining-improvement from a partial trajectory;
-  powers the early-stop controller.
+- **Dynamics** (`dynamics.rs`) — remaining-improvement from a partial trajectory.
+  Its deployed early-stop path is disabled and refuses loudly after RC-012;
+  repairing model and controller together remains future work.
 - **World** (`world.rs`) — imagined observable-state rollouts; imagined-vs-real
   schedule ranking **Spearman ≈0.85–0.90 on genuinely held-out candidates**
   (RC-010). The previously reported **0.975** came from a 5-candidate set of
@@ -153,7 +154,7 @@ World + Dynamics into one source-attributed consensus; publishes to the graph;
 disagreement; the explore/exploit λ dial; `CuriousIdeator`. Steers compute at
 the unknown, not only the best.
 
-## Stage 7 — Research OS / Operations 🟡 60%
+## Stage 7 — Research OS / Operations 🟢 90%
 
 - 🟢 `ResearchOrchestrator` — the lifecycle loop (observe→analyze→learn→
   plan→run→evaluate→update→write-knowledge), auto-exports dataset + dashboard.
@@ -164,11 +165,14 @@ the unknown, not only the best.
   evidence — each with a measured reason. **The loop OBEYS it** (`--executive`):
   it retrains stale models, investigates flagged operators, and **routes idea
   generation to a live Ollama/Qwen** (verified: 12 Qwen-originated experiments).
-- 🔵 **Model Registry** (versioned weights + lineage) — designed (Stage 7 doc), unbuilt.
-- 🔵 **Monitor** (continuous golden/replay/ledger + model-health gates) — designed, unbuilt.
-- 🔵 **Persistent Scheduler service** (job queue, budgets, triggers) — designed, unbuilt.
+- 🟢 **Model Registry** (`model_registry.rs`) — versioned weights, lineage, and
+  campaign/generation snapshots. Loading snapshots for warm-start/A-B remains.
+- 🟢 **Monitor** (`monitor.rs`) — health gates that halt on broken append-only
+  invariants. Live alerting and tuned auto-pause remain.
+- 🟢 **Persistent budget-capped service** — `run_service` with explicit tick,
+  experiment, and wall-time budgets. Multi-machine execution remains.
 
-## Stage 8 — Knowledge OS 🟡 70%
+## Stage 8 — Knowledge OS 🟢 80%
 
 - 🟢 **Theory Engine** (`theory.rs`) — the true-researcher core:
   rule → mechanism (from `StepEvent` entropy/acceptance/diversity signatures) →
@@ -181,16 +185,18 @@ the unknown, not only the best.
   never deletes.
 - 🟢 **Foundation Dataset** (`dataset.rs`) — ML-ready corpus export + decision-log
   (why each agent chose) + search-trajectory digest; blunt manifest on the scale gap.
-- 🔵 Explanation assembler → ablation loop at scale; structural-signature memory
-  index across families; Popperian confidence via many-instance investigation.
+- 🟢 Multi-instance `investigate_operator` aggregates ablations into Popperian
+  confidence. Remaining: broader family coverage and a stronger
+  structural-signature memory index.
 
-## Stage 9 — Problem Families 🟡 50%
+## Stage 9 — Problem Families 🟡 75%
 
 `engine_v2::families`: **TSP** (Lucas permutation encoding, + decoder) and
 **MAX-2-SAT** — both **proven correct vs brute force** (QUBO ground state = true
-optimum). Everything downstream runs on `ProblemIR` unchanged. Existing:
-MaxCut / BQP / QPLIB / BiqMac. 🔵 *Planned:* wire TSP/SAT as runnable platform
-research targets; add Scheduling (job-shop) and full VRP; SAT gadgets for k>2.
+optimum) and wired as runnable platform targets. Everything downstream runs on
+`ProblemIR` unchanged. Existing: MaxCut / BQP / QPLIB / BiqMac. Remaining:
+family-specific campaigns, Scheduling (job-shop), full VRP, and SAT gadgets for
+k>2.
 
 ## Stage 10 — Dashboard 🟢 90%
 
@@ -202,7 +208,7 @@ with status pills. `--render-dashboard` regenerates from stores. Rendered over
 18,570 experiments. 🔵 *Planned:* a hosted live site (deliberately deferred —
 attack surface).
 
-## Stage 11 — Research Foundation Model 🔬 8%
+## Stage 11 — Research Foundation Model 🔬 10%
 
 The honest frontier (`research/STAGE_8_KNOWLEDGE_OS.md §7`). A model that
 predicts *which algorithm behaves how* across all families, trained on the

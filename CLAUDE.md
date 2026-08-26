@@ -43,7 +43,7 @@ Two systems in one repository, with a hard boundary between them.
                          │  (frontend::qubo_model_to_ir)
 ┌──────────────────────────────────────────────────────────────┐
 │  RESEARCH PLATFORM  (src/engine_v2 — where new work happens)  │
-│    Substrate: ProblemIR, SpinState, 3 backends, 14 operators, │
+│    Substrate: ProblemIR, SpinState, backends, operator registry│
 │               deterministic Runtime + adaptive controllers    │
 │    Generation: DecisionEngine, Evolution, capability select   │
 │    Knowledge:  ExperimentDb, KnowledgeGraph, MetaLearner      │
@@ -73,7 +73,8 @@ schedules, genomes) and **analyzes**. All computation is delegated to a
 - `frontend.rs` — `qubo_model_to_ir`, `rudy_maxcut_ir` (energy-exact bridges).
 - backends: `ReferenceState` (f64 oracle), `SparseBitSlice` (exact integer,
   >100k cross-checks), `DenseByte` (production-shaped, 4.8× vs oracle).
-- `registry.rs` — the 14 operators + capability passports.
+- `registry.rs` — registered operators + capability passports. Query the
+  registry when an exact count matters; do not freeze dynamic counts here.
 - `Runtime` — deterministic execution + `maybe_adapt` controllers.
 - `evolution.rs` — genetic search over operator sequences.
 - `families.rs` — `tsp_qubo`/`decode_tsp`, `max2sat_qubo` (proven vs brute force).

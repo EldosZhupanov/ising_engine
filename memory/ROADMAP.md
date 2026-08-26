@@ -19,7 +19,8 @@ exists would over-fit; the path is to grow the dataset first.
 
 ## Current priorities — "Next 10"
 
-Item 1 is the active task (see [CURRENT_TASK.md](CURRENT_TASK.md)).
+These are roadmap priorities, not the active task. The sole active task is in
+[`NOW.md`](NOW.md).
 
 1. **Growth campaign** — long curiosity-driven `--service` toward 500k
 2. Distributed `BatchExecutor` behind the same trait

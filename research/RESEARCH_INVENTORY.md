@@ -533,7 +533,80 @@ the workflow were extracted and executed locally: **all pass**.
 minutes, and RC-005/007/008 depend on wall-clock or low-power statistics that
 would make CI flaky. They are reproduction commands (§4), not gates.
 
-## 8. Final audit
+### RC-016 — First-slot operator information
+
+- **Method** — pre-registered matched opposite-action comparison with held-in,
+  held-out, amendments, and a frozen descendant.
+- **Result** — `K = 25`, `k+ = 25`, `k- = 0`, **SIGN CONSTANT**. The scoped
+  opposite-action hypothesis was refuted; no causal `S0` counterexample was
+  found.
+- **Boundary** — this is equal-sweep, not equal-cost; one powered arm of thirty;
+  it establishes no policy, general sensor sufficiency, or universal kernel
+  ordering.
+- **Sources** — `PREREG_RC016.md` plus Amendments 1–4 and descendant;
+  `RC016_CYCLE_RECORD.md`.
+
+### RC-017 — Mid-run causal action variation
+
+- **Status** — instrument abort; **no scientific result** and no held-out access.
+- **Consequence** — seeds `5001–5008` are burned. The instrument was not repaired
+  in place.
+- **Sources** — `PREREG_RC017.md`, `RC017_ABORT_RECORD.md`, and the frozen
+  diagnostic `RC017_ENTROPY_PILOT.md`.
+
+### RC-018 — Cost identification instrument
+
+- **Status** — instrument invalid. A mandatory pre-registered guard was asserted
+  in prose but absent from executable code.
+- **Consequence** — no RC-018 datum, threshold, or verdict is evidence for a cost
+  claim.
+- **Sources** — `PREREG_RC018_COST_IDENTIFICATION.md` and
+  `RC018_PILOT_ABORT_RECORD.md`.
+
+### RC-019 — Instrument-conformance audit
+
+- **Status** — completed read-only audit through RC-018; no scientific seeds and
+  no implementation changes.
+- **Source** — `RC019_INSTRUMENT_CONFORMANCE_AUDIT.md`.
+
+### RC-020 — Marginal wall-cost pilot
+
+- **Status** — **closed without a scientific verdict**. Attempt 1 was refused
+  before the body; attempt 2 executed the pilot body but the session-discard
+  evidence died before an artifact was written.
+- **Boundary** — `K3` did not fire; Gate A has no verdict. Seeds `10001–10008`
+  are burned conservatively; `11001–11008` and `12001–12008` remain unopened.
+- **Sources** — `PREREG_RC020_MARGINAL_WALL_COST.md`, Amendment 1, and
+  `RC020_PILOT_ABORT_RECORD.md`.
+
+### RC-021 — Host and timing-instrument qualification
+
+- **Status** — binding pre-registration plus two binding amendments. Instrument
+  implementation was authorized and reached the controls step; it is paused for
+  the durable-memory task. No qualification control or session has run and no
+  RC-021 data exists.
+- **Purpose** — qualify the host/instrument under the frozen engineering rule;
+  a PASS licenses only a fresh marginal-cost pre-registration, not an equal-cost
+  or product claim.
+- **Sources** — `PREREG_RC021_HOST_INSTRUMENT.md`,
+  `PREREG_RC021_AMENDMENT_1.md`, and `PREREG_RC021_AMENDMENT_2.md`.
+
+## 8. Current programme position
+
+The selector/capability/plan-synthesis platform exists. The missing link is not
+another selector implementation: it is a defensible chain from measurable cost,
+through a replicated domain-specific causal selector, to an identical-seed
+production A/B win against `UltimateSolver`. `PROJECT_PLAN.md` is authoritative
+for that ordered route; `memory/NOW.md` is authoritative for the task in flight.
+
+No RC number after 021 is pre-assigned. A fresh cycle is created only when a
+previous verdict licenses a new pre-registration. Kill outcomes close a branch
+instead of forcing the numbering to continue.
+
+## 9. Historical audit through RC-015 (retained for provenance)
+
+The audit below was written before RC-016–RC-021. Its “next” statements are
+historical and do not override the current programme position above.
 
 **Which discoveries changed the architecture?** Strictly, **none yet**. Two landed
 as permanent tests (RC-006, RC-009), which changes the *verification* surface, not

@@ -8,7 +8,7 @@ Record a new ADR when you change structure, a boundary, or a cross-cutting
 guarantee. An ADR states: context, the decision, alternatives considered,
 consequences, and links to superseded/related ADRs.
 
-## The nine, in one line each
+## The twelve, in one line each
 
 | ADR | Decision |
 |---|---|
@@ -21,6 +21,9 @@ consequences, and links to superseded/related ADRs.
 | [0006](../research/architecture/ADR/ADR-0006-amendment-presumed-fixed.md) | Amendment I: the architectural vector is presumed fixed, not dogmatically fixed |
 | [0007](../research/architecture/ADR/ADR-0007-four-track-program.md) | Four parallel tracks: Engine, Research, Benchmark, Verification |
 | [0008](../research/architecture/ADR/ADR-0008-experiment-infrastructure.md) | Experiment infrastructure — one command, full report, black-box engines |
+| [0009](../research/architecture/ADR/ADR-0009-addressable-randomness-for-counterfactuals.md) | **Proposed:** addressable randomness for counterfactual execution |
+| [0010](../research/architecture/ADR/ADR-0010-canonical-energy-entropy-v1.md) | **Proposed:** canonical energy-entropy representation v1 |
+| [0011](../research/architecture/ADR/ADR-0011-durable-project-memory.md) | Git-backed durable memory with one live state and scoped authority |
 
 ## The two that bite most often
 
