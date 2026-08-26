@@ -23,7 +23,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 
 | Path | Kind | Authority | Lifecycle | Created | Last changed | Immutable | Canonical scope |
 |---|---|---:|---|---|---|---|---|
-| `AGENTS.md` | engineering-rules | A0 | active | 2026-07-05 | 2026-07-05 | false | engineering-workflow |
+| `AGENTS.md` | engineering-rules | A0 | active | 2026-07-05 | 2026-08-26 | false | engineering-workflow |
 | `anls_design_spec.md` | design-spec | A2 | reference | 2026-03-12 | 2026-03-12 | false | design |
 | `architecture_spec.md` | reference | A3 | reference | 2026-03-12 | 2026-03-12 | false | none |
 | `ARCHITECTURE.md` | engineering-reference | A1 | active | 2026-03-11 | 2026-03-11 | false | engineering |

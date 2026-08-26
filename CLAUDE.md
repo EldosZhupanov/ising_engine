@@ -47,7 +47,7 @@ Two systems in one repository, with a hard boundary between them.
 │               deterministic Runtime + adaptive controllers    │
 │    Generation: DecisionEngine, Evolution, capability select   │
 │    Knowledge:  ExperimentDb, KnowledgeGraph, MetaLearner      │
-│    ai_scientist/ (28 modules): the autonomous researcher      │
+│    ai_scientist/: autonomous research and knowledge systems   │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -79,7 +79,7 @@ schedules, genomes) and **analyzes**. All computation is delegated to a
 - `evolution.rs` — genetic search over operator sequences.
 - `families.rs` — `tsp_qubo`/`decode_tsp`, `max2sat_qubo` (proven vs brute force).
 
-**AI Scientist (`src/engine_v2/ai_scientist/`, 28 modules):**
+**AI Scientist (`src/engine_v2/ai_scientist/`):**
 - Data & knowledge: `db` (append-only ExperimentDb), `graph` (KnowledgeGraph),
   `meta_learner`, `meta_layer`, `evaluation`, `reports`, `memory_os`, `dataset`.
 - Models: `predictor`, `policy`, `dynamics`, `world`.
@@ -251,7 +251,7 @@ programmatically).
 - **Dashboard** (`dashboard.rs`): one self-contained page, dark-first, no external
   assets. Regenerate any time from the persisted stores:
   `research_platform --dir <D> --render-dashboard` — it prints a `file://` path.
-  Canonical instance: `experiments/platform_gset/dashboard.html` (18,570 runs).
+  Generated instances live under `experiments/` and are not startup memory.
 - **Foundation Dataset** (`dataset.rs`): `FoundationDataset` exports the ML-ready
   corpus + decision log + trajectory digest. It ships a blunt manifest of the
   scale gap to the foundation-model milestones. Export happens automatically in
