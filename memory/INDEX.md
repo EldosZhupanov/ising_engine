@@ -18,6 +18,7 @@ It does not override the sources it names.
 | [`AUTHORITY.md`](AUTHORITY.md) | authority by question and conflict protocol |
 | [`CATALOG.md`](CATALOG.md) | complete document registry and lifecycle |
 | [`TIMELINE.md`](TIMELINE.md) | milestone and research-cycle chronology |
+| [`OBSIDIAN.md`](OBSIDIAN.md) | optional local graph and backlink view |
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | pointer to architecture sources |
 | [`DECISIONS.md`](DECISIONS.md) | pointer to accepted/proposed ADRs |
 | [`ROADMAP.md`](ROADMAP.md) | pointer to the implementation inventory |

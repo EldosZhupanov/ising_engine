@@ -16,7 +16,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 - `closed`: 24
 - `historical`: 1
 - `proposed`: 2
-- `reference`: 46
+- `reference`: 47
 - `superseded`: 4
 
 ## Registry
@@ -46,6 +46,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `memory/DECISIONS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
 | `memory/INDEX.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
 | `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-08-26 | false | current-task |
+| `memory/OBSIDIAN.md` | workspace-guide | A3 | reference | 2026-08-26 | 2026-08-26 | false | navigation |
 | `memory/OPEN_PROBLEMS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
 | `memory/PERFORMANCE.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
 | `memory/RESEARCH.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
