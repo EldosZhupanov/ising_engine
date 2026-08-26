@@ -9,7 +9,7 @@ capability carries exactly one label:
   built, demoed, or described as working until that gate passes.
 
 Sequence and gates live in `PROJECT_PLAN.md`; current state in
-`memory/CURRENT_HANDOFF.md`. **No product implementation begins before the
+`memory/NOW.md`. **No product implementation begins before the
 benchmark gate in §12.**
 
 ---

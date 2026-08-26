@@ -59,3 +59,12 @@ new and merely proposed.
 Files catalogued as `immutable: true` are never edited, moved, or renamed by a
 memory migration. Metadata for them lives in `memory/CATALOG.md` and the frozen
 hash manifest. A correction is a new linked amendment or record.
+
+## Known legacy reference
+
+The immutable `research/EXTERNAL_COMPARISON_PROTOCOL.md` names
+`memory/CURRENT_HANDOFF.md`. That path now resolves through a compatibility
+pointer to `NOW.md`; it is not a second live authority. Before another external
+comparison wave begins, its handoff-update clause requires a prospective
+amendment that names `NOW.md`. Until then, the external-comparison wave is
+blocked rather than silently reinterpreted.

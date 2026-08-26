@@ -26,8 +26,8 @@ sentinel, or experiment may run as part of this task.
 - The primary worktree contains uncommitted Step 6 review corrections. This
   memory branch must not modify, stage, reset, or discard them.
 - Binding RC documents and their paths are immutable.
-- The existing `memory/CURRENT_TASK.md` and `memory/CURRENT_HANDOFF.md` are stale
-  historical snapshots until converted to compatibility pointers.
+- `memory/CURRENT_TASK.md` and `memory/CURRENT_HANDOFF.md` are compatibility
+  pointers. Their former snapshots remain available through Git history.
 
 ## Product position
 

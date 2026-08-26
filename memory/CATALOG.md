@@ -14,9 +14,10 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 - `active`: 16
 - `binding`: 30
 - `closed`: 24
+- `historical`: 1
 - `proposed`: 2
 - `reference`: 46
-- `superseded`: 5
+- `superseded`: 4
 
 ## Registry
 
@@ -29,21 +30,21 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `bayesian_design_spec.md` | design-spec | A2 | reference | 2026-03-12 | 2026-03-12 | false | design |
 | `benchmark_suite/README.md` | reference | A3 | reference | 2026-07-07 | 2026-07-07 | false | none |
 | `benchmarks/report.md` | reference | A3 | reference | 2026-07-06 | 2026-07-07 | false | none |
-| `CLAUDE.md` | agent-operations | A1 | active | 2026-07-05 | 2026-08-22 | false | claude-operation |
+| `CLAUDE.md` | agent-operations | A1 | active | 2026-07-05 | 2026-08-26 | false | claude-operation |
 | `CONTEXT.md` | historical-summary | A4 | superseded | 2026-07-05 | 2026-08-19 | false | none |
 | `design_spec.md` | design-spec | A2 | reference | 2026-03-12 | 2026-03-12 | false | design |
 | `gnn_design_spec.md` | design-spec | A2 | reference | 2026-03-12 | 2026-03-12 | false | design |
-| `INDEX.md` | navigation | A2 | superseded | 2026-07-05 | 2026-08-19 | false | compatibility |
+| `INDEX.md` | navigation | A3 | reference | 2026-07-05 | 2026-08-26 | false | compatibility |
 | `MEMORY.md` | historical-summary | A4 | superseded | 2026-07-05 | 2026-08-19 | false | none |
 | `memory/ARCHITECTURE.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
 | `memory/AUTHORITY.md` | governance-map | A0 | active | 2026-08-26 | 2026-08-26 | false | document-governance |
 | `memory/BENCHMARKS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
 | `memory/CATALOG.md` | document-registry | A1 | active | 2026-08-26 | 2026-08-26 | false | document-catalogue |
-| `memory/CLAUDE_PRODUCT_COMPARISON_TASK.md` | memory-pointer | A3 | reference | 2026-08-22 | 2026-08-22 | false | navigation |
-| `memory/CURRENT_HANDOFF.md` | historical-handoff | A4 | superseded | 2026-08-22 | 2026-08-23 | false | compatibility |
-| `memory/CURRENT_TASK.md` | historical-handoff | A4 | superseded | 2026-08-19 | 2026-08-19 | false | compatibility |
+| `memory/CLAUDE_PRODUCT_COMPARISON_TASK.md` | historical-instruction | A4 | historical | 2026-08-22 | 2026-08-26 | false | none |
+| `memory/CURRENT_HANDOFF.md` | historical-handoff | A4 | superseded | 2026-08-22 | 2026-08-26 | false | compatibility |
+| `memory/CURRENT_TASK.md` | historical-handoff | A4 | superseded | 2026-08-19 | 2026-08-26 | false | compatibility |
 | `memory/DECISIONS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
-| `memory/INDEX.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
+| `memory/INDEX.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
 | `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-08-26 | false | current-task |
 | `memory/OPEN_PROBLEMS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
 | `memory/PERFORMANCE.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
@@ -52,8 +53,8 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `memory/TIMELINE.md` | chronology | A1 | active | 2026-08-26 | 2026-08-26 | false | project-chronology |
 | `PERF.md` | engineering-reference | A1 | active | 2026-07-05 | 2026-07-06 | false | engineering |
 | `portfolio_design_spec.md` | design-spec | A2 | reference | 2026-03-13 | 2026-03-13 | false | design |
-| `PRODUCT_SPEC.md` | product-spec | A0 | active | 2026-08-22 | 2026-08-22 | false | finished-product |
-| `PROJECT_PLAN.md` | active-plan | A0 | active | 2026-08-22 | 2026-08-23 | false | ordered-gates |
+| `PRODUCT_SPEC.md` | product-spec | A0 | active | 2026-08-22 | 2026-08-26 | false | finished-product |
+| `PROJECT_PLAN.md` | active-plan | A0 | active | 2026-08-22 | 2026-08-26 | false | ordered-gates |
 | `README.md` | public-overview | A2 | active | 2026-03-11 | 2026-07-06 | false | public-overview |
 | `research/adversarial_architecture_review.md` | research-reference | A2 | reference | 2026-07-07 | 2026-07-07 | false | research-context |
 | `research/architecture/ADR/ADR-0000-adr-system-and-knowledge-graph.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |

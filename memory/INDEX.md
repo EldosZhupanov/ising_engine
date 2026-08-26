@@ -1,45 +1,41 @@
-# memory/INDEX.md — persistent project memory
+# Persistent project memory
 
-**This directory is a pointer layer, not a content store.** Each file names its
-authoritative source and carries only what that source does not. Nothing here
-duplicates `ROADMAP.md` or the ADRs, so nothing here can drift out of sync with
-them.
+This directory is a governed pointer layer over canonical Git-tracked sources.
+It does not override the sources it names.
 
-Read in this order at the start of a session:
+## Start here
 
-| File | Purpose | Authoritative source |
-|---|---|---|
-| [INDEX.md](INDEX.md) | this map | — |
-| [CURRENT_TASK.md](CURRENT_TASK.md) | what is in flight right now | *authored here* |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | system shape and boundaries | `../ARCHITECTURE.md`, `../CONTEXT.md`, `../research/architecture/ADR/` |
-| [DECISIONS.md](DECISIONS.md) | why the architecture is shaped this way | `../research/architecture/ADR/` |
-| [ROADMAP.md](ROADMAP.md) | status and priorities | `../ROADMAP.md` |
-| [OPEN_PROBLEMS.md](OPEN_PROBLEMS.md) | unresolved questions and debt | `../research/RESEARCH_GAPS.md`, `../ROADMAP.md` §Technical debt |
-| [PERFORMANCE.md](PERFORMANCE.md) | perf history and measurement rules | `../PERF.md` |
-| [BENCHMARKS.md](BENCHMARKS.md) | competitive standing | `../experiments/results/index.json` |
-| [RESEARCH.md](RESEARCH.md) | research cycles, results, retractions | **`../research/RESEARCH_INVENTORY.md`** (master register), `../research/RC0*.md` |
+1. [`../START_HERE.md`](../START_HERE.md)
+2. [`NOW.md`](NOW.md)
+3. [`AUTHORITY.md`](AUTHORITY.md)
+4. only the task bundle named by `NOW.md`
 
-## Governance order (unchanged — from `../CLAUDE.md`)
+## Memory indexes
 
-Higher outranks lower. This directory does **not** insert itself into that chain;
-it indexes it.
+| File | Purpose |
+|---|---|
+| [`NOW.md`](NOW.md) | sole live state and next action |
+| [`AUTHORITY.md`](AUTHORITY.md) | authority by question and conflict protocol |
+| [`CATALOG.md`](CATALOG.md) | complete document registry and lifecycle |
+| [`TIMELINE.md`](TIMELINE.md) | milestone and research-cycle chronology |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | pointer to architecture sources |
+| [`DECISIONS.md`](DECISIONS.md) | pointer to accepted/proposed ADRs |
+| [`ROADMAP.md`](ROADMAP.md) | pointer to the implementation inventory |
+| [`OPEN_PROBLEMS.md`](OPEN_PROBLEMS.md) | unresolved questions and debt |
+| [`PERFORMANCE.md`](PERFORMANCE.md) | measurement rules and performance evidence |
+| [`BENCHMARKS.md`](BENCHMARKS.md) | competitive evidence |
+| [`RESEARCH.md`](RESEARCH.md) | research findings and retractions |
 
-1. `../research/ISING_ENGINE_CONSTITUTION.md` — direction (single source of truth)
-2. `../SOUL.md` — why the project exists
-3. `../research/architecture/ADR/` — architecture decisions
-4. `../ROADMAP.md` — status
-5. `../CLAUDE.md` — day-to-day rules
+## Compatibility files
 
-## Superseded documents
+`CURRENT_TASK.md` and `CURRENT_HANDOFF.md` retain old links but redirect to
+`NOW.md`. Root `MEMORY.md` and `CONTEXT.md` remain historical snapshots.
 
-`../MEMORY.md` and `../CONTEXT.md` are **retained for history only**. They
-predate the current direction and describe a SIMD-first plan that the code does
-not implement. Use `../ROADMAP.md` for direction and
-[CURRENT_TASK.md](CURRENT_TASK.md) for status.
+## Update discipline
 
-## A second, separate store
-
-`~/.claude/projects/-home-eldos-ising-engine/memory/` holds session-scoped
-assistant memory (16 topic files + its own `MEMORY.md`). It is auto-loaded per
-session and is **not** part of the repository. Findings that matter to the
-project must be written *here*, in the repo, to survive.
+- Current work changes only in `NOW.md`.
+- Added/moved Markdown changes `CATALOG.md` in the same commit.
+- Accepted decisions use ADRs.
+- Research chronology changes in `TIMELINE.md` only after a durable cycle-state
+  transition.
+- Binding evidence is never edited or moved; its metadata lives in the catalogue.

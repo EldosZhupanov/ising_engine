@@ -1,5 +1,9 @@
 # Claude coordinator task — evidence, comparison, then product
 
+> **Lifecycle: historical.** This 2026-08-22 coordinator instruction is retained
+> as provenance. Current work is governed by `memory/NOW.md`; ordered gates are
+> in `PROJECT_PLAN.md` and the product definition is in `PRODUCT_SPEC.md`.
+
 **Authority:** direct user instruction, 2026-08-22.  Claude Code is the main
 coordinator.  Work is manual: no DAG, automation, orchestration tasks, or
 `worker_done` protocol.
@@ -13,7 +17,7 @@ into a novelty or superiority claim.
 
 ## Ordered actions
 
-1. Finish the current `PROJECT_PLAN.md`, `memory/CURRENT_HANDOFF.md`,
+1. Finish the current `PROJECT_PLAN.md`, `memory/NOW.md`,
    `CLAUDE.md`, and `ROADMAP.md` docs-only step.  Correct RC-016 to the exact
    `SIGN CONSTANT` record (`K=25`, `k+=25`, `k-=0`; H-16 refuted), incorporate
    the independent Antigravity `CONSISTENT` review, run `git diff --check`, show
@@ -61,7 +65,7 @@ primary literature.
 - If it passes: present the user with the evidence and an MVP build plan.  Only
   then begin product implementation or use a "best"/"breakthrough" claim.
 
-After every atomic step update `memory/CURRENT_HANDOFF.md` (maximum 80 lines).
+After every atomic step update `memory/NOW.md` (maximum 120 lines).
 Use targeted reads, short path-based prompts, one implementer plus one reviewer,
 and a fresh/compacted session between tasks.
 

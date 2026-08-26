@@ -6,8 +6,8 @@ verifiable product. It does **not** restate direction (`research/ISING_ENGINE_CO
 philosophy (`SOUL.md`), or working rules (`AGENTS.md`, `CLAUDE.md`). Status by
 stage lives in `ROADMAP.md`; this file is the *path*, not the *inventory*.
 
-**Read order for a new agent:** this file → `memory/CURRENT_HANDOFF.md` → only
-the files that handoff names. Do not scan the repo.
+**Read order for a new agent:** `START_HERE.md` → `memory/NOW.md` → this file
+when the active task names the scientific/product sequence. Do not scan the repo.
 
 ---
 
@@ -93,9 +93,9 @@ does not resume at RC-020; it resumes at a **fresh pre-registered successor**,
 provisionally **RC-021**, whose subject is the *host and the instrument*, not
 marginal cost.
 
-**Status: pre-registered. The document is
-`research/PREREG_RC021_HOST_INSTRUMENT.md`. Implementation remains BLOCKED and
-requires a separate explicit decision.** No RC-021 instrument exists, no RC-021
+**Protocol status:** pre-registration and both amendments are binding.
+Implementation was separately authorized; its live engineering state belongs
+only in `memory/NOW.md`, not in this durable sequence. No RC-021 qualification
 datum exists, and `experiments/rc021/` does not exist.
 
 Its frozen design: primary estimand is the **paired wall-time spread** of one
@@ -289,8 +289,8 @@ definitions are **not** restated here — follow `AGENTS.md` §2.6 (Context Budg
 §2.7 (Search Strategy) and §3 (Agent Roles). What follows is only what those do
 not already cover.
 
-- **Enter through the handoff.** `PROJECT_PLAN.md` → `memory/CURRENT_HANDOFF.md`
-  → only the files the handoff names. Never scan the repo; never read every `.md`.
+- **Enter through durable memory.** `START_HERE.md` → `memory/NOW.md` → only the
+  task bundle it names. Never scan the repo; never read every `.md`.
 - **Two agents per task, maximum.** One implementer, one independent reviewer
   (`AGENTS.md` §3.5). No duplicate agents on the same work.
 - **One atomic task at a time.** The handoff names exactly one. Finish it or
@@ -315,5 +315,5 @@ not already cover.
 | Architecture decisions | `research/architecture/ADR/` |
 | Stage inventory and % | `ROADMAP.md` |
 | **Active sequence and gates** | **this file** |
-| **What to do right now** | **`memory/CURRENT_HANDOFF.md`** |
+| **What to do right now** | **`memory/NOW.md`** |
 | Open decisions | `memory/OPEN_PROBLEMS.md` |
