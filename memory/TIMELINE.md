@@ -12,6 +12,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-08-19 | `d18af54` | First repository memory/index layer committed | [`INDEX.md`](INDEX.md) |
 | 2026-08-26 | `e3669be` and descendants on `docs/memory-architecture` | Durable-memory authority, catalogue, and startup path established | [`ADR-0011`](../research/architecture/ADR/ADR-0011-durable-project-memory.md) |
 | 2026-08-27 | `983497d..d5880e3` | Durable memory integrated into `feat/solver-research-upgrades` after the reviewed Step 6 | [`ADR-0011`](../research/architecture/ADR/ADR-0011-durable-project-memory.md), [`NOW.md`](NOW.md) |
+| 2026-08-27 | `e824b7f` | Integrated durable-memory state independently reviewed PASS; current-task authority returned to RC-021 Step 7 | [`NOW.md`](NOW.md) |
 
 ## Research-cycle chronology
 
