@@ -13,6 +13,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-08-26 | `e3669be` and descendants on `docs/memory-architecture` | Durable-memory authority, catalogue, and startup path established | [`ADR-0011`](../research/architecture/ADR/ADR-0011-durable-project-memory.md) |
 | 2026-08-27 | `983497d..d5880e3` | Durable memory integrated into `feat/solver-research-upgrades` after the reviewed Step 6 | [`ADR-0011`](../research/architecture/ADR/ADR-0011-durable-project-memory.md), [`NOW.md`](NOW.md) |
 | 2026-08-27 | `e824b7f` | Integrated durable-memory state independently reviewed PASS; current-task authority returned to RC-021 Step 7 | [`NOW.md`](NOW.md) |
+| 2026-08-27 | `3493ed8` | RC-021 Step 7 decision, reservation-first finalization and read-only verification completed after adversarial review | [`NOW.md`](NOW.md) |
 
 ## Research-cycle chronology
 
@@ -38,7 +39,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | RC-018 | closed/instrument invalid | 2026-08-19 | No scientific datum | [`prereg`](../research/PREREG_RC018_COST_IDENTIFICATION.md), [`abort`](../research/RC018_PILOT_ABORT_RECORD.md) |
 | RC-019 | closed/read-only audit | 2026-08-20 | Instrument-conformance findings through RC-018 | [`audit`](../research/RC019_INSTRUMENT_CONFORMANCE_AUDIT.md) |
 | RC-020 | closed/no verdict | 2026-08-22 | Two attempts, no surviving scientific measurement; named seeds burned/reserved per record | [`prereg`](../research/PREREG_RC020_MARGINAL_WALL_COST.md), [`abort`](../research/RC020_PILOT_ABORT_RECORD.md) |
-| RC-021 | implementation through Step 6 complete and reviewed | 2026-08-23 | Binding host/instrument qualification protocol; instrument built through the controls step; no qualification data | [`prereg`](../research/PREREG_RC021_HOST_INSTRUMENT.md), [`A1`](../research/PREREG_RC021_AMENDMENT_1.md), [`A2`](../research/PREREG_RC021_AMENDMENT_2.md) |
+| RC-021 | implementation through Step 7 complete and reviewed | 2026-08-23 | Binding host/instrument qualification protocol; decision, finalization and verification implemented; no qualification data | [`prereg`](../research/PREREG_RC021_HOST_INSTRUMENT.md), [`A1`](../research/PREREG_RC021_AMENDMENT_1.md), [`A2`](../research/PREREG_RC021_AMENDMENT_2.md) |
 
 ## RC-021 implementation ancestry
 
@@ -53,6 +54,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | `e202c58` | seeds, sentinel, and `/proc` diagnostics |
 | `d4eded4` | protocol and gap enforcement |
 | `1b855b7` | controls, final reviewed Step 6 |
+| `3493ed8` | decision, finalize and verify, reviewed Step 7 |
 
 ## Update rule
 

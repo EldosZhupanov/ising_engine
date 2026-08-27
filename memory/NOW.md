@@ -14,12 +14,12 @@ its claims against `git status --short` and the current branch before acting.
 
 ## Active task
 
-**RC-021 Step 7 — decision, finalize and verify.**
+**RC-021 Step 8 — CLI and end-to-end synthetic tests.**
 
-This is the single active task. Implementation and synthetic or injected tests
-are permitted. Running RC-021 is not: no production control, no qualification
-session, and no sentinel on G11 may execute, and `experiments/rc021/` must not
-be created.
+This is the single active task. The five public modes and synthetic or injected
+end-to-end tests are permitted. Running RC-021 is not: no production control,
+no qualification session, and no sentinel on G11 may execute, and
+`experiments/rc021/` must not be created.
 
 ## Working context
 
@@ -27,11 +27,16 @@ be created.
 - RC-021 Step 6 is complete, committed as
   `1b855b774654f85a326baf37436262e9f5322e5b`, and an independent read-only
   review of it returned PASS.
+- RC-021 Step 7 is complete and committed as
+  `3493ed8`; its independent review blockers and adversarial follow-up findings
+  are closed, and the full source gate set is green.
 - The durable-memory series is integrated on this branch as commits
   `983497d..d5880e3`.
 - The integrated memory state at `e824b7f` was independently reviewed and
   returned PASS.
-- The working tree is clean.
+- The working tree contains an unrelated draft change to
+  `research/EXTERNAL_PROJECTS_BACKLOG.md`; preserve it and exclude it from every
+  RC-021 commit.
 - RC-021 has never been executed: no controls, no qualification session, no
   sentinel on G11, and no measurement data of any kind.
 - Binding RC documents and their paths are immutable.
@@ -49,25 +54,22 @@ be created.
 
 ## This task is complete only when
 
-1. The §7.2 decision predicate and all terminal status mappings are implemented
-   from the binding documents.
-2. Finalization writes the closure using the reservation-first durability
-   contract.
-3. The terminal evidence lock is enforced.
-4. `--verify` is strictly read-only and validates the full durable record.
-5. Synthetic or injected tests cover the decision, closure, damaged or partial
-   closure, and verify paths without running RC-021.
-6. The applicable `cargo` check, test, build, `clippy`, and `fmt` gates pass.
-7. An independent read-only review returns PASS.
-8. No `experiments/rc021/` and no RC-021 measurement data exists.
+1. The five public modes and their exact argument/precondition state machine are
+   wired through the existing private modules.
+2. Every mode exit code is derived from the frozen mode/run-status taxonomy.
+3. Synthetic end-to-end tests cover the legal transitions, refusals, terminal
+   lock, finalization and read-only verification.
+4. No test executes a real control, qualification session, or G11 sentinel.
+5. The applicable `cargo` check, test, build, `clippy`, and `fmt` gates pass.
+6. An independent read-only review of the complete instrument returns PASS.
+7. No `experiments/rc021/` and no RC-021 measurement data exists.
 
 ## Next action
 
-Explorer, strictly read-only: build the Step-7 dependency map from the binding
-preregistration and its amendments — the §7.2 predicate, the §8 statuses, the
-closure schema, the terminal lock, and the verify contract — together with the
-existing journal, manifest, protocol, session, and controls layers. Then Planner
-must present an atomic implementation plan before any edit is made.
+Explorer, strictly read-only: map the existing hidden P2 dispatch and the five
+mode APIs to Amendment 2's state-machine table and exit codes. Then Planner must
+present the single Step-8 source commit and synthetic integration-test plan
+before any edit is made.
 
 ## Forbidden during this task
 
@@ -75,8 +77,11 @@ must present an atomic implementation plan before any edit is made.
   G11.
 - Creating `experiments/rc021/`.
 - Editing or moving any binding preregistration, amendment, or cycle record.
-- Starting Step 8 or any public CLI surface.
 - Fixing the non-blocking F1/F2 test-hardening findings "while here".
+- Starting the real six-session execution or writing the instrument-review
+  record before the complete-instrument review returns PASS.
+- Modifying or staging `research/EXTERNAL_PROJECTS_BACKLOG.md` as part of
+  RC-021.
 - Changing `solver`, `core`, `engine_v2`, or any Cargo dependency.
 - Weakening the durability contract, the terminal evidence lock, or the
   read-only guarantee of `--verify`.
