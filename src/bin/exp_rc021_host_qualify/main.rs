@@ -3,13 +3,14 @@
 //! Implements `research/PREREG_RC021_HOST_INSTRUMENT.md` as amended by
 //! `PREREG_RC021_AMENDMENT_1.md` and `PREREG_RC021_AMENDMENT_2.md`.
 //!
-//! **This binary is under construction.** Commit 6 of the §12 plan adds the
-//! twelve controls, both markers and the control journal on top of the journal,
-//! host, manifest, provenance, seeds, sentinel, diagnostics, protocol and gap
-//! layers. There is still no decision, finalize or verify path (commit 7) and
-//! **no public CLI** (commit 8); neither may be added outside its own commit.
+//! **This binary is under construction.** Commit 7 of the §12 plan adds the
+//! decision rule, finalization and verification on top of the journal, host,
+//! manifest, provenance, seeds, sentinel, diagnostics, protocol, gap and
+//! controls layers. There is still **no public CLI** (commit 8), so nothing
+//! below reaches `decision` yet; it may not be added outside its own commit.
 
 mod controls;
+mod decision;
 mod host;
 mod journal;
 mod manifest;
@@ -32,8 +33,8 @@ fn main() {
     }
     println!(
         "RC-021 host qualification — journal, host, manifest, provenance, seeds,\n\
-         sentinel, diagnostics, protocol, gap enforcement and controls\n\
-         (commit 6 of the §12 plan). No decision, no finalize, no verify, no CLI."
+         sentinel, diagnostics, protocol, gap enforcement, controls, decision,\n\
+         finalize and verify (commit 7 of the §12 plan). No public CLI yet."
     );
 }
 

@@ -54,6 +54,11 @@ impl RunStatus {
             RunStatus::InconclusiveUnderpowered => "INCONCLUSIVE-UNDERPOWERED",
         }
     }
+    /// The inverse of [`RunStatus::as_str`], for reading a stored closure.
+    pub fn parse(s: &str) -> Option<RunStatus> {
+        RUN_STATUSES.iter().copied().find(|r| r.as_str() == s)
+    }
+
     /// §8: Class I is not a result; Class II is published.
     pub fn is_class_two(self) -> bool {
         matches!(self, RunStatus::HostNotQualified | RunStatus::HostQualified)
@@ -120,6 +125,8 @@ pub enum TerminalOutcome {
     Controls(ControlsOutcome),
     Session(crate::session::SessionOutcome),
     Verdict(VerdictOutcome),
+    Finalize(crate::decision::FinalizeOutcome),
+    Verify(crate::decision::VerifyOutcome),
 }
 
 impl TerminalOutcome {
@@ -134,6 +141,12 @@ impl TerminalOutcome {
                 .terminal_run_status()
                 .expect("a non-terminal SessionOutcome is not a terminal path"),
             TerminalOutcome::Verdict(v) => v.run_status(),
+            TerminalOutcome::Finalize(o) => o
+                .terminal_run_status()
+                .expect("a non-terminal FinalizeOutcome is not a terminal path"),
+            TerminalOutcome::Verify(o) => o
+                .terminal_run_status()
+                .expect("a non-terminal VerifyOutcome is not a terminal path"),
         }
     }
     pub fn variant_name(&self) -> String {
@@ -141,6 +154,8 @@ impl TerminalOutcome {
             TerminalOutcome::Controls(o) => format!("Controls::{}", o.variant_name()),
             TerminalOutcome::Session(o) => format!("Session::{}", o.variant_name()),
             TerminalOutcome::Verdict(v) => format!("Verdict::{}", v.variant_name()),
+            TerminalOutcome::Finalize(o) => format!("Finalize::{}", o.variant_name()),
+            TerminalOutcome::Verify(o) => format!("Verify::{}", o.variant_name()),
         }
     }
 }
@@ -174,6 +189,68 @@ pub fn terminal_controls_variants() -> Vec<&'static str> {
         .filter(|o| o.is_terminal())
         .map(|o| o.variant_name())
         .collect()
+}
+
+/// The terminal subset of `decision::FINALIZE_VARIANTS`.
+pub fn terminal_finalize_variants() -> Vec<&'static str> {
+    sample_finalize_outcomes()
+        .into_iter()
+        .filter(|o| o.is_terminal())
+        .map(|o| o.variant_name())
+        .collect()
+}
+
+/// The terminal subset of `decision::VERIFY_VARIANTS`.
+pub fn terminal_verify_variants() -> Vec<&'static str> {
+    sample_verify_outcomes()
+        .into_iter()
+        .filter(|o| o.is_terminal())
+        .map(|o| o.variant_name())
+        .collect()
+}
+
+/// Whether a P3 sample lists **exactly** its frozen inventory.
+///
+/// Sorted-multiset equality, so it rejects a missing name, an extra name **and**
+/// a same-length sample that duplicates one name while dropping another — the
+/// last of which a length check plus a de-duplicated comparison lets through.
+pub fn sample_is_frozen_inventory(sampled: &[&str], frozen: &[&str]) -> bool {
+    let mut got = sampled.to_vec();
+    got.sort_unstable();
+    let mut want = frozen.to_vec();
+    want.sort_unstable();
+    got == want
+}
+
+/// One value of **every** `FinalizeOutcome` variant.
+pub fn sample_finalize_outcomes() -> Vec<crate::decision::FinalizeOutcome> {
+    use crate::decision::FinalizeOutcome as F;
+    vec![
+        F::Wrote {
+            status: RunStatus::HostQualified,
+        },
+        F::DurabilityFailed { at: "sync_all" },
+        F::AlreadyComplete,
+        F::EmptyOrPartialClosure,
+        F::ArtifactWithoutClosure,
+        F::Unreconstructible,
+        F::RefusedBeforeMeasurement,
+        F::DerivedClosureInvalid,
+    ]
+}
+
+/// One value of **every** `VerifyOutcome` variant, terminal or not.
+pub fn sample_verify_outcomes() -> Vec<crate::decision::VerifyOutcome> {
+    use crate::decision::VerifyOutcome as V;
+    vec![
+        V::Verified,
+        V::Mismatch {
+            what: "integrity entry run.json".to_string(),
+        },
+        V::EmptyOrPartial,
+        V::DamagedManifest,
+        V::NoClosurePath,
+    ]
 }
 
 /// The terminal subset of [`SESSION_VARIANTS`].
@@ -284,6 +361,26 @@ pub fn representative_terminal_outcomes() -> Vec<TerminalOutcome> {
         TerminalOutcome::Verdict(VerdictOutcome::Qualified),
         TerminalOutcome::Verdict(VerdictOutcome::NotQualified),
         TerminalOutcome::Verdict(VerdictOutcome::Underpowered),
+        // §C14: every finalize outcome ends the run.
+        TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::Wrote {
+            status: RunStatus::HostQualified,
+        }),
+        TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::DurabilityFailed {
+            at: "sync_all",
+        }),
+        TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::AlreadyComplete),
+        TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::EmptyOrPartialClosure),
+        TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::ArtifactWithoutClosure),
+        TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::Unreconstructible),
+        TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::RefusedBeforeMeasurement),
+        TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::DerivedClosureInvalid),
+        // §C14.2: `Verified` and `NoClosurePath` are continuations and are
+        // deliberately absent, exactly like `Complete` and `Proceed`.
+        TerminalOutcome::Verify(crate::decision::VerifyOutcome::Mismatch {
+            what: "integrity entry run.json".to_string(),
+        }),
+        TerminalOutcome::Verify(crate::decision::VerifyOutcome::EmptyOrPartial),
+        TerminalOutcome::Verify(crate::decision::VerifyOutcome::DamagedManifest),
     ]
 }
 
@@ -2238,11 +2335,15 @@ impl<'a> ProductionRunner<'a> {
         covered.dedup();
         let terminal_controls = terminal_controls_variants();
         let terminal_sessions = terminal_session_variants();
+        let terminal_finalize = terminal_finalize_variants();
+        let terminal_verify = terminal_verify_variants();
         for want in terminal_controls
             .iter()
             .map(|v| format!("Controls::{v}"))
             .chain(terminal_sessions.iter().map(|v| format!("Session::{v}")))
             .chain(VERDICT_VARIANTS.iter().map(|v| format!("Verdict::{v}")))
+            .chain(terminal_finalize.iter().map(|v| format!("Finalize::{v}")))
+            .chain(terminal_verify.iter().map(|v| format!("Verify::{v}")))
         {
             if !covered.contains(&want) {
                 return ControlOutcome::fail(&format!("{want} has no representative"));
@@ -2262,8 +2363,55 @@ impl<'a> ProductionRunner<'a> {
                 ));
             }
         }
+        for v in crate::decision::VERIFY_VARIANTS {
+            if !terminal_verify.contains(&v) && covered.contains(&format!("Verify::{v}")) {
+                return ControlOutcome::fail(&format!(
+                    "Verify::{v} is a continuation and must not be a §8 terminal path"
+                ));
+            }
+        }
+        for v in crate::decision::FINALIZE_VARIANTS {
+            if !terminal_finalize.contains(&v) && covered.contains(&format!("Finalize::{v}")) {
+                return ControlOutcome::fail(&format!(
+                    "Finalize::{v} is a continuation and must not be a §8 terminal path"
+                ));
+            }
+        }
+        // The samples are the only source of the two lists above, so P3 is
+        // vacuous unless they are the **complete** frozen inventory. A variant
+        // added to either enum and forgotten here would otherwise vanish from
+        // the taxonomy without failing anything.
+        for (family, sampled, frozen) in [
+            (
+                "Finalize",
+                sample_finalize_outcomes()
+                    .iter()
+                    .map(|o| o.variant_name())
+                    .collect::<Vec<_>>(),
+                crate::decision::FINALIZE_VARIANTS.to_vec(),
+            ),
+            (
+                "Verify",
+                sample_verify_outcomes()
+                    .iter()
+                    .map(|o| o.variant_name())
+                    .collect::<Vec<_>>(),
+                crate::decision::VERIFY_VARIANTS.to_vec(),
+            ),
+        ] {
+            if !sample_is_frozen_inventory(&sampled, &frozen) {
+                return ControlOutcome::fail(&format!(
+                    "the {family} sample is not the frozen inventory: {sampled:?} vs {frozen:?}"
+                ));
+            }
+        }
         // Non-vacuous: there must be terminal paths in every family.
-        if terminal_controls.is_empty() || terminal_sessions.is_empty() || outcomes.is_empty() {
+        if terminal_controls.is_empty()
+            || terminal_sessions.is_empty()
+            || terminal_finalize.is_empty()
+            || terminal_verify.is_empty()
+            || outcomes.is_empty()
+        {
             return ControlOutcome::fail("the terminal enumeration is empty");
         }
 
@@ -2308,6 +2456,8 @@ impl<'a> ProductionRunner<'a> {
                 TerminalOutcome::Controls(c) => c.terminal_exit_code(),
                 TerminalOutcome::Session(c) => c.terminal_exit_code(),
                 TerminalOutcome::Verdict(v) => Some(v.run_status().exit_code()),
+                TerminalOutcome::Finalize(o) => o.terminal_exit_code(),
+                TerminalOutcome::Verify(o) => o.terminal_exit_code(),
             };
             if direct != via_status {
                 return ControlOutcome::fail(&format!(
@@ -4395,6 +4545,8 @@ mod tests {
                 TerminalOutcome::Controls(c) => c.terminal_exit_code(),
                 TerminalOutcome::Session(c) => c.terminal_exit_code(),
                 TerminalOutcome::Verdict(v) => Some(v.run_status().exit_code()),
+                TerminalOutcome::Finalize(f) => f.terminal_exit_code(),
+                TerminalOutcome::Verify(v) => v.terminal_exit_code(),
             };
             assert_eq!(
                 direct,
@@ -4744,5 +4896,39 @@ mod tests {
             assert!(read_load_avg_1min(&p).is_err(), "{bad:?}");
         }
         assert!(read_load_avg_1min(&d.path().join("absent")).is_err());
+    }
+
+    /// The P3 completeness guard must reject a sample that is the **right
+    /// length** yet the wrong set — one name duplicated, another dropped. A
+    /// length check paired with a de-duplicated comparison accepts exactly
+    /// that, which would make the guard vacuous while still looking strict.
+    #[test]
+    fn the_frozen_inventory_guard_rejects_a_same_length_wrong_content_sample() {
+        let frozen = ["A", "B", "C"];
+        assert!(sample_is_frozen_inventory(&["C", "A", "B"], &frozen));
+        assert!(
+            !sample_is_frozen_inventory(&["A", "B", "B"], &frozen),
+            "a duplicate hiding a missing name is not the inventory"
+        );
+        assert!(!sample_is_frozen_inventory(&["A", "B"], &frozen));
+        assert!(!sample_is_frozen_inventory(&["A", "B", "C", "D"], &frozen));
+
+        // And the two real samples are the frozen inventories.
+        let fin: Vec<&str> = sample_finalize_outcomes()
+            .iter()
+            .map(|o| o.variant_name())
+            .collect();
+        assert!(sample_is_frozen_inventory(
+            &fin,
+            &crate::decision::FINALIZE_VARIANTS
+        ));
+        let ver: Vec<&str> = sample_verify_outcomes()
+            .iter()
+            .map(|o| o.variant_name())
+            .collect();
+        assert!(sample_is_frozen_inventory(
+            &ver,
+            &crate::decision::VERIFY_VARIANTS
+        ));
     }
 }
