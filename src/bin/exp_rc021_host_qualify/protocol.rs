@@ -387,11 +387,25 @@ pub fn verify_sentinel_instance(bytes: &[u8]) -> Result<(), ProtocolError> {
 /// verifies the bytes before it parses them. A signature taking a bare
 /// `ProblemIR` would let any graph — synthetic, substituted or corrupted —
 /// reach the solver with the gate intact but bypassed.
-pub struct VerifiedSentinelInstance(ProblemIR);
+pub struct VerifiedSentinelInstance {
+    ir: ProblemIR,
+    /// The full SHA-256 of the bytes that were verified and parsed.
+    ///
+    /// Carried here so a provenance row can state the digest of what actually
+    /// ran, without re-reading the file — a re-read certifies whatever is on
+    /// disk *now*, which is not necessarily what the sentinel executed.
+    sha256: String,
+}
 
 impl VerifiedSentinelInstance {
     pub fn num_vars(&self) -> usize {
-        self.0.n
+        self.ir.n
+    }
+    /// The full 64-hex digest, not the twelve-character prefix the gate
+    /// compares against. A record labelled `sentinel_sha256` must hold a
+    /// sha256, or an auditor running `sha256sum` finds it disagrees.
+    pub fn sha256(&self) -> &str {
+        &self.sha256
     }
 }
 
@@ -400,8 +414,9 @@ pub fn load_sentinel_instance(bytes: &[u8]) -> Result<VerifiedSentinelInstance, 
     verify_sentinel_instance(bytes)?;
     let text =
         std::str::from_utf8(bytes).map_err(|e| ProtocolError::InstanceUnparsable(e.to_string()))?;
+    let sha256 = crate::host::sha256_hex(bytes);
     ising_engine::engine_v2::frontend::rudy_maxcut_ir(text)
-        .map(VerifiedSentinelInstance)
+        .map(|ir| VerifiedSentinelInstance { ir, sha256 })
         .map_err(ProtocolError::InstanceUnparsable)
 }
 
@@ -452,7 +467,7 @@ pub fn run_sentinel(
     instance: &VerifiedSentinelInstance,
     extra: ExtraWork,
 ) -> Result<SentinelRun, ProtocolError> {
-    execute_sentinel(&instance.0, RC021_SENTINEL_SEED, extra)
+    execute_sentinel(&instance.ir, RC021_SENTINEL_SEED, extra)
 }
 
 /// The executor. Private: the only production caller is [`run_sentinel`], which
@@ -598,7 +613,7 @@ pub fn run_work_block(
     block: WorkBlock,
 ) -> Result<WorkBlockRun, ProtocolError> {
     let temps = vec![SENTINEL_TEMP; SENTINEL_REPLICAS];
-    let ir = &instance.0;
+    let ir = &instance.ir;
     let init = vec![0u8; ir.n];
     let mut st = SparseBitSlice::new(ir, SENTINEL_REPLICAS, &init)
         .map_err(|e| ProtocolError::StateInit(format!("{e:?}")))?;
@@ -708,10 +723,12 @@ pub mod tests_support {
     use super::*;
 
     pub fn synthetic_verified() -> VerifiedSentinelInstance {
-        VerifiedSentinelInstance(
-            ising_engine::engine_v2::frontend::rudy_maxcut_ir("4 4\n1 2 1\n2 3 1\n3 4 1\n4 1 1\n")
+        let text = "4 4\n1 2 1\n2 3 1\n3 4 1\n4 1 1\n";
+        VerifiedSentinelInstance {
+            ir: ising_engine::engine_v2::frontend::rudy_maxcut_ir(text)
                 .expect("synthetic rudy must parse"),
-        )
+            sha256: crate::host::sha256_hex(text.as_bytes()),
+        }
     }
 }
 

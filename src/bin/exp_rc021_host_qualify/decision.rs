@@ -623,6 +623,12 @@ pub enum MarkerState {
 
 /// Whether the path exists, treating an I/O error as presence rather than
 /// absence — an unreadable marker is not an absent one.
+/// Exposed so the presence doctrine itself can be tested against `.exists()`.
+#[cfg(test)]
+pub fn path_present_for_test(path: &Path) -> bool {
+    path_present(path)
+}
+
 fn path_present(path: &Path) -> bool {
     match std::fs::metadata(path) {
         Ok(_) => true,
@@ -1133,8 +1139,36 @@ fn jstr(s: &str) -> String {
 }
 
 fn jnum(v: f64) -> String {
-    // §C8.1: shortest round-trip, never fixed precision.
-    v.to_string()
+    // §C8.1: shortest round-trip, never fixed precision. This workspace's
+    // serde_json is not built with its optional `float_roundtrip` feature, so
+    // the standard shortest spelling can occasionally be decoded one ULP
+    // away by `Value::as_f64`. Pick the shortest decimal spelling that the
+    // actual closure reader maps back to the exact bits.
+    let mut candidates = Vec::new();
+    candidates.push(v.to_string());
+    for precision in 0..=32 {
+        let fixed = format!("{v:.precision$}");
+        let fixed = if fixed.contains('.') {
+            fixed
+                .trim_end_matches('0')
+                .trim_end_matches('.')
+                .to_string()
+        } else {
+            fixed
+        };
+        candidates.push(fixed);
+        candidates.push(format!("{v:.precision$e}"));
+    }
+    candidates
+        .into_iter()
+        .filter(|candidate| {
+            serde_json::from_str::<serde_json::Value>(candidate)
+                .ok()
+                .and_then(|n| n.as_f64())
+                .is_some_and(|parsed| parsed.to_bits() == v.to_bits())
+        })
+        .min_by(|a, b| a.len().cmp(&b.len()).then_with(|| a.cmp(b)))
+        .unwrap_or_else(|| v.to_string())
 }
 
 fn jopt_u64(v: Option<u64>) -> String {
@@ -1873,7 +1907,12 @@ pub fn render_observations(ledger: &MeasurementLedger) -> String {
 /// `p`, that a PASS establishes a confidence bound, or that `N = 90` gives 95%
 /// confidence of anything. This renderer states the verdict as passage of a
 /// frozen engineering protocol and nothing more.
-pub fn render_results_md(c: &Closure, loo: &LeaveOneOut, rules: &VerdictRules) -> String {
+pub fn render_results_md(
+    dir: &Path,
+    c: &Closure,
+    loo: &LeaveOneOut,
+    rules: &VerdictRules,
+) -> String {
     let mut s = String::new();
     s.push_str("# RC-021 — host and instrument qualification\n\n");
     s.push_str(&format!(
@@ -1961,9 +2000,161 @@ pub fn render_results_md(c: &Closure, loo: &LeaveOneOut, rules: &VerdictRules) -
         c.identity_source.as_str()
     ));
     s.push_str(&format!("- `finalized_utc`: `{}`\n", c.finalized_utc));
+
+    if let Ok(manifest) = crate::manifest::read_manifest(&dir.join("run.json")) {
+        let h = &manifest.host_fields;
+        s.push_str(&format!(
+            "- `init_utc`: `{}`\n- `init_command_line`: `{}`\n",
+            manifest.utc_start,
+            serde_json::to_string(&manifest.command_line).unwrap_or_else(|_| "[]".into())
+        ));
+        s.push_str(&format!(
+            "- `kernel_release`: `{}`\n- `kernel_version`: `{}`\n\
+             - `available_processors`: `{}`\n- `mem_total_kb`: `{}`\n\
+             - `cpu_model`: `{}`\n- `cpu_set`: `{}`\n- `thread_count`: `{}`\n",
+            h.kernel_release,
+            h.kernel_version,
+            h.available_processors,
+            h.mem_total_kb,
+            h.cpu_model,
+            manifest.cpu_set,
+            manifest.thread_count
+        ));
+    }
+
+    s.push_str("\n### Invocation headers\n\n");
+    s.push_str("| journal | UTC start | command line | timer resolution ms | diagnostics |\n");
+    s.push_str("|---|---|---|---:|---|\n");
+    let mut metadata = Vec::new();
+    if let Ok(bytes) = std::fs::read(dir.join(crate::controls::CONTROL_JOURNAL)) {
+        if let Ok(read) = crate::controls::read_control_journal(&bytes) {
+            metadata.push(("CONTROL".to_string(), read.metadata));
+        }
+    }
+    for (label, rel) in [
+        ("P2".to_string(), crate::controls::P2_JOURNAL.to_string()),
+        ("N3".to_string(), crate::controls::N3_JOURNAL.to_string()),
+    ]
+    .into_iter()
+    .chain(
+        (1..=crate::session::SESSIONS)
+            .map(|session| (format!("session {session}"), session_journal_name(session))),
+    ) {
+        if let Ok(crate::journal::ReadOutcome::Present(read)) =
+            crate::journal::read_journal(&dir.join(rel))
+        {
+            if let Some(meta) = read.typed_metadata {
+                metadata.push((label, meta));
+            }
+        }
+    }
+    for (label, meta) in &metadata {
+        let diag = format!(
+            "cpu_time={} via /proc/self/stat; ctx_switches={} via /proc/self/status; \
+             freq={} via sysfs cpufreq",
+            meta.diag_availability.cpu_time,
+            meta.diag_availability.ctx_switches,
+            meta.diag_availability.freq
+        );
+        s.push_str(&format!(
+            "| {label} | `{}` | `{}` | {} | {} |\n",
+            meta.utc_start,
+            serde_json::to_string(&meta.command_line).unwrap_or_else(|_| "[]".into()),
+            jnum(meta.timer_resolution_ms),
+            diag
+        ));
+    }
+
+    s.push_str("\n### Frozen diagnostic seeds\n\n");
+    for (name, seed) in crate::protocol::RC021_SEEDS {
+        s.push_str(&format!("- `{name}`: `{seed}`\n"));
+    }
+    s.push_str(&format!(
+        "- reserved band: `{}..={}`\n- per-session order seeds: `{}`\n",
+        crate::protocol::RC021_BAND.0,
+        crate::protocol::RC021_BAND.1,
+        (1..=crate::session::SESSIONS)
+            .filter_map(|session| crate::session::session_order_seed(session).ok())
+            .map(|seed| seed.to_string())
+            .collect::<Vec<_>>()
+            .join(", ")
+    ));
+
+    s.push_str("\n### Six measured idle intervals\n\n");
+    s.push_str("| before session | observed ms | floor ms |\n|---:|---:|---:|\n");
+    let complete = std::fs::read_to_string(dir.join(crate::controls::CONTROLS_COMPLETE))
+        .ok()
+        .and_then(|body| crate::controls::ControlsComplete::parse(&body).ok());
+    let mut anchor = complete.map(|marker| marker.monotonic_offset_ms);
+    for session in 1..=crate::session::SESSIONS {
+        let read = crate::journal::read_journal(&dir.join(session_journal_name(session))).ok();
+        let present = match read {
+            Some(crate::journal::ReadOutcome::Present(read)) => Some(read),
+            _ => None,
+        };
+        let open = present.as_ref().and_then(|read| {
+            read.rows
+                .iter()
+                .find(|row| row.status == Status::SessionOpen)
+                .map(|row| row.monotonic_offset_ms)
+        });
+        let gap = anchor.zip(open).and_then(|(a, o)| o.checked_sub(a));
+        s.push_str(&format!(
+            "| {session} | {} | {} |\n",
+            gap.map(|v| v.to_string()).unwrap_or_else(|| "NA".into()),
+            crate::session::MIN_GAP_MS
+        ));
+        anchor = present.as_ref().and_then(|read| {
+            read.rows
+                .iter()
+                .find(|row| {
+                    matches!(
+                        row.status,
+                        Status::SessionCloseCompleted | Status::SessionCloseAborted
+                    )
+                })
+                .map(|row| row.monotonic_offset_ms)
+        });
+    }
+
+    if let Ok(bytes) = std::fs::read(dir.join(crate::controls::CONTROL_JOURNAL)) {
+        if let Ok(read) = crate::controls::read_control_journal(&bytes) {
+            s.push_str("\n### Durable control provenance\n\n");
+            for id in [
+                crate::controls::ControlId::P6,
+                crate::controls::ControlId::C10,
+            ] {
+                if let Some(row) = read.rows.iter().find(|row| row.control_id == id) {
+                    let detail = crate::journal::json_string_decode(&row.detail)
+                        .unwrap_or_else(|_| row.detail.clone());
+                    s.push_str(&format!("- `{}`: {}\n", id.as_str(), detail));
+                }
+            }
+        }
+    }
+
+    s.push_str("\n### Integrity inventory before the results file\n\n");
+    s.push_str("| path | SHA-256 | bytes | rows |\n|---|---|---:|---:|\n");
+    for entry in &c.integrity {
+        s.push_str(&format!(
+            "| `{}` | `{}` | {} | {} |\n",
+            entry.path,
+            entry.sha256,
+            entry
+                .byte_count
+                .map(|v| v.to_string())
+                .unwrap_or_else(|| "NA".into()),
+            entry
+                .parsed_row_count
+                .map(|v| v.to_string())
+                .unwrap_or_else(|| "NA".into())
+        ));
+    }
+    s.push_str(&format!("\n- `exit_status`: `{}`\n", c.exit_code));
     s.push_str(
-        "\nEvery journal's SHA-256, byte count and per-status counts are recorded in the closure's \
-         `integrity` inventory.\n",
+        "\nThe canonical closure records the final SHA-256, byte count, line counters and \
+         per-status counts for the frozen fifteen-file inventory, including the completed \
+         results document itself.\n",
     );
     s
 }
@@ -2119,6 +2310,13 @@ pub enum FinalizeOutcome {
     /// bytes were never written. The reservation stands, empty, and locks the
     /// run: `JOURNAL-INVALID`, exit 4.
     DerivedClosureInvalid,
+    /// §C13.6: `--run-id R` names a different run than the durable identity
+    /// does. Nothing is written and the invocation is correctable, so it is
+    /// `REFUSED-BEFORE-MEASUREMENT`, exit 2.
+    ///
+    /// It is tested **after** the terminal lock and the §C14.1 obligation, so
+    /// a wrong `--run-id` can never downgrade a locked, broken run's exit 4.
+    RunIdMismatch,
 }
 
 impl FinalizeOutcome {
@@ -2132,8 +2330,22 @@ impl FinalizeOutcome {
             FinalizeOutcome::Unreconstructible => "Unreconstructible",
             FinalizeOutcome::RefusedBeforeMeasurement => "RefusedBeforeMeasurement",
             FinalizeOutcome::DerivedClosureInvalid => "DerivedClosureInvalid",
+            FinalizeOutcome::RunIdMismatch => "RunIdMismatch",
         }
     }
+    /// The variant plus what it actually decided, for the operator.
+    ///
+    /// `variant_name()` is `"Wrote"` for every terminal status and
+    /// `"DurabilityFailed"` for every durability point, so printing it alone
+    /// discards the run's verdict and the failing step.
+    pub fn describe(&self) -> String {
+        match self {
+            FinalizeOutcome::Wrote { status } => format!("Wrote: {}", status.as_str()),
+            FinalizeOutcome::DurabilityFailed { at } => format!("DurabilityFailed at {at}"),
+            other => other.variant_name().to_string(),
+        }
+    }
+
     /// Every finalize outcome ends the run, so every one is terminal.
     pub fn is_terminal(&self) -> bool {
         self.terminal_run_status().is_some()
@@ -2149,6 +2361,7 @@ impl FinalizeOutcome {
             // §8's own code, never an invented literal.
             FinalizeOutcome::RefusedBeforeMeasurement => RunStatus::RefusedBeforeMeasurement,
             FinalizeOutcome::DerivedClosureInvalid => RunStatus::JournalInvalid,
+            FinalizeOutcome::RunIdMismatch => RunStatus::RefusedBeforeMeasurement,
         })
     }
     /// The code, **only** through §8.
@@ -2158,7 +2371,7 @@ impl FinalizeOutcome {
 }
 
 /// The frozen inventory P3 checks `sample_finalize_outcomes` against.
-pub const FINALIZE_VARIANTS: [&str; 8] = [
+pub const FINALIZE_VARIANTS: [&str; 9] = [
     "Wrote",
     "DurabilityFailed",
     "AlreadyComplete",
@@ -2167,13 +2380,18 @@ pub const FINALIZE_VARIANTS: [&str; 8] = [
     "Unreconstructible",
     "RefusedBeforeMeasurement",
     "DerivedClosureInvalid",
+    "RunIdMismatch",
 ];
 
 /// Whether an instrument-written artifact exists.
 fn any_artifact_present(dir: &Path) -> bool {
+    // `path_present`, not `.exists()`: the module's doctrine is that an
+    // unreadable path is not an absent one. `.exists()` maps EACCES/EIO to
+    // `false`, which would skip §C14.16's guard, reserve the closure path —
+    // locking the run irreversibly — and only then fail the artifact write.
     [OBSERVATIONS_FILE, RESULTS_FILE]
         .iter()
-        .any(|f| dir.join(f).exists())
+        .any(|f| path_present(&dir.join(f)))
 }
 
 /// Read the durable control evidence: the first `FAIL` row by ordinal, and the
@@ -2393,11 +2611,19 @@ pub fn artifacts_consistent(dir: &Path, ledger: &MeasurementLedger, status: RunS
 /// **or complete** — §C14.15 names all three — and a later `--verify`
 /// classifies from the bytes that survived, never from a past syscall error,
 /// which is not recorded and not reconstructed.
-pub fn finalize(dir: &Path) -> FinalizeOutcome {
-    finalize_with_io(dir, &mut RealIo)
+/// `run_id` is `--run-id R` from §C13.6's precondition row.
+///
+/// **The whole precondition order lives here and nowhere else.** An earlier
+/// CLI wrapper checked the run identity before calling this function, which
+/// put the run-id test ahead of the §C14.2 terminal lock and the §C14.1
+/// closure obligation; on a directory holding no run at all that returned
+/// `JOURNAL-INVALID` where §C13.6 requires `REFUSED-BEFORE-MEASUREMENT`. One
+/// owner, one order.
+pub fn finalize(dir: &Path, run_id: &str) -> FinalizeOutcome {
+    finalize_with_io(dir, run_id, &mut RealIo)
 }
 
-fn finalize_with_io(dir: &Path, io: &mut dyn FinalizeIo) -> FinalizeOutcome {
+fn finalize_with_io(dir: &Path, run_id: &str, io: &mut dyn FinalizeIo) -> FinalizeOutcome {
     // ---- step 1: read-only preflight ------------------------------------
     // §C14.2 / §C14.16: the terminal lock comes first, before any derivation.
     match closure_path_state(dir) {
@@ -2430,6 +2656,11 @@ fn finalize_with_io(dir: &Path, io: &mut dyn FinalizeIo) -> FinalizeOutcome {
         // §C13.9: Branch B exits **without reserving the closure path**.
         IdentityOutcome::Unreconstructible(_) => return FinalizeOutcome::Unreconstructible,
     };
+    // §C13.6: `R` must name this run. Last of the read-only preconditions and
+    // still before the reservation, so a mistyped argument writes nothing.
+    if identity.run_uuid != run_id {
+        return FinalizeOutcome::RunIdMismatch;
+    }
 
     // ---- step 2: reserve the path, empty --------------------------------
     let closure_path = dir.join(CLOSURE_FILE);
@@ -2445,6 +2676,8 @@ fn finalize_with_io(dir: &Path, io: &mut dyn FinalizeIo) -> FinalizeOutcome {
     }
 
     // ---- step 3: derive terminal and scientific classification ----------
+    // One clock read for this whole finalization.
+    let stamp = FinalizeStamp::take(io, &identity);
     let (control_records, ledger, evidence) = gather_terminal_evidence(dir, &identity);
     let (mut status, mut scientific) = classify_terminal(&evidence);
     // §C10.1: a damaged but reconstructible manifest is JOURNAL-INVALID, and no
@@ -2471,6 +2704,11 @@ fn finalize_with_io(dir: &Path, io: &mut dyn FinalizeIo) -> FinalizeOutcome {
     }
     if status.is_class_two() && !artifact_failed {
         if let Some((rules, loo)) = scientific.as_ref() {
+            // One stamp for both. `build_closure` reads the clock, so calling
+            // it twice lets the published Markdown and the canonical closure
+            // disagree about when the run was finalized whenever the artifact
+            // writes straddle a second — and `verify` cannot catch it, because
+            // it hashes the Markdown without re-reading its content.
             let preview = build_closure(
                 &identity,
                 source,
@@ -2479,10 +2717,10 @@ fn finalize_with_io(dir: &Path, io: &mut dyn FinalizeIo) -> FinalizeOutcome {
                 &control_records,
                 Some((*rules, loo.clone())),
                 Artifacts::default(),
-                io,
+                &stamp,
                 dir,
             );
-            let body = render_results_md(&preview, loo, rules);
+            let body = render_results_md(dir, &preview, loo, rules);
             if io
                 .write_artifact(&dir.join(RESULTS_FILE), body.as_bytes())
                 .is_err()
@@ -2512,7 +2750,7 @@ fn finalize_with_io(dir: &Path, io: &mut dyn FinalizeIo) -> FinalizeOutcome {
         &control_records,
         scientific,
         artifacts,
-        io,
+        &stamp,
         dir,
     );
 
@@ -2554,6 +2792,29 @@ fn file_sha256(path: &Path) -> Option<String> {
         .map(|b| crate::host::sha256_hex(&b))
 }
 
+/// §C14.155: `finalized_utc` and the final monotonic offset are **provenance**,
+/// not results — they differ between invocations by construction. Within one
+/// invocation they must not: the closure and the results Markdown that
+/// describes it are one act of finalization, and reading the clock once per
+/// call let them disagree whenever the artifact writes straddled a second.
+/// `verify` could not catch that, since it hashes the Markdown without
+/// re-reading its content.
+#[derive(Clone)]
+struct FinalizeStamp {
+    utc: String,
+    monotonic_offset_ms: Option<u64>,
+}
+
+impl FinalizeStamp {
+    fn take(io: &mut dyn FinalizeIo, identity: &RunIdentity) -> FinalizeStamp {
+        FinalizeStamp {
+            monotonic_offset_ms: io
+                .monotonic_offset_ms(&identity.boot_id, identity.run_start_uptime_ms),
+            utc: io.now_utc(),
+        }
+    }
+}
+
 #[allow(clippy::too_many_arguments)]
 fn build_closure(
     identity: &RunIdentity,
@@ -2563,7 +2824,7 @@ fn build_closure(
     control_records: &[ControlOutcomeRecord],
     scientific: Option<(VerdictRules, LeaveOneOut)>,
     artifacts: Artifacts,
-    io: &mut dyn FinalizeIo,
+    stamp: &FinalizeStamp,
     dir: &Path,
 ) -> Closure {
     let (verdict_rules, leave_one_out, failures_total, failures_by_session) = match scientific {
@@ -2580,9 +2841,8 @@ fn build_closure(
         schema_version: crate::journal::SCHEMA_VERSION.to_string(),
         run_uuid: identity.run_uuid.clone(),
         boot_id: identity.boot_id.clone(),
-        finalized_monotonic_offset_ms: io
-            .monotonic_offset_ms(&identity.boot_id, identity.run_start_uptime_ms),
-        finalized_utc: io.now_utc(),
+        finalized_monotonic_offset_ms: stamp.monotonic_offset_ms,
+        finalized_utc: stamp.utc.clone(),
         repo_commit: identity.repo_commit.clone(),
         prereg_commit: identity.prereg_commit.clone(),
         amendment_commits: identity.amendment_commits.clone(),
@@ -2680,6 +2940,18 @@ fn mismatch(what: &str) -> VerifyOutcome {
 /// Opens nothing for writing, repairs nothing, regenerates nothing and reads no
 /// live host state. `finalized_utc` and `finalized_monotonic_offset_ms` are
 /// **stored provenance** (§C14.155) and are never recomputed.
+impl VerifyOutcome {
+    /// The variant plus what it found. `Mismatch { what }` names the inventory
+    /// entry that failed — the single most useful fact `--verify` produces, and
+    /// the one an operator has no other way to learn.
+    pub fn describe(&self) -> String {
+        match self {
+            VerifyOutcome::Mismatch { what } => format!("Mismatch: {what}"),
+            other => other.variant_name().to_string(),
+        }
+    }
+}
+
 pub fn verify(dir: &Path) -> VerifyOutcome {
     let closure = match closure_path_state(dir) {
         ClosurePathState::Absent => return VerifyOutcome::NoClosurePath,
@@ -2818,6 +3090,10 @@ mod tests {
     use std::sync::atomic::{AtomicU64, Ordering};
 
     static SEQ: AtomicU64 = AtomicU64::new(0);
+
+    /// Every fixture manifest and every fixture journal header carries this
+    /// run id, so it is the one `--run-id R` a fixture can legally present.
+    const TEST_RUN_ID: &str = "00000000000000000000000000000000";
 
     /// §C17: a unique directory from the process id, an atomic counter and the
     /// test name, with a cleanup guard. Any other scheme reintroduces
@@ -3523,6 +3799,20 @@ mod tests {
         assert_eq!(Closure::parse(&text).unwrap(), c, "canonical round trip");
     }
 
+    #[test]
+    fn closure_float_spelling_round_trips_through_the_actual_json_reader() {
+        // Without the codec's reader-aware spelling search this value is
+        // decoded one ULP away by the workspace's serde_json configuration.
+        let value = 0.010000000000000009_f64;
+        let encoded = jnum(value);
+        let parsed = serde_json::from_str::<serde_json::Value>(&encoded)
+            .unwrap()
+            .as_f64()
+            .unwrap();
+        assert_eq!(parsed.to_bits(), value.to_bits());
+        assert_eq!(jnum(parsed), encoded, "the canonical spelling is stable");
+    }
+
     /// §C13.5: the fixed ordered fifteen, always all fifteen.
     #[test]
     fn the_integrity_inventory_is_the_fixed_fifteen_in_order() {
@@ -3922,7 +4212,7 @@ mod tests {
     fn a_clean_run_finalizes_to_a_class_two_closure_with_both_artifacts() {
         let d = prepared_run("happy");
         let mut io = FakeIo::new(FailAt::None);
-        let out = finalize_with_io(d.path(), &mut io);
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
         assert_eq!(
             out,
             FinalizeOutcome::Wrote {
@@ -4006,7 +4296,7 @@ mod tests {
         for (fail_at, at) in points {
             let d = prepared_run("durability");
             let mut io = FakeIo::new(fail_at);
-            let out = finalize_with_io(d.path(), &mut io);
+            let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
             assert_eq!(out, FinalizeOutcome::DurabilityFailed { at }, "{at}");
             assert_eq!(
                 out.terminal_exit_code(),
@@ -4033,7 +4323,7 @@ mod tests {
             // A repeat writes nothing at all.
             let before = snapshot(d.path());
             let mut io2 = FakeIo::new(FailAt::None);
-            let repeat = finalize_with_io(d.path(), &mut io2);
+            let repeat = finalize_with_io(d.path(), TEST_RUN_ID, &mut io2);
             assert_eq!(*io2.creates.borrow(), 0, "{at}: no second create_new");
             assert_eq!(snapshot(d.path()), before, "{at}: a repeat wrote bytes");
             match state {
@@ -4068,7 +4358,7 @@ mod tests {
         for fail_at in [FailAt::Flush, FailAt::SyncAll, FailAt::FsyncAfterWrite] {
             let d = prepared_run("completeplus");
             let mut io = FakeIo::new(fail_at);
-            let out = finalize_with_io(d.path(), &mut io);
+            let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
             // This invocation reports the durability failure.
             assert_eq!(
                 out.terminal_exit_code(),
@@ -4101,7 +4391,7 @@ mod tests {
         let d = prepared_run("partial");
         let mut io = FakeIo::new(FailAt::WriteAll);
         io.partial_write = true;
-        let out = finalize_with_io(d.path(), &mut io);
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
         assert_eq!(out, FinalizeOutcome::DurabilityFailed { at: "write_all" });
         assert!(matches!(
             closure_path_state(d.path()),
@@ -4123,7 +4413,7 @@ mod tests {
     fn an_artifact_failure_yields_a_class_one_closure_that_still_hashes_the_partial_bytes() {
         let d = prepared_run("artifactfail");
         let mut io = FakeIo::new(FailAt::Artifact);
-        let out = finalize_with_io(d.path(), &mut io);
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
         assert_eq!(
             out,
             FinalizeOutcome::Wrote {
@@ -4199,7 +4489,7 @@ mod tests {
         drop(j);
 
         let mut io = FakeIo::new(FailAt::None);
-        let out = finalize_with_io(d.path(), &mut io);
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
         assert_eq!(
             out,
             FinalizeOutcome::Wrote {
@@ -4224,7 +4514,7 @@ mod tests {
         let d = prepared_run("notstartedrun");
         std::fs::remove_file(d.path().join(session_journal_name(6))).unwrap();
         let mut io = FakeIo::new(FailAt::None);
-        let out = finalize_with_io(d.path(), &mut io);
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
         assert_eq!(
             out,
             FinalizeOutcome::Wrote {
@@ -4266,7 +4556,7 @@ mod tests {
         write_controls_started(d.path());
         let before = snapshot(d.path());
         let mut io = FakeIo::new(FailAt::None);
-        let out = finalize_with_io(d.path(), &mut io);
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
         assert_eq!(out, FinalizeOutcome::Unreconstructible);
         assert_eq!(
             out.terminal_exit_code(),
@@ -4286,7 +4576,7 @@ mod tests {
             std::fs::write(d.path().join(artifact), b"left behind\n").unwrap();
             let before = snapshot(d.path());
             let mut io = FakeIo::new(FailAt::None);
-            let out = finalize_with_io(d.path(), &mut io);
+            let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
             assert_eq!(out, FinalizeOutcome::ArtifactWithoutClosure, "{artifact}");
             assert_eq!(
                 out.terminal_exit_code(),
@@ -4304,12 +4594,12 @@ mod tests {
         let d = prepared_run("locked");
         let mut io = FakeIo::new(FailAt::None);
         assert!(matches!(
-            finalize_with_io(d.path(), &mut io),
+            finalize_with_io(d.path(), TEST_RUN_ID, &mut io),
             FinalizeOutcome::Wrote { .. }
         ));
         let before = snapshot(d.path());
         let mut io2 = FakeIo::new(FailAt::None);
-        let out = finalize_with_io(d.path(), &mut io2);
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io2);
         assert_eq!(out, FinalizeOutcome::AlreadyComplete);
         assert_eq!(
             out.terminal_exit_code(),
@@ -4328,7 +4618,7 @@ mod tests {
         assert_eq!(closure_path_state(d.path()), ClosurePathState::Empty);
         let before = snapshot(d.path());
         let mut io = FakeIo::new(FailAt::None);
-        let out = finalize_with_io(d.path(), &mut io);
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
         assert_eq!(out, FinalizeOutcome::EmptyOrPartialClosure);
         assert_eq!(
             out.terminal_exit_code(),
@@ -4345,7 +4635,7 @@ mod tests {
     fn verify_is_a_mode_success_for_every_class_of_valid_closure() {
         // Class II HOST-QUALIFIED.
         let d = prepared_run("vq");
-        finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         assert_eq!(verify(d.path()), VerifyOutcome::Verified);
         assert_eq!(verify(d.path()).mode_exit_code(), Some(0));
         assert_eq!(verify(d.path()).terminal_run_status(), None);
@@ -4354,7 +4644,7 @@ mod tests {
         // Class II HOST-NOT-QUALIFIED — still a mode success, not exit 1.
         let d = prepared_run("vnq");
         std::fs::remove_file(d.path().join(session_journal_name(6))).unwrap();
-        finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         let c = match closure_path_state(d.path()) {
             ClosurePathState::Complete(c) => *c,
             other => panic!("{other:?}"),
@@ -4366,7 +4656,7 @@ mod tests {
         // Class I — the four scientific fields are asserted null.
         let d = prepared_run("vci");
         std::fs::write(d.path().join(session_journal_name(1)), b"broken\n").unwrap();
-        finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         let c = match closure_path_state(d.path()) {
             ClosurePathState::Complete(c) => *c,
             other => panic!("{other:?}"),
@@ -4381,7 +4671,7 @@ mod tests {
     #[test]
     fn verify_leaves_the_directory_byte_identical() {
         let d = prepared_run("readonly");
-        finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         let before = snapshot(d.path());
         assert_eq!(verify(d.path()), VerifyOutcome::Verified);
         assert_eq!(snapshot(d.path()), before, "verify wrote or repaired bytes");
@@ -4398,7 +4688,7 @@ mod tests {
     fn verify_detects_a_mutation_in_every_inventory_entry() {
         for (rel, _) in INTEGRITY_INVENTORY {
             let d = prepared_run("invmut");
-            finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+            finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
             assert_eq!(verify(d.path()), VerifyOutcome::Verified, "{rel}");
             let p = d.path().join(rel);
             if rel == CLOSURE_FILE {
@@ -4503,7 +4793,7 @@ mod tests {
         ];
         for (what, mutate) in cases {
             let d = prepared_run("fieldmut");
-            finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+            finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
             let mut c = match closure_path_state(d.path()) {
                 ClosurePathState::Complete(c) => *c,
                 other => panic!("{what}: {other:?}"),
@@ -4527,7 +4817,7 @@ mod tests {
         // them.
         for stamp in ["finalized_utc", "finalized_monotonic_offset_ms"] {
             let d = prepared_run("stamp");
-            finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+            finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
             let mut c = match closure_path_state(d.path()) {
                 ClosurePathState::Complete(c) => *c,
                 other => panic!("{other:?}"),
@@ -4550,7 +4840,7 @@ mod tests {
     #[test]
     fn verify_refuses_a_damaged_manifest() {
         let d = prepared_run("vmanifest");
-        finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         std::fs::write(d.path().join("run.json"), b"{ truncated").unwrap();
         let out = verify(d.path());
         assert!(
@@ -4933,7 +5223,7 @@ mod tests {
             .collect();
         write_raw_session(d.path(), 1, &dup, Some(true));
 
-        let out = finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         assert_eq!(
             out,
             FinalizeOutcome::Wrote {
@@ -4959,7 +5249,7 @@ mod tests {
     fn observations_of_six_valid_sessions_are_ninety_unique_ascending_indices() {
         let d = prepared_run("obs_ascending");
         assert_eq!(
-            finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None)),
+            finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None)),
             FinalizeOutcome::Wrote {
                 status: RunStatus::HostQualified
             }
@@ -4988,7 +5278,7 @@ mod tests {
 
         let ledger = read_ledger(d.path());
         assert_journal_invalid("session path is not a readable file", &ledger.sessions[0]);
-        let out = finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         assert_eq!(
             out,
             FinalizeOutcome::Wrote {
@@ -5042,7 +5332,7 @@ mod tests {
             read_run_invalid_evidence(d.path()),
             RunInvalidEvidence::Unusable
         );
-        let out = finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         assert_eq!(
             out,
             FinalizeOutcome::Wrote {
@@ -5076,7 +5366,7 @@ mod tests {
             read_run_invalid_evidence(d.path()),
             RunInvalidEvidence::Unusable
         );
-        let out = finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         assert_eq!(out.terminal_exit_code(), Some(4));
         assert_eq!(finalized_status(d.path()), RunStatus::JournalInvalid);
         assert_ne!(finalized_status(d.path()), RunStatus::InstrumentInvalid);
@@ -5098,7 +5388,7 @@ mod tests {
             read_run_invalid_evidence(d.path()),
             RunInvalidEvidence::BoundToThisRun
         );
-        let out = finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         assert_eq!(
             out,
             FinalizeOutcome::Wrote {
@@ -5121,7 +5411,7 @@ mod tests {
             RunInvalidEvidence::Absent
         );
         assert_eq!(
-            finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None)),
+            finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None)),
             FinalizeOutcome::Wrote {
                 status: RunStatus::HostQualified
             }
@@ -5139,7 +5429,7 @@ mod tests {
         std::fs::write(d.path().join(MANIFEST_FILE), m.render().unwrap()).unwrap();
         let before = snapshot(d.path());
         let mut io = FakeIo::new(FailAt::None);
-        let out = finalize_with_io(d.path(), &mut io);
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
         assert_eq!(out, FinalizeOutcome::RefusedBeforeMeasurement);
         assert_eq!(
             out.terminal_exit_code(),
@@ -5167,7 +5457,7 @@ mod tests {
             mine.render(),
         )
         .unwrap();
-        let out = finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         assert_eq!(
             out,
             FinalizeOutcome::Wrote {
@@ -5189,7 +5479,7 @@ mod tests {
         write_controls_started(d.path());
         write_passing_controls(d.path());
         let mut io = FakeIo::new(FailAt::None);
-        let out = finalize_with_io(d.path(), &mut io);
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
         assert_ne!(out, FinalizeOutcome::RefusedBeforeMeasurement);
         assert_eq!(*io.creates.borrow(), 1, "the closure was reserved");
         assert_eq!(
@@ -5205,7 +5495,7 @@ mod tests {
     fn class_two_requires_both_bound_markers() {
         let d = prepared_run("missing_started");
         std::fs::remove_file(d.path().join(crate::controls::CONTROLS_STARTED)).unwrap();
-        let out = finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         assert_eq!(
             out,
             FinalizeOutcome::Wrote {
@@ -5223,7 +5513,7 @@ mod tests {
             meta(crate::journal::MetaSession::Control),
             crate::controls::CONTROL_COUNT as usize - 1,
         );
-        let out = finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         assert_eq!(
             out,
             FinalizeOutcome::Wrote {
@@ -5244,7 +5534,7 @@ mod tests {
         write_control_prefix(d.path(), foreign, crate::controls::CONTROL_COUNT as usize);
         write_controls_complete(d.path());
         assert_eq!(
-            finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None)),
+            finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None)),
             FinalizeOutcome::Wrote {
                 status: RunStatus::InstrumentInvalid
             }
@@ -5261,7 +5551,7 @@ mod tests {
         complete.control_journal_sha256 = "a".repeat(64);
         std::fs::write(&marker_path, complete.render()).unwrap();
         assert_eq!(
-            finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None)),
+            finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None)),
             FinalizeOutcome::Wrote {
                 status: RunStatus::InstrumentInvalid
             }
@@ -5279,7 +5569,7 @@ mod tests {
         );
         write_controls_complete(d.path());
         assert_eq!(
-            finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None)),
+            finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None)),
             FinalizeOutcome::Wrote {
                 status: RunStatus::InstrumentInvalid
             }
@@ -5305,7 +5595,7 @@ mod tests {
             let d = prepared_run(name);
             std::fs::write(d.path().join(crate::controls::CONTROLS_STARTED), &bytes).unwrap();
             let mut io = FakeIo::new(FailAt::None);
-            let out = finalize_with_io(d.path(), &mut io);
+            let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
             assert_ne!(out, FinalizeOutcome::RefusedBeforeMeasurement, "{name}");
             assert_eq!(
                 out,
@@ -5369,7 +5659,7 @@ mod tests {
         for (name, arrange) in cases {
             let d = prepared_run(&format!("post_{name}"));
             arrange(d.path());
-            let out = finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+            let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
             let FinalizeOutcome::Wrote { status } = out else {
                 panic!("{name}: expected a write, got {out:?}");
             };
@@ -5389,7 +5679,7 @@ mod tests {
         let d = prepared_run("selfcheck");
         let mut io = FakeIo::new(FailAt::None);
         io.corrupt_closure = true;
-        let out = finalize_with_io(d.path(), &mut io);
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
         assert_eq!(out, FinalizeOutcome::DerivedClosureInvalid);
         assert_eq!(out.terminal_exit_code(), Some(4));
 
@@ -5404,7 +5694,7 @@ mod tests {
         // §C14.16: the lock is permanent — a repeat writes nothing.
         let mut io2 = FakeIo::new(FailAt::None);
         assert_eq!(
-            finalize_with_io(d.path(), &mut io2),
+            finalize_with_io(d.path(), TEST_RUN_ID, &mut io2),
             FinalizeOutcome::EmptyOrPartialClosure
         );
         assert_eq!(*io2.creates.borrow(), 0);
@@ -5447,7 +5737,7 @@ mod tests {
 
         // The run is finalized as a written JOURNAL-INVALID record, not as a
         // closure the reader would reject.
-        let out = finalize_with_io(d.path(), &mut FakeIo::new(FailAt::None));
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         assert_eq!(
             out,
             FinalizeOutcome::Wrote {

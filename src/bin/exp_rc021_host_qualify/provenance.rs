@@ -23,7 +23,7 @@ pub const BINDING_DOCS: [&str; 3] = [
 pub const BIRTH_PATH: &str = "src/bin/exp_rc021_host_qualify/main.rs";
 
 /// Every file the instrument is made of; all must be tracked and clean.
-pub const INSTRUMENT_FILES: [&str; 9] = [
+pub const INSTRUMENT_FILES: [&str; 10] = [
     "src/bin/exp_rc021_host_qualify/main.rs",
     "src/bin/exp_rc021_host_qualify/controls.rs",
     "src/bin/exp_rc021_host_qualify/decision.rs",
@@ -33,6 +33,14 @@ pub const INSTRUMENT_FILES: [&str; 9] = [
     "src/bin/exp_rc021_host_qualify/protocol.rs",
     "src/bin/exp_rc021_host_qualify/provenance.rs",
     "src/bin/exp_rc021_host_qualify/session.rs",
+    // Instrument code, not build tooling: the sole source of
+    // `RC021_OPT_LEVEL` and `RC021_CARGO_ENCODED_RUSTFLAGS`, which decide
+    // `is_optimised_build()` — the gate admitting both measuring modes — and
+    // which supply the build facts P6 records durably. Outside this list an
+    // edit making it emit `RC021_OPT_LEVEL=3` for an unoptimised binary would
+    // leave the tree "clean", pass P6, and have the closure certify a build
+    // that never happened.
+    "build.rs",
 ];
 
 // ======================================================================= ERROR

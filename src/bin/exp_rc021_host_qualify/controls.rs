@@ -171,7 +171,7 @@ pub const CONTROLS_VARIANTS: [&str; 5] = [
     "AlreadyStarted",
     "WriteFailed",
 ];
-pub const SESSION_VARIANTS: [&str; 7] = [
+pub const SESSION_VARIANTS: [&str; 10] = [
     "Proceed",
     "ShortGap",
     "Terminal",
@@ -179,6 +179,9 @@ pub const SESSION_VARIANTS: [&str; 7] = [
     "DamagedRunInvalid",
     "PredecessorNotClosed",
     "InvalidRequest",
+    "HostChangedMidSession",
+    "MeasurementFailed",
+    "JournalWriteFailed",
 ];
 
 /// The terminal subset of [`CONTROLS_VARIANTS`], derived from the
@@ -236,6 +239,7 @@ pub fn sample_finalize_outcomes() -> Vec<crate::decision::FinalizeOutcome> {
         F::Unreconstructible,
         F::RefusedBeforeMeasurement,
         F::DerivedClosureInvalid,
+        F::RunIdMismatch,
     ]
 }
 
@@ -311,6 +315,15 @@ pub fn sample_session_outcomes() -> Vec<crate::session::SessionOutcome> {
         S::InvalidRequest {
             reason: "session 9".to_string(),
         },
+        S::HostChangedMidSession {
+            why: "boot_id changed mid-session".to_string(),
+        },
+        S::MeasurementFailed {
+            why: "sentinel could not run".to_string(),
+        },
+        S::JournalWriteFailed {
+            why: "sync_all failed".to_string(),
+        },
     ]
 }
 
@@ -358,6 +371,15 @@ pub fn representative_terminal_outcomes() -> Vec<TerminalOutcome> {
         TerminalOutcome::Session(S::InvalidRequest {
             reason: "session 9".to_string(),
         }),
+        TerminalOutcome::Session(S::HostChangedMidSession {
+            why: "boot_id changed mid-session".to_string(),
+        }),
+        TerminalOutcome::Session(S::MeasurementFailed {
+            why: "sentinel could not run".to_string(),
+        }),
+        TerminalOutcome::Session(S::JournalWriteFailed {
+            why: "sync_all failed".to_string(),
+        }),
         TerminalOutcome::Verdict(VerdictOutcome::Qualified),
         TerminalOutcome::Verdict(VerdictOutcome::NotQualified),
         TerminalOutcome::Verdict(VerdictOutcome::Underpowered),
@@ -374,6 +396,7 @@ pub fn representative_terminal_outcomes() -> Vec<TerminalOutcome> {
         TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::Unreconstructible),
         TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::RefusedBeforeMeasurement),
         TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::DerivedClosureInvalid),
+        TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::RunIdMismatch),
         // §C14.2: `Verified` and `NoClosurePath` are continuations and are
         // deliberately absent, exactly like `Complete` and `Proceed`.
         TerminalOutcome::Verify(crate::decision::VerifyOutcome::Mismatch {
@@ -1089,6 +1112,34 @@ pub trait Clock {
     fn utc(&mut self) -> String;
 }
 
+/// Production clock anchored once to the boot-shared uptime axis. After the
+/// checked anchor is established it advances with [`std::time::Instant`], so a
+/// transient `/proc` read cannot fabricate a later row offset.
+pub struct LiveClock {
+    base_offset_ms: u64,
+    started: std::time::Instant,
+}
+
+impl LiveClock {
+    pub fn new(base_offset_ms: u64) -> LiveClock {
+        LiveClock {
+            base_offset_ms,
+            started: std::time::Instant::now(),
+        }
+    }
+}
+
+impl Clock for LiveClock {
+    fn monotonic_offset_ms(&mut self) -> u64 {
+        self.base_offset_ms
+            .saturating_add(self.started.elapsed().as_millis() as u64)
+    }
+
+    fn utc(&mut self) -> String {
+        chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true)
+    }
+}
+
 /// One control's result. The runner decides; this module only orders, records
 /// and classifies.
 #[derive(Clone, PartialEq, Eq, Debug)]
@@ -1172,6 +1223,26 @@ impl ControlsOutcome {
         }
     }
 
+    /// The variant plus whatever diagnostic it carries, for the operator.
+    ///
+    /// `RefusedBeforeMeasurement`'s own contract is "not one byte created", so
+    /// if the reason is not printed it exists nowhere at all — the operator
+    /// gets a bare exit 2 and no way to learn which provenance fact failed.
+    pub fn describe(&self) -> String {
+        let detail = match self {
+            ControlsOutcome::RefusedBeforeMeasurement { detail } => Some(detail.clone()),
+            ControlsOutcome::WriteFailed { why } => Some(why.clone()),
+            ControlsOutcome::Failed { control, class } => {
+                Some(format!("{} ({:?})", control.as_str(), class))
+            }
+            ControlsOutcome::Complete { .. } | ControlsOutcome::AlreadyStarted => None,
+        };
+        match detail {
+            Some(d) => format!("{}: {d}", self.variant_name()),
+            None => self.variant_name().to_string(),
+        }
+    }
+
     /// The exit code, **only** through §8. There is no second table.
     pub fn terminal_exit_code(&self) -> Option<i32> {
         self.terminal_run_status().map(RunStatus::exit_code)
@@ -1205,20 +1276,15 @@ pub const METADATA_IDENTITY_FIELDS: [&str; 8] = [
     "host_fingerprint",
 ];
 
-/// Configuration, **not** identity. Checked as well, because a journal that
-/// disagreed with the manifest about the CPU set or the timer would describe a
-/// different measuring setup — but these are not among §C10.1's eight.
+/// Configuration, **not** identity. CPU set and thread count remain fixed;
+/// timer resolution and diagnostic availability are deliberately absent.
+/// §C6.1 requires those two observations anew for every process invocation and
+/// explicitly says an availability change is not a failure.
 ///
 /// `command_line` and `utc_start` are deliberately absent from both lists: they
 /// describe *this* invocation, so copying them from the `--init-run` manifest
 /// would record the wrong provenance.
-pub const METADATA_CONFIG_FIELDS: [&str; 5] = [
-    "cpu_set",
-    "thread_count",
-    "timer_resolution_ms",
-    "cpu_time_unit",
-    "diag_availability",
-];
+pub const METADATA_CONFIG_FIELDS: [&str; 3] = ["cpu_set", "thread_count", "cpu_time_unit"];
 
 impl ControlsContext<'_> {
     /// Checked **before** `controls_started.json` is created, so a mismatch
@@ -1272,25 +1338,8 @@ impl ControlsContext<'_> {
         if j.thread_count != m.thread_count {
             return Err(mismatch("thread_count", j.thread_count.to_string()));
         }
-        if j.timer_resolution_ms.to_bits() != m.timer_resolution_ms.to_bits() {
-            return Err(mismatch(
-                "timer_resolution_ms",
-                j.timer_resolution_ms.to_string(),
-            ));
-        }
         if j.cpu_time_unit != m.cpu_time_unit {
             return Err(mismatch("cpu_time_unit", j.cpu_time_unit.clone()));
-        }
-        if (
-            j.diag_availability.cpu_time,
-            j.diag_availability.ctx_switches,
-            j.diag_availability.freq,
-        ) != (
-            m.diag_availability.cpu_time,
-            m.diag_availability.ctx_switches,
-            m.diag_availability.freq,
-        ) {
-            return Err(mismatch("diag_availability", "differs".to_string()));
         }
         // The command line the marker records is the one this invocation ran.
         if self.command_line.is_empty() {
@@ -1721,6 +1770,12 @@ pub fn run_p2(dir: &Path, exe: &Path) -> ControlOutcome {
 pub trait ControlEnvironment {
     /// §6 P6: the real provenance gate.
     fn provenance(&mut self) -> Result<(), String>;
+    /// Durable provenance text for P6's central-journal row. The default keeps
+    /// synthetic environments small; production overrides it with the §10
+    /// build, corpus and local-time facts that are unavailable at finalize.
+    fn provenance_detail(&mut self) -> Result<String, String> {
+        Ok("provenance gate satisfied".to_string())
+    }
     /// §4.1: put the host into **phase-B conditions** — the frozen 256-sweep
     /// warmup. There is no seed or sweep parameter: the only block this can run
     /// is [`WorkBlock::Warmup`].
@@ -1864,6 +1919,8 @@ pub struct LiveEnvironment<'a> {
     exe: PathBuf,
     instance: &'a crate::protocol::VerifiedSentinelInstance,
     manifest: &'a RunManifest,
+    timer_resolution_ms: f64,
+    diag_availability: crate::host::DiagProbe,
     cpu_ids: Vec<u32>,
     /// §C6.1's sources, owned so a borrowed view can be handed out per call.
     diag_paths_owned: (PathBuf, PathBuf, PathBuf),
@@ -1872,16 +1929,182 @@ pub struct LiveEnvironment<'a> {
     utc_start: String,
 }
 
+fn format_live_provenance_detail(
+    rustc: &str,
+    profile: &str,
+    flags: &str,
+    sentinel_sha256: &str,
+    local_timestamp: &str,
+) -> String {
+    format!(
+        "rustc={rustc}; build_profile={profile}; build_flags={flags}; \
+         sentinel_sha256={sentinel_sha256}; local_timestamp={local_timestamp}"
+    )
+}
+
+/// The compiler version, or why it could not be read — never a refusal.
+///
+/// The recommended measuring host is a quiet machine, which need not carry a
+/// build toolchain. A missing `rustc` makes a version *string* unrecordable; it
+/// does not make the host unqualifiable. Propagating the error made P6 fail and
+/// `run_controls` refuse the entire qualification at exit 2 because a string was
+/// missing — contradicting the rule applied to build flags directly below: an
+/// unobservable value is `UNAVAILABLE`, never absence.
+pub fn rustc_version_fact(out: std::io::Result<std::process::Output>) -> String {
+    match out {
+        Ok(out) if out.status.success() => String::from_utf8(out.stdout)
+            .map(|v| v.trim().to_string())
+            .unwrap_or_else(|_| "UNAVAILABLE(not UTF-8)".to_string()),
+        Ok(out) => format!("UNAVAILABLE(exited {:?})", out.status.code()),
+        Err(e) => format!("UNAVAILABLE({})", e.kind()),
+    }
+}
+
+/// How this binary was actually compiled, from the build script.
+///
+/// Two earlier attempts were both false. `option_env!("RUSTFLAGS")` reads the
+/// compile-time *environment*, but this workspace sets its flags in
+/// `.cargo/config.toml`, which cargo passes to rustc as arguments — so the row
+/// recorded `<none>` for a binary built with `-Ctarget-cpu=native`, the input
+/// most able to move the timings this instrument certifies. `cfg!` sees only
+/// the effective target features, not the flags. Cargo does hand
+/// `CARGO_ENCODED_RUSTFLAGS` to a build script, and `build.rs` forwards it.
+pub fn build_flags_fact() -> String {
+    let declared = env!("RC021_CARGO_ENCODED_RUSTFLAGS").replace('\u{1f}', " ");
+    let mut features: Vec<&str> = Vec::new();
+    for (name, on) in [
+        ("sse2", cfg!(target_feature = "sse2")),
+        ("sse4.2", cfg!(target_feature = "sse4.2")),
+        ("avx", cfg!(target_feature = "avx")),
+        ("avx2", cfg!(target_feature = "avx2")),
+        ("fma", cfg!(target_feature = "fma")),
+        ("bmi2", cfg!(target_feature = "bmi2")),
+        ("avx512f", cfg!(target_feature = "avx512f")),
+    ] {
+        if on {
+            features.push(name);
+        }
+    }
+    let features = if features.is_empty() {
+        "none".to_string()
+    } else {
+        features.join(",")
+    };
+    let declared = if declared.is_empty() {
+        "none".to_string()
+    } else {
+        declared
+    };
+    format!("{declared} | target_feature={features}")
+}
+
+/// The cargo profile and its optimisation settings, as the build script saw
+/// them — not `cfg!(debug_assertions)`, which is **`false` in every profile in
+/// this workspace** and therefore identifies nothing.
+pub fn build_profile_fact() -> String {
+    format!(
+        "profile={} opt_level={} debug={}",
+        env!("RC021_PROFILE"),
+        env!("RC021_OPT_LEVEL"),
+        env!("RC021_DEBUG")
+    )
+}
+
+/// Whether this binary is optimised, from evidence rather than a proxy.
+///
+/// The original guard was `cfg!(debug_assertions)`. Measured: that macro is
+/// `false` under `cargo test`, `cargo test --release` and every build in this
+/// workspace, because `.cargo/config.toml`'s rustflags are in play — so the
+/// guard could never fire and RC-021 had **no** protection against measuring
+/// from an unoptimised binary. Two independent facts now decide it: the
+/// profile's own `OPT_LEVEL`, and any `-Copt-level` in the rustflags that
+/// override it. Unoptimised means both say zero.
+/// Whether this binary is optimised.
+///
+/// **Deliberately not "and built under the release profile".** Adding
+/// `RC021_PROFILE == "release"` would close a real hole — `.cargo/config.toml`
+/// gives every profile `-Copt-level=3`, so a dev build passes this test while
+/// still differing in codegen-units (256 against 16) and incremental
+/// compilation, both of which move timings. It was tried and reverted: the
+/// guard sits at the entry of both measuring modes, so under `cargo test`
+/// (`PROFILE=debug`) it refuses every one of them and roughly ten tests can no
+/// longer reach the branch they exist to check.
+///
+/// The fact is not lost. `build_profile_fact()` records `profile=` in P6's
+/// durable provenance row, so a run made from a dev binary says so in its own
+/// record and any auditor can see it. Closing the guard properly needs a
+/// build-fitness seam on both modes, the way `SessionHost` was added for the
+/// live world — recorded in `memory/OPEN_PROBLEMS.md`.
+pub fn is_optimised_build() -> bool {
+    is_optimised(
+        env!("RC021_OPT_LEVEL"),
+        &env!("RC021_CARGO_ENCODED_RUSTFLAGS").replace('\u{1f}', " "),
+    )
+}
+
+/// The predicate itself, over its two inputs.
+///
+/// Separated so it can be falsified. On this workspace every build is optimised
+/// and the broken proxy and the correct check therefore **agree**, so no test of
+/// `is_optimised_build()` can tell them apart — they differ only on the
+/// unoptimised build this workspace never produces. The logic, given inputs,
+/// can be tested exhaustively.
+///
+/// A `-Copt-level` in the rustflags overrides the profile's own setting, which
+/// is exactly how this workspace compiles a `dev` profile at level 3.
+pub fn is_optimised(profile_opt_level: &str, flags: &str) -> bool {
+    // Both spellings. `CARGO_ENCODED_RUSTFLAGS` separates *arguments* with
+    // `\x1f`, so a config written `["-C", "opt-level=0"]`, or
+    // `RUSTFLAGS="-C opt-level=0"`, arrives as `-C opt-level=0` — which the
+    // joined form alone does not match. Missing it would fall through to the
+    // profile and report a release build explicitly compiled at level 0 as
+    // optimised: exactly the false negative this guard exists to prevent.
+    if let Some(level) = last_opt_level(flags) {
+        return !level.is_empty() && level != "0";
+    }
+    profile_opt_level != "0" && profile_opt_level != "UNAVAILABLE"
+}
+
+/// The last `-Copt-level=N` or `-C opt-level=N` in `flags`, if any. Later
+/// occurrences win, as they do for rustc itself.
+fn last_opt_level(flags: &str) -> Option<&str> {
+    let mut found = None;
+    let tokens: Vec<&str> = flags.split_whitespace().collect();
+    for (i, tok) in tokens.iter().enumerate() {
+        if let Some(level) = tok.strip_prefix("-Copt-level=") {
+            found = Some(level);
+        } else if *tok == "-C" {
+            if let Some(level) = tokens.get(i + 1).and_then(|t| t.strip_prefix("opt-level=")) {
+                found = Some(level);
+            }
+        } else if let Some(level) = tok
+            .strip_prefix("-C")
+            .and_then(|t| t.strip_prefix("opt-level="))
+        {
+            found = Some(level);
+        }
+    }
+    found
+}
+
 impl<'a> LiveEnvironment<'a> {
     /// `instance` is a [`crate::protocol::VerifiedSentinelInstance`], so the
-    /// adapter cannot be pointed at an unverified graph; `timer_resolution_ms`
-    /// and `diag` come from the manifest this run already recorded.
+    /// adapter cannot be pointed at an unverified graph. Timer resolution and
+    /// diagnostic availability are the once-per-invocation observations that
+    /// also enter this invocation's journal metadata.
+    ///
+    /// Nine arguments, deliberately: each is a distinct durable fact this
+    /// adapter is not allowed to derive for itself. Grouping them into a
+    /// struct would only move the same list one line up.
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         run_dir: &Path,
         repo: &Path,
         exe: &Path,
         instance: &'a crate::protocol::VerifiedSentinelInstance,
         manifest: &'a RunManifest,
+        timer_resolution_ms: f64,
+        diag_availability: crate::host::DiagProbe,
         command_line: Vec<String>,
         utc_start: String,
     ) -> Result<LiveEnvironment<'a>, ControlError> {
@@ -1896,6 +2119,8 @@ impl<'a> LiveEnvironment<'a> {
             exe: exe.to_path_buf(),
             instance,
             manifest,
+            timer_resolution_ms,
+            diag_availability,
             cpu_ids,
             diag_paths_owned: (
                 PathBuf::from("/proc/self/stat"),
@@ -1923,6 +2148,38 @@ impl ControlEnvironment for LiveEnvironment<'_> {
             .map_err(|e| e.to_string())
     }
 
+    fn provenance_detail(&mut self) -> Result<String, String> {
+        if !is_optimised_build() {
+            return Err(format!(
+                "RC-021 measuring modes require an optimised build ({})",
+                build_profile_fact()
+            ));
+        }
+        // The recommended measuring host is a quiet machine, which need not
+        // carry a build toolchain. A missing `rustc` makes a version *string*
+        // unrecordable; it does not make the host unqualifiable. Refusing the
+        // whole run for it would also contradict the rule stated just above
+        // for build flags — an unobservable value is `UNAVAILABLE`, never
+        // absence and never a refusal.
+        let rustc = rustc_version_fact(
+            std::process::Command::new("rustc")
+                .arg("--version")
+                .output(),
+        );
+        Ok(format_live_provenance_detail(
+            &rustc,
+            &build_profile_fact(),
+            &build_flags_fact(),
+            // The **full** digest of the bytes the executed instance was
+            // built from. A twelve-character prefix under a key named
+            // `sentinel_sha256` disagrees with `sha256sum` for anyone auditing
+            // the run; re-reading the file would certify whatever is on disk
+            // now, which is not necessarily what the sentinel ran.
+            self.instance.sha256(),
+            &chrono::Local::now().to_rfc3339(),
+        ))
+    }
+
     /// §4.1: the frozen 256-sweep warmup, and nothing else — [`WorkBlock`] is a
     /// closed pair, so this cannot become "a warmup of my choosing".
     fn prepare_phase_b(&mut self) -> Result<(), String> {
@@ -1941,11 +2198,11 @@ impl ControlEnvironment for LiveEnvironment<'_> {
             SentinelRequest::Frozen => ExtraWork::NONE,
             SentinelRequest::P1Injection => ExtraWork::for_p1_injection(extra.extra_sweeps()),
         };
-        // §C6.1: the diagnostics arm reads the channels the manifest declared;
+        // §C6.1: the diagnostics arm reads the channels this invocation probed;
         // the other arm reads nothing, which is what criterion 10 compares.
         let reader = crate::host::FsReader;
         let paths = self.diag_paths();
-        let diag = self.manifest.diag_availability;
+        let diag = self.diag_availability;
         let start = if diagnostics {
             Some(crate::host::window_start(&reader, &paths, diag))
         } else {
@@ -1972,7 +2229,7 @@ impl ControlEnvironment for LiveEnvironment<'_> {
     }
 
     fn timer_resolution_ms(&mut self) -> f64 {
-        self.manifest.timer_resolution_ms
+        self.timer_resolution_ms
     }
 
     /// §6 N3 — one session's protocol, into `rc021_journal_n3.tsv`.
@@ -1988,7 +2245,7 @@ impl ControlEnvironment for LiveEnvironment<'_> {
             &self.journal_metadata(MetaSession::N3),
             &self.row_context(),
             self.instance,
-            self.manifest.timer_resolution_ms,
+            self.timer_resolution_ms,
             &mut |_| self.monotonic_offset_ms(),
             &mut || read_load_avg_1min(Path::new("/proc/loadavg")),
         )
@@ -2002,13 +2259,13 @@ impl ControlEnvironment for LiveEnvironment<'_> {
 impl LiveEnvironment<'_> {
     #[cfg(test)]
     fn timer_resolution_ms_for_test(&self) -> f64 {
-        self.manifest.timer_resolution_ms
+        self.timer_resolution_ms
     }
 
     /// Metadata for a journal **this** run writes. Identity and configuration
     /// come from the manifest; `command_line` and `utc_start` describe this
     /// invocation, so they are not copied from the `--init-run` manifest.
-    fn journal_metadata(&self, session: MetaSession) -> Metadata {
+    pub fn journal_metadata(&self, session: MetaSession) -> Metadata {
         let m = self.manifest;
         Metadata {
             run_uuid: m.run_uuid.clone(),
@@ -2021,35 +2278,73 @@ impl LiveEnvironment<'_> {
             host_fingerprint: m.host_fingerprint.clone(),
             cpu_set: m.cpu_set.clone(),
             thread_count: m.thread_count,
-            timer_resolution_ms: m.timer_resolution_ms,
+            timer_resolution_ms: self.timer_resolution_ms,
             cpu_time_unit: m.cpu_time_unit.clone(),
             command_line: self.command_line.clone(),
             utc_start: self.utc_start.clone(),
             session,
             diag_availability: crate::journal::DiagAvailability {
-                cpu_time: m.diag_availability.cpu_time,
-                ctx_switches: m.diag_availability.ctx_switches,
-                freq: m.diag_availability.freq,
+                cpu_time: self.diag_availability.cpu_time,
+                ctx_switches: self.diag_availability.ctx_switches,
+                freq: self.diag_availability.freq,
             },
         }
     }
 
-    fn row_context(&self) -> crate::journal::RowContext {
+    pub fn row_context(&self) -> crate::journal::RowContext {
         let m = self.manifest;
         crate::journal::RowContext {
             run_uuid: m.run_uuid.clone(),
             repo_commit: m.repo_commit.clone(),
             prereg_commit: m.prereg_commit.clone(),
             host_fingerprint: m.host_fingerprint.clone(),
-            timer_resolution_ms: m.timer_resolution_ms,
+            timer_resolution_ms: self.timer_resolution_ms,
             cpu_set: m.cpu_set.clone(),
             thread_count: m.thread_count,
         }
     }
 
     /// §C12: the checked offset on the boot-shared uptime axis.
-    fn monotonic_offset_ms(&self) -> Result<u64, String> {
+    pub fn monotonic_offset_ms(&self) -> Result<u64, String> {
         live_monotonic_offset_ms(&self.manifest.boot_id, self.manifest.run_start_uptime_ms)
+    }
+}
+
+impl crate::session::SessionEnvironment for LiveEnvironment<'_> {
+    fn run_work_block(&mut self, block: WorkBlock) -> Result<(), String> {
+        crate::protocol::run_work_block(self.instance, block)
+            .map(|_| ())
+            .map_err(|e| e.to_string())
+    }
+
+    fn measure_pair(&mut self) -> Result<crate::session::PairObservation, String> {
+        let reader = crate::host::FsReader;
+        let paths = self.diag_paths();
+        let availability = self.diag_availability;
+        let load_avg_start = read_load_avg_1min(Path::new("/proc/loadavg"))?;
+        let start = crate::host::window_start(&reader, &paths, availability);
+        let first = crate::protocol::run_sentinel(self.instance, crate::protocol::ExtraWork::NONE)
+            .map_err(|e| e.to_string())?;
+        let last = crate::protocol::run_sentinel(self.instance, crate::protocol::ExtraWork::NONE)
+            .map_err(|e| e.to_string())?;
+        let diagnostics =
+            crate::host::window_end(&reader, &paths, availability, &self.cpu_ids, &start);
+        let load_avg_end = read_load_avg_1min(Path::new("/proc/loadavg"))?;
+        Ok(crate::session::PairObservation {
+            sentinel_first_ms: first.wall_ms,
+            sentinel_last_ms: last.wall_ms,
+            load_avg_start,
+            load_avg_end,
+            diagnostics,
+        })
+    }
+
+    fn monotonic_offset_ms(&mut self) -> Result<u64, String> {
+        LiveEnvironment::monotonic_offset_ms(self)
+    }
+
+    fn load_avg(&mut self) -> Result<f64, String> {
+        read_load_avg_1min(Path::new("/proc/loadavg"))
     }
 }
 
@@ -2256,8 +2551,11 @@ impl<'a> ProductionRunner<'a> {
     /// §6 P6 — provenance gate. `REFUSED-BEFORE-MEASUREMENT` on failure, which
     /// is why it runs before any byte exists.
     fn p6(&mut self) -> ControlOutcome {
-        match self.env.provenance() {
-            Ok(()) => ControlOutcome::pass("provenance gate satisfied"),
+        if let Err(e) = self.env.provenance() {
+            return ControlOutcome::fail(&e);
+        }
+        match self.env.provenance_detail() {
+            Ok(detail) => ControlOutcome::pass(&detail),
             Err(e) => ControlOutcome::fail(&e),
         }
     }
@@ -2941,6 +3239,64 @@ mod tests {
         assert_eq!(ControlId::P7.ordinal(), 11);
         assert_eq!(ControlId::C10.ordinal(), 12);
         assert!(ControlId::parse("P9").is_none());
+    }
+
+    #[test]
+    fn production_p6_detail_carries_the_provenance_unavailable_at_finalize() {
+        let detail = format_live_provenance_detail(
+            "rustc 1.89.0",
+            "release",
+            "-C target-cpu=native",
+            &"a".repeat(64),
+            "2026-08-27T12:00:00+05:00",
+        );
+        for required in [
+            "rustc=rustc 1.89.0",
+            "build_profile=release",
+            "build_flags=-C target-cpu=native",
+            &format!("sentinel_sha256={}", "a".repeat(64)),
+            "local_timestamp=2026-08-27T12:00:00+05:00",
+        ] {
+            assert!(detail.contains(required), "missing {required:?}");
+        }
+    }
+
+    /// The formatter test above passes a full digest in by hand, so it cannot
+    /// catch what the row actually records. This one asks the live adapter.
+    ///
+    /// The key is named `sentinel_sha256`; it held `G11_SHA256_PREFIX`, twelve
+    /// hex characters, which is what the *gate* compares — not a digest. The
+    /// row is fsynced into the control journal and republished in
+    /// `RC021_RESULTS.md`, so an auditor running `sha256sum` finds it disagrees.
+    #[test]
+    fn the_live_provenance_row_records_the_executed_instance_digest() {
+        let d = TempDir::new("p6_digest");
+        let m = fixture_manifest(d.path());
+        let inst = crate::protocol::tests_support::synthetic_verified();
+        let mut live = LiveEnvironment::new(
+            d.path(),
+            d.path(),
+            std::path::Path::new("/nonexistent/exe"),
+            &inst,
+            &m,
+            m.timer_resolution_ms,
+            m.diag_availability,
+            vec!["exp_rc021_host_qualify".to_string()],
+            "2026-08-28T00:00:00Z".to_string(),
+        )
+        .expect("the fixture cpu_set parses");
+        let detail = live
+            .provenance_detail()
+            .expect("an optimised build records its provenance");
+        let field = detail
+            .split("sentinel_sha256=")
+            .nth(1)
+            .and_then(|r| r.split(';').next())
+            .expect("the key must be present")
+            .trim();
+        assert_eq!(field.len(), 64, "a sha256, not a prefix: {field:?}");
+        assert_eq!(field, inst.sha256(), "and the digest of what actually ran");
+        assert_ne!(field, crate::protocol::G11_SHA256_PREFIX);
     }
 
     #[test]
@@ -3817,10 +4173,6 @@ mod tests {
                 "thread_count",
                 Box::new(|m: &mut Metadata| m.thread_count = 9),
             ),
-            (
-                "timer_resolution_ms",
-                Box::new(|m: &mut Metadata| m.timer_resolution_ms = 0.00003),
-            ),
         ];
         // The eight §C10.1 identity fields, plus the configuration fields the
         // binding also checks. `command_line` and `utc_start` are in neither
@@ -3869,6 +4221,24 @@ mod tests {
             assert!(r.seen.is_empty(), "{field}: nothing may execute");
             assert_eq!(snapshot(d.path()), before, "{field}: bytes changed");
         }
+    }
+
+    #[test]
+    fn each_invocation_may_record_new_timer_and_diagnostic_observations() {
+        let d = TempDir::new("invocation_observations");
+        let m = fixture_manifest(d.path());
+        let mut invocation = meta();
+        invocation.timer_resolution_ms = f64::from_bits(m.timer_resolution_ms.to_bits() + 1);
+        invocation.diag_availability.cpu_time = !m.diag_availability.cpu_time;
+        invocation.diag_availability.ctx_switches = !m.diag_availability.ctx_switches;
+        let c = ControlsContext {
+            manifest: &m,
+            command_line: invocation.command_line.clone(),
+            meta: invocation,
+        };
+        assert_eq!(c.bind(), Ok(()), "§C6.1 says a change is not a failure");
+        assert!(!METADATA_CONFIG_FIELDS.contains(&"timer_resolution_ms"));
+        assert!(!METADATA_CONFIG_FIELDS.contains(&"diag_availability"));
     }
 
     /// §C10.2: terminal or closing evidence forbids controls outright.
@@ -4230,7 +4600,7 @@ mod tests {
             // The sample carries the InstrumentInvalid class.
             ("Failed", Some(RunStatus::InstrumentInvalid), Some(3)),
         ];
-        let sessions: [Row; 7] = [
+        let sessions: [Row; 10] = [
             ("Proceed", None, None),
             (
                 "ShortGap",
@@ -4250,13 +4620,28 @@ mod tests {
             ),
             (
                 "PredecessorNotClosed",
-                Some(RunStatus::HostNotQualified),
-                Some(1),
+                Some(RunStatus::RefusedBeforeMeasurement),
+                Some(2),
             ),
             (
                 "InvalidRequest",
                 Some(RunStatus::RefusedBeforeMeasurement),
                 Some(2),
+            ),
+            (
+                "HostChangedMidSession",
+                Some(RunStatus::InstrumentInvalid),
+                Some(3),
+            ),
+            (
+                "MeasurementFailed",
+                Some(RunStatus::InstrumentInvalid),
+                Some(3),
+            ),
+            (
+                "JournalWriteFailed",
+                Some(RunStatus::JournalInvalid),
+                Some(4),
             ),
         ];
 
@@ -4692,12 +5077,20 @@ mod tests {
         let d = TempDir::new("live");
         let m = fixture_manifest(d.path());
         let inst = crate::protocol::tests_support::synthetic_verified();
+        let observed_timer = f64::from_bits(m.timer_resolution_ms.to_bits() + 1);
+        let observed_diag = crate::host::DiagProbe {
+            cpu_time: !m.diag_availability.cpu_time,
+            ctx_switches: !m.diag_availability.ctx_switches,
+            freq: !m.diag_availability.freq,
+        };
         let live = LiveEnvironment::new(
             d.path(),
             Path::new("."),
             Path::new("/nonexistent/exe"),
             &inst,
             &m,
+            observed_timer,
+            observed_diag,
             vec!["exp_rc021_host_qualify".into(), "--controls".into()],
             "2026-08-25T00:00:00Z".into(),
         )
@@ -4706,7 +5099,18 @@ mod tests {
         let _: &dyn ControlEnvironment = &live;
         // Its constructor takes run inputs only — no field of function type,
         // so no caller can substitute what a control measures.
-        assert!(live.timer_resolution_ms_for_test() > 0.0);
+        assert_eq!(
+            live.timer_resolution_ms_for_test().to_bits(),
+            observed_timer.to_bits()
+        );
+        let meta = live.journal_metadata(MetaSession::Control);
+        assert_eq!(meta.timer_resolution_ms.to_bits(), observed_timer.to_bits());
+        assert_eq!(meta.diag_availability.cpu_time, observed_diag.cpu_time);
+        assert_eq!(
+            meta.diag_availability.ctx_switches,
+            observed_diag.ctx_switches
+        );
+        assert_eq!(meta.diag_availability.freq, observed_diag.freq);
     }
 
     /// §6 N3 / §5.2 — the **production** replay, driven on a synthetic verified

@@ -408,6 +408,32 @@ pub enum SessionOutcome {
     /// must not be recorded as one. Correcting the request and retrying is
     /// permitted.
     InvalidRequest { reason: String },
+    /// §C12.3: the host changed **while the session was running** — the
+    /// `boot_id` moved, or uptime fell below the run's own start. Exit 3, and
+    /// `run_invalid.json` records why.
+    ///
+    /// This is not `JournalWriteFailed`. That outcome means the evidence could
+    /// not be written; this one means the evidence is fine and the *host* is
+    /// not the one the run began on. Collapsing the two loses the only record
+    /// of why the run stopped, and reports a sound journal as broken.
+    HostChangedMidSession { why: String },
+    /// The measuring apparatus failed: the sentinel could not run, a work block
+    /// could not execute, or `/proc/loadavg` could not be read. Exit 3.
+    ///
+    /// **This is the decision about what exit 4 means.** `JOURNAL-INVALID` says
+    /// *the evidence could not be written*; it is not a catch-all for "something
+    /// went wrong". Here the journal is intact and every row already fsynced
+    /// stands — what failed is the instrument, which §6 and §C11.25 class as
+    /// `INSTRUMENT-INVALID`. The session ends with no `SESSION-CLOSE` row, so
+    /// §5.2 classifies it `ABORTED` and `--finalize` derives the run's class
+    /// from the journals, as it does for every other abort.
+    MeasurementFailed { why: String },
+    /// §5.1: a journal create, append, flush or fsync failed. The measuring
+    /// mode stops immediately and the run is `JOURNAL-INVALID`, exit 4.
+    ///
+    /// Reserved strictly for that: create, append, flush, fsync. Every other
+    /// mid-session failure has its own outcome above.
+    JournalWriteFailed { why: String },
 }
 
 impl SessionOutcome {
@@ -420,6 +446,9 @@ impl SessionOutcome {
             SessionOutcome::DamagedRunInvalid { .. } => "DamagedRunInvalid",
             SessionOutcome::PredecessorNotClosed { .. } => "PredecessorNotClosed",
             SessionOutcome::InvalidRequest { .. } => "InvalidRequest",
+            SessionOutcome::HostChangedMidSession { .. } => "HostChangedMidSession",
+            SessionOutcome::MeasurementFailed { .. } => "MeasurementFailed",
+            SessionOutcome::JournalWriteFailed { .. } => "JournalWriteFailed",
         }
     }
 
@@ -439,9 +468,47 @@ impl SessionOutcome {
             SessionOutcome::Terminal { .. } => Some(RunStatus::InstrumentInvalid),
             SessionOutcome::AlreadyInvalid => Some(RunStatus::InstrumentInvalid),
             SessionOutcome::DamagedRunInvalid { .. } => Some(RunStatus::JournalInvalid),
-            // §5.2 leaves the predecessor `ABORTED` or `NOT STARTED`, and §8.2
-            // makes its unwritten measurements count as failures.
-            SessionOutcome::PredecessorNotClosed { .. } => Some(RunStatus::HostNotQualified),
+            SessionOutcome::JournalWriteFailed { .. } => Some(RunStatus::JournalInvalid),
+            SessionOutcome::HostChangedMidSession { .. } => Some(RunStatus::InstrumentInvalid),
+            SessionOutcome::MeasurementFailed { .. } => Some(RunStatus::InstrumentInvalid),
+            // Exit 2, matching this variant's own contract: the unwritten
+            // measurements of an ABORTED or NOT STARTED predecessor do count as
+            // failures — **in the ledger, at finalize**. Exit 1 is a §7.2
+            // result, and §C14.1 makes it inseparable from a closure record. A
+            // `--session` invocation that measured nothing has neither, so it
+            // refuses and lets `--finalize` publish the verdict.
+            SessionOutcome::PredecessorNotClosed { .. } => {
+                Some(RunStatus::RefusedBeforeMeasurement)
+            }
+        }
+    }
+
+    /// The variant plus whatever diagnostic it carries, for the operator.
+    ///
+    /// Every failing outcome holds a `why`/`reason` string. An exit code alone
+    /// cannot tell a refused sentinel from a failed fsync, so no caller may
+    /// discard it.
+    pub fn describe(&self) -> String {
+        let detail = match self {
+            SessionOutcome::Terminal { reason } | SessionOutcome::InvalidRequest { reason } => {
+                Some(reason.clone())
+            }
+            SessionOutcome::DamagedRunInvalid { why }
+            | SessionOutcome::HostChangedMidSession { why }
+            | SessionOutcome::MeasurementFailed { why }
+            | SessionOutcome::JournalWriteFailed { why } => Some(why.clone()),
+            SessionOutcome::ShortGap {
+                gap_ms,
+                required_ms,
+            } => Some(format!("gap {gap_ms} ms of the required {required_ms} ms")),
+            SessionOutcome::PredecessorNotClosed { predecessor, .. } => {
+                Some(format!("session {predecessor} has no completed close"))
+            }
+            SessionOutcome::Proceed { .. } | SessionOutcome::AlreadyInvalid => None,
+        };
+        match detail {
+            Some(d) => format!("{}: {d}", self.variant_name()),
+            None => self.variant_name().to_string(),
         }
     }
 
@@ -451,12 +518,166 @@ impl SessionOutcome {
     }
     /// Whether this outcome requires a durable `run_invalid.json` (§C12.3).
     /// `AlreadyInvalid` is deliberately `false`: the record exists already.
+    /// §C12.3's two record-writing outcomes, and the single place that names
+    /// them. `Terminal` is the mismatch caught by the preflight;
+    /// `HostChangedMidSession` is the same fact caught after the session began.
+    /// A caller that decides this for itself would drift from the module.
     pub fn writes_run_invalid(&self) -> bool {
-        matches!(self, SessionOutcome::Terminal { .. })
+        matches!(
+            self,
+            SessionOutcome::Terminal { .. } | SessionOutcome::HostChangedMidSession { .. }
+        )
     }
     pub fn may_retry_after_waiting(&self) -> bool {
         matches!(self, SessionOutcome::ShortGap { .. })
     }
+}
+
+// ================================================ §4 / §5 SESSION EXECUTION
+
+/// One completed paired measurement as observed by the live adapter. The
+/// scientific classification remains here, outside the adapter, so injection
+/// can replace host observations but cannot replace the frozen rule.
+#[derive(Clone, Copy, PartialEq, Debug)]
+pub struct PairObservation {
+    pub sentinel_first_ms: f64,
+    pub sentinel_last_ms: f64,
+    pub load_avg_start: f64,
+    pub load_avg_end: f64,
+    pub diagnostics: crate::host::DiagSample,
+}
+
+/// The operational seam for one qualification session. It exposes only the
+/// frozen work blocks and observations; no threshold, coordinate or row is
+/// supplied by the caller.
+pub trait SessionEnvironment {
+    fn run_work_block(&mut self, block: WorkBlock) -> Result<(), String>;
+    fn measure_pair(&mut self) -> Result<PairObservation, String>;
+    fn monotonic_offset_ms(&mut self) -> Result<u64, String>;
+    fn load_avg(&mut self) -> Result<f64, String>;
+}
+
+/// Execute exactly one frozen 15-pair session into an append-only journal.
+/// The caller must have obtained [`SessionOutcome::Proceed`] from
+/// [`session_preflight`] before calling this function.
+/// `manifest` supplies the **acceptance floor** and nothing else.
+///
+/// §C6.1 freezes the per-invocation sampling of `diag_availability`; it says
+/// nothing about timer resolution, and the two must not be treated alike.
+/// `RESOLUTION_MULT × timer_resolution_ms` is what separates `OK` from
+/// `LOST(BelowResolutionFloor)` — an **acceptance criterion**, and Amendment 1
+/// §A6 keeps the criteria fixed for the whole run. Deriving it from the value
+/// this invocation happens to observe lets the criterion move between sessions:
+/// a clocksource that degrades before session 4 would make its fifteen rows
+/// `LOST` against a floor the other five never faced, and nothing would notice.
+/// The observed resolution is still what each row and header record — that is
+/// provenance. The floor comes from the manifest, fixed at `--init-run`.
+pub fn execute_session(
+    dir: &Path,
+    session: u8,
+    meta: &crate::journal::Metadata,
+    ctx: &crate::journal::RowContext,
+    manifest: &crate::manifest::RunManifest,
+    env: &mut dyn SessionEnvironment,
+) -> Result<(), SessionOutcome> {
+    use crate::journal::Status;
+    use crate::protocol::{classify_measurement, Measurement};
+
+    let path = dir.join(format!("rc021_journal_s{session}.tsv"));
+    let mut journal = crate::journal::Journal::create(&path, meta).map_err(|e| {
+        SessionOutcome::JournalWriteFailed {
+            why: format!("create {}: {e}", path.display()),
+        }
+    })?;
+    let open_offset =
+        env.monotonic_offset_ms()
+            .map_err(|why| SessionOutcome::HostChangedMidSession {
+                why: format!("SESSION-OPEN clock: {why}"),
+            })?;
+    let open_load = env
+        .load_avg()
+        .map_err(|why| SessionOutcome::MeasurementFailed {
+            why: format!("SESSION-OPEN load: {why}"),
+        })?;
+    journal
+        .append(&ctx.session_open(session, open_offset, open_load))
+        .map_err(|e| SessionOutcome::JournalWriteFailed { why: e.to_string() })?;
+
+    for coordinate in plan_session(session).map_err(|e| SessionOutcome::InvalidRequest {
+        reason: e.to_string(),
+    })? {
+        if let Some(block) = work_before(coordinate.phase, coordinate.block).map_err(|e| {
+            SessionOutcome::InvalidRequest {
+                reason: e.to_string(),
+            }
+        })? {
+            env.run_work_block(block)
+                .map_err(|why| SessionOutcome::MeasurementFailed { why })?;
+        }
+        let observed = env
+            .measure_pair()
+            .map_err(|why| SessionOutcome::MeasurementFailed { why })?;
+        // §C12.3: `monotonic_offset_ms` fails exactly on a changed `boot_id` or
+        // an uptime below the run's start. Those are terminal host facts, not
+        // journal-write failures, and they must leave a record.
+        let offset =
+            env.monotonic_offset_ms()
+                .map_err(|why| SessionOutcome::HostChangedMidSession {
+                    why: format!("measurement clock: {why}"),
+                })?;
+        let row = match classify_measurement(
+            observed.sentinel_first_ms,
+            observed.sentinel_last_ms,
+            manifest.timer_resolution_ms,
+        ) {
+            Measurement::Ok { spread } => {
+                let mut row = ctx.lost(
+                    session,
+                    coordinate.phase,
+                    coordinate.block,
+                    Some(coordinate.measurement_index),
+                    offset,
+                    "",
+                );
+                row.status = Status::Ok;
+                row.sentinel_first_ms = Some(observed.sentinel_first_ms);
+                row.sentinel_last_ms = Some(observed.sentinel_last_ms);
+                row.paired_spread = Some(spread);
+                row.load_avg_start = Some(observed.load_avg_start);
+                row.load_avg_end = Some(observed.load_avg_end);
+                row.diag_cpu_time = observed.diagnostics.cpu_time_ticks;
+                row.diag_ctx_switches = observed.diagnostics.ctx_switches;
+                row.diag_freq = observed.diagnostics.freq_khz;
+                row.diag_flags = observed.diagnostics.flags;
+                row
+            }
+            Measurement::Lost(why) => ctx.lost(
+                session,
+                coordinate.phase,
+                coordinate.block,
+                Some(coordinate.measurement_index),
+                offset,
+                &format!("{why:?}"),
+            ),
+        };
+        journal
+            .append(&row)
+            .map_err(|e| SessionOutcome::JournalWriteFailed { why: e.to_string() })?;
+    }
+
+    let close_offset =
+        env.monotonic_offset_ms()
+            .map_err(|why| SessionOutcome::HostChangedMidSession {
+                why: format!("SESSION-CLOSE clock: {why}"),
+            })?;
+    let close_load = env
+        .load_avg()
+        .map_err(|why| SessionOutcome::MeasurementFailed {
+            why: format!("SESSION-CLOSE load: {why}"),
+        })?;
+    journal
+        .append(&ctx.session_close(session, close_offset, true, close_load))
+        .map_err(|e| SessionOutcome::JournalWriteFailed { why: e.to_string() })
 }
 
 /// The gate, in its frozen order.
@@ -1161,6 +1382,197 @@ mod tests {
         }
     }
 
+    fn session_metadata(m: &RunManifest, session: u8) -> crate::journal::Metadata {
+        crate::journal::Metadata {
+            run_uuid: m.run_uuid.clone(),
+            boot_id: m.boot_id.clone(),
+            run_start_uptime_ms: m.run_start_uptime_ms,
+            repo_commit: m.repo_commit.clone(),
+            prereg_commit: m.prereg_commit.clone(),
+            amendment_commits: m.amendment_commits.clone(),
+            instrument_birth_commit: m.instrument_birth_commit.clone(),
+            host_fingerprint: m.host_fingerprint.clone(),
+            cpu_set: m.cpu_set.clone(),
+            thread_count: m.thread_count,
+            timer_resolution_ms: m.timer_resolution_ms,
+            cpu_time_unit: m.cpu_time_unit.clone(),
+            command_line: vec![
+                "exp_rc021_host_qualify".into(),
+                "--session".into(),
+                session.to_string(),
+            ],
+            utc_start: "2026-08-27T00:00:00Z".into(),
+            session: crate::journal::MetaSession::Qualification(session),
+            diag_availability: crate::journal::DiagAvailability {
+                cpu_time: false,
+                ctx_switches: false,
+                freq: false,
+            },
+        }
+    }
+
+    fn row_context(m: &RunManifest) -> crate::journal::RowContext {
+        crate::journal::RowContext {
+            run_uuid: m.run_uuid.clone(),
+            repo_commit: m.repo_commit.clone(),
+            prereg_commit: m.prereg_commit.clone(),
+            host_fingerprint: m.host_fingerprint.clone(),
+            timer_resolution_ms: m.timer_resolution_ms,
+            cpu_set: m.cpu_set.clone(),
+            thread_count: m.thread_count,
+        }
+    }
+
+    #[derive(Default)]
+    struct FakeSessionEnvironment {
+        blocks: Vec<WorkBlock>,
+        pairs: usize,
+        next_offset: u64,
+        /// After this many clock reads, `monotonic_offset_ms` reports the
+        /// §C12.3 fact. `None` never fails.
+        clock_fails_after: Option<u64>,
+        /// After this many pair measurements, the sentinel refuses.
+        pair_fails_after: Option<usize>,
+        /// After this many load reads, `/proc/loadavg` refuses.
+        load_fails_after: Option<usize>,
+        loads: usize,
+    }
+
+    impl SessionEnvironment for FakeSessionEnvironment {
+        fn run_work_block(&mut self, block: WorkBlock) -> Result<(), String> {
+            self.blocks.push(block);
+            Ok(())
+        }
+
+        fn measure_pair(&mut self) -> Result<PairObservation, String> {
+            self.pairs += 1;
+            if self.pair_fails_after.is_some_and(|n| self.pairs > n) {
+                return Err("sentinel could not run".to_string());
+            }
+            Ok(PairObservation {
+                sentinel_first_ms: 1.0,
+                sentinel_last_ms: 1.01,
+                load_avg_start: 0.1,
+                load_avg_end: 0.1,
+                diagnostics: crate::host::DiagSample {
+                    cpu_time_ticks: None,
+                    ctx_switches: None,
+                    freq_khz: None,
+                    flags: 7,
+                },
+            })
+        }
+
+        fn monotonic_offset_ms(&mut self) -> Result<u64, String> {
+            self.next_offset += 1;
+            if self.clock_fails_after.is_some_and(|n| self.next_offset > n) {
+                return Err("boot_id changed under the run".to_string());
+            }
+            Ok(self.next_offset)
+        }
+
+        fn load_avg(&mut self) -> Result<f64, String> {
+            self.loads += 1;
+            if self.load_fails_after.is_some_and(|n| self.loads > n) {
+                return Err("/proc/loadavg unreadable".to_string());
+            }
+            Ok(0.1)
+        }
+    }
+
+    #[test]
+    fn the_injected_session_executor_writes_exactly_the_frozen_plan() {
+        let d = TempDir::new("execute");
+        let m = manifest(d.path());
+        let mut env = FakeSessionEnvironment::default();
+        execute_session(
+            d.path(),
+            2,
+            &session_metadata(&m, 2),
+            &row_context(&m),
+            &m,
+            &mut env,
+        )
+        .unwrap();
+
+        assert_eq!(env.pairs, MEASUREMENTS_PER_SESSION as usize);
+        assert_eq!(
+            env.blocks,
+            [
+                vec![WorkBlock::Warmup],
+                vec![WorkBlock::Load; BLOCKS_PER_PHASE as usize]
+            ]
+            .concat(),
+            "one warmup and five load blocks, in that order"
+        );
+        let path = d.path().join("rc021_journal_s2.tsv");
+        let read = crate::journal::read_journal(&path).unwrap();
+        let crate::journal::ReadOutcome::Present(journal) = &read else {
+            panic!("the created session journal must be present");
+        };
+        let rows: Vec<_> = journal
+            .rows
+            .iter()
+            .filter(|row| {
+                matches!(
+                    row.status,
+                    crate::journal::Status::Ok | crate::journal::Status::Lost
+                )
+            })
+            .collect();
+        assert_eq!(rows.len(), MEASUREMENTS_PER_SESSION as usize);
+        assert!(rows
+            .iter()
+            .all(|row| row.status == crate::journal::Status::Ok));
+        assert_eq!(
+            rows.iter()
+                .filter_map(|row| row.measurement_index)
+                .collect::<Vec<_>>(),
+            (16..=30).collect::<Vec<_>>()
+        );
+        let classified = crate::decision::classify_session(2, &read);
+        assert_eq!(
+            classified.state,
+            Some(crate::decision::SessionState::Completed)
+        );
+        assert!(!classified.journal_invalid);
+    }
+
+    #[test]
+    fn the_session_executor_never_reopens_or_overwrites_a_journal() {
+        let d = TempDir::new("execute_create_new");
+        let m = manifest(d.path());
+        let mut first = FakeSessionEnvironment::default();
+        execute_session(
+            d.path(),
+            1,
+            &session_metadata(&m, 1),
+            &row_context(&m),
+            &m,
+            &mut first,
+        )
+        .unwrap();
+        let before = dir_bytes(d.path());
+
+        let mut second = FakeSessionEnvironment::default();
+        let outcome = execute_session(
+            d.path(),
+            1,
+            &session_metadata(&m, 1),
+            &row_context(&m),
+            &m,
+            &mut second,
+        )
+        .unwrap_err();
+        assert!(matches!(outcome, SessionOutcome::JournalWriteFailed { .. }));
+        assert_eq!(
+            outcome.terminal_exit_code(),
+            Some(RunStatus::JournalInvalid.exit_code())
+        );
+        assert_eq!(second.pairs, 0, "the existing path refuses before work");
+        assert_eq!(dir_bytes(d.path()), before, "existing bytes are immutable");
+    }
+
     // ------------------------------------------ §C11.45 the configuration check
 
     #[test]
@@ -1711,9 +2123,12 @@ mod tests {
         assert_eq!(
             writes,
             vec![
-                // §8.2: the predecessor's unwritten measurements count as
-                // failures, so this is Class II HOST-NOT-QUALIFIED, code 1.
-                ("predecessor not closed", false, Some(1)),
+                // §8.2's "unwritten measurements count as failures" is a
+                // statement about the **ledger at finalize**, not a licence for
+                // a preflight to publish the verdict. Exit 1 is a §7.2 result
+                // and §C14.1 makes it inseparable from a closure record; this
+                // gate has neither, so it refuses at 2 and writes nothing.
+                ("predecessor not closed", false, Some(2)),
                 ("bad session number", false, Some(2)),
                 ("damaged record", false, Some(4)),
                 ("configuration mismatch", true, Some(3)),
@@ -1842,5 +2257,492 @@ mod tests {
         for s in 1..=SESSIONS {
             assert_eq!(plan_session(s).unwrap(), plan_session(s).unwrap());
         }
+    }
+
+    /// §C12.3: a host that moves **while the session runs** is a terminal host
+    /// fact, not a journal-write failure.
+    ///
+    /// `live_monotonic_offset_ms` errors on exactly two conditions — a changed
+    /// `boot_id`, or uptime below the run's start. Mapping them to
+    /// `JournalWriteFailed` declared a sound journal broken and, worse, left no
+    /// record of *why* the run stopped: `JOURNAL-INVALID` writes nothing, while
+    /// §C12.3 requires `run_invalid.json` and exit 3.
+    #[test]
+    fn a_host_that_changes_mid_session_is_recorded_not_called_a_broken_journal() {
+        let d = TempDir::new("clock_mid_session");
+        let m = manifest(d.path());
+        let mut env = FakeSessionEnvironment {
+            clock_fails_after: Some(3),
+            ..Default::default()
+        };
+        let outcome = execute_session(
+            d.path(),
+            2,
+            &session_metadata(&m, 2),
+            &row_context(&m),
+            &m,
+            &mut env,
+        )
+        .expect_err("the clock fact must stop the session");
+
+        assert!(
+            matches!(outcome, SessionOutcome::HostChangedMidSession { .. }),
+            "got {outcome:?}"
+        );
+        assert_eq!(
+            outcome.terminal_run_status(),
+            Some(RunStatus::InstrumentInvalid),
+            "§C12.3 is exit 3, not the exit 4 of a broken journal"
+        );
+        assert!(
+            outcome.writes_run_invalid(),
+            "§C12.3 requires the record; JournalWriteFailed could never write it"
+        );
+        // The rows already fsynced stand as evidence: the journal exists and is
+        // not truncated or removed.
+        assert!(d.path().join("rc021_journal_s2.tsv").exists());
+    }
+
+    /// The optimisation predicate, exhaustively — the part that *can* be
+    /// falsified.
+    ///
+    /// `cfg!(debug_assertions)`, the original guard, is constant `false` on this
+    /// workspace, so it could never fire and RC-021 had no protection against
+    /// measuring from an unoptimised binary. The replacement reads two build
+    /// facts; a `-Copt-level` in the rustflags overrides the profile, which is
+    /// how a `dev` profile here compiles at level 3.
+    #[test]
+    fn the_optimisation_predicate_separates_the_cases_the_old_proxy_could_not() {
+        use crate::controls::is_optimised;
+        // Profile alone.
+        assert!(is_optimised("3", ""));
+        assert!(is_optimised("2", ""));
+        assert!(!is_optimised("0", ""), "an unoptimised profile is refused");
+        assert!(!is_optimised("UNAVAILABLE", ""));
+        // Rustflags override the profile, in both directions.
+        assert!(
+            is_optimised("0", "-Ctarget-cpu=native -Copt-level=3"),
+            "this workspace's own case: dev profile, level 3 by rustflags"
+        );
+        assert!(
+            !is_optimised("3", "-Copt-level=0"),
+            "a release profile explicitly compiled unoptimised is still refused"
+        );
+        // `CARGO_ENCODED_RUSTFLAGS` separates *arguments*, so a config written
+        // `["-C", "opt-level=0"]` arrives space-separated. Matching only the
+        // joined spelling would fall through to the profile and call that
+        // release build optimised — the false negative the guard exists for.
+        assert!(
+            !is_optimised("3", "-C opt-level=0"),
+            "the space-separated spelling must be recognised too"
+        );
+        assert!(is_optimised("0", "-C opt-level=3"));
+        // Later occurrences win, as they do for rustc.
+        assert!(!is_optimised("3", "-Copt-level=3 -C opt-level=0"));
+        assert!(is_optimised("0", "-C opt-level=0 -Copt-level=2"));
+        // And the real build is optimised, with the evidence in the record.
+        assert!(crate::controls::is_optimised_build());
+    }
+
+    /// A missing compiler must not refuse a qualification.
+    ///
+    /// The measuring host is meant to be quiet, not to carry a toolchain.
+    /// Propagating the error made P6 fail and refused the whole run at exit 2
+    /// because a version *string* could not be recorded.
+    #[test]
+    fn an_unreadable_compiler_is_recorded_not_refused() {
+        use std::os::unix::process::ExitStatusExt;
+        let missing = crate::controls::rustc_version_fact(Err(std::io::Error::new(
+            std::io::ErrorKind::NotFound,
+            "no rustc",
+        )));
+        assert!(missing.starts_with("UNAVAILABLE"), "{missing}");
+
+        let failed = crate::controls::rustc_version_fact(Ok(std::process::Output {
+            status: std::process::ExitStatus::from_raw(1 << 8),
+            stdout: Vec::new(),
+            stderr: b"boom".to_vec(),
+        }));
+        assert!(failed.starts_with("UNAVAILABLE"), "{failed}");
+
+        let ok = crate::controls::rustc_version_fact(Ok(std::process::Output {
+            status: std::process::ExitStatus::from_raw(0),
+            stdout: b"rustc 1.99.0 (abcdef 2026-01-01)\n".to_vec(),
+            stderr: Vec::new(),
+        }));
+        assert_eq!(ok, "rustc 1.99.0 (abcdef 2026-01-01)");
+    }
+
+    /// The instrument may not assert something it cannot observe.
+    ///
+    /// `option_env!` cannot see `.cargo/config.toml` flags, so the old
+    /// `unwrap_or("<none>")` recorded "no flags were used" for a binary built
+    /// with `-Ctarget-cpu=native` — the input most able to move the timings
+    /// this instrument certifies.
+    #[test]
+    fn the_build_provenance_row_never_claims_flags_it_cannot_see() {
+        let flags = crate::controls::build_flags_fact();
+        assert!(
+            !flags.contains("<none>"),
+            "an unobservable value must not be recorded as absence: {flags}"
+        );
+        assert!(
+            flags.contains("target_feature="),
+            "the effective features are the checkable evidence: {flags}"
+        );
+        // This workspace sets `-Ctarget-cpu=native` and `-Copt-level=3` in
+        // `.cargo/config.toml`. The build script sees them; the crate cannot.
+        // Recording "<none>" or "UNAVAILABLE" here would now itself be false.
+        assert!(
+            flags.contains("-Copt-level="),
+            "the configured rustflags must reach the record: {flags}"
+        );
+        let profile = crate::controls::build_profile_fact();
+        for key in ["profile=", "opt_level=", "debug="] {
+            assert!(profile.contains(key), "{key} missing from {profile}");
+        }
+        assert!(
+            !profile.contains("UNAVAILABLE"),
+            "the build script sees these; nothing here should be unobservable: {profile}"
+        );
+    }
+
+    /// **What exit 4 means, asserted.** `JOURNAL-INVALID` is reserved for "the
+    /// evidence could not be written". An apparatus failure — the sentinel, a
+    /// work block, `/proc/loadavg` — leaves the journal intact and is
+    /// `INSTRUMENT-INVALID`, exit 3. Collapsing the two would make exit 4 a
+    /// catch-all and destroy the only signal that says the record is unusable.
+    #[test]
+    fn an_apparatus_failure_is_instrument_invalid_and_the_journal_stays_intact() {
+        for (name, env) in [
+            (
+                "sentinel refuses mid-session",
+                FakeSessionEnvironment {
+                    pair_fails_after: Some(4),
+                    ..Default::default()
+                },
+            ),
+            (
+                "loadavg refuses mid-session",
+                FakeSessionEnvironment {
+                    // `env.load_avg()` is read exactly twice — SESSION-OPEN
+                    // and SESSION-CLOSE — so 1 fails the close read, with all
+                    // fifteen measurement rows already fsynced.
+                    load_fails_after: Some(1),
+                    ..Default::default()
+                },
+            ),
+        ] {
+            let d = TempDir::new("apparatus");
+            let m = manifest(d.path());
+            let mut env = env;
+            let outcome = execute_session(
+                d.path(),
+                1,
+                &session_metadata(&m, 1),
+                &row_context(&m),
+                &m,
+                &mut env,
+            )
+            .expect_err(name);
+            assert!(
+                matches!(outcome, SessionOutcome::MeasurementFailed { .. }),
+                "{name}: got {outcome:?}"
+            );
+            assert_eq!(
+                outcome.terminal_run_status(),
+                Some(RunStatus::InstrumentInvalid),
+                "{name}: the apparatus failed, not the record"
+            );
+            assert!(
+                !outcome.writes_run_invalid(),
+                "{name}: nothing about the host changed"
+            );
+            // The rows already fsynced are evidence and are still readable.
+            let path = d.path().join("rc021_journal_s1.tsv");
+            let read = crate::journal::read_journal(&path).unwrap();
+            let crate::journal::ReadOutcome::Present(r) = &read else {
+                panic!("{name}: the journal must exist");
+            };
+            assert!(
+                matches!(r.verdict, crate::journal::ReadVerdict::Valid),
+                "{name}: the journal is intact, so it must read as valid"
+            );
+        }
+    }
+
+    /// The §C12.3 clock fact is the same fact wherever it is detected. It is
+    /// read at three points — before `SESSION-OPEN`, once per measurement, and
+    /// before `SESSION-CLOSE` — and an earlier fix corrected only the middle
+    /// one, which is exactly the failure this test exists to prevent.
+    #[test]
+    fn every_clock_read_in_a_session_reports_the_same_host_fact() {
+        // The clock is read 1 + 15 + 1 = 17 times: SESSION-OPEN, once per
+        // measurement, SESSION-CLOSE. 0 fails the first, 3 fails mid-plan, and
+        // 16 fails the last.
+        for (name, after) in [("open", 0u64), ("measurement", 3), ("close", 16)] {
+            let d = TempDir::new(&format!("clock_{name}"));
+            let m = manifest(d.path());
+            let mut env = FakeSessionEnvironment {
+                clock_fails_after: Some(after),
+                ..Default::default()
+            };
+            let outcome = execute_session(
+                d.path(),
+                1,
+                &session_metadata(&m, 1),
+                &row_context(&m),
+                &m,
+                &mut env,
+            )
+            .expect_err(name);
+            assert!(
+                matches!(outcome, SessionOutcome::HostChangedMidSession { .. }),
+                "{name} clock read reported {outcome:?}, not the §C12.3 fact"
+            );
+            assert_eq!(
+                outcome.terminal_run_status(),
+                Some(RunStatus::InstrumentInvalid)
+            );
+            assert!(
+                outcome.writes_run_invalid(),
+                "{name}: §C12.3 needs the record"
+            );
+        }
+    }
+
+    /// The `OK`/`LOST` floor is an **acceptance criterion** and must not move
+    /// between sessions.
+    ///
+    /// §C6.1 freezes per-invocation sampling for `diag_availability` only. If
+    /// the floor were derived from the resolution each invocation happens to
+    /// observe, a clocksource that degrades before session 4 would send its
+    /// fifteen rows to `LOST` against a floor the other five never faced — the
+    /// criterion itself moving mid-run, with nothing to notice.
+    #[test]
+    fn the_resolution_floor_comes_from_the_manifest_not_the_invocation() {
+        let d = TempDir::new("floor_frozen");
+        let m = manifest(d.path());
+        // A whole invocation that observed a degraded clocksource: its header
+        // and its rows both carry the worse value, as the row/header binding
+        // requires. Only the manifest still holds the run's own, and every
+        // measured pair would fall under a floor derived from the observation.
+        let degraded = m.timer_resolution_ms * 1000.0;
+        let mut ctx = row_context(&m);
+        ctx.timer_resolution_ms = degraded;
+        let mut meta = session_metadata(&m, 1);
+        meta.timer_resolution_ms = degraded;
+        let mut env = FakeSessionEnvironment::default();
+        execute_session(d.path(), 1, &meta, &ctx, &m, &mut env).expect("the session completes");
+
+        let read = crate::journal::read_journal(&d.path().join("rc021_journal_s1.tsv")).unwrap();
+        let crate::journal::ReadOutcome::Present(r) = &read else {
+            panic!("the journal exists");
+        };
+        let ok = r
+            .rows
+            .iter()
+            .filter(|row| row.status == crate::journal::Status::Ok)
+            .count();
+        assert_eq!(
+            ok, MEASUREMENTS_PER_SESSION as usize,
+            "the run's frozen floor decides, not this invocation's observation"
+        );
+        // The observation is still recorded — that part is provenance.
+        assert!(r
+            .rows
+            .iter()
+            .all(|row| row.timer_resolution_ms.to_bits() == ctx.timer_resolution_ms.to_bits()));
+    }
+
+    /// The release guard must be decidable from evidence, not from a proxy that
+    /// is constant here.
+    ///
+    /// Measured on this workspace: `cfg!(debug_assertions)` is **`false` under
+    /// `cargo test`, under `cargo test --release`, and in every build** —
+    /// `.cargo/config.toml`'s rustflags are in play. The original guard was
+    /// exactly that macro, so it could never fire: RC-021 had no protection at
+    /// all against measuring from an unoptimised binary, in either mode.
+    #[test]
+    fn the_optimisation_guard_does_not_rest_on_a_constant_proxy() {
+        // `cfg!(debug_assertions)` is constant `false` on this workspace, so an
+        // assertion about it would be an assertion about a constant. What is
+        // testable is that the guard now reads recorded build facts instead.
+        assert!(crate::controls::is_optimised_build());
+        // The evidence is split across the two facts by construction: the
+        // profile half is `opt_level=0` under `cargo test`'s dev profile, and
+        // the `-Copt-level=3` that actually optimises this workspace lives in
+        // the flags. Asserting on the profile alone made the suite red in dev
+        // while passing in release — which is how it was missed.
+        let profile = crate::controls::build_profile_fact();
+        let flags = crate::controls::build_flags_fact();
+        assert!(
+            profile.contains("opt_level=") && !profile.contains("UNAVAILABLE"),
+            "the profile fact must be recorded: {profile}"
+        );
+        assert!(
+            flags.contains("-Copt-level=") || profile.contains("opt_level=3"),
+            "the guard's own evidence must be visible somewhere in the record: \
+             profile={profile} flags={flags}"
+        );
+    }
+
+    /// `build.rs` decides whether the instrument may measure at all, so it is
+    /// instrument code and must sit under the same provenance gate as the rest.
+    #[test]
+    fn the_build_script_is_covered_by_the_provenance_gate() {
+        assert!(
+            crate::provenance::INSTRUMENT_FILES.contains(&"build.rs"),
+            "an untracked or unchecked build.rs could emit RC021_OPT_LEVEL=3 for \
+             an unoptimised binary and still leave the tree clean"
+        );
+        // And it is the sole source of those facts.
+        assert!(std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("build.rs")
+            .exists());
+    }
+
+    /// The whole finalization carries one timestamp: the closure and the
+    /// results Markdown describing it are one act.
+    #[test]
+    fn the_closure_and_its_markdown_share_one_finalized_utc() {
+        // `FakeIo::now_utc` is constant, so this asserts the structure rather
+        // than a race: the Markdown's stamp is read from the closure that
+        // `finalize` actually wrote, not from a second clock read.
+        let raw = std::fs::read_to_string(
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("src/bin/exp_rc021_host_qualify/decision.rs"),
+        )
+        .unwrap();
+        let finalize =
+            &raw[raw.find("fn finalize_with_io").unwrap()..raw.find("fn file_sha256").unwrap()];
+        assert!(
+            finalize.contains("FinalizeStamp::take(io, &identity)"),
+            "the stamp must be taken once"
+        );
+        assert_eq!(
+            finalize.matches("FinalizeStamp::take").count(),
+            1,
+            "exactly once per finalization"
+        );
+        assert!(
+            !finalize.contains("io.now_utc()"),
+            "no second clock read may reach the closure or its Markdown"
+        );
+    }
+
+    /// Every failing outcome carries a diagnostic, and `describe` must not drop
+    /// it. `RefusedBeforeMeasurement` writes nothing to disk, so a reason it
+    /// does not print exists nowhere at all.
+    #[test]
+    fn every_failing_controls_outcome_describes_itself() {
+        use crate::controls::ControlsOutcome as C;
+        for outcome in crate::controls::sample_controls_outcomes() {
+            let d = outcome.describe();
+            assert!(d.starts_with(outcome.variant_name()), "{d}");
+            let carries_detail = matches!(
+                outcome,
+                C::RefusedBeforeMeasurement { .. } | C::WriteFailed { .. } | C::Failed { .. }
+            );
+            assert_eq!(
+                d != outcome.variant_name(),
+                carries_detail,
+                "{} must {} carry its detail",
+                outcome.variant_name(),
+                if carries_detail { "" } else { "not" }
+            );
+        }
+    }
+
+    /// §C14.16's artifact guard must use the module's own presence doctrine.
+    ///
+    /// `path_present` treats an I/O error as presence — "an unreadable marker
+    /// is not an absent one" — while `.exists()` maps EACCES to `false`. With
+    /// `.exists()` the guard is skipped, finalize reserves the closure path
+    /// (locking the run irreversibly) and only then fails the artifact write.
+    #[test]
+    fn an_unreadable_artifact_still_counts_as_present() {
+        use std::os::unix::fs::PermissionsExt;
+        let d = TempDir::new("unreadable_artifact");
+        let vault = d.path().join("vault");
+        std::fs::create_dir_all(&vault).unwrap();
+        let artifact = vault.join("rc021_observations.tsv");
+        std::fs::write(&artifact, b"x").unwrap();
+        // Remove traversal: the file exists but cannot be stat'ed.
+        std::fs::set_permissions(&vault, std::fs::Permissions::from_mode(0o000)).unwrap();
+
+        let visible = std::fs::metadata(&artifact).is_err();
+        let restore = std::fs::set_permissions(&vault, std::fs::Permissions::from_mode(0o755));
+        if !visible {
+            // Running as a user that ignores the mode (root, or some CI
+            // filesystems). The distinction is not observable here.
+            restore.unwrap();
+            return;
+        }
+        restore.unwrap();
+        // The doctrine itself, on a path that errors rather than being absent.
+        let denied = d.path().join("vault_denied");
+        std::fs::create_dir_all(&denied).unwrap();
+        let inner = denied.join("rc021_observations.tsv");
+        std::fs::write(&inner, b"x").unwrap();
+        std::fs::set_permissions(&denied, std::fs::Permissions::from_mode(0o000)).unwrap();
+        let present = crate::decision::path_present_for_test(&inner);
+        let exists = inner.exists();
+        std::fs::set_permissions(&denied, std::fs::Permissions::from_mode(0o755)).unwrap();
+        assert!(present, "an unreadable path is not an absent one");
+        assert!(
+            !exists,
+            "`.exists()` is exactly the doctrine we must not use"
+        );
+    }
+
+    /// A record labelled `sentinel_sha256` must hold a sha256.
+    ///
+    /// It held `G11_SHA256_PREFIX` — twelve hex characters. That string is
+    /// fsynced into P6's detail column and republished in `RC021_RESULTS.md`,
+    /// so an auditor running `sha256sum` on the frozen instance finds it
+    /// disagrees with the value the record calls its digest.
+    #[test]
+    fn the_provenance_row_records_a_full_sentinel_digest() {
+        let instance = crate::protocol::tests_support::synthetic_verified();
+        let digest = instance.sha256();
+        assert_eq!(digest.len(), 64, "a sha256 is 64 hex characters: {digest}");
+        assert!(digest.chars().all(|c| c.is_ascii_hexdigit()));
+        assert_ne!(
+            digest,
+            crate::protocol::G11_SHA256_PREFIX,
+            "the prefix is the gate's comparison, not the record's digest"
+        );
+        // And it is the digest of the bytes that were actually verified.
+        let text = "4 4\n1 2 1\n2 3 1\n3 4 1\n4 1 1\n";
+        assert_eq!(digest, crate::host::sha256_hex(text.as_bytes()));
+    }
+
+    /// `--verify` must name what mismatched. It is the only mode whose useful
+    /// output *is* the diagnostic.
+    #[test]
+    fn verify_describes_which_entry_mismatched() {
+        use crate::decision::VerifyOutcome as V;
+        assert_eq!(
+            V::Mismatch {
+                what: "integrity entry rc021_journal_s3.tsv".to_string()
+            }
+            .describe(),
+            "Mismatch: integrity entry rc021_journal_s3.tsv"
+        );
+        for other in [V::EmptyOrPartial, V::DamagedManifest, V::NoClosurePath] {
+            assert_eq!(other.describe(), other.variant_name());
+        }
+        // Two different mismatches must not print the same thing.
+        assert_ne!(
+            V::Mismatch {
+                what: "a".to_string()
+            }
+            .describe(),
+            V::Mismatch {
+                what: "b".to_string()
+            }
+            .describe()
+        );
     }
 }

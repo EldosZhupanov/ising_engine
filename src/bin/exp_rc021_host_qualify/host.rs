@@ -150,6 +150,29 @@ pub fn new_run_uuid() -> String {
     b.iter().map(|x| format!("{x:02x}")).collect()
 }
 
+/// The smallest observable non-zero [`std::time::Instant`] delta, in
+/// milliseconds. This is the inherited RC-020 procedure: 64 independent
+/// observations and the minimum, stored in shortest round-trip `f64` form by
+/// the manifest codec.
+pub fn timer_resolution_ms() -> f64 {
+    let mut best = f64::INFINITY;
+    for _ in 0..64 {
+        let t0 = std::time::Instant::now();
+        loop {
+            let elapsed = t0.elapsed();
+            if !elapsed.is_zero() {
+                best = best.min(elapsed.as_secs_f64() * 1000.0);
+                break;
+            }
+        }
+    }
+    if best.is_finite() {
+        best
+    } else {
+        0.0
+    }
+}
+
 /// The shape a valid `run_uuid` must have.
 pub fn is_run_uuid(s: &str) -> bool {
     s.len() == 32
@@ -842,6 +865,13 @@ mod tests {
         // no fraction at all
         assert_eq!(parse_uptime_ms("42").unwrap(), 42_000);
         assert_eq!(parse_uptime_ms("0.000").unwrap(), 0);
+    }
+
+    #[test]
+    fn live_timer_resolution_is_a_positive_finite_observation() {
+        let resolution = timer_resolution_ms();
+        assert!(resolution.is_finite());
+        assert!(resolution > 0.0);
     }
 
     #[test]
