@@ -237,6 +237,10 @@ fn task(op: &str, sweeps: u32, seed: u64) -> ExperimentTask {
     }
 }
 
+fn executor() -> RuntimeExecutor {
+    RuntimeExecutor::auto()
+}
+
 fn validate_task(task: &ExperimentTask, op: &str, sweeps: u32, seed: u64) -> Result<(), String> {
     if task.schedule.ops != [op] {
         return Err(format!("{op} arm has the wrong operator schedule"));
@@ -528,7 +532,7 @@ fn main() {
                 .to_string()
         })
         .collect();
-    let executor = RuntimeExecutor::auto();
+    let executor = executor();
     let mut rows = Vec::with_capacity(EXPECTED_ROWS);
     let mut seen = HashSet::with_capacity(EXPECTED_ROWS);
 
@@ -677,6 +681,7 @@ mod tests {
 
     #[test]
     fn every_arm_has_exactly_the_frozen_budget_and_parameters() {
+        assert!(!executor().early_stopping());
         for pair in PAIRS {
             for sweeps in BUDGETS {
                 for seed in SEEDS {
