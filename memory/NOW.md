@@ -140,6 +140,33 @@ This is not a lowering of the bar. Every HIGH and MEDIUM found so far has been
 fixed and mutation-verified; the criterion only says that polish below that
 severity does not justify holding four thousand lines out of history.
 
+## The census is done — and it decided the programme
+
+**`research/RC022_ARCHITECTURE_CENSUS.md`, 2026-08-30.** The §8.A experiment
+that the standing objective named as decisive has run. Analysis only: no
+compute, no dependency, no execution.
+
+Twenty independently designed MaxCut/QUBO heuristic families from MQLib spread
+across **at least eight cells** of RC-004's seven-axis space, against one for
+our eighteen operators. **No family occupies our cell**, and three mechanisms
+the corpus uses heavily are absent from our operator library entirely:
+
+- **memory beyond the configuration** (tabu recency/frequency) — **7 of 20
+  families**, and we have none; verified by search over `src/engine_v2`;
+- **synthesized moves** (crossover, path-relinking) — 9 of 20; RC-003 touched
+  this axis once, for +0.06 %;
+- continuous domain with gradient moves — 1 family.
+
+So RC-004's one-cell result is a property of **our corpus**, not of the problem
+class, and the taxonomy discriminates well enough to steer generation. The
+marginal/probabilistic cell stays closed to us by `RELATIONAL_PRIMITIVE.md`'s
+Z₂ theorem, which leaves **memory as the surviving Ax2 route** —
+`AXIOMS_OF_OPTIMIZATION.md` §5's named attackable axiom.
+
+This does **not** say an empty cell holds a better algorithm, that memory helps
+our instances, or that any of these beats `UltimateSolver`. It is a map of what
+exists, not a measurement of what wins.
+
 ## Next action — in this order
 
 1. **Close the three untested state-machine rows** listed in
