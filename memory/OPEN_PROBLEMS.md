@@ -300,6 +300,49 @@ already solved.
 
 ---
 
+## 0e. RC-024 — path relinking works, reliably, and immaterially
+
+`results/rc024/RESULT.md`. Preregistered `28710dc`, candidate `4af912e`, one
+registered run. 90 paired observations: **69 wins, 0 losses, 21 ties**, mean
++0.105 %, Wilcoxon p = 5.4e-13, **0 of 90 pairs cleared the 1 % floor**.
+
+**The pattern across three cycles is now the finding, not any single result.**
+RC-022 named synthesized moves as the largest gap between our operator corpus
+and MQLib's. Measured twice in independent forms — RC-003's covariance-mined
+collective moves at ≈ +0.06 %, RC-024's endpoint-guided path relinking at
++0.105 % — both an order of magnitude under the floor. RC-023 found the form of
+memory to matter not at all. **Three architecture experiments in a row say the
+mechanism inventory is not where this corpus is short.** §1 of this file already
+records that G-Set is degenerate on two axes. The next preregistration should
+therefore test the *corpus*, not another operator.
+
+Two method lessons, both the same shape as §0d's:
+
+**A mutation that survives is not always a test gap — sometimes it is an
+equivalence.** Seeding the best-prefix tracker at `+inf` instead of the source's
+own energy drops the zero-length prefix that PREREG §2 step 6 requires. It
+survived the never-worse test, and the reason is structural: the relinking
+target is by construction the lowest-energy replica, so the far endpoint is
+never worse than the source and the seed changes nothing **except on an exact
+tie**. The fix was not a stronger version of the same test but synthetic
+endpoints that tie their start — a case the invariant test could not reach.
+**When a mutation survives, first ask whether it is observable at all; the
+answer tells you which test is missing.**
+
+**A fixture can be too small to contain the mechanism.** The never-worse
+invariant is enforced by rewinding a source to its best prefix. On the
+seven-variable fixture the greedy walk descends the whole way, no rewind ever
+fires, and the invariant is satisfied by arithmetic rather than by the code that
+implements it. Only a 40-variable frustrated ring made the walk climb. **An
+invariant tested where it cannot be violated is not tested.**
+
+Also recorded: RC-023's post-hoc signed/unweighted stratification **does not
+reproduce** on RC-024 (+0.126 % vs +0.100 %). Different mechanism, so this is
+not a refutation — but it removes one way that split could have been a property
+of the corpus rather than of tabu memory.
+
+---
+
 ## 1. Benchmark degeneracy — G-Set cannot test two questions *in principle*
 
 Not a statistical-power problem. An **identifiability** problem: no quantity of

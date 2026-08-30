@@ -62,14 +62,35 @@ our selector, because no random-subset arm was run.
 
 ## Active task
 
-**RC-024 — preregister and test the remaining synthesized-move architecture
-axis.**
+**RC-024 is complete. Registered outcome: WORKS BUT IMMATERIAL.**
 
-RC-021 closeout is complete. RC-024 is a separate architecture-evidence cycle:
-first map the existing move-synthesis path, then freeze the candidate, control,
-seeds, estimand and decision rule in a committed preregistration, and only then
-write or run code. It may measure paired solution quality at an identical
-logical budget; the unqualified RC-021 host forbids every wall-time claim.
+Endpoint-guided path relinking was preregistered (`28710dc`), implemented and
+mutation-verified (`4af912e`), and run once as registered. Ninety paired
+observations over 30 G-Set instances at seeds 101/102/103:
+**69 wins, 0 losses, 21 ties**; mean gain **+0.105 %**, median +0.077 %,
+Wilcoxon **p = 5.4 × 10⁻¹³**. Not one pair of the ninety cleared the 1 %
+materiality floor. Full record: `results/rc024/RESULT.md`.
+
+The zero in the loss column is the never-worse invariant, proven on synthetic
+endpoints before the run. The candidate does strictly more logical work than its
+control and this host is INSTRUMENT-INVALID, so **no wall-time or equal-cost
+claim is licensed** — a +0.105 % gain bought with unmeasured extra work is not a
+speed result.
+
+**Taken with RC-003 and RC-023, this is the cycle's real finding.** RC-022 named
+synthesized moves as the largest mechanism gap between our corpus and the human
+one — 9 of 20 external families. It is now measured twice in two independent
+forms: covariance-mined collective moves (RC-003, ≈ +0.06 %) and endpoint-guided
+path relinking (RC-024, +0.105 %). Both land an order of magnitude under the
+floor. RC-023 found the *form* of memory not to matter at all. Three
+architecture experiments in a row say the mechanism inventory is **not** where
+this corpus is short — a claim about these instances at this budget, and the
+hypothesis the next cycle should try to break rather than a conclusion.
+
+RC-023's post-hoc signed/unweighted stratification **does not reproduce here**
+(+0.126 % signed vs +0.100 % unweighted). That removes one way it could have
+been a property of the corpus rather than of tabu memory. It neither confirms
+nor refutes the original observation, which concerned a different mechanism.
 
 ## Working context
 
@@ -212,12 +233,21 @@ that is not already solved.
 
 ## Next action — in this order
 
-1. Explorer: map `move_synthesis`, elite/path-relinking support, registry,
-   Runtime, and the RC-023 experiment harness without editing.
-2. Planner: freeze an atomic RC-024 design and explicit do-not-touch set.
-3. Commit the binding preregistration before candidate implementation or data.
-4. Implement, review, run the registered quality-only experiment once, and
-   publish the result.
+1. **Decide what the three flat cycles mean before running a fourth.** RC-003,
+   RC-023 and RC-024 each added a mechanism the human corpus has and we lacked,
+   and each returned an effect an order of magnitude under the materiality
+   floor. Either the remaining unoccupied cells hold nothing either, or the
+   corpus cannot express the difference. `OPEN_PROBLEMS.md` §1 already records
+   that G-Set is degenerate on two axes. **The next preregistration should test
+   the corpus, not another operator** — a candidate that is immaterial on G-Set
+   but material on an instance family G-Set cannot express would settle it, and
+   a candidate flat on both closes the mechanism hypothesis honestly.
+2. **Decide item D** in `OPEN_PROBLEMS.md` §0b: does exit 4 mean "the evidence
+   is broken" or "something went wrong"? A sentinel that could not run is not a
+   damaged journal. A contract question; it belongs to the maintainer.
+3. **C10 remediation is deferred by the user's decision** and is the only route
+   to any wall-time claim. Nothing in RC-022/023/024 needed it, which is why
+   three cycles ran on an unqualified host without a single prohibited claim.
 
 RC-021 is an instrument, not a result, and it is still unqualified on this host
 (C10). That is why RC-023 makes **no wall-time claim of any kind** — only

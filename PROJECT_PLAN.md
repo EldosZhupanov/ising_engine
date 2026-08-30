@@ -156,17 +156,26 @@ question whether our one-cell operator corpus omits mechanisms that the wider
 field actually uses.
 
 RC-022 established that it does. RC-023 then tested hard versus soft memory and
-found no registered difference at its frozen logical budget. RC-024 therefore
-tests the largest remaining occupied external axis: synthesized moves. The
-cycle must be preregistered before code or data, may compare paired solution
-quality only at identical seeds and logical work, and must publish a null or
-adverse result exactly as readily as a positive one. RC-021's Class I closure
-means wall-time, equal-cost and throughput claims remain forbidden.
+found no registered difference at its frozen logical budget. RC-024 tested the
+largest remaining occupied external axis, synthesized moves, and closed
+**WORKS BUT IMMATERIAL**: endpoint-guided path relinking won 69 of 90 paired
+trials and lost none, at +0.105 % mean — reliably positive, an order of
+magnitude under the 1 % materiality floor, and bought with unmeasured extra
+logical work that RC-021's Class I closure forbids anyone from pricing.
 
-This narrowly authorizes one isolated `engine_v2` research candidate and its
-test/experiment harness. It does **not** authorize the Instance Foundry, the
-general DSL, operator-generation campaigns, scalar-family changes, public API
-changes, or production integration.
+**The line has now returned three consecutive immaterial results** — RC-003 at
+≈ +0.06 %, RC-023 at no detectable effect, RC-024 at +0.105 %. Under the frozen
+RC-024 decision table, WORKS BUT IMMATERIAL authorizes nothing further on its
+own. Before a fourth operator is preregistered, this line must decide whether
+the remaining unoccupied cells are empty too or whether the corpus cannot
+express the difference; `memory/OPEN_PROBLEMS.md` §1 already records that G-Set
+is degenerate on two axes. The next preregistration in this line should test the
+corpus, not another mechanism.
+
+This line narrowly authorizes one isolated `engine_v2` research candidate and
+its test/experiment harness per cycle. It does **not** authorize the Instance
+Foundry, the general DSL, operator-generation campaigns, scalar-family changes,
+public API changes, or production integration.
 
 ### Stage S2 — the four branches out of Gate A
 

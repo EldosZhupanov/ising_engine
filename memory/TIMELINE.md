@@ -19,6 +19,8 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-08-30 | `165543c`, corrected by `d852b19` | RC-022 census found at least eight occupied architecture cells and selected memory form as the first measured gap | [`RC022_ARCHITECTURE_CENSUS.md`](../research/RC022_ARCHITECTURE_CENSUS.md) |
 | 2026-08-30 | `762d1bc` | RC-023 found hard and soft memory forms indistinguishable at the frozen budget; synthesized moves became the next untested axis | [`RESULT.md`](../results/rc023/RESULT.md) |
 | 2026-08-30 | `af8da91`, `c110e2b` | RC-021 Class I record published and its final synthetic CLI state-machine coverage closed with mutation proof; terminal evidence remained byte-identical | [`RC021_INSTRUMENT_INVALID_RECORD.md`](../research/RC021_INSTRUMENT_INVALID_RECORD.md), [`OPEN_PROBLEMS.md`](OPEN_PROBLEMS.md) |
+| 2026-08-30 | `28710dc`, `4af912e` | RC-024 preregistered and its candidate committed with the four PREREG §5.4 endpoint obligations closed under eight killed mutations | [`PREREG_RC024_PATH_RELINKING.md`](../research/PREREG_RC024_PATH_RELINKING.md) |
+| 2026-08-30 | RC-024 registered run | Endpoint-guided path relinking won 69 of 90 paired trials and lost none, at +0.105 % mean — reliably positive, an order of magnitude under the 1 % materiality floor | [`RESULT.md`](../results/rc024/RESULT.md) |
 
 ## Research-cycle chronology
 
@@ -47,6 +49,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | RC-021 | closed/instrument invalid | 2026-08-23 | Eleven controls passed; C10 failed; complete Class I closure, no qualification sessions and no scientific verdict | [`prereg`](../research/PREREG_RC021_HOST_INSTRUMENT.md), [`A1`](../research/PREREG_RC021_AMENDMENT_1.md), [`A2`](../research/PREREG_RC021_AMENDMENT_2.md), [`record`](../research/RC021_INSTRUMENT_INVALID_RECORD.md) |
 | RC-022 | closed/architecture census | 2026-08-30 | Twenty human-designed families occupy at least eight RC-004 cells; our corpus occupies one | [`record`](../research/RC022_ARCHITECTURE_CENSUS.md) |
 | RC-023 | closed/outcome (a) | 2026-08-30 | Hard prohibition and soft decaying memory were indistinguishable at the registered budget | [`prereg`](../research/PREREG_RC023_MEMORY_FORM.md), [`result`](../results/rc023/RESULT.md) |
+| RC-024 | closed/works but immaterial | 2026-08-30 | Path relinking never lost a paired trial and never gained 1 %; with RC-003 and RC-023 it says the mechanism inventory is not where this corpus is short | [`prereg`](../research/PREREG_RC024_PATH_RELINKING.md), [`result`](../results/rc024/RESULT.md) |
 
 ## RC-021 implementation ancestry
 
