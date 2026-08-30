@@ -264,9 +264,14 @@ that is not already solved.
    has never been the limiting step here. The one that changes anything is the
    AGENTS.md study, and it was reported to us inverted — the harm is in
    **auto-generated repository overviews**, not context files as a class, while
-   hand-written instructions are followed and help. Our `INDEX.md` and
-   `.claude/context/` are exactly the harmful category and cost 20–23 % per
-   session. Registered as a question, not a change.
+   hand-written instructions are followed and help. Checking our own overviews
+   ended the question early: `.claude/context/` is **untracked**, has no
+   generator and no freshness gate, was last written 2026-07-05, and its
+   `modules.txt` still describes a project with **no `engine_v2`**. `CLAUDE.md`
+   §7–§8 ranked that map above ripgrep, and the same paper shows such
+   instructions are obeyed. Corrected in place: `rg` and `cargo metadata` now
+   rank first because they cannot go stale. Do **not** regenerate
+   `.claude/context/` without evidence that a maintained overview helps.
 
 RC-021 is an instrument, not a result, and it is still unqualified on this host
 (C10). That is why RC-023 makes **no wall-time claim of any kind** — only

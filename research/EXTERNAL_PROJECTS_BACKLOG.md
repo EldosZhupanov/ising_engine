@@ -558,10 +558,27 @@ cannot be fabricated and a refutation cannot be lost. Nothing in this paper
 measures that, so it can neither endorse nor condemn the system as a whole. It
 speaks only to the generated-overview part.
 
-**Registered as a testable question, not as a change:** does dropping the
-generated overviews from session startup remove the 20 % context tax without
-degrading work quality? That is measurable here and belongs in a preregistration
-of its own, because "it felt fine" is not an answer this project accepts.
+**Acted on, because checking made the question moot.** Before registering an
+experiment about the cost of our generated overviews, the overviews were
+inspected. They are **untracked** — absent from a fresh clone entirely — have no
+generator and no freshness gate, and were last written on **2026-07-05**. Their
+`modules.txt` describes a project with three modules and **no `engine_v2`**: the
+entire research platform, every operator and every RC-021 binary are invisible to
+it. `unsafe.txt` happens to still be right; the rest are two months wrong.
+
+So the harm here was never the 20 % token tax the paper measures. It was that
+`CLAUDE.md` §7 said "prefer these over scanning" and §8 ranked them **above
+ripgrep** — and per that same paper, instructions in context files *are* followed.
+Every new agent was being pointed at a map that lies and, in a clean checkout,
+does not exist. That needs no experiment; it needs the instruction corrected,
+which was done in the same commit. `rg` and `cargo metadata` now rank first
+because they read the tree as it is and cannot rot.
+
+**What remains a genuine open question**, and is not settled by this: whether a
+*maintained* repository overview would help at all. The paper says no; we have no
+local evidence either way, and building a generator plus a freshness gate for
+something with no demonstrated benefit would be the same mistake §14.3 rejects
+elsewhere. Do not regenerate `.claude/context/` without that evidence.
 
 ## §14.2 Verified, real, and genuinely interesting — but not our bottleneck
 

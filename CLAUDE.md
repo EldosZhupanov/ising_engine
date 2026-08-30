@@ -158,8 +158,14 @@ platform (`--orchestrate`, `--executive`, `--planner`, `--shared-knowledge`,
 - `CLAUDE.md` (this file) — how work is done.
 - `research/architecture/ADR/` — architecture decisions (see §12).
 - `research/*_BLUEPRINT.md`, `STAGE_7/8_*.md` — design documents per stage.
-- Auto-generated context: `INDEX.md`, `.claude/context/{tree,modules,symbols,git}`.
-  Prefer these over scanning.
+- `INDEX.md` — tracked, small, current. Read it.
+- `.claude/context/{tree,modules,symbols,git,impls,cargo_targets}` — **untracked
+  local scratch. Do not rely on it.** It is absent in a fresh clone, has no
+  generator and no freshness gate, and on 2026-08-30 its `modules.txt` still
+  described a three-module project with no `engine_v2` at all — two months
+  stale. A generated map that rots silently is an instrument asserting what it
+  has not observed. Verify anything it says against `rg` or `cargo metadata`
+  before acting on it. Deleting it costs nothing.
 - Update docs only when behavior or direction changes. No redundant docs.
 
 ## 8. Development Style / Working Strategy
@@ -167,8 +173,9 @@ platform (`--orchestrate`, `--executive`, `--planner`, `--shared-knowledge`,
 Solve tasks in this order (stop as soon as you have what you need):
 
 1. `git diff` / `git status`.
-2. `INDEX.md`, then `.claude/context/`.
-3. `rg` (ripgrep) → `fd` → `ast-grep`.
+2. `memory/NOW.md` for where the work stands, `INDEX.md` for the layout.
+3. `rg` (ripgrep) → `fd` → `ast-grep`. These read the tree as it is now and
+   cannot go stale, which is why they rank above any generated map.
 4. `cargo metadata`.
 5. Open only the minimum source files.
 
