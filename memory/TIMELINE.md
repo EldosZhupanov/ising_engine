@@ -18,6 +18,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-08-30 | instrument commit `e9a0450` | RC-021 closed Class I `INSTRUMENT-INVALID` after mandatory control C10 failed; no qualification session began | [`RC021_INSTRUMENT_INVALID_RECORD.md`](../research/RC021_INSTRUMENT_INVALID_RECORD.md) |
 | 2026-08-30 | `165543c`, corrected by `d852b19` | RC-022 census found at least eight occupied architecture cells and selected memory form as the first measured gap | [`RC022_ARCHITECTURE_CENSUS.md`](../research/RC022_ARCHITECTURE_CENSUS.md) |
 | 2026-08-30 | `762d1bc` | RC-023 found hard and soft memory forms indistinguishable at the frozen budget; synthesized moves became the next untested axis | [`RESULT.md`](../results/rc023/RESULT.md) |
+| 2026-08-30 | `af8da91`, `c110e2b` | RC-021 Class I record published and its final synthetic CLI state-machine coverage closed with mutation proof; terminal evidence remained byte-identical | [`RC021_INSTRUMENT_INVALID_RECORD.md`](../research/RC021_INSTRUMENT_INVALID_RECORD.md), [`OPEN_PROBLEMS.md`](OPEN_PROBLEMS.md) |
 
 ## Research-cycle chronology
 

@@ -62,13 +62,14 @@ our selector, because no random-subset arm was run.
 
 ## Active task
 
-**RC-021 closeout — publish the Class I closure and close the final synthetic
-state-machine coverage debt.**
+**RC-024 — preregister and test the remaining synthesized-move architecture
+axis.**
 
-This is the single active task. Only documentation and synthetic or injected
-tests are permitted. The allocated RC-021 run is terminal and may not be
-repeated; its existing `experiments/rc021/` evidence must not be edited,
-deleted, repaired, or supplemented.
+RC-021 closeout is complete. RC-024 is a separate architecture-evidence cycle:
+first map the existing move-synthesis path, then freeze the candidate, control,
+seeds, estimand and decision rule in a committed preregistration, and only then
+write or run code. It may measure paired solution quality at an identical
+logical budget; the unqualified RC-021 host forbids every wall-time claim.
 
 ## Working context
 
@@ -90,6 +91,10 @@ deleted, repaired, or supplemented.
   session began, no paired-spread datum exists, and no Class II host verdict is
   licensed. The durable publication is
   `research/RC021_INSTRUMENT_INVALID_RECORD.md`.
+- RC-021 closeout is committed as `af8da91` and `c110e2b`: the immutable Class
+  I record is published, all formerly missing synthetic state-machine rows are
+  covered by non-vacuous tests, the named mutation is killed, and the raw
+  terminal evidence remained byte-identical across the full gate run.
 - The durable-memory series is integrated on this branch as commits
   `983497d..d5880e3`.
 - The integrated memory state at `e824b7f` was independently reviewed and
@@ -115,15 +120,17 @@ deleted, repaired, or supplemented.
 
 ## This task is complete only when
 
-1. The Class I closure is published as an immutable abort record without a
-   scientific verdict.
-2. The three state-machine coverage gaps in `OPEN_PROBLEMS.md` §0b item I are
-   closed by synthetic tests that fail under mutations of their named branch.
-3. No test executes a real control, qualification session, or G11 sentinel.
-4. The applicable `cargo` check, test, build, `clippy`, `fmt`, memory and diff
-   gates pass.
-5. The existing terminal evidence directory is byte-identical before and after
-   the closeout.
+1. An Explorer map proves the exact existing synthesized-move implementation,
+   runtime/registry call sites, reusable harness and do-not-touch boundary.
+2. A binding RC-024 preregistration is committed before candidate code or
+   result data exists.
+3. Candidate and control differ on one named synthesized-move mechanism, use
+   identical seeds and logical budgets, and have deterministic backend/energy
+   equivalence tests.
+4. The registered experiment runs once, its complete outcome is published even
+   if null or adverse, and prohibited wall-time/production claims are absent.
+5. An independent review and every applicable source, memory and immutable-file
+   gate pass; RC-021 terminal evidence remains byte-identical.
 
 ## When Step 8 is finished — the stopping criterion
 
@@ -205,11 +212,12 @@ that is not already solved.
 
 ## Next action — in this order
 
-1. **Close the three untested state-machine rows** listed in
-   `OPEN_PROBLEMS.md` §0b item I — the last coverage debt in RC-021 Step 8.
-2. **Design RC-024 on the axis that is still untested.** Synthesized moves
-   (crossover, path-relinking) is 9 of 20 MQLib families and RC-003 touched it
-   once for +0.06 %. Preregister before writing the operator, as RC-023 did.
+1. Explorer: map `move_synthesis`, elite/path-relinking support, registry,
+   Runtime, and the RC-023 experiment harness without editing.
+2. Planner: freeze an atomic RC-024 design and explicit do-not-touch set.
+3. Commit the binding preregistration before candidate implementation or data.
+4. Implement, review, run the registered quality-only experiment once, and
+   publish the result.
 
 RC-021 is an instrument, not a result, and it is still unqualified on this host
 (C10). That is why RC-023 makes **no wall-time claim of any kind** — only
@@ -221,10 +229,17 @@ paired quality at identical seeds, which needs no qualified host.
   on G11.
 - Editing, deleting, repairing, or supplementing the existing
   `experiments/rc021/` terminal evidence.
-- Editing or moving any binding preregistration, amendment, or cycle record.
+- Editing or moving any existing binding preregistration, amendment, or cycle
+  record; RC-024 gets a new prospective preregistration and result.
 - Fixing the non-blocking F1/F2 test-hardening findings "while here".
 - Starting any six-session execution under the spent RC-021 protocol.
-- Changing `solver`, `core`, `engine_v2`, or any Cargo dependency.
+- Changing the scalar solver family, `core`, Cargo dependencies, public API,
+  `UltimateSolver`, or production auto-routing.
+- Inspecting or changing registered result seeds after the RC-024
+  preregistration is committed.
+- Making a wall-time, equal-cost, universal-optimizer, or production-superiority
+  claim from RC-024.
+- Starting Soup/LoRA/video-model work inside this research cycle.
 - Weakening the durability contract, the terminal evidence lock, or the
   read-only guarantee of `--verify`.
 - Treating Obsidian, generated indexes, summaries, chat logs, or model memory as

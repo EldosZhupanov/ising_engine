@@ -147,6 +147,27 @@ RC-021 required, in its pre-registration and before any code:
 RC-020 instrument in place, lowering the `0.09` bound, opening any reserved
 block, or writing the §9 descendant.
 
+### Architecture-axis evidence line — RC-022 onward
+
+This line is separate from the blocked RC-020/021 wall-time sequence. It does
+not open S2 or S3, spend their reserved seeds, construct an equal-cost claim, or
+authorize production routing. It exists to answer the Constitution-aligned
+question whether our one-cell operator corpus omits mechanisms that the wider
+field actually uses.
+
+RC-022 established that it does. RC-023 then tested hard versus soft memory and
+found no registered difference at its frozen logical budget. RC-024 therefore
+tests the largest remaining occupied external axis: synthesized moves. The
+cycle must be preregistered before code or data, may compare paired solution
+quality only at identical seeds and logical work, and must publish a null or
+adverse result exactly as readily as a positive one. RC-021's Class I closure
+means wall-time, equal-cost and throughput claims remain forbidden.
+
+This narrowly authorizes one isolated `engine_v2` research candidate and its
+test/experiment harness. It does **not** authorize the Instance Foundry, the
+general DSL, operator-generation campaigns, scalar-family changes, public API
+changes, or production integration.
+
 ### Stage S2 — the four branches out of Gate A
 
 Exactly one fires. The branch is read off the artifact, never argued for.
