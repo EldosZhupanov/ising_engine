@@ -137,6 +137,31 @@ fn safe_unmet_preconditions_have_frozen_exit_codes_and_write_nothing() {
     );
 }
 
+/// §C10.2 at the real process boundary.  The diagnostic assertion makes this
+/// non-vacuous: a later provenance refusal also exits 2, but cannot satisfy the
+/// reserved-path message below.
+#[test]
+fn init_run_refuses_a_reserved_path_before_provenance_and_writes_nothing() {
+    let dir = TempDir::new("init_reserved");
+    let path = dir.path().to_str().unwrap();
+    let reserved = dir.path().join("rc021_closure.json");
+    std::fs::write(&reserved, b"existing terminal evidence").unwrap();
+    let before = snapshot(dir.path());
+
+    let (code, stderr) = run_with_stderr(&["--init-run", "--dir", path]);
+
+    assert_eq!(code, 2);
+    assert!(
+        stderr.contains("reserved RC-021 path already exists: rc021_closure.json"),
+        "the refusal must come from the reserved-path branch: {stderr:?}"
+    );
+    assert_eq!(
+        snapshot(dir.path()),
+        before,
+        "a refused initialization must not write or repair anything"
+    );
+}
+
 /// §C14.2 at the process boundary: once the closure path exists the run is
 /// locked, and a wrong `--run-id` must not downgrade exit 4 to a correctable
 /// exit 2.

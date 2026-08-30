@@ -2050,26 +2050,6 @@ mod cli_tests {
         assert_eq!(snapshot(d.path()), before);
     }
 
-    // §C11.45's short-gap refusal has **no CLI-level test**, deliberately.
-    // The branch sits past `live_facts`, whose provenance gate refuses on any
-    // uncommitted tree, so in-process it returns INSTRUMENT-INVALID before the
-    // gap is ever checked. The rule and its exit code are covered where they
-    // live — `session::tests::the_gap_floor_is_inclusive_and_a_backwards_clock_
-    // is_not_a_short_gap` and the frozen `SESSION_VARIANTS` classification
-    // table. The missing wiring test is `OPEN_PROBLEMS.md` §0b item J, whose
-    // remedy is a `LiveFacts` seam on `session_mode`.
-
-    // `--init-run`'s reserved-path refusal likewise has **no CLI-level test**.
-    // A test written for it passed for the wrong reason — `init_run_mode`
-    // reaches `repository_root`/`live_facts` and the provenance gate refuses a
-    // dirty tree at the same exit 2 — and a mutation that bypassed
-    // `manifest::preflight_run_dir` entirely survived it. A test that cannot
-    // distinguish the branch it names is worse than none, so it was removed.
-    // The rule is covered where it lives: `manifest::tests::
-    // any_journal_shaped_name_blocks_the_run`, `similar_but_unreserved_names_
-    // do_not_block` and `reserved_path_errors_are_not_read_as_absence`.
-    // Same seam, same remedy: `OPEN_PROBLEMS.md` §0b item J.
-
     /// §C12.3's record must describe the host **at the failure**, not the
     /// snapshot the preflight took minutes earlier.
     ///
