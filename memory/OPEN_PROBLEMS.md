@@ -384,6 +384,62 @@ the question is asked before a threshold is chosen rather than after it fails.
 
 ---
 
+## 0g. RC-025 — the corpus is exonerated, and the mechanism line is closed
+
+`results/rc025/RESULT.md`. Preregistered `339e74f`, amended `c3b4835` before any
+datum, one registered run of 540 rows. The RC-023 and RC-024 pairs were re-run
+unchanged up a ladder of weight diversity — 1/2 → 10 → 21 distinct weights at
+three densities, on Biq Mac, whose bottom rung is G-Set's degenerate class.
+
+**Registered outcome: NO EVIDENCE THE CORPUS EXPLAINS THE FLAT RESULTS.**
+Spearman of gain against distinct weights: memory form ρ = +0.074, p = 0.489;
+synthesis ρ = −0.098, p = 0.360. The mandatory control passed — rung 1 reproduced
+G-Set's immateriality for both pairs — so the ladder was readable and it is flat.
+
+§1 below stands: G-Set genuinely cannot separate the guide axis, by proof. It is
+simply **not the reason** these mechanisms are immaterial. Breaking the `E = 2V −
+|E|` bijection does not make either of them matter.
+
+**Four cycles now agree, and this closes the line.** RC-003 ≈ +0.06 %, RC-023 no
+effect, RC-024 +0.105 %, RC-025 +0.18 % and −0.38 % on a second corpus.
+RC-022's census was right that we occupy one architecture cell and the field
+occupies eight. It does not follow that the other cells pay. **Occupying a cell
+is not the same as benefiting from it**, and the search for value in the
+mechanism inventory has run out of road. The next cycle must look somewhere that
+neither the mechanism nor the corpus explains.
+
+Three things worth keeping:
+
+**Hard prohibition is mildly harmful, not neutral.** RC-023 found no difference
+on G-Set; here `tabu_sweep` loses 62 of 81 decided instances at every rung, sign
+test p = 1.8e-6. Small (−0.38 %) and immaterial, but the *sign* is now
+established where G-Set could not establish it. Tenure was 10 and untuned in both
+cycles, so this indicts the untuned form only.
+
+**Path relinking has never once lost.** 54/0 here after 69/0 on G-Set — 180
+paired trials on two corpora without a single loss. That is the never-worse
+invariant doing exactly what it was built to do.
+
+**A refusal is worth more than a result you would have had to retract.** The
+first registered run stopped dead: the families in §2 were named without their
+size suffix, and `pm1s`, `pm1d` and `g05` each exist at more than one size. A
+substring matcher would have mixed n=80 and n=100 into one rung, returned the
+right *number* of files, and produced a plausible number with nothing
+complaining. **A guard that refuses on a count is worth more than one that
+refuses on a name**, because the wrong name still yields a count. Every family is
+now resolved against the corpus at `cargo test` time; the mutation that undoes
+this survived every test that existed before it.
+
+Also recorded honestly, not tidied: §2 registered a secondary high-diversity
+extension that §3 and §7 then excluded from the frozen run. The preregistration
+was internally inconsistent and the extension was **not run and will not be run
+now** — adding an arm after seeing a null is the move preregistration exists to
+forbid. And six unregistered within-ladder Spearman tests produced two p < 0.001
+results at the same density **in opposite directions**, which is why the pooled
+registered test is null: they cancel. Recorded in the result, read as nothing.
+
+---
+
 ## 1. Benchmark degeneracy — G-Set cannot test two questions *in principle*
 
 Not a statistical-power problem. An **identifiability** problem: no quantity of

@@ -21,6 +21,8 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-08-30 | `af8da91`, `c110e2b` | RC-021 Class I record published and its final synthetic CLI state-machine coverage closed with mutation proof; terminal evidence remained byte-identical | [`RC021_INSTRUMENT_INVALID_RECORD.md`](../research/RC021_INSTRUMENT_INVALID_RECORD.md), [`OPEN_PROBLEMS.md`](OPEN_PROBLEMS.md) |
 | 2026-08-30 | `28710dc`, `4af912e` | RC-024 preregistered and its candidate committed with the four PREREG §5.4 endpoint obligations closed under eight killed mutations | [`PREREG_RC024_PATH_RELINKING.md`](../research/PREREG_RC024_PATH_RELINKING.md) |
 | 2026-08-30 | RC-024 registered run | Endpoint-guided path relinking won 69 of 90 paired trials and lost none, at +0.105 % mean — reliably positive, an order of magnitude under the 1 % materiality floor | [`RESULT.md`](../results/rc024/RESULT.md) |
+| 2026-08-30 | `8e73ad5` | C10 diagnosed: its 1 % bound sat at the median of its own null, so the recorded failure reason was never established; host resolution measured at ~25 % clean, ~5 % marginal, 1 % unreachable | [`RC021_C10_DIAGNOSIS.md`](../research/RC021_C10_DIAGNOSIS.md) |
+| 2026-08-30 | RC-025 registered run | The corpus is exonerated and the mechanism line closes; the first invocation refused on a family-name error before measuring anything, and the correction was amended in before the run | [`RESULT.md`](../results/rc025/RESULT.md) |
 
 ## Research-cycle chronology
 
@@ -50,6 +52,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | RC-022 | closed/architecture census | 2026-08-30 | Twenty human-designed families occupy at least eight RC-004 cells; our corpus occupies one | [`record`](../research/RC022_ARCHITECTURE_CENSUS.md) |
 | RC-023 | closed/outcome (a) | 2026-08-30 | Hard prohibition and soft decaying memory were indistinguishable at the registered budget | [`prereg`](../research/PREREG_RC023_MEMORY_FORM.md), [`result`](../results/rc023/RESULT.md) |
 | RC-024 | closed/works but immaterial | 2026-08-30 | Path relinking never lost a paired trial and never gained 1 %; with RC-003 and RC-023 it says the mechanism inventory is not where this corpus is short | [`prereg`](../research/PREREG_RC024_PATH_RELINKING.md), [`result`](../results/rc024/RESULT.md) |
+| RC-025 | closed/no evidence | 2026-08-30 | A weight-diversity ladder exonerates the corpus: breaking G-Set's degeneracy does not make either mechanism pay, closing the architecture line after four cycles | [`prereg`](../research/PREREG_RC025_CORPUS_OR_MECHANISM.md), [`amendment`](../research/PREREG_RC025_AMENDMENT_1.md), [`result`](../results/rc025/RESULT.md) |
 
 ## RC-021 implementation ancestry
 

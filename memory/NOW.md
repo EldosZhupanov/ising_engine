@@ -233,15 +233,25 @@ that is not already solved.
 
 ## Next action — in this order
 
-1. **Decide what the three flat cycles mean before running a fourth.** RC-003,
-   RC-023 and RC-024 each added a mechanism the human corpus has and we lacked,
-   and each returned an effect an order of magnitude under the materiality
-   floor. Either the remaining unoccupied cells hold nothing either, or the
-   corpus cannot express the difference. `OPEN_PROBLEMS.md` §1 already records
-   that G-Set is degenerate on two axes. **The next preregistration should test
-   the corpus, not another operator** — a candidate that is immaterial on G-Set
-   but material on an instance family G-Set cannot express would settle it, and
-   a candidate flat on both closes the mechanism hypothesis honestly.
+1. **The mechanism line is closed. Do not open a fifth cycle on it.** RC-025 ran
+   the question the three flat cycles raised: is it the mechanisms, or is it the
+   corpus? Registered answer — **no evidence the corpus explains it**
+   (`results/rc025/RESULT.md`, Spearman p = 0.49 and p = 0.36, mandatory control
+   passed). The RC-023 and RC-024 pairs were re-run unchanged up a weight-
+   diversity ladder from 1/2 to 21 distinct weights at three densities, whose
+   bottom rung reproduced G-Set's immateriality. Breaking the `E = 2V − |E|`
+   bijection changes nothing. §1's proof that G-Set cannot separate the guide
+   axis still stands — it is simply not the reason these mechanisms do not pay.
+
+   RC-022's census was right that the field occupies eight architecture cells to
+   our one. **Occupying a cell is not the same as benefiting from it.** Four
+   cycles across two corpora say the mechanism inventory is not where this
+   project is short, and the next question must be one that neither the
+   mechanism nor the corpus explains. Two candidates, neither yet designed:
+   **(a)** the budget — every cycle ran 50 sweeps; a mechanism that needs a long
+   run to pay would be invisible to all four; **(b)** the comparison itself —
+   every cycle scored a solo operator, while the field's tabu and path relinking
+   live inside a surrounding search that our schedules do not provide.
 2. **Decide item D** in `OPEN_PROBLEMS.md` §0b: does exit 4 mean "the evidence
    is broken" or "something went wrong"? A sentinel that could not run is not a
    damaged journal. A contract question; it belongs to the maintainer.
