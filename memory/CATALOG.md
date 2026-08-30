@@ -11,7 +11,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 
 ## Summary
 
-- `active`: 16
+- `active`: 17
 - `binding`: 35
 - `closed`: 32
 - `historical`: 1
@@ -57,6 +57,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `memory/CURRENT_TASK.md` | historical-handoff | A4 | superseded | 2026-08-19 | 2026-08-26 | false | compatibility |
 | `memory/DECISIONS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
 | `memory/INDEX.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
+| `memory/NEXT_TASK_RC027.md` | task-bundle | A1 | active | 2026-08-30 | 2026-08-30 | false | RC027 |
 | `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-08-30 | false | current-task |
 | `memory/OBSIDIAN.md` | workspace-guide | A3 | reference | 2026-08-26 | 2026-08-26 | false | navigation |
 | `memory/OPEN_PROBLEMS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-30 | false | navigation |

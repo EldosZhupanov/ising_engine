@@ -267,10 +267,17 @@ that is not already solved.
    previous binary and interleave the arms, prove identity against something
    published earlier, declare whatever moved.
 
-4. **The remaining undesigned direction is the budget axis.** Every cycle ran 50
-   sweeps; a mechanism that only pays on a long run would be invisible to all
-   six. It is the last cheap question this project has not asked. Preregister
-   before code, as the last four cycles did.
+4. **ACTIVE TASK — RC-027, the budget axis.** Every one of the six cycles ran
+   50 sweeps; a mechanism that only pays on a long run would be invisible to all
+   of them. It is the last cheap question this project has not asked and the only
+   one left that could overturn the closure. Do the candidate and control curves
+   **converge, diverge, or stay parallel** as the budget grows?
+
+   **The full brief is [`NEXT_TASK_RC027.md`](NEXT_TASK_RC027.md).** Read it
+   before anything else: it carries the design, the mandatory controls, the
+   non-negotiable procedure, the six traps that have already cost this project
+   time, the tools that now exist, and the hard prohibitions. Preregister before
+   any code, as the last four cycles did.
 
 2. **Decide item D** in `OPEN_PROBLEMS.md` §0b: does exit 4 mean "the evidence
    is broken" or "something went wrong"? A sentinel that could not run is not a
