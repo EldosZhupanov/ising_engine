@@ -13,7 +13,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 
 - `active`: 16
 - `binding`: 35
-- `closed`: 30
+- `closed`: 31
 - `historical`: 1
 - `proposed`: 2
 - `reference`: 60
@@ -155,6 +155,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `results/rc023/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC023 |
 | `results/rc024/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC024 |
 | `results/rc025/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC025 |
+| `results/rc026/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC026 |
 | `ROADMAP.md` | stage-inventory | A1 | active | 2026-07-05 | 2026-08-26 | false | implementation-status |
 | `SECURITY.md` | engineering-reference | A1 | active | 2026-03-11 | 2026-03-11 | false | engineering |
 | `SKILL.md` | reference | A3 | reference | 2026-03-11 | 2026-03-11 | false | none |

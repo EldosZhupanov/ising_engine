@@ -233,25 +233,40 @@ that is not already solved.
 
 ## Next action — in this order
 
-1. **The mechanism line is closed. Do not open a fifth cycle on it.** RC-025 ran
-   the question the three flat cycles raised: is it the mechanisms, or is it the
-   corpus? Registered answer — **no evidence the corpus explains it**
-   (`results/rc025/RESULT.md`, Spearman p = 0.49 and p = 0.36, mandatory control
-   passed). The RC-023 and RC-024 pairs were re-run unchanged up a weight-
-   diversity ladder from 1/2 to 21 distinct weights at three densities, whose
-   bottom rung reproduced G-Set's immateriality. Breaking the `E = 2V − |E|`
-   bijection changes nothing. §1's proof that G-Set cannot separate the guide
-   axis still stands — it is simply not the reason these mechanisms do not pay.
+1. **The architecture line is closed. Do not open a sixth cycle on it.** Its
+   three natural questions have all been asked and answered:
 
-   RC-022's census was right that the field occupies eight architecture cells to
-   our one. **Occupying a cell is not the same as benefiting from it.** Four
-   cycles across two corpora say the mechanism inventory is not where this
-   project is short, and the next question must be one that neither the
-   mechanism nor the corpus explains. Two candidates, neither yet designed:
-   **(a)** the budget — every cycle ran 50 sweeps; a mechanism that needs a long
-   run to pay would be invisible to all four; **(b)** the comparison itself —
-   every cycle scored a solo operator, while the field's tabu and path relinking
-   live inside a surrounding search that our schedules do not provide.
+   | question | cycles | answer |
+   |---|---|---|
+   | is the mechanism inventory the gap? | RC-003, RC-023, RC-024 | effects an order of magnitude under the 1 % floor |
+   | is G-Set's degeneracy the reason? | RC-025 | no — a weight-diversity ladder is flat |
+   | were we measuring it outside the search it belongs in? | RC-026 | **partly yes** — and it changes nothing that matters |
+
+   RC-026 is the only one that found a signal: embedding path relinking k times
+   inside one search, at an unchanged 50-sweep budget, gives Spearman ρ = +0.312,
+   **p = 1.0e-4**, positive on 26 of 30 instances. It is also `gain ∝ k^0.18`
+   against a per-round cost of `d²/2` evaluations — 25× the rounds buys 1.77× the
+   gain, and 1 % would need of order 3.6e5 rounds. **The direction that helps is
+   the direction that cannot be afforded.** That is a cleaner ending than five
+   nulls, and it is the ending.
+
+   Everything is recorded: `results/rc026/RESULT.md`, `OPEN_PROBLEMS.md` §0h.
+
+2. **The one asset this line produced is the never-worse invariant.** 478 wins,
+   **0 losses** in 630 paired trials across two corpora, three preregistrations,
+   nine seeds and five embedding depths. Whatever comes next, that property — a
+   mechanism that cannot make things worse, proven before it was run — is the
+   template worth reusing, not the mechanism itself.
+
+3. **The next question must come from outside this line.** The three natural
+   ones are spent. Two directions are now unblocked and neither has been
+   designed: the **budget axis** (every cycle ran 50 sweeps; a mechanism that
+   only pays on a long run is invisible to all six), and **wall-time work**,
+   which `RC021_C10_DIAGNOSIS.md` reopened by measuring what this host can
+   resolve — ~25 % cleanly, ~5 % marginally, 1 % never. Compiler/LLM code
+   optimisation reports 1.25× effects, which is squarely inside that range.
+   Whichever is chosen, preregister before code, as the last four cycles did.
+
 2. **Decide item D** in `OPEN_PROBLEMS.md` §0b: does exit 4 mean "the evidence
    is broken" or "something went wrong"? A sentinel that could not run is not a
    damaged journal. A contract question; it belongs to the maintainer.

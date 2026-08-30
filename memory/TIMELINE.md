@@ -23,6 +23,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-08-30 | RC-024 registered run | Endpoint-guided path relinking won 69 of 90 paired trials and lost none, at +0.105 % mean — reliably positive, an order of magnitude under the 1 % materiality floor | [`RESULT.md`](../results/rc024/RESULT.md) |
 | 2026-08-30 | `8e73ad5` | C10 diagnosed: its 1 % bound sat at the median of its own null, so the recorded failure reason was never established; host resolution measured at ~25 % clean, ~5 % marginal, 1 % unreachable | [`RC021_C10_DIAGNOSIS.md`](../research/RC021_C10_DIAGNOSIS.md) |
 | 2026-08-30 | RC-025 registered run | The corpus is exonerated and the mechanism line closes; the first invocation refused on a family-name error before measuring anything, and the correction was amended in before the run | [`RESULT.md`](../results/rc025/RESULT.md) |
+| 2026-08-30 | RC-026 registered run | The shape of the comparison was hiding a real effect: embedding raises the gain monotonically over five rungs at an unchanged budget, and 478 wins with 0 losses in 630 trials close the never-worse invariant | [`RESULT.md`](../results/rc026/RESULT.md) |
 
 ## Research-cycle chronology
 
@@ -53,6 +54,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | RC-023 | closed/outcome (a) | 2026-08-30 | Hard prohibition and soft decaying memory were indistinguishable at the registered budget | [`prereg`](../research/PREREG_RC023_MEMORY_FORM.md), [`result`](../results/rc023/RESULT.md) |
 | RC-024 | closed/works but immaterial | 2026-08-30 | Path relinking never lost a paired trial and never gained 1 %; with RC-003 and RC-023 it says the mechanism inventory is not where this corpus is short | [`prereg`](../research/PREREG_RC024_PATH_RELINKING.md), [`result`](../results/rc024/RESULT.md) |
 | RC-025 | closed/no evidence | 2026-08-30 | A weight-diversity ladder exonerates the corpus: breaking G-Set's degeneracy does not make either mechanism pay, closing the architecture line after four cycles | [`prereg`](../research/PREREG_RC025_CORPUS_OR_MECHANISM.md), [`amendment`](../research/PREREG_RC025_AMENDMENT_1.md), [`result`](../results/rc025/RESULT.md) |
+| RC-026 | closed/helps immaterially | 2026-08-30 | Embedding path relinking k times inside one search gives the line's only significant trend, p=1.0e-4, at gain ∝ k^0.18 against a quadratic per-round cost; the architecture line is closed | [`prereg`](../research/PREREG_RC026_EMBEDDING_LADDER.md), [`result`](../results/rc026/RESULT.md) |
 
 ## RC-021 implementation ancestry
 

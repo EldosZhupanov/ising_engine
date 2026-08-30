@@ -440,6 +440,49 @@ registered test is null: they cancel. Recorded in the result, read as nothing.
 
 ---
 
+## 0h. RC-026 — embedding helps, and that is why the line closes
+
+`results/rc026/RESULT.md`. Preregistered `4725682`, one registered run of 450
+rows. `path_relink_sweep` applied k ∈ {1,2,5,10,25} times inside one search, at
+blocks of 50/k sweeps so **every rung spends the same 50 Metropolis sweeps** and
+only the interleaving changes.
+
+**Registered outcome: EMBEDDING HELPS, IMMATERIALLY.** Spearman(gain, k)
+ρ = +0.312, **p = 1.0e-4** — the first significant trend in five architecture
+cycles. Both mandatory controls passed: k=1 reproduced RC-024 (+0.0997 % against
++0.105 %) on independent seeds, and the control energy was bit-identical across
+all five rungs, so nothing leaked between arms. The trend is broad — positive on
+26 of 30 instances, and k=25 beats k=1 on 25 of 30, Wilcoxon p = 1.1e-5.
+
+**The signal is real and it is still the wrong shape.** gain ∝ k^0.18: 25× the
+rounds buys 1.77× the gain, and reaching 1 % would take of order 3.6e5 rounds by
+extrapolation. Meanwhile `relink_source` costs **d²/2 delta-energy evaluations
+per source per round** for Hamming distance d, so embedding multiplies an already
+quadratic cost by k. **The direction that helps is the direction that cannot be
+afforded** — a cleaner reason to stop than five nulls would have been. (That cost
+statement is read off the algorithm, not off a clock; no wall-time claim is made
+anywhere, the host being INSTRUMENT-INVALID.)
+
+**The architecture line is closed.** Its three natural questions have all been
+asked: is it the mechanism (RC-003/023/024 — effects an order of magnitude under
+the floor), is it the corpus (RC-025 — no), was it the shape of the comparison
+(RC-026 — partly, and immaterially). **Do not open a sixth cycle on it.**
+
+**The never-worse invariant, after 630 trials.** 478 wins, **0 losses**, across
+two corpora, three preregistrations, nine seeds and five embedding depths.
+`path_relink_sweep` has never once finished worse than its control. Proven on
+synthetic endpoints before any of those runs and enforced by rewinding each
+source to its best prefix — the single most reliable thing this project has
+built, worth about a tenth of a percent.
+
+**Method note that generalises past this line.** RC-026 found a real effect that
+four prior cycles could not see, and it did so by changing **the arrangement of
+the comparison rather than the thing compared**. Before concluding that a
+mechanism does nothing, ask whether it has been given the shape it is used in.
+A null on a solo operator is a null about solo operators.
+
+---
+
 ## 1. Benchmark degeneracy — G-Set cannot test two questions *in principle*
 
 Not a statistical-power problem. An **identifiability** problem: no quantity of
