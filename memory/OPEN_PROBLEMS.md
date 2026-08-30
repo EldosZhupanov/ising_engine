@@ -483,6 +483,48 @@ A null on a solo operator is a null about solo operators.
 
 ---
 
+## 0i. The first wall-time claim this project was entitled to make
+
+`research/PERF_INCREMENTAL_RELINK.md`. RC-026 named its own blocker — relinking
+costs `d²/2` delta evaluations per source per round — and the fix was ordinary:
+flipping one site moves the local field only at its neighbours, so cache the
+deltas and refresh only those. Adjacency came from `SpinState::neighbors`, which
+the cluster operators already use; the read-only core was not touched.
+
+**Measured 5.72×** on the RC-024 harness, three interleaved repetitions against
+the saved pre-change binary. The RC-026 ladder went from over an hour to 375 s.
+
+**The entitlement is the point, not the number.** `RC021_C10_DIAGNOSIS.md` had
+already measured that this host resolves ~25 % cleanly, ~5 % marginally and 1 %
+never, with two identical arms differing by up to 3 % at p90. The within-arm
+spread here was 6.4 % and 2.0 %, consistent with that null, and an 82.5 %
+difference sits two orders of magnitude above it. Every previous performance
+claim in this repository's history was made without knowing that number.
+
+**Bit-identity was proven against artifacts published before the change existed.**
+The frozen RC-024 and RC-026 commands were re-run and both output files matched
+their published SHA-256 exactly — **540 registered rows across two
+preregistrations**. A test written after a change tests what you already
+believed; a hash published before it does not.
+
+**One thing did change, and it looked diagnostic.** `Report.work` fell, because
+the operator genuinely does less work — and `work` reaches `lab.rs`'s
+`fitness(score, work, …)`, so evolved plans in the orchestrate loop can differ.
+Declared rather than hidden. It is a correction: §4 below records that the cost
+model omits its dominant variable, and reporting a count the operator no longer
+performs would have made it wronger. **Check where a "diagnostic" field is
+consumed before calling a change bit-identical.**
+
+**It does not reopen the architecture line.** RC-026's killer was the exponent,
+not the constant: `gain ∝ k^0.18` needs of order 3.6e5 rounds for 1 %, and a 6×
+cheaper round buys none of that back.
+
+The protocol is written down in the record: calibrate the host, keep the previous
+binary and interleave the arms, prove identity against something published
+earlier, and declare whatever moved.
+
+---
+
 ## 1. Benchmark degeneracy — G-Set cannot test two questions *in principle*
 
 Not a statistical-power problem. An **identifiability** problem: no quantity of

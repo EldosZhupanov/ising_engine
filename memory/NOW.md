@@ -258,14 +258,19 @@ that is not already solved.
    mechanism that cannot make things worse, proven before it was run — is the
    template worth reusing, not the mechanism itself.
 
-3. **The next question must come from outside this line.** The three natural
-   ones are spent. Two directions are now unblocked and neither has been
-   designed: the **budget axis** (every cycle ran 50 sweeps; a mechanism that
-   only pays on a long run is invisible to all six), and **wall-time work**,
-   which `RC021_C10_DIAGNOSIS.md` reopened by measuring what this host can
-   resolve — ~25 % cleanly, ~5 % marginally, 1 % never. Compiler/LLM code
-   optimisation reports 1.25× effects, which is squarely inside that range.
-   Whichever is chosen, preregister before code, as the last four cycles did.
+3. **Wall-time work is open and the protocol now exists.**
+   `research/PERF_INCREMENTAL_RELINK.md` made the project's first entitled
+   wall-time claim: incremental relinking, **5.72×** measured against the host's
+   own calibrated null, bit-identity proven by re-running two frozen commands and
+   matching the SHA-256 published in their `RESULT.md` files — 540 registered
+   rows. `CLAUDE.md` §9 now carries the protocol: calibrate the host, keep the
+   previous binary and interleave the arms, prove identity against something
+   published earlier, declare whatever moved.
+
+4. **The remaining undesigned direction is the budget axis.** Every cycle ran 50
+   sweeps; a mechanism that only pays on a long run would be invisible to all
+   six. It is the last cheap question this project has not asked. Preregister
+   before code, as the last four cycles did.
 
 2. **Decide item D** in `OPEN_PROBLEMS.md` §0b: does exit 4 mean "the evidence
    is broken" or "something went wrong"? A sentinel that could not run is not a

@@ -24,6 +24,12 @@ pub struct PathRelinkSweep {
     ranked: Vec<usize>,
     sources: Vec<usize>,
     differing: Vec<usize>,
+    /// `is_differing[site]` mirrors membership of `differing`, so a neighbour
+    /// can be tested in O(1) instead of scanning the list.
+    is_differing: Vec<bool>,
+    /// The current ΔE of each still-differing site for the source replica.
+    /// Valid exactly for the sites in `differing`.
+    cached: Vec<f64>,
     path: Vec<usize>,
     de: Vec<f64>,
     mask: ReplicaMask,
@@ -50,6 +56,8 @@ impl PathRelinkSweep {
             ranked: Vec::new(),
             sources: Vec::new(),
             differing: Vec::new(),
+            is_differing: Vec::new(),
+            cached: Vec::new(),
             path: Vec::new(),
             de: Vec::new(),
             mask: ReplicaMask::default(),
@@ -68,6 +76,8 @@ impl PathRelinkSweep {
         self.ranked = Vec::with_capacity(r);
         self.sources = Vec::with_capacity((r / 4).max(1));
         self.differing = Vec::with_capacity(n);
+        self.is_differing = vec![false; n];
+        self.cached = vec![0.0; n];
         self.path = Vec::with_capacity(n);
         self.de = vec![0.0; r];
         self.mask = ReplicaMask::new(r);
@@ -85,25 +95,31 @@ impl PathRelinkSweep {
     ) -> (usize, usize, usize) {
         self.differing.clear();
         self.path.clear();
+        let mut evaluations = 0usize;
         for site in 0..state.num_vars() {
             if state.spin(site, source) != state.spin(site, target) {
                 self.differing.push(site);
+                self.is_differing[site] = true;
+                state.delta_e_into(site, &mut self.de);
+                evaluations += 1;
+                self.cached[site] = self.de[source];
             }
         }
 
         let mut current = start_energy;
         let mut best = start_energy;
         let mut best_step = 0usize;
-        let mut evaluations = 0usize;
 
         while !self.differing.is_empty() {
             let mut pick_pos = 0usize;
             let mut pick_site = usize::MAX;
             let mut pick_delta = f64::INFINITY;
             for (pos, &site) in self.differing.iter().enumerate() {
-                state.delta_e_into(site, &mut self.de);
-                evaluations += 1;
-                let delta = self.de[source];
+                // Read rather than recompute. Flipping one site changes the
+                // local field only at its neighbours, so every other cached
+                // value is the same f64 a recomputation would return — which is
+                // what keeps this bit-identical to the quadratic version.
+                let delta = self.cached[site];
                 let order = delta
                     .total_cmp(&pick_delta)
                     .then_with(|| site.cmp(&pick_site));
@@ -115,6 +131,7 @@ impl PathRelinkSweep {
             }
 
             self.differing.swap_remove(pick_pos);
+            self.is_differing[pick_site] = false;
             self.path.push(pick_site);
             self.mask.clear();
             self.mask.set(source);
@@ -123,6 +140,17 @@ impl PathRelinkSweep {
             if current < best {
                 best = current;
                 best_step = self.path.len();
+            }
+            // Only the flipped site's neighbours can have moved. `neighbors` is
+            // the topology-only view every cluster operator already uses, so
+            // this needs nothing the Operator API did not already offer.
+            for index in 0..state.neighbors(pick_site).len() {
+                let t = state.neighbors(pick_site)[index] as usize;
+                if self.is_differing[t] {
+                    state.delta_e_into(t, &mut self.de);
+                    evaluations += 1;
+                    self.cached[t] = self.de[source];
+                }
             }
         }
 
@@ -413,6 +441,50 @@ mod tests {
             .count()
     }
 
+    /// A golden record of the relinker's exact behaviour, captured **before**
+    /// the incremental-delta optimisation and unchanged by it. The greedy walk
+    /// is deterministic given the state, so the path, the retained prefix and
+    /// the resulting energies are exact constants — not tolerances. Any change
+    /// to how the deltas are obtained must reproduce them bit for bit.
+    #[test]
+    fn the_greedy_walk_is_bit_identical_to_its_golden_record() {
+        let ir = frustrated_large();
+        let r = 8;
+        let temps: Vec<f64> = (0..r).map(|k| 0.4 + 0.5 * k as f64).collect();
+        let mut state = ReferenceState::new(&ir, r, &vec![0; ir.n]);
+        MetropolisSweep::new().apply(
+            &mut state,
+            &view(r, &temps),
+            &mut ChaCha8Rng::seed_from_u64(4242),
+            Budget { sweeps: 17 },
+        );
+        let mut before = vec![0.0; r];
+        state.energies_into(&mut before);
+
+        let mut op = PathRelinkSweep::new();
+        op.ensure(&state);
+        let (steps, evaluations, best_step) = op.relink_source(&mut state, 7, 0, before[7]);
+        let mut after = vec![0.0; r];
+        state.energies_into(&mut after);
+
+        assert_eq!(steps, 21, "the walk length moved");
+        assert_eq!(best_step, 18, "the retained prefix moved");
+        assert_eq!(
+            op.path,
+            vec![30, 3, 2, 5, 8, 11, 27, 16, 15, 26, 6, 7, 33, 34, 10, 37, 24, 25, 38, 39, 21],
+            "the greedy walk took a different path"
+        );
+        assert_eq!(after[7], -16.0, "the retained energy moved");
+        assert_eq!(state.audit(), 0.0);
+        // The cost is deliberately NOT pinned: it is what the optimisation was
+        // allowed to change, and it did — 231 evaluations became 46 on this
+        // fixture. Everything above is what it was not allowed to change.
+        assert!(
+            evaluations < steps * (steps + 1) / 2,
+            "cost {evaluations} did not fall below the quadratic scan"
+        );
+    }
+
     /// PREREG §5.4 — strict Hamming progress. Every step of a path must remove
     /// exactly one still-differing variable, never revisit a site and never
     /// touch a site the endpoints already agree on. The path is therefore a
@@ -465,8 +537,28 @@ mod tests {
             "the retained prefix and the rewound suffix must account for the \
              whole distance"
         );
-        // Every still-differing variable is re-evaluated at every step.
-        assert_eq!(evaluations, distance_before * (distance_before + 1) / 2);
+        // The cost model, recomputed independently from the path this run
+        // actually took: one evaluation per differing site at setup, then one
+        // per still-differing neighbour of each flipped site. Asserting the
+        // count rather than a bound is what makes a regression to the old
+        // quadratic scan — or a missed neighbour refresh — visible here.
+        let mut remaining: std::collections::HashSet<usize> = expected.iter().copied().collect();
+        let mut refreshes = 0usize;
+        for &site in &op.path {
+            remaining.remove(&site);
+            refreshes += state
+                .neighbors(site)
+                .iter()
+                .filter(|&&t| remaining.contains(&(t as usize)))
+                .count();
+        }
+        assert_eq!(evaluations, distance_before + refreshes);
+        assert!(
+            evaluations < distance_before * (distance_before + 1) / 2,
+            "the incremental walk must cost less than the quadratic scan it replaced: \
+             {evaluations} against {}",
+            distance_before * (distance_before + 1) / 2
+        );
 
         state.energies_into(&mut energies);
         assert_eq!(energies[target], target_before, "the target was modified");

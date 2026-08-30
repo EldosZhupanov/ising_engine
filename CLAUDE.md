@@ -241,6 +241,11 @@ investigates flagged theories, routes ideation to a live Ollama/Qwen).
   report the effect against that host's measured null. Do **not** pass `--pin` on
   this host: pinning leaves the null near zero while nearly doubling a known
   injected effect, so it looks safe and is not.
+- **Prove bit-identity against something published before the change.** Re-run a
+  frozen experiment command and require its output file to match the SHA-256
+  already recorded in its `RESULT.md`. A test written after a change tests what
+  you already believed. Worked example, including the field that looked
+  diagnostic and was not: `research/PERF_INCREMENTAL_RELINK.md`.
 
 **Reviews:** `/code-review` for the branch; `/code-review ultra` for the
 multi-agent cloud review (user-triggered, billed — cannot be launched
