@@ -12,7 +12,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 ## Summary
 
 - `active`: 16
-- `binding`: 33
+- `binding`: 34
 - `closed`: 29
 - `historical`: 1
 - `proposed`: 2
@@ -122,6 +122,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `research/PREREG_RC023_MEMORY_FORM.md` | preregistration | A1 | binding | 2026-08-30 | 2026-08-30 | true | RC023 |
 | `research/PREREG_RC024_PATH_RELINKING.md` | preregistration | A1 | binding | 2026-08-30 | 2026-08-30 | true | RC024 |
 | `research/PREREG_RC025_CORPUS_OR_MECHANISM.md` | preregistration | A1 | binding | 2026-08-30 | 2026-08-30 | true | RC025 |
+| `research/PREREG_RC025_AMENDMENT_1.md` | preregistration | A1 | binding | 2026-08-30 | 2026-08-30 | true | RC025 |
 | `research/RC005_COST_MODEL_BLINDNESS.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC005 |
 | `research/RC006_GRADIENT_LEDGER.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC006 |
 | `research/RC007_OPERATOR_COMMUTATIVITY.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC007 |

@@ -32,21 +32,24 @@ struct Family {
     weights: usize,
 }
 
+/// Names carry the `_100` size suffix per **Amendment 1**: `pm1s`, `pm1d` and
+/// `g05` each exist at more than one size in this collection, so a bare prefix
+/// does not denote one family and would mix two problem sizes into one rung.
 const PRIMARY: [Family; 9] = [
     Family {
-        prefix: "pm1s",
+        prefix: "pm1s_100",
         ladder: "d10",
         rung: 1,
         weights: 2,
     },
     Family {
-        prefix: "pw01",
+        prefix: "pw01_100",
         ladder: "d10",
         rung: 2,
         weights: 10,
     },
     Family {
-        prefix: "w01",
+        prefix: "w01_100",
         ladder: "d10",
         rung: 3,
         weights: 21,
@@ -58,31 +61,31 @@ const PRIMARY: [Family; 9] = [
         weights: 1,
     },
     Family {
-        prefix: "pw05",
+        prefix: "pw05_100",
         ladder: "d50",
         rung: 2,
         weights: 10,
     },
     Family {
-        prefix: "w05",
+        prefix: "w05_100",
         ladder: "d50",
         rung: 3,
         weights: 21,
     },
     Family {
-        prefix: "pm1d",
+        prefix: "pm1d_100",
         ladder: "d90",
         rung: 1,
         weights: 2,
     },
     Family {
-        prefix: "pw09",
+        prefix: "pw09_100",
         ladder: "d90",
         rung: 2,
         weights: 10,
     },
     Family {
-        prefix: "w09",
+        prefix: "w09_100",
         ladder: "d90",
         rung: 3,
         weights: 21,
@@ -376,13 +379,17 @@ mod tests {
     /// move ten instances one step up the ladder.
     #[test]
     fn family_matching_does_not_leak_across_rungs() {
-        assert!(in_family("w01.1.sparse", "w01"));
-        assert!(!in_family("pw01.1.sparse", "w01"));
-        assert!(in_family("pw01.1.sparse", "pw01"));
-        assert!(!in_family("pw05.1.sparse", "pw01"));
-        assert!(in_family("g05_100.0.sparse", "g05_100"));
-        assert!(!in_family("g05_60.0.sparse", "g05_100"));
-        assert!(!in_family("w01x.1.sparse", "w01"));
+        assert!(in_family("w01_100.1", "w01_100"));
+        assert!(!in_family("pw01_100.1", "w01_100"));
+        assert!(in_family("pw01_100.1", "pw01_100"));
+        assert!(!in_family("pw05_100.1", "pw01_100"));
+        // Amendment 1: the size suffix is load-bearing. A bare family name
+        // would draw two problem sizes into one rung and still yield ten files.
+        assert!(in_family("pm1s_100.0", "pm1s_100"));
+        assert!(!in_family("pm1s_80.0", "pm1s_100"));
+        assert!(!in_family("g05_60.0", "g05_100"));
+        assert!(!in_family("g05_80.0", "g05_100"));
+        assert!(!in_family("w01_1000.1", "w01_100"));
     }
 
     /// The ladder registered in PREREG §2: nine families, three ladders of three
@@ -406,6 +413,46 @@ mod tests {
             // E = 2V - |E| holds only at one or two distinct weights.
             assert!(rungs[0].weights <= 2, "{ladder} rung 1 is not degenerate");
             assert!(rungs[1].weights > 2, "{ladder} rung 2 is still degenerate");
+        }
+    }
+
+    /// Amendment 1 was found by the harness refusing at run time, which is one
+    /// run too late to be comfortable. Every registered family name is resolved
+    /// against the corpus here, so a wrong name, a family that has lost files,
+    /// or a rung whose weight diversity has drifted fails `cargo test` instead.
+    #[test]
+    fn every_registered_family_resolves_against_the_corpus() {
+        let dir = Path::new(INSTANCE_DIR);
+        if !dir.is_dir() {
+            // Run from outside the repository root; there is nothing to check.
+            return;
+        }
+        let mut names: Vec<String> = std::fs::read_dir(dir)
+            .expect("corpus is readable")
+            .filter_map(|e| e.ok())
+            .filter_map(|e| e.file_name().into_string().ok())
+            .collect();
+        names.sort();
+        for family in &PRIMARY {
+            let matched: Vec<&String> = names
+                .iter()
+                .filter(|n| in_family(n, family.prefix))
+                .collect();
+            assert_eq!(
+                matched.len(),
+                FILES_PER_FAMILY,
+                "{} resolved to {} files",
+                family.prefix,
+                matched.len()
+            );
+            for name in matched {
+                let loaded = load(&dir.join(name), family.weights)
+                    .unwrap_or_else(|e| panic!("{}/{name}: {e}", dir.display()));
+                assert_eq!(
+                    loaded.ir.n, 100,
+                    "{name} is not the n=100 instance PREREG §2 registered"
+                );
+            }
         }
     }
 
