@@ -151,8 +151,12 @@ across **at least eight cells** of RC-004's seven-axis space, against one for
 our eighteen operators. **No family occupies our cell**, and three mechanisms
 the corpus uses heavily are absent from our operator library entirely:
 
-- **memory beyond the configuration** (tabu recency/frequency) — **7 of 20
-  families**, and we have none; verified by search over `src/engine_v2`;
+- **memory beyond the configuration** — 7 of 20 families, all tabu-family. We
+  have **one**, in a different form: `history_field`, a metadynamics soft
+  decaying penalty, which is among our **top four** operators by mean rank. The
+  first version of RC-022 said we had none; that was wrong and the correction is
+  §0 of the record. The gap is not the axis but the **form**: no hard
+  prohibition, no recency list, no aspiration criterion anywhere;
 - **synthesized moves** (crossover, path-relinking) — 9 of 20; RC-003 touched
   this axis once, for +0.06 %;
 - continuous domain with gradient moves — 1 family.
@@ -166,6 +170,13 @@ Z₂ theorem, which leaves **memory as the surviving Ax2 route** —
 This does **not** say an empty cell holds a better algorithm, that memory helps
 our instances, or that any of these beats `UltimateSolver`. It is a map of what
 exists, not a measurement of what wins.
+
+**The question it produced, which is the next piece of work:** does the *form* of
+memory matter — can hard prohibition with an aspiration criterion do something a
+soft decaying bias cannot? Both fit the existing Operator API unchanged
+(`apply(&mut self, …)`, one instance per plan, determinism already proven by
+`history_field`), so the test is one new operator against one existing one on
+the same substrate at identical seeds.
 
 ## Next action — in this order
 

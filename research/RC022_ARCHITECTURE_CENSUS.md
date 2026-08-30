@@ -14,6 +14,48 @@ modified by this record.
 
 ---
 
+## 0. Correction, 2026-08-30, same day
+
+**The first version of this record was wrong on its headline claim, and the
+error is left visible here rather than rewritten away.**
+
+It said, of memory beyond the configuration: *"7 of 20 families — **none** for
+us"*, and built on that: *"the most-used mechanism in the corpus is the one we
+have zero of."*
+
+**We have it.** `src/engine_v2/operators/history_field.rs` is, in its own first
+line, "a **metadynamics-style history bias**": a per-site, per-replica penalty
+that grows by 1.0 each time a site is flipped and decays by 0.98 every sweep,
+added to ΔE at acceptance. The buffer is allocated once and is never cleared,
+and the `Runtime` instantiates each operator **once per plan**
+(`runtime.rs:252`, `if !ops.contains_key`), so the memory persists for the whole
+run. It is state that is not the configuration, carrying where the search has
+been — the definition this record used for the axis.
+
+It is also not marginal: `RESEARCH_HISTORY.md` records `history_field` among the
+**top four of the eighteen** by mean rank over ~75 instances (0.000–0.012, with
+a cliff to the fifth at 0.369).
+
+**How the error happened.** The claim was checked by searching `src/engine_v2`
+for `tabu`, `recency`, `aspiration` and forbidden-move state. All four are
+absent — and all four are *Glover's vocabulary*. `history_field` implements the
+same axis from the physics tradition, under physics' name, and the search could
+not see it. **I searched for a spelling and reported it as an absence.**
+
+`move_synthesis` is a second, weaker case: it accumulates observations over a
+period and rebuilds a move repertoire from them (`sweeps_seen`, `moves`
+recomputed each `period`), so its memory resets rather than running. RC-004
+already noted it leaves the cell on **M**; it leaves on **Σ** as well.
+
+**What survives unchanged.** The eight-cell spread of MQLib; that no family
+occupies our cell; the synthesized-moves, continuous-gradient and
+marginal-probabilistic gaps; and §8.A's verdict that the taxonomy discriminates.
+
+**What replaces the headline** is stated in §4.4 below, and it is a better
+finding than the wrong one.
+
+---
+
 ## 1. The question
 
 RC-004 concluded that **all eighteen of our operators occupy one cell**,
@@ -86,25 +128,48 @@ means the human corpus went elsewhere.
 
 | mechanism | families | our operator library |
 |---|---|---|
-| **Memory beyond the configuration** (tabu: recency, frequency, aspiration) | **7 of 20** | **none** — verified by search over `src/engine_v2`: no `tabu`, `recency`, `aspiration` or forbidden-move state in any operator |
+| **Memory beyond the configuration** | **7 of 20**, all tabu-family: hard prohibition, recency **and** frequency, aspiration | **one, in a different form** — `history_field`, a metadynamics soft decaying penalty; plus `move_synthesis`'s periodic observation window. No hard prohibition, no aspiration criterion, no recency list anywhere |
 | **Synthesized moves** (crossover, path-relinking, recombination) | **9 of 20** | RC-003's runtime synthesizer touched this axis once, for **+0.06 %** |
 | **Continuous domain with gradient moves** | 1 (`burer2002`) | none |
 | **Marginal/probabilistic state with resampling** | 2 (`deSousa2013`, `pardalos2008`) | none — and `RELATIONAL_PRIMITIVE.md` proves per-variable marginals are **vacuous** on MaxCut by Z₂ symmetry, so this cell is *closed to us by theorem*, not merely unoccupied |
 | **Partial (incomplete) configurations** during construction | 2 (`merz2002`, `festa2002`), plus MQLib's shared `QUBOPartialSolution`/`MaxCutPartialSolution` infrastructure | none — every operator acts on a complete assignment |
 
-**4.4 The most-used mechanism in the corpus is the one we have zero of.**
-Tabu memory appears in seven of twenty families and is the backbone of the
-best-performing entries in the accompanying paper. In `AXIOMS_OF_OPTIMIZATION.md`
-terms it is an **Ax2 attack**: the object the algorithm mutates stops being only
-a candidate solution and becomes *a solution plus a record of where the search
-has been*. §5 of that document names Ax2 as the attackable axiom, and
-`RELATIONAL_PRIMITIVE.md` closes the marginal route to it. **Memory is the Ax2
-route that remains open.**
+**4.4 The gap is not the axis. It is the form of memory — and the axis is the
+one our own analysis called attackable.**
+
+Both traditions attack the same axiom. In `AXIOMS_OF_OPTIMIZATION.md` terms,
+memory is an **Ax2 attack**: the object the algorithm mutates stops being only a
+candidate solution and becomes *a solution plus a record of where the search has
+been*. §5 of that document names Ax2 as the attackable axiom, and
+`RELATIONAL_PRIMITIVE.md` closes the marginal route to it by Z₂ symmetry.
+**Memory is the Ax2 route that remains open — and we are already standing in
+it.**
+
+We entered it once, from physics: a *soft, continuous, per-site* bias on
+revisiting, which perturbs acceptance and leaves the canonical energy untouched.
+The corpus entered it seven times, from operations research: *hard, discrete,
+list-based* prohibition, with recency **and** frequency memory and an
+**aspiration criterion** that overrides the prohibition when a forbidden move
+would beat the incumbent. Those are not the same mechanism. Soft bias slows a
+return; hard prohibition forbids it and then buys the exception back explicitly.
+
+The evidence that this axis is worth the attention is our own: our single
+memory operator is one of our four best, and the corpus's seven are the backbone
+of the best entries in MQLib's accompanying paper. Neither fact is a
+measurement of hard-versus-soft, and this record does not make one.
 
 A frozen legacy `src/solver/tabu.rs` exists, independent of the operator library
-(CLAUDE.md §1). It is not in the registry, the Evolution Engine cannot select it,
-and no capability passport describes it — so it does not populate the cell for
-any purpose the platform can reach.
+(CLAUDE.md §1). It is not in the registry, the Evolution Engine cannot select
+it, and no capability passport describes it — so hard prohibition is present in
+the repository but unreachable by anything the platform can plan.
+
+**4.5 RC-004's own classification was coarser than this axis.**
+RC-004 placed all eighteen operators at one point and noted `move_synthesis` as
+the only one touching a second axis (**M**). On this record's reading,
+`history_field` leaves the cell on **Σ**, and `move_synthesis` leaves on both.
+RC-004 is immutable and is not edited; the discrepancy is recorded here. It is a
+partial instance of §8.A's third outcome — the taxonomy needed a closer reading
+of our own corpus than it first received.
 
 ## 5. What this licenses, and what it does not
 
@@ -129,7 +194,16 @@ is the first outcome: **cells exist that we do not occupy, and one of them —
 memory-carrying state — is both the corpus's most common mechanism and the
 surviving route to the axiom our own analysis named as attackable.**
 
-The next question is therefore not "which operator is better" but **"what does
-an operator look like whose state is not only the configuration"** — and that is
-a question for `EXTERNAL_PROJECTS_BACKLOG.md` §8.B and §8.C, which were gated on
-this census.
+The next question is therefore **not** "what does an operator with memory look
+like" — we have one, and it is among our best. It is:
+
+> **Does the *form* of the memory matter? Specifically, does hard prohibition
+> with an aspiration criterion do something a soft decaying bias cannot?**
+
+That is a sharp, falsifiable question with a cheap first test, because both
+mechanisms fit the existing Operator API unchanged: `apply(&mut self, …)` gives
+an operator persistent state, the `Runtime` builds it once per plan, and
+`history_field` already proves determinism survives it. The comparison would be
+one new operator against one existing one, on the same substrate, at identical
+seeds — which is exactly what `EXTERNAL_PROJECTS_BACKLOG.md` §8.B and §8.C were
+gated on, and what the platform is built to run.
