@@ -525,6 +525,31 @@ earlier, and declare whatever moved.
 
 ---
 
+## 0j. The degeneracy is not G-Set's alone — it is most of the ecosystem
+
+`research/BENCHMARK_DEGENERACY_AUDIT.md`. §1 below proved G-Set degenerate on two
+axes. `src/bin/benchmark_degeneracy_audit.rs` generalises the proof into a tool
+and applies it to every public MaxCut corpus held here. Zero compute: the
+property is arithmetic about the files.
+
+Over **242 MaxCut instances**: the guide axis is **unidentifiable on 54.5 %**,
+frustration has **no control group on 58.7 %**, 92 are degenerate on both, and
+**only 60 — 25 % — are clean on both**. All 60 live in two Biq Mac families,
+`ising*` and `w*`.
+
+**G-Set is 30/30 on both axes**, and it is the corpus where MaxCut, Ising-machine
+and annealer results are conventionally reported. DIMACS `sg3dl*` is 32/34.
+
+Two things follow. **Operationally:** the 60 clean instances are the whole public
+supply for either question, and any future design touching the guide axis or
+frustration must be built on them. **Generally:** a benchmark can be structurally
+incapable of answering a question, the check costs nothing, and this project ran
+18,570 experiments before making it. The audit keys on **magnitudes, not
+weights** — ±1 is two weights but one magnitude, so the bijection survives a sign
+flip, and that is the case easiest to get wrong.
+
+---
+
 ## 1. Benchmark degeneracy — G-Set cannot test two questions *in principle*
 
 Not a statistical-power problem. An **identifiability** problem: no quantity of

@@ -13,7 +13,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 
 - `active`: 17
 - `binding`: 36
-- `closed`: 32
+- `closed`: 33
 - `historical`: 1
 - `proposed`: 2
 - `reference`: 60
@@ -119,6 +119,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `research/RC003_ARCHITECTURE_AUDIT.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC003 |
 | `research/RC004_ARCHITECTURE_SPACE.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC004 |
 | `research/RC021_C10_DIAGNOSIS.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC021-C10 |
+| `research/BENCHMARK_DEGENERACY_AUDIT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | benchmark-capability |
 | `research/PERF_INCREMENTAL_RELINK.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | wall-time-protocol |
 | `research/RC022_ARCHITECTURE_CENSUS.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC022 |
 | `research/PREREG_RC023_MEMORY_FORM.md` | preregistration | A1 | binding | 2026-08-30 | 2026-08-30 | true | RC023 |

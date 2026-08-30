@@ -25,6 +25,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-08-30 | RC-025 registered run | The corpus is exonerated and the mechanism line closes; the first invocation refused on a family-name error before measuring anything, and the correction was amended in before the run | [`RESULT.md`](../results/rc025/RESULT.md) |
 | 2026-08-30 | RC-026 registered run | The shape of the comparison was hiding a real effect: embedding raises the gain monotonically over five rungs at an unchanged budget, and 478 wins with 0 losses in 630 trials close the never-worse invariant | [`RESULT.md`](../results/rc026/RESULT.md) |
 | 2026-08-30 | wall-time protocol | Incremental relinking measured at 5.72x against the host's own calibrated null, with bit-identity proven by reproducing two artifacts published before the change — the first wall-time claim the project was entitled to make | [`PERF_INCREMENTAL_RELINK.md`](../research/PERF_INCREMENTAL_RELINK.md) |
+| 2026-08-30 | benchmark audit | The guide axis is unidentifiable on 54.5 % of 242 public MaxCut instances and G-Set is 30/30 degenerate on both axes; only 60 instances in the whole ecosystem are clean | [`BENCHMARK_DEGENERACY_AUDIT.md`](../research/BENCHMARK_DEGENERACY_AUDIT.md) |
 
 ## Research-cycle chronology
 
