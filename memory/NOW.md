@@ -173,28 +173,49 @@ exists, not a measurement of what wins.
 
 **The question it produced, which is the next piece of work:** does the *form* of
 memory matter — can hard prohibition with an aspiration criterion do something a
-soft decaying bias cannot? Both fit the existing Operator API unchanged
-(`apply(&mut self, …)`, one instance per plan, determinism already proven by
-`history_field`), so the test is one new operator against one existing one on
-the same substrate at identical seeds.
+soft decaying bias cannot?
+
+**RC-023 answered it: no.** `research/PREREG_RC023_MEMORY_FORM.md` was committed
+(`74e425e`) before any code; `tabu_sweep` was built as `history_field`'s twin
+(`34eab7c`), differing only in the form of the memory, with the shared RNG
+stream pinned by a test so the comparison isolates that one variable. Two-sided
+Wilcoxon over 30 paired G-Set scores: **p = 0.87** as registered, **p = 0.63**
+when the harness's 3-decimal printing is removed as a possible artifact. Mean
+difference −0.0018, median +0.0010 — they disagree in sign. Registered outcome
+(a): the two forms are indistinguishable at this budget on this corpus. Full
+record and its prohibited claims: `results/rc023/RESULT.md`.
+
+The result is worth as much as a win. RC-022 named the *form* of memory as the
+surviving Ax2 route after the Z₂ theorem closed the marginal cell. That route is
+now measured and it is flat — which means the gap between our corpus and MQLib's
+is not the tabu spelling, and the next candidate must come from a different axis
+(synthesized moves, 9 of 20 families, is the largest remaining one).
+
+**The post-hoc observation that must not be promoted without its own
+preregistration:** the sign of the per-instance difference separates perfectly
+by whether the instance carries negative weights — tabu is lower on 6/6 signed
+(±1) instances and 3/24 unweighted ones, Mann–Whitney U = 0. Density is
+excluded (G48/G49/G50 match G11/G12/G13 on topology and m/n and show ~0), but
+the matched control is **saturated** — nine of nineteen operators sit at its
+optimum — so it cannot discriminate and the confound is only partly excluded.
+RC-004 retracted Law 2 for exactly this shape of error. Treat it as a
+hypothesis, and note that its first design obstacle is finding a control corpus
+that is not already solved.
 
 ## Next action — in this order
 
-1. **Close the three untested state-machine rows** listed in
-   `OPEN_PROBLEMS.md` §0b item I. They are the last coverage debt between Step 8
-   and a review that can return PASS.
-2. **One independent read-only review of the complete instrument.** If it
-   returns PASS, commit Step 8 as a single source commit — and only then.
-   Leaving ~3 000 lines uncommitted is currently the largest recoverable risk in
-   the repository.
+1. **Design RC-024 on the axis that is still untested.** Synthesized moves
+   (crossover, path-relinking) is 9 of 20 MQLib families and RC-003 touched it
+   once for +0.06 %. Preregister before writing the operator, as RC-023 did.
+2. **Close the three untested state-machine rows** listed in
+   `OPEN_PROBLEMS.md` §0b item I — the last coverage debt in RC-021 Step 8.
 3. **Decide item D** in `OPEN_PROBLEMS.md` §0b: does exit 4 mean "the evidence is
    broken" or "something went wrong"? A sentinel that could not run is not a
    damaged journal. This is a contract question and belongs to the maintainer.
-4. **Then the census** — `EXTERNAL_PROJECTS_BACKLOG.md` §8.A. It costs no compute
-   and it selects which research program is worth running at all.
 
-RC-021 is an instrument, not a result. Finishing it earns the right to measure;
-it does not measure anything. Item 4 is where evidence starts.
+RC-021 is an instrument, not a result, and it is still unqualified on this host
+(C10). That is why RC-023 makes **no wall-time claim of any kind** — only
+paired quality at identical seeds, which needs no qualified host.
 
 ## Forbidden during this task
 

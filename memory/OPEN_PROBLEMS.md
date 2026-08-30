@@ -261,6 +261,45 @@ made impossible.
 
 ---
 
+## 0d. RC-023 — the form of memory does not matter, and the pretty pattern is not a finding
+
+`results/rc023/RESULT.md`. Preregistered before code (`74e425e`), operator
+`34eab7c`. Two-sided Wilcoxon, 30 paired G-Set instances: p = 0.87 registered,
+p = 0.63 with the print-precision artifact removed. Hard prohibition with an
+aspiration criterion does nothing a soft decaying bias cannot, at this budget on
+this corpus.
+
+Three things this cost us that are worth keeping:
+
+**The harness printed away its own resolution.** `--op-benchmark` prints
+`{norm:.3}`, which manufactured six exact ties out of thirty — and Wilcoxon
+*discards* ties. The registered analysis was therefore run on 24 pairs without
+anyone having decided that. Re-printing at 9 dp (same deterministic runs, only
+the format changed) recovered four of them. The conclusion did not move, so
+nothing was rescued; but a display precision silently became an analysis
+decision. **Check the resolution of the number before ranking it.**
+
+**The twin only isolates one variable if the RNG agrees.** `tabu_sweep` mirrors
+`history_field` including the `let _u: f64 = rng.gen();` on the accept-by-descent
+branch. Three of the four correctness tests died under their mutation
+immediately; the fourth mutation — deleting that draw — **survived**, because
+nothing tested it. Without a test, the comparison would quietly have been
+"different memory *and* different randomness". `the_rng_stream_stays_aligned_with_the_twin`
+now pins it. **In a twin experiment, the shared parts need tests more than the
+differing part does — the differing part is what you are watching.**
+
+**The perfect separation is the shape of our last retraction.** The sign of the
+difference splits 6/6 vs 3/24 on whether the instance has negative weights,
+Mann–Whitney U = 0, p = 0.0001. Density is genuinely excluded — G48/G49/G50
+match G11/G12/G13 on topology *and* m/n and show ~0. But the matched control is
+**saturated**: nine of nineteen operators sit exactly at its optimum, so a null
+difference there is a ceiling, not evidence. Law 2 was retracted for exactly
+this (an empty control plus a confound). Recorded as a hypothesis needing its
+own preregistration, whose first obstacle is a control corpus that is not
+already solved.
+
+---
+
 ## 1. Benchmark degeneracy — G-Set cannot test two questions *in principle*
 
 Not a statistical-power problem. An **identifiability** problem: no quantity of
