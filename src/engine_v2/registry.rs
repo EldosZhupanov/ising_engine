@@ -62,6 +62,7 @@ impl OperatorRegistry {
         reg.register(|| Box::new(ops::EnsembleThermostat::seek()));
         reg.register(|| Box::new(ops::MoveSynthesizer::population()));
         reg.register(|| Box::new(ops::MoveSynthesizer::dynamics()));
+        reg.register(|| Box::new(ops::PathRelinkSweep::new()));
         reg
     }
 
