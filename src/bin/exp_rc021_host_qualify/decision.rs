@@ -13,7 +13,9 @@
 //! comment or output may say the protocol certifies any `p`, establishes a
 //! confidence bound, or gives 95% confidence of anything.
 
-#![allow(dead_code)] // The CLI that drives this arrives in Step 8.
+// Step 8 wired this module to the CLI, so the blanket `allow(dead_code)` that
+// stood here while it was unreachable is gone: over 5 700 lines it would hide
+// genuinely dead code for the rest of the instrument's life.
 
 use crate::controls::{RunStatus, SPREAD_BOUND};
 use crate::journal::{JournalRead, ReadOutcome, Row, Status};
@@ -219,12 +221,21 @@ struct SessionShape {
 /// violation is an incomplete run: the observed measurement rows need only be
 /// an in-order **prefix** of the plan, and the missing tail stays accounted for
 /// by §C8.3's logical `LOST` and §7.2's synthetic unwritten failures.
-fn session_grammar(session: u8, read: &JournalRead) -> Result<SessionShape, String> {
+fn session_grammar(
+    session: u8,
+    read: &JournalRead,
+    identity: &RunIdentity,
+) -> Result<SessionShape, String> {
     let plan = crate::session::plan_session(session).map_err(|e| format!("no frozen plan: {e}"))?;
     let planned = crate::session::MEASUREMENTS_PER_SESSION;
     let Some(metadata) = read.typed_metadata.as_ref() else {
         return Err("the journal has no typed metadata".to_string());
     };
+    // §C10.1: the eight identity values. A journal that is not this run's is
+    // not this run's evidence, whatever it says about itself.
+    if RunIdentity::from_metadata(metadata) != *identity {
+        return Err("journal metadata does not bind to this run".to_string());
+    }
     if metadata.session != crate::journal::MetaSession::Qualification(session) {
         return Err(format!(
             "the journal path is for session {session}, but its metadata names {:?}",
@@ -318,7 +329,22 @@ fn session_grammar(session: u8, read: &JournalRead) -> Result<SessionShape, Stri
 }
 
 /// §5.2 recognition from durable bytes. Never writes, never repairs.
-pub fn classify_session(session: u8, outcome: &ReadOutcome) -> SessionClassification {
+/// `identity` binds the journal to **this** run.
+///
+/// Every other durable input is bound: the control journal by
+/// `RunIdentity::from_metadata`, both markers in `read_controls_started` and
+/// `read_controls_complete`, and a predecessor journal by `metadata_binds` in
+/// the CLI. The session journals — the only ones the verdict is derived from —
+/// were not. `Row::validate` cross-checks each row against *its own file's*
+/// header, so a journal copied from another run, or another host, parses
+/// cleanly, classifies `COMPLETED` with fifteen valid measurements, and counts
+/// toward the ninety. `--verify` re-derives through the same path and confirms
+/// it rather than catching it.
+pub fn classify_session(
+    session: u8,
+    outcome: &ReadOutcome,
+    identity: &RunIdentity,
+) -> SessionClassification {
     let mut c = SessionClassification {
         session,
         state: Some(SessionState::NotStarted),
@@ -345,7 +371,7 @@ pub fn classify_session(session: u8, outcome: &ReadOutcome) -> SessionClassifica
     // §C13.7: the cross-row grammar, against the frozen plan. A coordinate or
     // lifecycle violation is a damaged interior row, and the ordered §8.2 test
     // reaches JOURNAL-INVALID through `MeasurementLedger::any_journal_invalid`.
-    let shape = match session_grammar(session, read) {
+    let shape = match session_grammar(session, read, identity) {
         Ok(s) => s,
         Err(_) => {
             c.journal_invalid = true;
@@ -803,7 +829,7 @@ pub enum IdentityOutcome {
 }
 
 impl RunIdentity {
-    fn from_manifest(m: &crate::manifest::RunManifest) -> RunIdentity {
+    pub fn from_manifest(m: &crate::manifest::RunManifest) -> RunIdentity {
         RunIdentity {
             run_uuid: m.run_uuid.clone(),
             boot_id: m.boot_id.clone(),
@@ -945,7 +971,7 @@ fn tabular_counters(bytes: &[u8], header: &str) -> (u64, u64, u64, u64, u64) {
     }
     let metadata = lines
         .iter()
-        .take_while(|l| l.starts_with("#rc021_meta\t"))
+        .take_while(|l| l.starts_with(crate::controls::META_PREFIX))
         .count() as u64;
     let rest = &lines[metadata as usize..];
     // §C13.4: header_line_count is 1 only for a complete, line-feed-terminated
@@ -956,7 +982,19 @@ fn tabular_counters(bytes: &[u8], header: &str) -> (u64, u64, u64, u64, u64) {
         return (physical, metadata, 0, 0, 0);
     }
     let data: Vec<&str> = rest[1..].to_vec();
-    (physical, metadata, 1, data.len() as u64, data.len() as u64)
+    // §C13.4: `parsed_row_count` is the reader's count, `data_row_count` the
+    // file's. Returning the same number for both made them equal by
+    // construction, so a torn final line was recorded as "parsed" beside a
+    // `status_counts` of all zeros — a self-contradiction in the one artifact
+    // that exists to be audited. A line the writer never terminated was never
+    // parsed by anybody.
+    let terminated = bytes.last() == Some(&b'\n');
+    let parsed = if terminated {
+        data.len() as u64
+    } else {
+        data.len().saturating_sub(1) as u64
+    };
+    (physical, metadata, 1, data.len() as u64, parsed)
 }
 
 fn control_header() -> String {
@@ -2301,7 +2339,7 @@ pub enum FinalizeOutcome {
     ArtifactWithoutClosure,
     /// §C10.1 Branch B: the identity cannot be asserted, so nothing is
     /// reserved and nothing is written.
-    Unreconstructible,
+    Unreconstructible { why: String },
     /// §C13.6 and §C14.1: the run never began — no `controls_started.json`, no
     /// `run_invalid.json` and no session journal — so **no closure path is
     /// reserved**. `REFUSED-BEFORE-MEASUREMENT`, exit 2, correctable.
@@ -2327,7 +2365,7 @@ impl FinalizeOutcome {
             FinalizeOutcome::AlreadyComplete => "AlreadyComplete",
             FinalizeOutcome::EmptyOrPartialClosure => "EmptyOrPartialClosure",
             FinalizeOutcome::ArtifactWithoutClosure => "ArtifactWithoutClosure",
-            FinalizeOutcome::Unreconstructible => "Unreconstructible",
+            FinalizeOutcome::Unreconstructible { .. } => "Unreconstructible",
             FinalizeOutcome::RefusedBeforeMeasurement => "RefusedBeforeMeasurement",
             FinalizeOutcome::DerivedClosureInvalid => "DerivedClosureInvalid",
             FinalizeOutcome::RunIdMismatch => "RunIdMismatch",
@@ -2342,6 +2380,9 @@ impl FinalizeOutcome {
         match self {
             FinalizeOutcome::Wrote { status } => format!("Wrote: {}", status.as_str()),
             FinalizeOutcome::DurabilityFailed { at } => format!("DurabilityFailed at {at}"),
+            // §C10.1 Branch B names *why* the identity could not be rebuilt.
+            // Discarding it left exit 4 with no account of what was damaged.
+            FinalizeOutcome::Unreconstructible { why } => format!("Unreconstructible: {why}"),
             other => other.variant_name().to_string(),
         }
     }
@@ -2357,7 +2398,7 @@ impl FinalizeOutcome {
             FinalizeOutcome::AlreadyComplete => RunStatus::RefusedBeforeMeasurement,
             FinalizeOutcome::EmptyOrPartialClosure => RunStatus::JournalInvalid,
             FinalizeOutcome::ArtifactWithoutClosure => RunStatus::JournalInvalid,
-            FinalizeOutcome::Unreconstructible => RunStatus::JournalInvalid,
+            FinalizeOutcome::Unreconstructible { .. } => RunStatus::JournalInvalid,
             // §8's own code, never an invented literal.
             FinalizeOutcome::RefusedBeforeMeasurement => RunStatus::RefusedBeforeMeasurement,
             FinalizeOutcome::DerivedClosureInvalid => RunStatus::JournalInvalid,
@@ -2496,7 +2537,7 @@ fn gather_terminal_evidence(
     MeasurementLedger,
     TerminalEvidence,
 ) {
-    let ledger = read_ledger(dir);
+    let ledger = read_ledger(dir, identity);
     let (control_records, controls) = read_control_evidence(dir, identity);
     let started = read_controls_started(dir, identity);
     let complete = read_controls_complete(dir, identity, &controls);
@@ -2538,11 +2579,11 @@ fn run_began(dir: &Path) -> bool {
 }
 
 /// Read and classify all six session journals.
-pub fn read_ledger(dir: &Path) -> MeasurementLedger {
+pub fn read_ledger(dir: &Path, identity: &RunIdentity) -> MeasurementLedger {
     let mut sessions = Vec::with_capacity(crate::session::SESSIONS as usize);
     for s in 1..=crate::session::SESSIONS {
         match crate::journal::read_journal(&dir.join(session_journal_name(s))) {
-            Ok(outcome) => sessions.push(classify_session(s, &outcome)),
+            Ok(outcome) => sessions.push(classify_session(s, &outcome, identity)),
             Err(_) => sessions.push(SessionClassification {
                 session: s,
                 state: None,
@@ -2586,10 +2627,13 @@ pub fn artifacts_consistent(dir: &Path, ledger: &MeasurementLedger, status: RunS
         if bytes != render_observations(ledger).as_bytes() {
             return false;
         }
-    } else if obs.exists() {
+    } else if path_present(&obs) {
         return false;
     }
-    dir.join(RESULTS_FILE).exists()
+    // `path_present`, not `.exists()`: the module's doctrine is that an
+    // unreadable path is not an absent one, and `.exists()` maps EACCES to
+    // `false` — blessing a closure whose artifact state was never observed.
+    path_present(&dir.join(RESULTS_FILE))
 }
 
 /// §C13.9 — the frozen artifact write order.
@@ -2654,7 +2698,9 @@ fn finalize_with_io(dir: &Path, run_id: &str, io: &mut dyn FinalizeIo) -> Finali
             manifest_damaged,
         } => (identity, source, manifest_damaged),
         // §C13.9: Branch B exits **without reserving the closure path**.
-        IdentityOutcome::Unreconstructible(_) => return FinalizeOutcome::Unreconstructible,
+        IdentityOutcome::Unreconstructible(why) => {
+            return FinalizeOutcome::Unreconstructible { why }
+        }
     };
     // §C13.6: `R` must name this run. Last of the read-only preconditions and
     // still before the reservation, so a mistyped argument writes nothing.
@@ -2967,7 +3013,11 @@ pub fn verify(dir: &Path) -> VerifyOutcome {
     // proceed against a run whose identity cannot be established.
     let identity = match establish_identity(dir) {
         IdentityOutcome::Established { identity, .. } => identity,
-        IdentityOutcome::Unreconstructible(_) => return VerifyOutcome::DamagedManifest,
+        IdentityOutcome::Unreconstructible(why) => {
+            return VerifyOutcome::Mismatch {
+                what: format!("identity is unreconstructible: {why}"),
+            }
+        }
     };
     if closure.identity_source == IdentitySource::Manifest
         && crate::manifest::read_manifest(&dir.join("run.json")).is_err()
@@ -3094,6 +3144,12 @@ mod tests {
     /// Every fixture manifest and every fixture journal header carries this
     /// run id, so it is the one `--run-id R` a fixture can legally present.
     const TEST_RUN_ID: &str = "00000000000000000000000000000000";
+
+    /// The identity every fixture in this module writes into its manifest and
+    /// its journal headers.
+    fn fixture_identity(dir: &Path) -> RunIdentity {
+        RunIdentity::from_manifest(&manifest(dir))
+    }
 
     /// §C17: a unique directory from the process id, an atomic counter and the
     /// test name, with a cleanup guard. Any other scheme reintroduces
@@ -3341,7 +3397,7 @@ mod tests {
         for (i, sp) in spreads_per_session.iter().enumerate() {
             write_session(d.path(), i as u8 + 1, sp, completed);
         }
-        read_ledger(d.path())
+        read_ledger(d.path(), &fixture_identity(d.path()))
     }
 
     /// §7.2 rule 2 at each boundary, and the fixed denominator.
@@ -3459,7 +3515,7 @@ mod tests {
 
         // NOT STARTED — no journal file at all.
         let d = TempDir::new("notstarted");
-        let c = classify_session(1, &ReadOutcome::Missing);
+        let c = classify_session(1, &ReadOutcome::Missing, &fixture_identity(d.path()));
         assert_eq!(c.state, Some(SessionState::NotStarted));
         assert_eq!(c.unwritten, crate::session::MEASUREMENTS_PER_SESSION);
         assert_eq!(c.failures(), crate::session::MEASUREMENTS_PER_SESSION);
@@ -3468,7 +3524,7 @@ mod tests {
         // COMPLETED — fifteen measurements and a close row.
         let d = TempDir::new("completed");
         write_session(d.path(), 1, &within, true);
-        let c = &read_ledger(d.path()).sessions[0];
+        let c = &read_ledger(d.path(), &fixture_identity(d.path())).sessions[0];
         assert_eq!(c.state, Some(SessionState::Completed));
         assert_eq!(c.unwritten, 0);
         assert_eq!(c.failures(), 0);
@@ -3477,7 +3533,7 @@ mod tests {
         // it ABORTED, never NOT STARTED.
         let d = TempDir::new("aborted");
         write_session(d.path(), 1, &within[..3], false);
-        let c = &read_ledger(d.path()).sessions[0];
+        let c = &read_ledger(d.path(), &fixture_identity(d.path())).sessions[0];
         assert_eq!(c.state, Some(SessionState::Aborted));
         assert_eq!(c.unwritten, 12);
         assert_eq!(c.failures(), 12);
@@ -3491,7 +3547,7 @@ mod tests {
         let at = bytes.len() / 2;
         bytes[at] = b'\x00';
         std::fs::write(&p, &bytes).unwrap();
-        let c = &read_ledger(d.path()).sessions[0];
+        let c = &read_ledger(d.path(), &fixture_identity(d.path())).sessions[0];
         assert!(c.journal_invalid);
         assert_eq!(c.state, None);
 
@@ -3533,7 +3589,7 @@ mod tests {
                 .unwrap();
         }
         j.append(&c.session_close(1, 20, true, 0.1)).unwrap();
-        let s = &read_ledger(d.path()).sessions[0];
+        let s = &read_ledger(d.path(), &fixture_identity(d.path())).sessions[0];
         assert_eq!(s.physical_lost, 1);
         assert_eq!(s.failures(), 1);
         assert_eq!(s.state, Some(SessionState::Completed));
@@ -3546,7 +3602,7 @@ mod tests {
         let mut bytes = before.clone();
         bytes.extend_from_slice(b"rc021/1\ttruncated");
         std::fs::write(&path, &bytes).unwrap();
-        let s = &read_ledger(d.path()).sessions[0];
+        let s = &read_ledger(d.path(), &fixture_identity(d.path())).sessions[0];
         assert_eq!(s.logical_lost, 1);
         assert_eq!(s.failures(), 1, "14 written + 1 logical LOST = 15");
         assert_eq!(s.unwritten, 0);
@@ -3556,7 +3612,7 @@ mod tests {
         write_session(d.path(), 1, &within[..5], false);
         let path = d.path().join(session_journal_name(1));
         let before = std::fs::read(&path).unwrap();
-        let s = &read_ledger(d.path()).sessions[0];
+        let s = &read_ledger(d.path(), &fixture_identity(d.path())).sessions[0];
         assert_eq!(s.unwritten, 10);
         assert_eq!(s.failures(), 10);
         assert_eq!(
@@ -3589,7 +3645,7 @@ mod tests {
         for s in 1..=crate::session::SESSIONS {
             write_session(d.path(), s, &within, true);
         }
-        let clean = read_ledger(d.path());
+        let clean = read_ledger(d.path(), &fixture_identity(d.path()));
         let (status, sci) = classify_terminal(&evidence(clean.clone()));
         assert_eq!(status, RunStatus::HostQualified);
         assert!(sci.is_some());
@@ -3607,7 +3663,7 @@ mod tests {
         for s in 2..=crate::session::SESSIONS {
             write_session(d.path(), s, &within, true);
         }
-        let ext = read_ledger(d.path());
+        let ext = read_ledger(d.path(), &fixture_identity(d.path()));
         assert!(ext.external_cause_before_abort());
         let (status, sci) = classify_terminal(&evidence(ext.clone()));
         assert_eq!(status, RunStatus::InconclusiveUnderpowered);
@@ -3644,7 +3700,7 @@ mod tests {
         j.append(&c.external_cause(1, 21, 0.1, "after the fact"))
             .unwrap();
         drop(j);
-        let s = &read_ledger(d.path()).sessions[0];
+        let s = &read_ledger(d.path(), &fixture_identity(d.path())).sessions[0];
         assert_journal_invalid("a row after the close", s);
     }
 
@@ -4001,7 +4057,7 @@ mod tests {
     fn leave_one_out_is_descriptive_and_its_counters_sum() {
         let d = TempDir::new("loo");
         write_clean_run(d.path());
-        let ledger = read_ledger(d.path());
+        let ledger = read_ledger(d.path(), &fixture_identity(d.path()));
         let loo = leave_one_out(&ledger);
         assert_eq!(loo.omissions.len(), 6);
         assert_eq!(
@@ -4024,7 +4080,7 @@ mod tests {
     fn quantiles_are_null_exactly_when_no_valid_spread_remains() {
         let d = TempDir::new("loonull");
         // Every session NOT STARTED: 90 synthetic failures, no spread at all.
-        let ledger = read_ledger(d.path());
+        let ledger = read_ledger(d.path(), &fixture_identity(d.path()));
         let loo = leave_one_out(&ledger);
         assert_eq!(loo.full_90.valid_spread_count, 0);
         assert_eq!(loo.full_90.median_spread, None);
@@ -4454,7 +4510,7 @@ mod tests {
         assert!(entry.byte_count.unwrap() > 0);
 
         // The intended full bytes are NOT what was hashed.
-        let ledger = read_ledger(d.path());
+        let ledger = read_ledger(d.path(), &fixture_identity(d.path()));
         let intended = crate::host::sha256_hex(render_observations(&ledger).as_bytes());
         assert_ne!(
             entry.sha256, intended,
@@ -4557,7 +4613,16 @@ mod tests {
         let before = snapshot(d.path());
         let mut io = FakeIo::new(FailAt::None);
         let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut io);
-        assert_eq!(out, FinalizeOutcome::Unreconstructible);
+        assert!(
+            matches!(out, FinalizeOutcome::Unreconstructible { .. }),
+            "{out:?}"
+        );
+        // §C10.1 Branch B must say what was damaged, not merely that it was.
+        assert!(
+            out.describe().len() > "Unreconstructible".len(),
+            "the reason must reach the operator: {}",
+            out.describe()
+        );
         assert_eq!(
             out.terminal_exit_code(),
             Some(RunStatus::JournalInvalid.exit_code())
@@ -4979,7 +5044,7 @@ mod tests {
         write_raw_session(d.path(), session, rows, close);
         let outcome =
             crate::journal::read_journal(&d.path().join(session_journal_name(session))).unwrap();
-        classify_session(session, &outcome)
+        classify_session(session, &outcome, &fixture_identity(d.path()))
     }
 
     fn assert_journal_invalid(what: &str, c: &SessionClassification) {
@@ -5066,7 +5131,11 @@ mod tests {
         drop(j);
         assert_journal_invalid(
             "measurement before open",
-            &classify_session(1, &crate::journal::read_journal(&path).unwrap()),
+            &classify_session(
+                1,
+                &crate::journal::read_journal(&path).unwrap(),
+                &fixture_identity(d.path()),
+            ),
         );
 
         // Two SESSION-OPEN rows.
@@ -5077,7 +5146,11 @@ mod tests {
         drop(j);
         assert_journal_invalid(
             "two opens",
-            &classify_session(1, &crate::journal::read_journal(&path).unwrap()),
+            &classify_session(
+                1,
+                &crate::journal::read_journal(&path).unwrap(),
+                &fixture_identity(d.path()),
+            ),
         );
 
         // Two close rows.
@@ -5092,7 +5165,11 @@ mod tests {
         drop(j);
         assert_journal_invalid(
             "two closes",
-            &classify_session(1, &crate::journal::read_journal(&path).unwrap()),
+            &classify_session(
+                1,
+                &crate::journal::read_journal(&path).unwrap(),
+                &fixture_identity(d.path()),
+            ),
         );
 
         // A measurement after the close row.
@@ -5107,7 +5184,11 @@ mod tests {
         drop(j);
         assert_journal_invalid(
             "row after close",
-            &classify_session(1, &crate::journal::read_journal(&path).unwrap()),
+            &classify_session(
+                1,
+                &crate::journal::read_journal(&path).unwrap(),
+                &fixture_identity(d.path()),
+            ),
         );
 
         let early = planned_rows(1).into_iter().take(14).collect::<Vec<_>>();
@@ -5125,7 +5206,11 @@ mod tests {
         drop(j);
         assert_journal_invalid(
             "metadata session does not match the path",
-            &classify_session(1, &crate::journal::read_journal(&path).unwrap()),
+            &classify_session(
+                1,
+                &crate::journal::read_journal(&path).unwrap(),
+                &fixture_identity(d.path()),
+            ),
         );
 
         // EXTERNAL-CAUSE can justify only an abort. A completed close after it
@@ -5142,7 +5227,11 @@ mod tests {
         drop(j);
         assert_journal_invalid(
             "EXTERNAL-CAUSE followed by completed close",
-            &classify_session(1, &crate::journal::read_journal(&path).unwrap()),
+            &classify_session(
+                1,
+                &crate::journal::read_journal(&path).unwrap(),
+                &fixture_identity(d.path()),
+            ),
         );
     }
 
@@ -5152,12 +5241,16 @@ mod tests {
         let path = d.path().join(session_journal_name(1));
         let m = meta(crate::journal::MetaSession::Qualification(1));
         drop(crate::journal::Journal::create(&path, &m).unwrap());
-        let c = classify_session(1, &crate::journal::read_journal(&path).unwrap());
+        let c = classify_session(
+            1,
+            &crate::journal::read_journal(&path).unwrap(),
+            &fixture_identity(d.path()),
+        );
         assert!(!c.journal_invalid);
         assert_eq!(c.state, Some(SessionState::Aborted));
         assert_eq!(c.unwritten, crate::session::MEASUREMENTS_PER_SESSION);
 
-        let missing = classify_session(1, &ReadOutcome::Missing);
+        let missing = classify_session(1, &ReadOutcome::Missing, &fixture_identity(d.path()));
         assert_eq!(missing.state, Some(SessionState::NotStarted));
     }
 
@@ -5202,7 +5295,11 @@ mod tests {
         bytes.truncate(bytes.len() - 20);
         std::fs::write(&path, &bytes).unwrap();
 
-        let c = classify_session(1, &crate::journal::read_journal(&path).unwrap());
+        let c = classify_session(
+            1,
+            &crate::journal::read_journal(&path).unwrap(),
+            &fixture_identity(d.path()),
+        );
         assert!(!c.journal_invalid, "a truncated tail is not a damaged row");
         assert_eq!(c.state, Some(SessionState::Aborted));
         assert_eq!(c.logical_lost, 1);
@@ -5276,7 +5373,7 @@ mod tests {
         std::fs::remove_file(&path).unwrap();
         std::fs::create_dir(&path).unwrap();
 
-        let ledger = read_ledger(d.path());
+        let ledger = read_ledger(d.path(), &fixture_identity(d.path()));
         assert_journal_invalid("session path is not a readable file", &ledger.sessions[0]);
         let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
         assert_eq!(
@@ -5733,7 +5830,10 @@ mod tests {
             panic!("the journal is present");
         };
         assert!(r.logical_lost_from_truncation, "the tail is truncated");
-        assert_journal_invalid("truncated sixteenth", &classify_session(1, &read));
+        assert_journal_invalid(
+            "truncated sixteenth",
+            &classify_session(1, &read, &fixture_identity(d.path())),
+        );
 
         // The run is finalized as a written JOURNAL-INVALID record, not as a
         // closure the reader would reject.
@@ -5748,5 +5848,103 @@ mod tests {
         Closure::parse(&std::fs::read_to_string(d.path().join(CLOSURE_FILE)).unwrap())
             .expect("the closure is canonical");
         assert_eq!(verify(d.path()), VerifyOutcome::Verified);
+    }
+
+    /// A session journal from another run must not count toward the ninety.
+    ///
+    /// `Row::validate` cross-checks each row against **its own file's** header,
+    /// so a journal lifted from a different run — or a different host — parses
+    /// cleanly. Every other durable input was bound to the run identity: the
+    /// control journal, both markers, and a predecessor journal in the CLI. The
+    /// six the verdict is actually derived from were not, so fifteen foreign
+    /// measurements counted, and `--verify` re-derived through the same path
+    /// and confirmed the result instead of catching it.
+    #[test]
+    fn a_session_journal_from_another_run_is_not_this_runs_evidence() {
+        let d = prepared_run("foreign_session");
+        // A complete, internally consistent session 4 belonging to another run.
+        let mut foreign = manifest(d.path());
+        foreign.run_uuid = "7".repeat(32);
+        let path = d.path().join(session_journal_name(4));
+        std::fs::remove_file(&path).unwrap();
+        let meta = crate::journal::Metadata {
+            run_uuid: foreign.run_uuid.clone(),
+            ..meta(crate::journal::MetaSession::Qualification(4))
+        };
+        let ctx = crate::journal::RowContext {
+            run_uuid: foreign.run_uuid.clone(),
+            ..ctx()
+        };
+        let mut j = crate::journal::Journal::create(&path, &meta).unwrap();
+        j.append(&ctx.session_open(4, 10, 0.1)).unwrap();
+        for coord in crate::session::plan_session(4).unwrap() {
+            let mut r = ctx.lost(
+                4,
+                coord.phase,
+                coord.block,
+                Some(coord.measurement_index),
+                1_000,
+                "",
+            );
+            r.status = Status::Ok;
+            r.sentinel_first_ms = Some(2.0);
+            r.sentinel_last_ms = Some(2.02);
+            r.paired_spread = Some(0.01);
+            r.load_avg_start = Some(0.1);
+            r.load_avg_end = Some(0.1);
+            j.append(&r).unwrap();
+        }
+        j.append(&ctx.session_close(4, 20, true, 0.1)).unwrap();
+        drop(j);
+
+        // On its own terms the file is flawless.
+        let read = crate::journal::read_journal(&path).unwrap();
+        let crate::journal::ReadOutcome::Present(r) = &read else {
+            panic!("present");
+        };
+        assert!(matches!(r.verdict, crate::journal::ReadVerdict::Valid));
+
+        // Against this run's identity it is not evidence at all.
+        let c = classify_session(4, &read, &fixture_identity(d.path()));
+        assert!(c.journal_invalid, "a foreign journal must not classify");
+        assert_eq!(c.state, None);
+
+        // And the run therefore cannot be qualified from it.
+        let out = finalize_with_io(d.path(), TEST_RUN_ID, &mut FakeIo::new(FailAt::None));
+        assert_eq!(
+            out,
+            FinalizeOutcome::Wrote {
+                status: RunStatus::JournalInvalid
+            },
+            "fifteen foreign measurements must never reach the ninety"
+        );
+        assert_eq!(verify(d.path()), VerifyOutcome::Verified);
+    }
+
+    /// §C13.4: `parsed_row_count` is the reader's count, `data_row_count` the
+    /// file's. Returning one number for both made a torn final line count as
+    /// parsed, beside a `status_counts` of all zeros.
+    #[test]
+    fn a_torn_final_line_is_not_counted_as_parsed() {
+        let d = prepared_run("torn_control");
+        let path = d.path().join("control/rc021_control_journal.tsv");
+        let mut bytes = std::fs::read(&path).unwrap();
+        bytes.pop(); // remove the trailing line feed: the last write was torn
+        std::fs::write(&path, &bytes).unwrap();
+        let entry = build_integrity(d.path())
+            .into_iter()
+            .find(|e| e.path == "control/rc021_control_journal.tsv")
+            .unwrap();
+        let data = entry.data_row_count.unwrap();
+        let parsed = entry.parsed_row_count.unwrap();
+        assert_eq!(data, parsed + 1, "the torn line is data but was not parsed");
+        // And the record no longer contradicts itself: an all-or-nothing reader
+        // that produced no statuses must not claim it parsed every row.
+        if let Some(StatusCountsRecord::Control { pass, fail }) = entry.status_counts {
+            assert!(
+                pass + fail <= parsed,
+                "status counts {pass}+{fail} exceed parsed {parsed}"
+            );
+        }
     }
 }

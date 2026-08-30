@@ -743,7 +743,11 @@ fn completed_session_close(
             "session {session_id} metadata does not bind to the manifest"
         )));
     }
-    let classified = decision::classify_session(session_id, &outcome);
+    let classified = decision::classify_session(
+        session_id,
+        &outcome,
+        &decision::RunIdentity::from_manifest(manifest),
+    );
     if classified.journal_invalid {
         return Err(PredecessorFault::JournalInvalid(format!(
             "session {session_id} journal is invalid"

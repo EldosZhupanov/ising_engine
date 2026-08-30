@@ -1530,7 +1530,11 @@ mod tests {
                 .collect::<Vec<_>>(),
             (16..=30).collect::<Vec<_>>()
         );
-        let classified = crate::decision::classify_session(2, &read);
+        let classified = crate::decision::classify_session(
+            2,
+            &read,
+            &crate::decision::RunIdentity::from_manifest(&m),
+        );
         assert_eq!(
             classified.state,
             Some(crate::decision::SessionState::Completed)

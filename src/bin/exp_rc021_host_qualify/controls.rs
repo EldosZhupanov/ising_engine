@@ -236,7 +236,9 @@ pub fn sample_finalize_outcomes() -> Vec<crate::decision::FinalizeOutcome> {
         F::AlreadyComplete,
         F::EmptyOrPartialClosure,
         F::ArtifactWithoutClosure,
-        F::Unreconstructible,
+        F::Unreconstructible {
+            why: "no surviving header".to_string(),
+        },
         F::RefusedBeforeMeasurement,
         F::DerivedClosureInvalid,
         F::RunIdMismatch,
@@ -393,7 +395,9 @@ pub fn representative_terminal_outcomes() -> Vec<TerminalOutcome> {
         TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::AlreadyComplete),
         TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::EmptyOrPartialClosure),
         TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::ArtifactWithoutClosure),
-        TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::Unreconstructible),
+        TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::Unreconstructible {
+            why: "no surviving header".to_string(),
+        }),
         TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::RefusedBeforeMeasurement),
         TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::DerivedClosureInvalid),
         TerminalOutcome::Finalize(crate::decision::FinalizeOutcome::RunIdMismatch),
@@ -736,7 +740,8 @@ pub struct ControlJournalRead {
 }
 
 /// §C9 metadata grammar: `#rc021_meta<TAB>key<TAB>JSON-value<LF>`.
-const META_PREFIX: &str = "#rc021_meta\t";
+/// The frozen metadata-line prefix, spelled once.
+pub const META_PREFIX: &str = "#rc021_meta\t";
 
 /// Read a central control journal from its **bytes**.
 ///
