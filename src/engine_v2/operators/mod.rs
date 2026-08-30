@@ -33,6 +33,7 @@ pub mod population_annealing;
 pub mod random_flip_sweep;
 pub mod replica_exchange;
 pub mod steepest_descent;
+pub mod tabu_sweep;
 
 pub use cluster::{HoudayerClusterMove, IsoenergeticClusterMove};
 pub use ensemble_thermostat::EnsembleThermostat;
@@ -47,3 +48,4 @@ pub use population_annealing::{EliteBroadcast, PopulationResample, RandomRestart
 pub use random_flip_sweep::RandomFlipSweep;
 pub use replica_exchange::ReplicaExchange;
 pub use steepest_descent::SteepestDescent;
+pub use tabu_sweep::TabuSweep;

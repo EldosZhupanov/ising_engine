@@ -51,6 +51,7 @@ impl OperatorRegistry {
         reg.register(|| Box::new(ops::ExtremalOptimization::new()));
         reg.register(|| Box::new(ops::ExtremalMetropolis::new()));
         reg.register(|| Box::new(ops::ReplicaExchange::new()));
+        reg.register(|| Box::new(ops::TabuSweep::new()));
         reg.register(|| Box::new(ops::HoudayerClusterMove::new()));
         reg.register(|| Box::new(ops::IsoenergeticClusterMove::new()));
         reg.register(|| Box::new(ops::PopulationResample::new()));
