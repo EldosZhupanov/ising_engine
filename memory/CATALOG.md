@@ -13,7 +13,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 
 - `active`: 16
 - `binding`: 31
-- `closed`: 25
+- `closed`: 27
 - `historical`: 1
 - `proposed`: 2
 - `reference`: 60
@@ -57,17 +57,17 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `memory/CURRENT_TASK.md` | historical-handoff | A4 | superseded | 2026-08-19 | 2026-08-26 | false | compatibility |
 | `memory/DECISIONS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
 | `memory/INDEX.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
-| `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-08-27 | false | current-task |
+| `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-08-30 | false | current-task |
 | `memory/OBSIDIAN.md` | workspace-guide | A3 | reference | 2026-08-26 | 2026-08-26 | false | navigation |
-| `memory/OPEN_PROBLEMS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
+| `memory/OPEN_PROBLEMS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-30 | false | navigation |
 | `memory/PERFORMANCE.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
 | `memory/RESEARCH.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
 | `memory/ROADMAP.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
-| `memory/TIMELINE.md` | chronology | A1 | active | 2026-08-26 | 2026-08-27 | false | project-chronology |
+| `memory/TIMELINE.md` | chronology | A1 | active | 2026-08-26 | 2026-08-30 | false | project-chronology |
 | `PERF.md` | engineering-reference | A1 | active | 2026-07-05 | 2026-07-06 | false | engineering |
 | `portfolio_design_spec.md` | design-spec | A2 | reference | 2026-03-13 | 2026-03-13 | false | design |
 | `PRODUCT_SPEC.md` | product-spec | A0 | active | 2026-08-22 | 2026-08-26 | false | finished-product |
-| `PROJECT_PLAN.md` | active-plan | A0 | active | 2026-08-22 | 2026-08-26 | false | ordered-gates |
+| `PROJECT_PLAN.md` | active-plan | A0 | active | 2026-08-22 | 2026-08-30 | false | ordered-gates |
 | `README.md` | public-overview | A2 | active | 2026-03-11 | 2026-07-06 | false | public-overview |
 | `research/adversarial_architecture_review.md` | research-reference | A2 | reference | 2026-07-07 | 2026-07-07 | false | research-context |
 | `research/architecture/ADR/ADR-0000-adr-system-and-knowledge-graph.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
@@ -117,7 +117,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `research/RC002_INITIALIZATION_ERASURE.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC002 |
 | `research/RC003_ARCHITECTURE_AUDIT.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC003 |
 | `research/RC004_ARCHITECTURE_SPACE.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC004 |
-| `research/RC022_ARCHITECTURE_CENSUS.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | false | RC022 |
+| `research/RC022_ARCHITECTURE_CENSUS.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC022 |
 | `research/PREREG_RC023_MEMORY_FORM.md` | preregistration | A1 | binding | 2026-08-30 | 2026-08-30 | true | RC023 |
 | `research/RC005_COST_MODEL_BLINDNESS.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC005 |
 | `research/RC006_GRADIENT_LEDGER.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC006 |
@@ -139,6 +139,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `research/RC018_PILOT_ABORT_RECORD.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-19 | true | RC018 |
 | `research/RC019_INSTRUMENT_CONFORMANCE_AUDIT.md` | research-record | A1 | closed | 2026-08-19 | 2026-08-20 | true | RC019 |
 | `research/RC020_PILOT_ABORT_RECORD.md` | research-record | A1 | closed | 2026-08-22 | 2026-08-22 | true | RC020 |
+| `research/RC021_INSTRUMENT_INVALID_RECORD.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC021 |
 | `research/RELATIONAL_PRIMITIVE.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
 | `research/RESEARCH_GAPS.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
 | `research/RESEARCH_HISTORY.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
@@ -146,6 +147,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `research/ROADMAP_AUTONOMOUS_SCIENTIST.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
 | `research/STAGE_7_RESEARCH_PLATFORM.md` | research-reference | A2 | reference | 2026-07-14 | 2026-07-14 | false | research-context |
 | `research/STAGE_8_KNOWLEDGE_OS.md` | research-reference | A2 | reference | 2026-07-14 | 2026-07-14 | false | research-context |
+| `results/rc023/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC023 |
 | `ROADMAP.md` | stage-inventory | A1 | active | 2026-07-05 | 2026-08-26 | false | implementation-status |
 | `SECURITY.md` | engineering-reference | A1 | active | 2026-03-11 | 2026-03-11 | false | engineering |
 | `SKILL.md` | reference | A3 | reference | 2026-03-11 | 2026-03-11 | false | none |

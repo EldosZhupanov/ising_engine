@@ -86,17 +86,24 @@ pass. Repeating a run until a drift guard admits it selects an atypically quiet
 moment and biases the very timing quantity being measured. **The instrument must
 work reliably, not pass once by luck.** Do not lower the `0.09` bound.
 
-### Stage S1b — RC-021 host/instrument successor — **ACTIVE, THE ONLY TASK IN FLIGHT**
+### Stage S1b — RC-021 host/instrument successor — **CLOSED, INSTRUMENT INVALID**
 
 Gate A returned nothing, so S2 cannot fire and S3 is unreachable. The sequence
 does not resume at RC-020; it resumes at a **fresh pre-registered successor**,
 provisionally **RC-021**, whose subject is the *host and the instrument*, not
 marginal cost.
 
-**Protocol status:** pre-registration and both amendments are binding.
-Implementation was separately authorized; its live engineering state belongs
-only in `memory/NOW.md`, not in this durable sequence. No RC-021 qualification
-datum exists, and `experiments/rc021/` does not exist.
+**Protocol status:** pre-registration and both amendments remain binding. The
+instrument was implemented and reviewed, then the one allocated run entered its
+mandatory control phase on 2026-08-30. Eleven controls passed; `C10` failed
+because diagnostic overhead was `0.010802221586322025`, above the frozen `0.01`
+limit. The canonical closure is Class I `INSTRUMENT-INVALID`, exit 3. No
+qualification session began, no paired-spread datum exists, and no Class II
+verdict about the host is licensed. The durable publication is
+`research/RC021_INSTRUMENT_INVALID_RECORD.md`.
+
+RC-021 is terminal and is not retried. Repairing or replacing the wall-time
+instrument requires a fresh pre-registration. Stage S2 did not open.
 
 Its frozen design: primary estimand is the **paired wall-time spread** of one
 deterministic sentinel workload; **6 sessions × 3 phases × 5 pairs = 90**

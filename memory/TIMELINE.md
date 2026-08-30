@@ -14,6 +14,10 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-08-27 | `983497d..d5880e3` | Durable memory integrated into `feat/solver-research-upgrades` after the reviewed Step 6 | [`ADR-0011`](../research/architecture/ADR/ADR-0011-durable-project-memory.md), [`NOW.md`](NOW.md) |
 | 2026-08-27 | `e824b7f` | Integrated durable-memory state independently reviewed PASS; current-task authority returned to RC-021 Step 7 | [`NOW.md`](NOW.md) |
 | 2026-08-27 | `3493ed8` | RC-021 Step 7 decision, reservation-first finalization and read-only verification completed after adversarial review | [`NOW.md`](NOW.md) |
+| 2026-08-28 | `35fb5fa..e9a0450` | RC-021 Step 8 CLI completed; seven review rounds closed every HIGH and MEDIUM finding before execution | [`OPEN_PROBLEMS.md`](OPEN_PROBLEMS.md) |
+| 2026-08-30 | instrument commit `e9a0450` | RC-021 closed Class I `INSTRUMENT-INVALID` after mandatory control C10 failed; no qualification session began | [`RC021_INSTRUMENT_INVALID_RECORD.md`](../research/RC021_INSTRUMENT_INVALID_RECORD.md) |
+| 2026-08-30 | `165543c`, corrected by `d852b19` | RC-022 census found at least eight occupied architecture cells and selected memory form as the first measured gap | [`RC022_ARCHITECTURE_CENSUS.md`](../research/RC022_ARCHITECTURE_CENSUS.md) |
+| 2026-08-30 | `762d1bc` | RC-023 found hard and soft memory forms indistinguishable at the frozen budget; synthesized moves became the next untested axis | [`RESULT.md`](../results/rc023/RESULT.md) |
 
 ## Research-cycle chronology
 
@@ -39,7 +43,9 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | RC-018 | closed/instrument invalid | 2026-08-19 | No scientific datum | [`prereg`](../research/PREREG_RC018_COST_IDENTIFICATION.md), [`abort`](../research/RC018_PILOT_ABORT_RECORD.md) |
 | RC-019 | closed/read-only audit | 2026-08-20 | Instrument-conformance findings through RC-018 | [`audit`](../research/RC019_INSTRUMENT_CONFORMANCE_AUDIT.md) |
 | RC-020 | closed/no verdict | 2026-08-22 | Two attempts, no surviving scientific measurement; named seeds burned/reserved per record | [`prereg`](../research/PREREG_RC020_MARGINAL_WALL_COST.md), [`abort`](../research/RC020_PILOT_ABORT_RECORD.md) |
-| RC-021 | implementation through Step 7 complete and reviewed | 2026-08-23 | Binding host/instrument qualification protocol; decision, finalization and verification implemented; no qualification data | [`prereg`](../research/PREREG_RC021_HOST_INSTRUMENT.md), [`A1`](../research/PREREG_RC021_AMENDMENT_1.md), [`A2`](../research/PREREG_RC021_AMENDMENT_2.md) |
+| RC-021 | closed/instrument invalid | 2026-08-23 | Eleven controls passed; C10 failed; complete Class I closure, no qualification sessions and no scientific verdict | [`prereg`](../research/PREREG_RC021_HOST_INSTRUMENT.md), [`A1`](../research/PREREG_RC021_AMENDMENT_1.md), [`A2`](../research/PREREG_RC021_AMENDMENT_2.md), [`record`](../research/RC021_INSTRUMENT_INVALID_RECORD.md) |
+| RC-022 | closed/architecture census | 2026-08-30 | Twenty human-designed families occupy at least eight RC-004 cells; our corpus occupies one | [`record`](../research/RC022_ARCHITECTURE_CENSUS.md) |
+| RC-023 | closed/outcome (a) | 2026-08-30 | Hard prohibition and soft decaying memory were indistinguishable at the registered budget | [`prereg`](../research/PREREG_RC023_MEMORY_FORM.md), [`result`](../results/rc023/RESULT.md) |
 
 ## RC-021 implementation ancestry
 
@@ -55,6 +61,9 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | `d4eded4` | protocol and gap enforcement |
 | `1b855b7` | controls, final reviewed Step 6 |
 | `3493ed8` | decision, finalize and verify, reviewed Step 7 |
+| `35fb5fa` | public CLI and end-to-end synthetic tests, Step 8 |
+| `ad24013` | bind session journals to run identity |
+| `e9a0450` | final presence-doctrine fix and exit-5 gap record before execution |
 
 ## Update rule
 

@@ -3,7 +3,7 @@ id: memory-now
 kind: live-state
 status: active
 authority_scope: current-task
-updated: 2026-08-28
+updated: 2026-08-30
 immutable: false
 ---
 
@@ -62,12 +62,13 @@ our selector, because no random-subset arm was run.
 
 ## Active task
 
-**RC-021 Step 8 — CLI and end-to-end synthetic tests.**
+**RC-021 closeout — publish the Class I closure and close the final synthetic
+state-machine coverage debt.**
 
-This is the single active task. The five public modes and synthetic or injected
-end-to-end tests are permitted. Running RC-021 is not: no production control,
-no qualification session, and no sentinel on G11 may execute, and
-`experiments/rc021/` must not be created.
+This is the single active task. Only documentation and synthetic or injected
+tests are permitted. The allocated RC-021 run is terminal and may not be
+repeated; its existing `experiments/rc021/` evidence must not be edited,
+deleted, repaired, or supplemented.
 
 ## Working context
 
@@ -78,27 +79,27 @@ no qualification session, and no sentinel on G11 may execute, and
 - RC-021 Step 7 is complete and committed as
   `3493ed8`; its independent review blockers and adversarial follow-up findings
   are closed, and the full source gate set is green.
-- **Step 8 is committed as `35fb5fa`, with `ad24013` on top.** Six independent
-  review rounds have run. The sixth found a HIGH — session journals were never
-  bound to the run identity, so a journal from another run counted toward the
-  ninety and `--verify` would have confirmed it. Every HIGH and MEDIUM across
-  all six rounds is fixed and confirmed by a killed mutation. The full finding
-  set, fixed and deliberately open, is `memory/OPEN_PROBLEMS.md` §0b.
-- **RC-021 has still never been executed** and must not be until a review round
-  returns no HIGH and no MEDIUM. §2 permits no retries and no "repeat in a
-  quieter moment": the run is spent the moment it starts, so it starts only on
-  an instrument no round is still finding defects in, and on a quiet host with
-  nothing else running. A full run is ~65 minutes, of which ~60 is the six
-  mandatory ten-minute idle intervals.
+- **Step 8 is committed as `35fb5fa`, with `ad24013` and `e9a0450` on top.**
+  Seven independent review rounds ran. Every HIGH and MEDIUM was fixed and
+  mutation-verified; the deliberately open findings are recorded in
+  `memory/OPEN_PROBLEMS.md` §0b.
+- **RC-021 executed once on instrument commit `e9a0450` and is terminal.** The
+  mandatory controls ran; eleven passed and `C10` failed because diagnostic
+  overhead was `0.010802221586322025`, above the frozen `0.01` limit. The
+  complete closure is Class I `INSTRUMENT-INVALID`, exit 3. No qualification
+  session began, no paired-spread datum exists, and no Class II host verdict is
+  licensed. The durable publication is
+  `research/RC021_INSTRUMENT_INVALID_RECORD.md`.
 - The durable-memory series is integrated on this branch as commits
   `983497d..d5880e3`.
 - The integrated memory state at `e824b7f` was independently reviewed and
   returned PASS.
-- The working tree contains an unrelated draft change to
-  `research/EXTERNAL_PROJECTS_BACKLOG.md`; preserve it and exclude it from every
-  RC-021 commit.
-- RC-021 has never been executed: no controls, no qualification session, no
-  sentinel on G11, and no measurement data of any kind.
+- `experiments/rc021/` is the existing gitignored terminal evidence directory;
+  its closure and five input artifacts are bound by hashes in the abort record.
+- RC-022 is closed: twenty MQLib families occupy at least eight RC-004 cells.
+- RC-023 is closed with registered outcome (a): hard and soft memory forms were
+  indistinguishable at the frozen budget. Synthesized moves are the next
+  untested architectural axis.
 - Binding RC documents and their paths are immutable.
 - `docs/memory-architecture` is a historical backup reference only. It is not
   the active branch and holds no authority.
@@ -114,15 +115,15 @@ no qualification session, and no sentinel on G11 may execute, and
 
 ## This task is complete only when
 
-1. The five public modes and their exact argument/precondition state machine are
-   wired through the existing private modules.
-2. Every mode exit code is derived from the frozen mode/run-status taxonomy.
-3. Synthetic end-to-end tests cover the legal transitions, refusals, terminal
-   lock, finalization and read-only verification.
-4. No test executes a real control, qualification session, or G11 sentinel.
-5. The applicable `cargo` check, test, build, `clippy`, and `fmt` gates pass.
-6. An independent read-only review of the complete instrument returns PASS.
-7. No `experiments/rc021/` and no RC-021 measurement data exists.
+1. The Class I closure is published as an immutable abort record without a
+   scientific verdict.
+2. The three state-machine coverage gaps in `OPEN_PROBLEMS.md` §0b item I are
+   closed by synthetic tests that fail under mutations of their named branch.
+3. No test executes a real control, qualification session, or G11 sentinel.
+4. The applicable `cargo` check, test, build, `clippy`, `fmt`, memory and diff
+   gates pass.
+5. The existing terminal evidence directory is byte-identical before and after
+   the closeout.
 
 ## When Step 8 is finished — the stopping criterion
 
@@ -204,14 +205,11 @@ that is not already solved.
 
 ## Next action — in this order
 
-1. **Design RC-024 on the axis that is still untested.** Synthesized moves
+1. **Close the three untested state-machine rows** listed in
+   `OPEN_PROBLEMS.md` §0b item I — the last coverage debt in RC-021 Step 8.
+2. **Design RC-024 on the axis that is still untested.** Synthesized moves
    (crossover, path-relinking) is 9 of 20 MQLib families and RC-003 touched it
    once for +0.06 %. Preregister before writing the operator, as RC-023 did.
-2. **Close the three untested state-machine rows** listed in
-   `OPEN_PROBLEMS.md` §0b item I — the last coverage debt in RC-021 Step 8.
-3. **Decide item D** in `OPEN_PROBLEMS.md` §0b: does exit 4 mean "the evidence is
-   broken" or "something went wrong"? A sentinel that could not run is not a
-   damaged journal. This is a contract question and belongs to the maintainer.
 
 RC-021 is an instrument, not a result, and it is still unqualified on this host
 (C10). That is why RC-023 makes **no wall-time claim of any kind** — only
@@ -219,15 +217,13 @@ paired quality at identical seeds, which needs no qualified host.
 
 ## Forbidden during this task
 
-- Running RC-021, any real control, any qualification session, or a sentinel on
-  G11.
-- Creating `experiments/rc021/`.
+- Re-running RC-021, any real control, any qualification session, or a sentinel
+  on G11.
+- Editing, deleting, repairing, or supplementing the existing
+  `experiments/rc021/` terminal evidence.
 - Editing or moving any binding preregistration, amendment, or cycle record.
 - Fixing the non-blocking F1/F2 test-hardening findings "while here".
-- Starting the real six-session execution or writing the instrument-review
-  record before the complete-instrument review returns PASS.
-- Modifying or staging `research/EXTERNAL_PROJECTS_BACKLOG.md` as part of
-  RC-021.
+- Starting any six-session execution under the spent RC-021 protocol.
 - Changing `solver`, `core`, `engine_v2`, or any Cargo dependency.
 - Weakening the durability contract, the terminal evidence lock, or the
   read-only guarantee of `--verify`.
