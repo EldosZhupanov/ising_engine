@@ -245,9 +245,28 @@ that is not already solved.
 2. **Decide item D** in `OPEN_PROBLEMS.md` §0b: does exit 4 mean "the evidence
    is broken" or "something went wrong"? A sentinel that could not run is not a
    damaged journal. A contract question; it belongs to the maintainer.
-3. **C10 remediation is deferred by the user's decision** and is the only route
-   to any wall-time claim. Nothing in RC-022/023/024 needed it, which is why
-   three cycles ran on an unqualified host without a single prohibited claim.
+3. **C10 is diagnosed, and the wall-time block is not where the record said.**
+   `research/RC021_C10_DIAGNOSIS.md`: C10's 1 % bound sits at the *median* of its
+   own null distribution — two identical arms exceed it in 20 of 40 replications
+   — so its verdict carried almost no information about the diagnostics. The
+   outcome (INSTRUMENT-INVALID) stands; the recorded cause does not, and the
+   diagnostic overhead remains **unmeasured** rather than shown to be zero.
+   `src/bin/host_timing_calibration.rs` now measures what this host can resolve
+   **before** a threshold is frozen: **~25 % cleanly, ~5 % marginally, 1 % not at
+   all**, and `--pin` reports a known +25 % injection as +48 %. Consequences are
+   recorded in `CLAUDE.md` §9 and `OPEN_PROBLEMS.md` §0f. A wall-time claim needs
+   a fresh preregistration with a bound at or above 5 % and a mandatory null arm;
+   C10 itself stays frozen exactly as written.
+
+4. **The external-technology review is settled** —
+   `EXTERNAL_PROJECTS_BACKLOG.md` §14. All thirteen August-2026 sources were
+   fetched and verified real. Twelve are "no": they speed up writing code, which
+   has never been the limiting step here. The one that changes anything is the
+   AGENTS.md study, and it was reported to us inverted — the harm is in
+   **auto-generated repository overviews**, not context files as a class, while
+   hand-written instructions are followed and help. Our `INDEX.md` and
+   `.claude/context/` are exactly the harmful category and cost 20–23 % per
+   session. Registered as a question, not a change.
 
 RC-021 is an instrument, not a result, and it is still unqualified on this host
 (C10). That is why RC-023 makes **no wall-time claim of any kind** — only

@@ -343,6 +343,47 @@ of the corpus rather than of tabu memory.
 
 ---
 
+## 0f. C10 — the control that failed for a reason nobody had measured
+
+`research/RC021_C10_DIAGNOSIS.md`. RC-021 closed INSTRUMENT-INVALID on C10:
+"diagnostic overhead 0.0108 exceeds 0.01". Reproducing C10's exact comparison
+outside the instrument, with **both arms identical**, gives a median difference
+of **1.006 %** at C10's own sample size — the control fails a perfect host in
+**20 of 40** replications. The 1.08 % it measured is indistinguishable from its
+own null.
+
+**The outcome stands; the recorded reason does not.** The instrument was invalid.
+But the diagnostics were never shown to cost anything — C10 could not have
+detected it either way. The honest statement is that the overhead is
+**unmeasured**, not that it is zero. The defect sits one level above the code: a
+bound was frozen without asking whether the host could resolve it. Same class as
+every §0b finding — *an instrument asserting something it had not observed* —
+and here the unobserved thing was the control's own null.
+
+**Three lessons worth more than the diagnosis:**
+
+**A threshold is a claim about the instrument, not only about the world.** "1 %"
+sounds conservative and was unachievable from the day it was written. Any future
+preregistration that names a numeric bound must show, before freezing it, that
+the apparatus can resolve it.
+
+**A null arm alone cannot validate a measurement.** `--pin` leaves the null
+sitting at +0.15 % — indistinguishable from the unpinned null, so a null-only
+calibration would have called pinning harmless. The positive control shows it
+reports a known **+25 %** injection as **+48 %**. A tool that has only ever
+measured "no difference" has not been shown able to see one. This is §0d's RNG
+lesson again in a different costume: **the shared machinery needs the test, not
+just the thing under study.**
+
+**Conventional benchmarking advice is a hypothesis about your host.** Pinning to
+a core is standard practice and is wrong here.
+
+Recorded consequence in `CLAUDE.md` §9: the ">1 % measured win" rule is **not
+verifiable on this host**, and `src/bin/host_timing_calibration.rs` now exists so
+the question is asked before a threshold is chosen rather than after it fails.
+
+---
+
 ## 1. Benchmark degeneracy — G-Set cannot test two questions *in principle*
 
 Not a statistical-power problem. An **identifiability** problem: no quantity of

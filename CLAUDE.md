@@ -224,6 +224,16 @@ investigates flagged theories, routes ideation to a live Ollama/Qwen).
 - `tests/test_regression_golden.rs` must pass unchanged.
 - Keep only measured **>1%** wins. Revert regressions immediately. Keep the
   previous release binary for A/B.
+- **Know what your host can resolve before you claim a win.** Measured on
+  2026-08-30 (`research/RC021_C10_DIAGNOSIS.md`), this WSL2 host resolves a
+  paired wall-time difference of ~25 % cleanly, ~5 % marginally, and **1 % not at
+  all** — two *identical* arms differ by up to 3 % at p90. The >1 % rule above is
+  therefore **not verifiable on this machine**: a "1.4 % win" measured here is
+  noise wearing a decimal point. Before any timing claim, run
+  `cargo run --release --bin host_timing_calibration -- --file <instance>` and
+  report the effect against that host's measured null. Do **not** pass `--pin` on
+  this host: pinning leaves the null near zero while nearly doubling a known
+  injected effect, so it looks safe and is not.
 
 **Reviews:** `/code-review` for the branch; `/code-review ultra` for the
 multi-agent cloud review (user-triggered, billed — cannot be launched

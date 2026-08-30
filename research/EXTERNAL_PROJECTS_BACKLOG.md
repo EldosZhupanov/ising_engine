@@ -506,3 +506,101 @@ correct it.
 **Do not remove or reorder any current roadmap priority on the strength of this
 section.** It becomes actionable only through §8.A's result and, if that result
 supports it, a written ADR.
+
+---
+
+# §14. August-2026 agent-infrastructure review — verified, and mostly not for us
+
+A survey of August-2026 agent research was brought to the project on
+**2026-08-30**. Every link in it was fetched and checked before anything here
+was written. **All thirteen sources are real**, which is worth stating because
+it is not the usual outcome for a generated survey. The headline numbers were
+also reported accurately — with one exception, recorded below, which happens to
+be the one item that concerns us directly.
+
+This section exists so the same list is not re-researched. The verdicts are
+against **our** bottleneck, not against the work's quality.
+
+## §14.1 The one item that changes what we do
+
+| Source | Verified | What it actually found |
+|---|---|---|
+| **Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?** — Gloaguen, Mündler, Müller, Raychev, Vechev. <https://arxiv.org/abs/2602.11988> | Submitted **2026-02-12**, revised 2026-06-23 | Not a new paper, and **not the result it was reported as** |
+
+The survey reported that context files "on average reduced task success". The
+paper says something more specific and, for us, nearly the opposite:
+
+- **LLM-generated** context files reduce resolution rate by **0.5 % / 2 %** on
+  SWE-bench Lite and AGENTbench;
+- **developer-written** context files "improve the performance compared to no
+  context files for **all agents but Claude Code**";
+- when all other documentation is removed, generated files **improve
+  performance by 2.7 %** and beat developer-written docs;
+- in every setting, context files add **2.45–3.92 steps** and **20–23 % cost**;
+- "agents generally follow instructions present in the context files";
+- repository overviews do **not** meaningfully reduce the steps an agent takes
+  before reaching relevant code.
+
+So the negative finding is about **auto-generated repository overviews**, not
+about context files as a class. That splits our own documentation cleanly:
+
+- `CLAUDE.md`, `memory/AUTHORITY.md`, `memory/NOW.md`, `OPEN_PROBLEMS.md` are
+  **instructions and evidence records**, hand-written for this repository — the
+  category the paper finds helpful, and the category whose instructions it finds
+  are actually obeyed;
+- `INDEX.md` and `.claude/context/{tree,modules,symbols,git}` are **generated
+  repository overviews** — precisely the category the paper finds unhelpful, and
+  we load them on every session.
+
+**Caveat that must travel with this.** The paper measures *task success rate*.
+Our memory system does not exist to raise a solve rate; it exists so a result
+cannot be fabricated and a refutation cannot be lost. Nothing in this paper
+measures that, so it can neither endorse nor condemn the system as a whole. It
+speaks only to the generated-overview part.
+
+**Registered as a testable question, not as a change:** does dropping the
+generated overviews from session startup remove the 20 % context tax without
+degrading work quality? That is measurable here and belongs in a preregistration
+of its own, because "it felt fine" is not an answer this project accepts.
+
+## §14.2 Verified, real, and genuinely interesting — but not our bottleneck
+
+| Source | Verified | Verdict |
+|---|---|---|
+| **Prime Agent: A Self-Improving RLM Harness** — Karten, Zhang, Thomas et al. (Prime Intellect). <https://arxiv.org/abs/2608.23552>, <https://github.com/PrimeIntellect-ai/prime-agent> | Submitted **2026-08-24**; repo real, **MIT, 19.1k★**; persistent IPython REPL, recursive subagents, agent-to-agent messaging, session recovery. Authors report ARC-AGI-3 RHAE Best@1 **30 % → 95.5 %** (their own configuration, not independently replicated) | **Reference only.** Overlaps `research_platform --service`. Migrating would trade away determinism and the append-only guarantee, both of which are proven here and are the reason our records are admissible. The one idea worth stealing is **session recovery/verification** |
+| **CodeGrep: An RL-Trained Retrieval Agent for LLM Coding Agents** — Chen, Yang, Cao, Lin. <https://arxiv.org/abs/2608.05886> | Submitted **2026-08-06**; 14B GRPO-trained retrieval model; SWE-bench Verified resolve **27.0 % vs 25.8 %** baseline, **−15 % rounds, −19 % tokens**, retrieval precision 0.677 | **No current need.** The idea — do not let the main agent grep the repository — we already implement for free via `INDEX.md`, `.claude/context/` and CLAUDE.md §8's search-before-read order. Training and hosting a 14B retriever to save tokens optimises a resource that is not our constraint. Note the tension with §14.1: the retrieval story and the overview story point opposite ways, and only §14.1 has an experiment behind it |
+| **Agent Gym: Continuous Evaluation and Evolution of LLM Agents Through Human-in-the-Loop Feedback** — Omran, Zimmermann, Cambridge, Kapoor, Dixit. <https://arxiv.org/abs/2608.15591> | Submitted **2026-08-16**; six composable capabilities **Act, Evaluate, Investigate, Correct, Learn, Observe** | **No current need.** We run this loop already and more strictly: `OPEN_PROBLEMS.md` §0b–§0e is failure → lesson → memory, and every lesson here must be paid for with a **killed mutation** before it is written down. The framework would add form, not rigour |
+| **Agentic Code Optimization via Compiler-LLM Cooperation** — Mikek, Vashchilenko, Lu, Xu. <https://arxiv.org/abs/2604.04238> | Submitted **2026-04-05**; multi-agent optimisation across abstraction levels; **speedups up to 1.25×** | **The only strategically valuable item — and it is blocked.** Co-evolving an algorithm with its implementation is what this project is. It is a **wall-time** method, and RC-021 closed Class I `INSTRUMENT-INVALID` on this host. See §14.4: the block is not where we thought it was |
+| **ai-agent-papers** catalogue — <https://github.com/masamasa59/ai-agent-papers> | Real, **1.6k★**, biweekly updates, dedicated self-evolution section | **Watch list only.** A reading list is not a dependency |
+| **North Mini Code** (Cohere Labs) — <https://huggingface.co/blog/CohereLabs/introducing-north-mini-code> | Real; **30B MoE, ~3B active**, Apache-2.0, June 2026 | **No current need.** Ollama already covers the local tier and the local model is not the constraint |
+| **Muse Glimmer 30B** (Meta Superintelligence Lab) — <https://dell.huggingface.co/models/meta-models/Muse-Glimmer-30B> | Real; August 2026, **Apache-2.0**, distilled from Muse Spark for agentic tasks on consumer hardware | **No current need**, same reason |
+| **Code World Model: Coding Agent as World Brain** (Westlake AGI Lab) — <https://huggingface.co/papers/2608.25927> | Real, **2026-08-25**; coding agent maintains executable world state, video model renders it | **Rejected.** Interactive visual world generation. No path to an optimisation engine |
+| Dynamic multi-agent topology as a hyperparameter | Real research direction in the catalogue above | **Rejected for now.** Optimises the part of our system that is not limiting |
+
+## §14.3 Why almost all of it is "no"
+
+Three preregistered cycles closed in August 2026, each adding a mechanism the
+external corpus has and we lacked:
+
+| cycle | mechanism | effect |
+|---|---|---|
+| RC-003 | collective moves mined from population covariance | ≈ **+0.06 %** |
+| RC-023 | hard prohibition memory with aspiration, vs soft decaying bias | **no detectable difference** |
+| RC-024 | endpoint-guided path relinking | **+0.105 %**, 69 wins / 0 losses / 90 |
+
+All three land an order of magnitude under the 1 % materiality floor. **The
+bottleneck is not the mechanism inventory and it is not the agent harness.**
+Writing code has not been the limiting step: two operators, eight killed
+mutations and two registered experiments were produced in a single working day.
+`OPEN_PROBLEMS.md` §1 records the corpus, G-Set, as degenerate on two axes.
+
+Agent infrastructure makes the fast part faster. That is why the 10/10 items in
+the survey are "no" here and the ⭐ item is the one that mattered.
+
+## §14.4 What the survey could not know — the wall-time block is not what the record says
+
+The Compiler-LLM direction is the one item worth wanting, and it needs wall-time
+measurement, which RC-021 denied. Diagnosing that block on 2026-08-30 produced a
+finding that supersedes the recorded cause: see
+`research/RC021_C10_DIAGNOSIS.md`. In short, **C10's failure was real but its
+stated reason was not**, and the repair is not a cheaper diagnostic.
