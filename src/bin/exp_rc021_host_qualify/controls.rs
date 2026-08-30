@@ -2082,12 +2082,11 @@ fn last_opt_level(flags: &str) -> Option<&str> {
             if let Some(level) = tokens.get(i + 1).and_then(|t| t.strip_prefix("opt-level=")) {
                 found = Some(level);
             }
-        } else if let Some(level) = tok
-            .strip_prefix("-C")
-            .and_then(|t| t.strip_prefix("opt-level="))
-        {
-            found = Some(level);
         }
+        // There is no third spelling. `-C` followed by `opt-level=N` in the
+        // *same* token is `-Copt-level=N`, which the first arm already takes;
+        // a branch for it could never execute, and this module exists in part
+        // to remove guards that cannot fire.
     }
     found
 }

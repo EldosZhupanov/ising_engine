@@ -656,7 +656,12 @@ pub fn path_present_for_test(path: &Path) -> bool {
 }
 
 fn path_present(path: &Path) -> bool {
-    match std::fs::metadata(path) {
+    // `symlink_metadata`, not `metadata`: the latter **follows** links, so a
+    // dangling symlink returns NotFound and this function would report "absent"
+    // — exactly the reading its own doctrine forbids. `main.rs::path_present`
+    // and `controls::path_state` both use `symlink_metadata`; this was the odd
+    // one out, and it is the guard §C14.16 depends on.
+    match std::fs::symlink_metadata(path) {
         Ok(_) => true,
         Err(e) => e.kind() != std::io::ErrorKind::NotFound,
     }

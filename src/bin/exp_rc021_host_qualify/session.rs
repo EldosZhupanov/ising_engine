@@ -2658,6 +2658,31 @@ mod tests {
         }
     }
 
+    /// A dangling symlink is present. `metadata` follows links and reports
+    /// NotFound; `symlink_metadata` sees the link itself.
+    ///
+    /// This was the fourth site where the presence doctrine broke, and the
+    /// subtlest: the function *named* `path_present`, whose comment exists to
+    /// forbid reading an unreadable path as an absent one, was itself following
+    /// links. §C14.16's `ArtifactWithoutClosure` guard depends on it, so a
+    /// dangling `RC021_RESULTS.md` made finalize reserve the closure path
+    /// instead of refusing before reserving anything.
+    #[test]
+    fn a_dangling_symlink_is_present_not_absent() {
+        let d = TempDir::new("dangling");
+        let link = d.path().join("RC021_RESULTS.md");
+        std::os::unix::fs::symlink(d.path().join("nothing-here"), &link).unwrap();
+        assert!(!link.exists(), "the target is gone, so `exists` says no");
+        assert!(
+            std::fs::metadata(&link).is_err(),
+            "and `metadata` follows the link into NotFound"
+        );
+        assert!(
+            crate::decision::path_present_for_test(&link),
+            "but the path is occupied: something is there, and it is not this run's"
+        );
+    }
+
     /// §C14.16's artifact guard must use the module's own presence doctrine.
     ///
     /// `path_present` treats an I/O error as presence — "an unreadable marker

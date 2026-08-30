@@ -170,6 +170,50 @@ never parsed, a journal it never bound. The discipline that caught them is not
 review volume — it is asking, of each durable statement, *what would make this
 false, and would we see it?*
 
+### Round seven — no HIGH, and one finding that lands on the preregistration
+
+**Fixed.** `path_present` used `std::fs::metadata`, which **follows** symlinks,
+so a dangling symlink returned NotFound and the function reported "absent" —
+precisely the reading its own comment forbids, in the **fourth** site where this
+doctrine broke and the subtlest, because the offender was the doctrine's own
+implementation. §C14.16's guard depends on it, so a dangling `RC021_RESULTS.md`
+made finalize reserve the closure path instead of refusing before reserving
+anything. `main.rs::path_present` and `controls::path_state` already used
+`symlink_metadata`. Also removed a branch in `last_opt_level` that could never
+execute, in a module that exists partly to delete guards that cannot fire.
+
+**Against the preregistration, not the code — for the maintainer.**
+
+`INCONCLUSIVE-UNDERPOWERED` (exit 5) is **unreachable**. §8.1 clause 3 makes it
+reachable *only* through an `EXTERNAL-CAUSE` row "written and fsynced to the
+session journal before the abort it justifies", and §C13's state machine freezes
+**exactly five public modes**, none of which records one. `RowContext::
+external_cause` therefore has no production caller. This is not an implementation
+defect: adding a sixth mode would violate the frozen table, so the instrument
+cannot close it. §8 defines six run statuses and one of them cannot occur.
+
+The consequence is operational and should be understood before any run. A
+transient instrument fault mid-session — one EIO on `/proc/loadavg` — ends the
+session without a close row. `--session` reports INSTRUMENT-INVALID, exit 3, but
+at finalize §8.2's chain finds no control failure, no journal-integrity failure
+and no `EXTERNAL-CAUSE` row, so it falls to §7.2, the unwritten measurements
+count as failures, and the run is published as **HOST-NOT-QUALIFIED** — a Class
+II verdict about the host, from a fault in the instrument.
+
+That is §7.2 working exactly as written ("every planned execution stays in the
+denominator whatever it returns", and no repeat in a quieter moment), so the
+instrument must not paper over it. But it means **a single transient fault costs
+the single permitted run and publishes a negative result about a healthy host**.
+Closing it needs an amendment under §15 — either a sixth mode that records an
+external cause, or a rule sending an in-session apparatus failure to Class I.
+
+**Also low, recorded not fixed.** When the results-Markdown write fails at
+`sync_all` with the bytes already on disk, finalize records Class I while
+`--verify` recomputes Class II and returns `Mismatch("terminal_status")`. Both
+exit 4, so the operator is not misled about whether the run is broken; only the
+diagnostic is imprecise. §C14.15 makes the asymmetry deliberate — a later reader
+classifies from surviving bytes, never from a past syscall error.
+
 ### Open by decision — do not "fix while here"
 
 | # | Finding | Why it is open |
