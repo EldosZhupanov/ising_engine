@@ -1,0 +1,11 @@
+# host timing calibration — what difference can this host resolve?
+# instance=benchmark_suite/data/gset/G1 n=800 replicas=32
+# pinned=false pairs=6 reps=8
+# `null` rows run byte-identical arms: every number is host noise.
+# `inject` rows add a known extra fraction of work to one arm.
+# An effect below the null's p90 cannot be distinguished from noise.
+arm	window	ms_per_run	reps	expected	median	p10	p90	over_1pct
+null	8	4.863	8	+0.00000	-0.05441	-0.18239	+0.00429	7/8
+inject	8	4.863	8	+0.25000	+0.21339	+0.20917	+0.26281	8/8
+null	32	30.915	8	+0.00000	-0.03839	-0.11547	+0.05401	8/8
+inject	32	30.915	8	+0.25000	+0.15909	+0.12593	+0.21206	8/8

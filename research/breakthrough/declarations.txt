@@ -1,0 +1,208 @@
+src/core/csr_matrix.rs:6:pub struct CsrMatrix {
+src/core/csr_matrix.rs:12:impl CsrMatrix {
+src/core/qubo_model.rs:7:pub struct QuboModel {
+src/core/qubo_model.rs:13:impl QuboModel {
+src/presolve/qpbo.rs:44:struct Dinic {
+src/presolve/qpbo.rs:53:impl Dinic {
+src/presolve/qpbo.rs:145:fn pos(i: usize) -> usize {
+src/presolve/qpbo.rs:149:fn neg(i: usize) -> usize {
+src/presolve/qpbo.rs:153:fn comp(lit: usize) -> usize {
+src/presolve/qpbo.rs:160:pub fn roof_duality_persistencies(model: &QuboModel) -> Vec<Option<i8>> {
+src/presolve/qpbo.rs:269:fn reverse(adj: &[Vec<usize>]) -> Vec<Vec<usize>> {
+src/presolve/qpbo.rs:279:fn bfs_reach(adj: &[Vec<usize>], s: usize) -> Vec<bool> {
+src/core/anls.rs:3:pub struct AnlsPreconditioner {
+src/core/anls.rs:9:impl AnlsPreconditioner {
+src/core/hubo.rs:14:pub struct Edge2 {
+src/core/hubo.rs:20:pub struct Edge3 {
+src/core/hubo.rs:27:pub struct Edge4 {
+src/core/hubo.rs:38:pub struct HuboModel {
+src/core/hubo.rs:46:impl HuboModel {
+src/core/hubo.rs:68:pub struct FlatHuboModel {
+src/core/hubo.rs:91:impl FlatHuboModel {
+src/core/hubo.rs:165:pub struct QuboModel {
+src/core/hubo.rs:175:impl QuboModel {
+src/presolve/mod.rs:26:pub mod qpbo;
+src/presolve/mod.rs:38:pub fn fix_persistent_variables(model: &QuboModel, clamped: &[(usize, i8)]) -> Vec<(usize, i8)> {
+src/presolve/mod.rs:54:pub fn first_order_fixpoint(model: &QuboModel, assumptions: &[(usize, i8)]) -> Vec<Option<i8>> {
+src/presolve/mod.rs:126:pub fn fix_persistent_variables_probing(
+src/presolve/mod.rs:194:pub fn connected_components(model: &QuboModel, active: &[bool]) -> Vec<Vec<usize>> {
+src/presolve/mod.rs:228:pub fn extract_component(
+src/presolve/mod.rs:283:pub fn full_presolve(model: &QuboModel, clamped: &[(usize, i8)]) -> Vec<(usize, i8)> {
+src/presolve/mod.rs:328:fn reduce_by_clamps(model: &QuboModel, clamped: &[(usize, i8)]) -> (QuboModel, Vec<usize>) {
+src/core/mod.rs:1:mod csr_matrix;
+src/core/mod.rs:2:pub mod hubo;
+src/core/mod.rs:6:pub mod anls;
+src/solver/engine.rs:15:pub struct Xoshiro256PlusPlus {
+src/solver/engine.rs:19:impl Xoshiro256PlusPlus {
+src/solver/engine.rs:81:pub struct Xoshiro256PlusPlusX8 {
+src/solver/engine.rs:86:impl Xoshiro256PlusPlusX8 {
+src/solver/engine.rs:181:fn fast_exp(x: f64) -> f64 {
+src/solver/engine.rs:218:pub fn calculate_delta_e_local(
+src/solver/engine.rs:310:pub fn calculate_delta_e(
+src/solver/engine.rs:333:pub fn calculate_replica_energies_local(
+src/solver/engine.rs:422:pub fn calculate_replica_energies(
+src/solver/engine.rs:454:pub struct StepScratch {
+src/solver/engine.rs:487:impl StepScratch {
+src/solver/engine.rs:573:pub fn step<R: Rng>(
+src/solver/tabu.rs:4:pub struct TabuSolver {
+src/solver/tabu.rs:9:impl TabuSolver {
+src/solver/ultimate.rs:9:pub enum LadderMode {
+src/solver/ultimate.rs:18:pub struct UltimateSolver {
+src/solver/ultimate.rs:56:impl UltimateSolver {
+src/engine_v2/backends/sparse_bitslice.rs:19:pub struct SparseBitSlice<'a> {
+src/engine_v2/backends/sparse_bitslice.rs:238:impl SpinState for SparseBitSlice<'_> {
+src/engine_v2/backends/sparse_bitslice.rs:350:mod tests {
+src/solver/local_search.rs:19:pub fn steepest_descent_1opt(model: &QuboModel, state: &mut [i8], is_clamped: &[bool]) -> f64 {
+src/engine_v2/backends/reference.rs:14:pub struct ReferenceState<'a> {
+src/engine_v2/backends/reference.rs:86:impl SpinState for ReferenceState<'_> {
+src/engine_v2/backends/reference.rs:205:mod tests {
+src/solver/mod.rs:1:pub mod adaptive;
+src/solver/mod.rs:2:pub mod cluster;
+src/solver/mod.rs:3:pub mod elite;
+src/solver/mod.rs:4:pub mod engine;
+src/solver/mod.rs:5:pub mod icm;
+src/solver/mod.rs:6:pub mod local_search;
+src/solver/mod.rs:7:pub mod parallel_tempering;
+src/solver/mod.rs:8:pub mod population_annealing;
+src/solver/mod.rs:9:pub mod replica;
+src/solver/mod.rs:10:pub mod schedule;
+src/solver/mod.rs:11:pub mod tts;
+src/solver/mod.rs:12:pub mod types;
+src/solver/mod.rs:13:pub mod ultimate;
+src/solver/mod.rs:20:pub mod autopilot;
+src/solver/tts.rs:23:pub fn success_probability(successes: &[bool]) -> f64 {
+src/solver/tts.rs:34:pub fn tts(p_success: f64, t_run: f64, quantile: f64) -> f64 {
+src/solver/tts.rs:48:pub fn bootstrap_success_ci(
+src/solver/tts.rs:79:pub fn tts_ci(
+src/solver/tts.rs:95:pub fn luby(i: usize) -> usize {
+src/solver/tts.rs:116:pub fn has_converged(best_energy_history: &[f64], window: usize, tol: f64) -> bool {
+src/engine_v2/operators/move_synthesis.rs:44:pub enum Source {
+src/engine_v2/operators/move_synthesis.rs:57:pub struct MoveSynthesizer {
+src/engine_v2/operators/move_synthesis.rs:86:impl MoveSynthesizer {
+src/engine_v2/operators/move_synthesis.rs:292:impl Operator for MoveSynthesizer {
+src/engine_v2/operators/move_synthesis.rs:451:mod tests {
+src/solver/adaptive.rs:12:pub struct AdaptiveTemperingSolver {
+src/solver/adaptive.rs:23:impl AdaptiveTemperingSolver {
+src/solver/schedule.rs:21:pub fn suggested_temp_range(model: &QuboModel) -> (f64, f64) {
+src/solver/replica.rs:3:pub struct Replica {
+src/solver/replica.rs:12:pub fn build_clamped_set(num_vars: usize, clamped: &[(usize, i8)]) -> Vec<bool> {
+src/engine_v2/backends/dense_byte.rs:26:pub struct DenseByteState<'a> {
+src/engine_v2/backends/dense_byte.rs:91:impl SpinState for DenseByteState<'_> {
+src/engine_v2/backends/dense_byte.rs:204:mod tests {
+src/solver/elite.rs:23:pub struct EliteArchive {
+src/solver/elite.rs:30:impl EliteArchive {
+src/solver/elite.rs:123:fn hamming(a: &[i8], b: &[i8]) -> usize {
+src/solver/elite.rs:133:pub fn path_relink(model: &QuboModel, source: &[i8], target: &[i8]) -> (Vec<i8>, f64) {
+src/engine_v2/operators/cluster.rs:28:fn disagreement_components(
+src/engine_v2/operators/cluster.rs:65:fn flip_component(
+src/engine_v2/operators/cluster.rs:80:fn cluster_constraints() -> Constraints {
+src/engine_v2/operators/cluster.rs:94:pub struct HoudayerClusterMove {
+src/engine_v2/operators/cluster.rs:101:impl HoudayerClusterMove {
+src/engine_v2/operators/cluster.rs:115:impl Operator for HoudayerClusterMove {
+src/engine_v2/operators/cluster.rs:166:pub struct IsoenergeticClusterMove {
+src/engine_v2/operators/cluster.rs:173:impl IsoenergeticClusterMove {
+src/engine_v2/operators/cluster.rs:187:impl Operator for IsoenergeticClusterMove {
+src/engine_v2/operators/cluster.rs:239:mod tests {
+src/engine_v2/backends/mod.rs:11:pub mod dense_byte;
+src/engine_v2/backends/mod.rs:12:pub mod reference;
+src/engine_v2/backends/mod.rs:13:pub mod sparse_bitslice;
+src/solver/cluster.rs:12:pub struct ClusterSolver {
+src/solver/cluster.rs:22:impl ClusterSolver {
+src/engine_v2/operators/extremal_optimization.rs:22:pub struct ExtremalOptimization {
+src/engine_v2/operators/extremal_optimization.rs:31:impl ExtremalOptimization {
+src/engine_v2/operators/extremal_optimization.rs:53:impl Operator for ExtremalOptimization {
+src/engine_v2/operators/extremal_optimization.rs:156:mod tests {
+src/solver/ultimate_patch.rs:6:pub struct UltimateSolver {
+src/solver/ultimate_patch.rs:17:impl UltimateSolver {
+src/solver/population_annealing.rs:37:pub struct PaDiagnostics {
+src/solver/population_annealing.rs:50:pub fn normalized_weights(log_w: &[f64]) -> Vec<f64> {
+src/solver/population_annealing.rs:59:pub fn effective_sample_size(w_norm: &[f64]) -> f64 {
+src/solver/population_annealing.rs:69:pub fn free_energy_increment(log_w: &[f64]) -> f64 {
+src/solver/population_annealing.rs:83:pub fn family_entropy(family_ids: &[usize]) -> (f64, usize) {
+src/solver/population_annealing.rs:106:pub fn systematic_resample(w_norm: &[f64], u: f64) -> Vec<usize> {
+src/solver/population_annealing.rs:137:pub fn adapt_spacings(spacings: &[f64], acceptance: &[f64]) -> Vec<f64> {
+src/solver/population_annealing.rs:165:pub fn feedback_optimized_alphas(alphas: &[f64], flow: &[f64], damping: f64) -> Vec<f64> {
+src/solver/population_annealing.rs:240:pub fn apply_resample<R: Rng>(
+src/engine_v2/operators/greedy_descent.rs:24:pub struct GreedyDescent {
+src/engine_v2/operators/greedy_descent.rs:30:impl GreedyDescent {
+src/engine_v2/operators/greedy_descent.rs:47:impl Operator for GreedyDescent {
+src/engine_v2/operators/greedy_descent.rs:119:mod tests {
+src/engine_v2/operators/gibbs_color_sweep.rs:36:pub struct GibbsColorSweep {
+src/engine_v2/operators/gibbs_color_sweep.rs:45:impl GibbsColorSweep {
+src/engine_v2/operators/gibbs_color_sweep.rs:78:impl Operator for GibbsColorSweep {
+src/engine_v2/operators/gibbs_color_sweep.rs:178:mod tests {
+src/engine_v2/operators/population_annealing.rs:23:fn energies_sorted_desc(state: &dyn SpinState, buf: &mut Vec<f64>) -> Vec<usize> {
+src/engine_v2/operators/population_annealing.rs:36:pub struct PopulationResample {
+src/engine_v2/operators/population_annealing.rs:41:impl PopulationResample {
+src/engine_v2/operators/population_annealing.rs:48:impl Operator for PopulationResample {
+src/engine_v2/operators/population_annealing.rs:142:pub struct EliteBroadcast {
+src/engine_v2/operators/population_annealing.rs:146:impl EliteBroadcast {
+src/engine_v2/operators/population_annealing.rs:153:impl Operator for EliteBroadcast {
+src/engine_v2/operators/population_annealing.rs:209:pub struct RandomRestartWorst {
+src/engine_v2/operators/population_annealing.rs:215:impl RandomRestartWorst {
+src/engine_v2/operators/population_annealing.rs:222:impl Operator for RandomRestartWorst {
+src/engine_v2/operators/population_annealing.rs:288:mod tests {
+src/solver/parallel_tempering.rs:11:pub struct ParallelTemperingSolver {
+src/solver/parallel_tempering.rs:20:impl ParallelTemperingSolver {
+src/engine_v2/operators/steepest_descent.rs:16:pub struct SteepestDescent {
+src/engine_v2/operators/steepest_descent.rs:24:impl SteepestDescent {
+src/engine_v2/operators/steepest_descent.rs:42:impl Operator for SteepestDescent {
+src/engine_v2/operators/steepest_descent.rs:129:mod tests {
+src/engine_v2/operators/tabu_sweep.rs:35:pub struct TabuSweep {
+src/engine_v2/operators/tabu_sweep.rs:49:impl TabuSweep {
+src/engine_v2/operators/tabu_sweep.rs:77:impl Operator for TabuSweep {
+src/engine_v2/operators/tabu_sweep.rs:169:mod tests {
+src/engine_v2/operators/history_field.rs:25:pub struct HistoryFieldSweep {
+src/engine_v2/operators/history_field.rs:33:impl HistoryFieldSweep {
+src/engine_v2/operators/history_field.rs:56:impl Operator for HistoryFieldSweep {
+src/engine_v2/operators/history_field.rs:137:mod tests {
+src/solver/autopilot.rs:8:pub struct SolverConfig {
+src/solver/autopilot.rs:16:pub struct BayesianOrchestrator {
+src/solver/autopilot.rs:22:impl Default for BayesianOrchestrator {
+src/solver/autopilot.rs:32:impl BayesianOrchestrator {
+src/engine_v2/operators/mod.rs:23:pub mod cluster;
+src/engine_v2/operators/mod.rs:24:pub mod ensemble_thermostat;
+src/engine_v2/operators/mod.rs:25:pub mod extremal_metropolis;
+src/engine_v2/operators/mod.rs:26:pub mod extremal_optimization;
+src/engine_v2/operators/mod.rs:27:pub mod gibbs_color_sweep;
+src/engine_v2/operators/mod.rs:28:pub mod greedy_descent;
+src/engine_v2/operators/mod.rs:29:pub mod history_field;
+src/engine_v2/operators/mod.rs:30:pub mod metropolis_sweep;
+src/engine_v2/operators/mod.rs:31:pub mod move_synthesis;
+src/engine_v2/operators/mod.rs:32:pub mod path_relink_sweep;
+src/engine_v2/operators/mod.rs:33:pub mod population_annealing;
+src/engine_v2/operators/mod.rs:34:pub mod random_flip_sweep;
+src/engine_v2/operators/mod.rs:35:pub mod replica_exchange;
+src/engine_v2/operators/mod.rs:36:pub mod steepest_descent;
+src/engine_v2/operators/mod.rs:37:pub mod tabu_sweep;
+src/engine_v2/operators/ensemble_thermostat.rs:50:pub struct EnsembleThermostat {
+src/engine_v2/operators/ensemble_thermostat.rs:59:impl EnsembleThermostat {
+src/engine_v2/operators/ensemble_thermostat.rs:109:impl Operator for EnsembleThermostat {
+src/engine_v2/operators/ensemble_thermostat.rs:236:mod tests {
+src/solver/types.rs:23:pub struct QuantumField {
+src/solver/types.rs:37:impl QuantumField {
+src/engine_v2/operators/replica_exchange.rs:23:pub struct ReplicaExchange {
+src/engine_v2/operators/replica_exchange.rs:28:impl ReplicaExchange {
+src/engine_v2/operators/replica_exchange.rs:35:impl Operator for ReplicaExchange {
+src/engine_v2/operators/replica_exchange.rs:113:mod tests {
+src/solver/icm.rs:45:pub fn is_icm_applicable(model: &FlatHuboModel) -> bool {
+src/solver/icm.rs:55:fn cluster_delta<F: Fn(usize) -> i8>(
+src/solver/icm.rs:91:pub fn icm_pair_move<R: Rng>(
+src/solver/icm.rs:161:pub fn icm_sweep<R: Rng>(field: &mut QuantumField, model: &FlatHuboModel, rng: &mut R) {
+src/engine_v2/operators/path_relink_sweep.rs:20:pub struct PathRelinkSweep {
+src/engine_v2/operators/path_relink_sweep.rs:39:impl PathRelinkSweep {
+src/engine_v2/operators/path_relink_sweep.rs:215:impl Default for PathRelinkSweep {
+src/engine_v2/operators/path_relink_sweep.rs:221:impl Operator for PathRelinkSweep {
+src/engine_v2/operators/path_relink_sweep.rs:290:mod tests {
+src/engine_v2/operators/extremal_metropolis.rs:32:pub struct ExtremalMetropolis {
+src/engine_v2/operators/extremal_metropolis.rs:45:impl ExtremalMetropolis {
+src/engine_v2/operators/extremal_metropolis.rs:70:impl Operator for ExtremalMetropolis {
+src/engine_v2/operators/extremal_metropolis.rs:225:mod tests {
+src/engine_v2/operators/metropolis_sweep.rs:26:pub struct MetropolisSweep {
+src/engine_v2/operators/metropolis_sweep.rs:33:impl MetropolisSweep {
+src/engine_v2/operators/metropolis_sweep.rs:61:impl Operator for MetropolisSweep {
+src/engine_v2/operators/metropolis_sweep.rs:150:mod tests {
+src/engine_v2/operators/random_flip_sweep.rs:18:pub struct RandomFlipSweep {
+src/engine_v2/operators/random_flip_sweep.rs:23:impl RandomFlipSweep {
+src/engine_v2/operators/random_flip_sweep.rs:30:impl Operator for RandomFlipSweep {
+src/engine_v2/operators/random_flip_sweep.rs:90:mod tests {

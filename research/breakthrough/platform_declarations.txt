@@ -1,0 +1,118 @@
+src/engine_v2/ai_scientist/predictor.rs:17:pub struct InstanceSignature {
+src/engine_v2/ai_scientist/predictor.rs:27:pub struct Predictor {
+src/engine_v2/ai_scientist/predictor.rs:144:    pub fn fit(db: &ExperimentDb, lambda: f64) -> Option<Self> {
+src/engine_v2/ai_scientist/predictor.rs:198:    pub fn predict(&self, sig: &InstanceSignature, sched: &Schedule) -> f64 {
+src/engine_v2/ai_scientist/predictor.rs:210:    pub fn filter(
+src/engine_v2/ai_scientist/predictor.rs:228:    pub fn to_weights_text(&self) -> String {
+src/engine_v2/ai_scientist/predictor.rs:241:    pub fn from_weights_text(s: &str) -> Option<Self> {
+src/engine_v2/ai_scientist/theory.rs:40:pub struct MechanismSignature {
+src/engine_v2/ai_scientist/theory.rs:52:pub struct MechanismHypothesis {
+src/engine_v2/ai_scientist/theory.rs:64:pub struct Prediction {
+src/engine_v2/ai_scientist/theory.rs:72:pub enum TheoryStatus {
+src/engine_v2/ai_scientist/theory.rs:84:pub struct Theory {
+src/engine_v2/ai_scientist/theory.rs:120:pub struct TheoryConfig {
+src/engine_v2/ai_scientist/theory.rs:136:pub struct TheoryEngine {
+src/engine_v2/ai_scientist/theory.rs:142:    pub fn new(cfg: TheoryConfig) -> Self {
+src/engine_v2/ai_scientist/theory.rs:274:    pub fn explain(
+src/engine_v2/ai_scientist/theory.rs:380:    pub fn investigate(
+src/engine_v2/ai_scientist/theory.rs:408:    pub fn publish(&self, theory: &Theory, graph: &mut KnowledgeGraph) {
+src/engine_v2/ai_scientist/meta_learner.rs:22:pub enum RuleKind {
+src/engine_v2/ai_scientist/meta_learner.rs:43:pub struct Rule {
+src/engine_v2/ai_scientist/meta_learner.rs:54:    pub fn signature(&self) -> String {
+src/engine_v2/ai_scientist/meta_learner.rs:100:pub struct OperatorGap {
+src/engine_v2/ai_scientist/meta_learner.rs:110:pub struct MetaLearner {
+src/engine_v2/ai_scientist/meta_learner.rs:127:    pub fn new() -> Self {
+src/engine_v2/ai_scientist/meta_learner.rs:144:    pub fn mine(&self, db: &ExperimentDb) -> Vec<Rule> {
+src/engine_v2/ai_scientist/meta_learner.rs:257:    pub fn publish(&self, db: &ExperimentDb, graph: &mut KnowledgeGraph) -> usize {
+src/engine_v2/ai_scientist/meta_learner.rs:513:    pub fn suggest_operator_gap(&self, db: &ExperimentDb) -> Option<OperatorGap> {
+src/engine_v2/ai_scientist/meta_learner.rs:551:    pub fn recommend(&self, kb: &KnowledgeBase, features: &InstanceFeatures) -> Option<Schedule> {
+src/engine_v2/ai_scientist/meta_learner.rs:566:    pub fn report(&self, db: &ExperimentDb, graph: &KnowledgeGraph) -> String {
+src/engine_v2/ai_scientist/scientist.rs:29:pub enum HypothesisStatus {
+src/engine_v2/ai_scientist/scientist.rs:38:pub struct Hypothesis {
+src/engine_v2/ai_scientist/scientist.rs:57:pub struct Analysis {
+src/engine_v2/ai_scientist/scientist.rs:72:pub struct DiscoverConfig {
+src/engine_v2/ai_scientist/scientist.rs:103:pub struct DiscoveryReport {
+src/engine_v2/ai_scientist/scientist.rs:116:pub struct AIScientist {
+src/engine_v2/ai_scientist/scientist.rs:123:    pub fn new(seed: u64) -> Self {
+src/engine_v2/ai_scientist/scientist.rs:132:    pub fn decisions(&self) -> &[String] {
+src/engine_v2/ai_scientist/scientist.rs:140:    pub fn analyze(db: &ExperimentDb) -> Analysis {
+src/engine_v2/ai_scientist/scientist.rs:205:    pub fn generate_hypotheses(
+src/engine_v2/ai_scientist/scientist.rs:351:    pub fn discover(
+src/engine_v2/ai_scientist/novelty.rs:15:pub fn schedule_distance(a: &[String], b: &[String]) -> f64 {
+src/engine_v2/ai_scientist/novelty.rs:46:pub struct NoveltyArchive {
+src/engine_v2/ai_scientist/novelty.rs:51:    pub fn new() -> Self {
+src/engine_v2/ai_scientist/novelty.rs:55:    pub fn len(&self) -> usize {
+src/engine_v2/ai_scientist/novelty.rs:59:    pub fn is_empty(&self) -> bool {
+src/engine_v2/ai_scientist/novelty.rs:63:    pub fn add(&mut self, sched: &Schedule) {
+src/engine_v2/ai_scientist/novelty.rs:69:    pub fn novelty(&self, sched: &Schedule) -> f64 {
+src/engine_v2/ai_scientist/policy.rs:45:pub struct OperatorPolicy {
+src/engine_v2/ai_scientist/policy.rs:87:    pub fn stop_token(&self) -> usize {
+src/engine_v2/ai_scientist/policy.rs:98:    pub fn new(mut vocab: Vec<String>, seed: u64) -> Self {
+src/engine_v2/ai_scientist/policy.rs:117:    pub fn token(&self, op: &str) -> Option<usize> {
+src/engine_v2/ai_scientist/policy.rs:123:    pub fn to_weights_text(&self) -> String {
+src/engine_v2/ai_scientist/policy.rs:143:    pub fn from_weights_text(s: &str) -> Option<Self> {
+src/engine_v2/ai_scientist/policy.rs:285:    pub fn loss(&self, corpus: &[(InstanceSignature, Vec<usize>)]) -> f64 {
+src/engine_v2/ai_scientist/policy.rs:308:    pub fn train_supervised(&mut self, db: &ExperimentDb, epochs: usize, lr: f64) -> (f64, f64) {
+src/engine_v2/ai_scientist/policy.rs:330:    pub fn corpus_from_db(
+src/engine_v2/ai_scientist/policy.rs:377:    pub fn first_op_probs(&self, sig: &InstanceSignature) -> Vec<(String, f64)> {
+src/engine_v2/ai_scientist/policy.rs:396:    pub fn generate_greedy(&self, sig: &InstanceSignature) -> Vec<String> {
+src/engine_v2/ai_scientist/policy.rs:430:    pub fn sample(&self, sig: &InstanceSignature, rng: &mut ChaCha8Rng) -> Vec<usize> {
+src/engine_v2/ai_scientist/policy.rs:459:    pub fn reinforce_update(
+src/engine_v2/ai_scientist/policy.rs:489:pub fn tokens_to_schedule(policy: &OperatorPolicy, toks: &[usize], sweeps: u32) -> Schedule {
+src/engine_v2/ai_scientist/policy.rs:523:pub struct ReinforceStep {
+src/engine_v2/ai_scientist/policy.rs:538:pub fn train_reinforce(
+src/engine_v2/ai_scientist/policy.rs:602:pub struct PolicyIdeator {
+src/engine_v2/ai_scientist/policy.rs:610:    pub fn new(policy: OperatorPolicy) -> Self {
+src/engine_v2/ai_scientist/policy.rs:617:    pub fn policy(&self) -> &OperatorPolicy {
+src/engine_v2/ai_scientist/orchestrator.rs:43:pub struct TickReport {
+src/engine_v2/ai_scientist/orchestrator.rs:70:pub struct OrchestratorConfig {
+src/engine_v2/ai_scientist/orchestrator.rs:123:pub fn detect_local_llm() -> Option<String> {
+src/engine_v2/ai_scientist/orchestrator.rs:140:pub struct ResearchOrchestrator {
+src/engine_v2/ai_scientist/orchestrator.rs:155:    pub fn open(dir: impl Into<PathBuf>, report_every: usize) -> std::io::Result<Self> {
+src/engine_v2/ai_scientist/orchestrator.rs:171:    pub fn manager(&self) -> &CampaignManager {
+src/engine_v2/ai_scientist/orchestrator.rs:177:    pub fn health(&self) -> HealthReport {
+src/engine_v2/ai_scientist/orchestrator.rs:182:    pub fn tick(
+src/engine_v2/ai_scientist/orchestrator.rs:469:    pub fn run(
+src/engine_v2/ai_scientist/orchestrator.rs:513:    pub fn run_service(
+src/engine_v2/ai_scientist/orchestrator.rs:571:    pub fn investigate_operator(
+src/engine_v2/ai_scientist/orchestrator.rs:616:pub struct ServiceBudget {
+src/engine_v2/ai_scientist/monitor.rs:19:pub enum HealthStatus {
+src/engine_v2/ai_scientist/monitor.rs:26:    pub fn label(self) -> &'static str {
+src/engine_v2/ai_scientist/monitor.rs:37:pub struct HealthCheck {
+src/engine_v2/ai_scientist/monitor.rs:45:pub struct HealthReport {
+src/engine_v2/ai_scientist/monitor.rs:51:    pub fn healthy(&self) -> bool {
+src/engine_v2/ai_scientist/monitor.rs:56:    pub fn worst(&self) -> HealthStatus {
+src/engine_v2/ai_scientist/monitor.rs:65:    pub fn summary(&self) -> String {
+src/engine_v2/ai_scientist/monitor.rs:94:pub struct MonitorConfig {
+src/engine_v2/ai_scientist/monitor.rs:118:pub struct Monitor {
+src/engine_v2/ai_scientist/monitor.rs:123:    pub fn new(cfg: MonitorConfig) -> Self {
+src/engine_v2/ai_scientist/monitor.rs:128:    pub fn check(&self, db: &ExperimentDb, graph: &KnowledgeGraph) -> HealthReport {
+src/engine_v2/ai_scientist/monitor.rs:261:    pub fn check_models(&self, models: &ModelRegistry) -> HealthReport {
+src/engine_v2/ai_scientist/world.rs:36:pub struct ObsState {
+src/engine_v2/ai_scientist/world.rs:119:pub struct WorldModel {
+src/engine_v2/ai_scientist/world.rs:154:    pub fn fit(
+src/engine_v2/ai_scientist/world.rs:210:    pub fn step(&self, s: &ObsState, op: &str, temp_hi: f64, sweeps: u32) -> ObsState {
+src/engine_v2/ai_scientist/world.rs:223:    pub fn imagine_final_best(&self, ir: &ProblemIR, schedule: &Schedule) -> f64 {
+src/engine_v2/ai_scientist/world.rs:240:    pub fn predicted_yield(&self, ir: &ProblemIR, op: &str, temp_hi: f64, sweeps: u32) -> f64 {
+src/engine_v2/ai_scientist/world.rs:245:    pub fn predicted_yield_from(
+src/engine_v2/ai_scientist/world.rs:266:    pub fn vocab(&self) -> &[String] {
+src/engine_v2/ai_scientist/world.rs:274:    pub fn to_weights_text(&self) -> String {
+src/engine_v2/ai_scientist/world.rs:294:    pub fn from_weights_text(s: &str) -> Option<Self> {
+src/engine_v2/ai_scientist/world.rs:342:pub struct WorldFilteredIdeator {
+src/engine_v2/ai_scientist/world.rs:355:    pub fn new(
+src/engine_v2/ai_scientist/world.rs:414:pub fn rank_correlation(
+src/engine_v2/ai_scientist/concept.rs:31:pub struct ConceptConfig {
+src/engine_v2/ai_scientist/concept.rs:54:pub struct ConceptVerdict {
+src/engine_v2/ai_scientist/concept.rs:70:pub fn default_candidates() -> Vec<Feature> {
+src/engine_v2/ai_scientist/concept.rs:166:pub fn evaluate(
+src/engine_v2/ai_scientist/concept.rs:224:pub fn discover(
+src/engine_v2/ai_scientist/curiosity.rs:34:pub struct CuriosityConfig {
+src/engine_v2/ai_scientist/curiosity.rs:86:pub struct CuriosityEngine {
+src/engine_v2/ai_scientist/curiosity.rs:102:    pub fn from_db(
+src/engine_v2/ai_scientist/curiosity.rs:221:    pub fn operator_curiosity(&self, op: &str) -> f64 {
+src/engine_v2/ai_scientist/curiosity.rs:226:    pub fn schedule_curiosity(&self, ops: &[String]) -> f64 {
+src/engine_v2/ai_scientist/curiosity.rs:238:    pub fn ranked(&self) -> Vec<(String, f64)> {
+src/engine_v2/ai_scientist/curiosity.rs:250:    pub fn components(&self, op: &str) -> (f64, f64, f64) {
+src/engine_v2/ai_scientist/curiosity.rs:263:pub fn explore_exploit_priority(value: f64, curiosity: f64, lambda: f64) -> f64 {
+src/engine_v2/ai_scientist/curiosity.rs:273:pub struct CuriousIdeator {
+src/engine_v2/ai_scientist/curiosity.rs:281:    pub fn new(inner: Box<dyn Ideator>, engine: CuriosityEngine, lambda: f64) -> Self {

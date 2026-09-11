@@ -12,11 +12,11 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 ## Summary
 
 - `active`: 17
-- `binding`: 36
+- `binding`: 37
 - `closed`: 33
 - `historical`: 1
 - `proposed`: 2
-- `reference`: 60
+- `reference`: 115
 - `superseded`: 4
 
 ## Registry
@@ -180,3 +180,59 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 ## Maintenance rule
 
 Every added, moved, or lifecycle-changing Markdown file updates this catalogue in the same commit. Automated validation compares this table with `rg --files -g '*.md'`; missing and duplicate paths fail the gate.
+| `research/breakthrough/AUDIT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/EXP001_PROTOCOL.md` | research-protocol | A1 | binding | 2026-09-11 | 2026-09-11 | true | breakthrough |
+| `research/breakthrough/GAUGE_SCOPE.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/HYPOTHESES.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/RESEARCH_STATE.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h01/HYPOTHESIS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h01/IMPLEMENTATION.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h01/MATH.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h01/NEXT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h01/RESULTS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h02/HYPOTHESIS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h02/IMPLEMENTATION.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h02/MATH.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h02/NEXT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h02/RESULTS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h03/HYPOTHESIS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h03/IMPLEMENTATION.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h03/MATH.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h03/NEXT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h03/RESULTS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h04/HYPOTHESIS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h04/IMPLEMENTATION.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h04/MATH.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h04/NEXT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h04/RESULTS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h05/HYPOTHESIS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h05/IMPLEMENTATION.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h05/MATH.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h05/NEXT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h05/RESULTS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h06/HYPOTHESIS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h06/IMPLEMENTATION.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h06/MATH.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h06/NEXT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h06/RESULTS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h07/HYPOTHESIS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h07/IMPLEMENTATION.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h07/MATH.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h07/NEXT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h07/RESULTS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h08/HYPOTHESIS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h08/IMPLEMENTATION.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h08/MATH.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h08/NEXT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h08/RESULTS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h09/HYPOTHESIS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h09/IMPLEMENTATION.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h09/MATH.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h09/NEXT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h09/RESULTS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h10/HYPOTHESIS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h10/IMPLEMENTATION.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h10/MATH.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h10/NEXT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/h10/RESULTS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
+| `research/breakthrough/HANDOFF.md` | research-handoff | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough-resume |

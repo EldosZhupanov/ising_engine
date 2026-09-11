@@ -3,7 +3,7 @@ id: memory-now
 kind: live-state
 status: active
 authority_scope: current-task
-updated: 2026-08-30
+updated: 2026-09-12
 immutable: false
 ---
 
@@ -11,6 +11,34 @@ immutable: false
 
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
+
+## Current user-authorized research expansion — 2026-09-11
+
+The current conversation explicitly requests a repository-wide algorithm audit,
+including `engine_v2`, ten mathematical hypotheses, and autonomous isolated
+experiments. This supersedes the old task-selection restriction below, not any
+binding protocol or historical outcome. The active task bundle is
+[research/breakthrough/RESEARCH_STATE.md](../research/breakthrough/RESEARCH_STATE.md),
+[the audit](../research/breakthrough/AUDIT.md), and
+[EXP001](../research/breakthrough/EXP001_PROTOCOL.md).
+
+**Resumed through the goal control on 2026-09-12:** the previously blocked
+thread goal is active again. The saved source state is unchanged at `fdec0df`.
+The audit and ten hypotheses are complete at the documented algorithm-surface
+scope. EXP001 preregistration received independent review PASS and is now being
+committed before any candidate code or data. Next: implement isolated exact
+conditional elimination and pair-curvature refinement, verify all identities,
+then run the frozen factorial suites. See
+[HANDOFF.md](../research/breakthrough/HANDOFF.md) for the preserved checkpoint.
+
+The pre-existing untracked `results/rc027/` remains untouched and uninspected.
+RC021 terminal evidence and all existing binding records remain immutable.
+`NOW.md` remains the sole project handoff; RESEARCH_STATE is an experiment ledger.
+Full-worktree memory validation has a pre-existing uncatalogued RC027 file;
+validate the intended-change tracked-source snapshot separately and report both.
+
+The sections below preserve prior research context. Their RC027 “active task”
+labels do not select the new task; its frozen protocol still governs RC027 data.
 
 ## Standing objective — the thing we do not drift from
 

@@ -81,3 +81,9 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 Add one row for a completed milestone, accepted/rejected decision, cycle state
 transition, or authority change. Do not log routine edits or duplicate the
 scientific content of the linked record.
+
+## Breakthrough investigation
+
+| Date | Event | Source |
+|---|---|---|
+| 2026-09-12 | Resume saved algorithm audit; preregister conditional elimination and pair-curvature factorial before code/data | [EXP001](../research/breakthrough/EXP001_PROTOCOL.md) |
