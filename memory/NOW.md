@@ -25,10 +25,14 @@ binding protocol or historical outcome. The active task bundle is
 **Resumed through the goal control on 2026-09-12:** the previously blocked
 thread goal is active again. The saved source state is unchanged at `fdec0df`.
 The audit and ten hypotheses are complete at the documented algorithm-surface
-scope. EXP001 preregistration received independent review PASS and is now being
-committed before any candidate code or data. Next: implement isolated exact
-conditional elimination and pair-curvature refinement, verify all identities,
-then run the frozen factorial suites. See
+scope. EXP001 preregistration was committed as `aee6ea8` before prototype code or data.
+The isolated prototype and analysis instrument now pass 9 Rust mathematical
+tests and 3 Python screen tests; independent instrument review returned PASS
+(no HIGH/MEDIUM findings; reviewer repeated all 12 tests).
+Next: commit the reviewed instrument, then execute the frozen 4,200-row factorial
+suites once. No registered candidate data exist yet. The user requested and
+received preliminary findings on 2026-09-12 and explicitly directed continued
+research without a change of direction. See
 [HANDOFF.md](../research/breakthrough/HANDOFF.md) for the preserved checkpoint.
 
 The pre-existing untracked `results/rc027/` remains untouched and uninspected.
