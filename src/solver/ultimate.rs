@@ -48,6 +48,9 @@ pub struct UltimateSolver {
     /// Path-relinking finisher: after annealing, relink diverse elite
     /// replicas (Wang-Lü-Glover-Hao 2012) and keep the best. Off by default.
     pub use_path_relinking: bool,
+    /// Edge-restricted 2-opt escape finisher: escapes 1-opt local traps by
+    /// scanning strictly the |E| graph edges (Theorem 1). Off by default.
+    pub use_2opt: bool,
     /// Ladder-tuning strategy (PA-PT mode). Defaults to acceptance
     /// uniformization; FeedbackOptimized uses the KTHT round-trip method.
     pub ladder_mode: LadderMode,
@@ -78,6 +81,7 @@ impl UltimateSolver {
             post_resample_relaxation: 5,
             use_icm: false,
             use_path_relinking: false,
+            use_2opt: false,
             ladder_mode: LadderMode::AcceptanceUniform,
         }
     }
@@ -123,6 +127,11 @@ impl UltimateSolver {
         self.num_slices = slices;
         self.num_temps = temps;
         self.num_pops = pops;
+        self
+    }
+
+    pub fn with_2opt(mut self, enabled: bool) -> Self {
+        self.use_2opt = enabled;
         self
     }
 
@@ -197,6 +206,7 @@ impl UltimateSolver {
                     post_resample_relaxation: self.post_resample_relaxation,
                     use_icm: self.use_icm,
                     use_path_relinking: self.use_path_relinking,
+                    use_2opt: self.use_2opt,
                     ladder_mode: self.ladder_mode,
                 };
                 let sub_state = sub_solver.solve(&sub_model, &[]);
@@ -362,6 +372,13 @@ impl UltimateSolver {
             best_state.copy_from_slice(&incumbent);
         }
         crate::solver::local_search::steepest_descent_1opt(model, &mut best_state, &is_clamped);
+        if self.use_2opt {
+            crate::solver::local_search::steepest_descent_2opt_escapes(
+                model,
+                &mut best_state,
+                &is_clamped,
+            );
+        }
         if self.use_path_relinking {
             let e = model.calculate_total_energy(&best_state);
             best_state = Self::path_relink_finish(model, &field, &is_clamped, best_state, e);
@@ -824,6 +841,13 @@ impl UltimateSolver {
             best_state.copy_from_slice(&incumbent);
         }
         crate::solver::local_search::steepest_descent_1opt(model, &mut best_state, is_clamped);
+        if self.use_2opt {
+            crate::solver::local_search::steepest_descent_2opt_escapes(
+                model,
+                &mut best_state,
+                is_clamped,
+            );
+        }
         (best_state, diagnostics)
     }
 
