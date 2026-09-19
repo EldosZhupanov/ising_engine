@@ -25,9 +25,10 @@ Third cycle CD003/H13: precision-rank bounded response N_resp <= (2bK+1)^r CONFI
 Fourth cycle CD004/H14: native soft-conflict learning cuts BnB nodes by 33-54% CONFIRMED (commit `f12ce06`).
 Fifth cycle CD005/H15 (Option D: Edge-Restricted 2-Opt Escapes) completed and confirmed:
 Theorem 1 verified (0 violations), escapes 93-97% of 1-opt local traps with up to 24.8x speedup over O(N^2) scans.
-All candidate ideas maintained in `research/CANDIDATE_IDEAS_LEDGER.md`. Next: synthesize into unified platform.
-No production changes or broad superiority/novelty claims. Preserve all
-unrelated research and unfinished earlier records.
+Phase 1 Integration: CD005 operator integrated into `src/solver/local_search.rs` and `UltimateSolver` (commit `895835e`).
+All unit/integration tests (199 passed, 6 local search tests including Theorem 1 completeness), release binaries, clippy, and fmt green.
+All candidate ideas maintained in `research/CANDIDATE_IDEAS_LEDGER.md` and `research/SYNTHESIS_CD_SOLVER_ARCHITECTURE.md`.
+Preserve all unrelated research and unfinished earlier records.
 
 The audit stop below is historical and superseded within this explicit scope.
 
