@@ -16,7 +16,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 - `closed`: 33
 - `historical`: 1
 - `proposed`: 4
-- `reference`: 124
+- `reference`: 131
 - `superseded`: 4
 
 ## Registry
@@ -70,6 +70,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `PRODUCT_SPEC.md` | product-spec | A0 | active | 2026-08-22 | 2026-08-26 | false | finished-product |
 | `PROJECT_PLAN.md` | active-plan | A0 | active | 2026-08-22 | 2026-08-30 | false | ordered-gates |
 | `README.md` | public-overview | A2 | active | 2026-03-11 | 2026-07-06 | false | public-overview |
+| `research/CANDIDATE_IDEAS_LEDGER.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | research-backlog |
 | `research/adversarial_architecture_review.md` | research-reference | A2 | reference | 2026-07-07 | 2026-07-07 | false | research-context |
 | `research/architecture/ADR/ADR-0000-adr-system-and-knowledge-graph.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
 | `research/architecture/ADR/ADR-0001-operators-not-algorithms.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
@@ -242,6 +243,12 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/PRIOR_ART_MATRIX.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/breakthrough/EXP001_RESULT.md` | research-result-draft | A2 | proposed | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/breakthrough/EXP002_PROTOCOL.md` | research-protocol-draft | A2 | proposed | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/breakthrough/cd002/HYPOTHESIS.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD002 |
+| `research/breakthrough/cd002/KILL_TEST.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD002 |
+| `research/breakthrough/cd002/MATH.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD002 |
+| `research/breakthrough/cd002/NEXT.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD002 |
+| `research/breakthrough/cd002/PRIOR_ART.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD002 |
+| `research/breakthrough/cd002/RESULTS.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD002 |
 | `research/breakthrough/h11/HYPOTHESIS.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/breakthrough/h11/MATH.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/breakthrough/h11/IMPLEMENTATION.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |

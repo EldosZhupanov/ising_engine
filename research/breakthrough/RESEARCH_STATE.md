@@ -1,15 +1,15 @@
 # Breakthrough research state
 
+**2026-09-19: CD002/H12 (Option C: Discrete Gauge Synchronization) completed and falsified.**
+Adversarial cycle witness proved $K \cdot |S_d|$-fold ground-state degeneracy on cycles,
+and zero advantage over classical Spectral Synchronization on triangulated graphs. Verdict: NO-GO.
+All candidate ideas preserved in [research/CANDIDATE_IDEAS_LEDGER.md](../CANDIDATE_IDEAS_LEDGER.md).
+Next: pivot to Option A (CD003: Precision & Margin-Bounded Response Programs).
+
 **2026-09-17: explicitly resumed by the user for cross-domain mechanisms and
 Ising with both HYPODIVE skills.** Prior stop statements below are historical.
 CD001/H11 completed an exact constructed falsification: 18 rows / 16,380 energies,
-rank-only response-count claim NO-GO. Two other broad novelty proposals were
-mapped to known reweighting and parametric optimization. No new method or speed
-advantage established. [Mechanism map](../PRIOR_ART_MATRIX.md),
-[result](h11/RESULTS.md), [handoff](../HYPODIVE_BUILDER_HANDOFF.md).
-Independent math and finished-code reviews passed (code review on retry after
-a service limit). Git freeze completed. Next: select a materially different hypothesis;
-do not rerun old series or treat earlier draft protocols as binding.
+rank-only response-count claim NO-GO. Git freeze completed in commit `20ce993`.
 
 **2026-09-17: audit stopped at the user's explicit request.** Follow
 [memory/NOW.md](../../memory/NOW.md); automatic goal continuations do not reopen

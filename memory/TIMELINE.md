@@ -88,3 +88,4 @@ scientific content of the linked record.
 |---|---|---|
 | 2026-09-12 | Resume saved algorithm audit; preregister conditional elimination and pair-curvature factorial before code/data | [EXP001](../research/breakthrough/EXP001_PROTOCOL.md) |
 | 2026-09-17 | CD001: cross-domain mechanism map; exact rank-one response-count counterexample, scientific NO-GO; independent math/code review PASS | [H11](../research/breakthrough/h11/RESULTS.md) |
+| 2026-09-19 | CD002: discrete gauge synchronization vs spectral sync; K*|Sd| frustration degeneracy, scientific NO-GO | [H12](../research/breakthrough/cd002/RESULTS.md) |

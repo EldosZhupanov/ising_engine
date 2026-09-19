@@ -18,14 +18,16 @@ The user explicitly selected the five-step mechanism map / boundary / transfer /
 prior-art falsification / minimal experiment workflow and requested both HYPODIVE
 skills. This lifts the earlier audit stop for this scoped investigation. Do not
 restart EXP001 or automatically execute the uncommitted EXP002 draft.
-Active bundle: `research/PRIOR_ART_MATRIX.md`,
-`research/HYPODIVE_BUILDER_INTAKE.md`, and `research/breakthrough/h11/`.
+Active bundle: `research/CANDIDATE_IDEAS_LEDGER.md`, `research/breakthrough/cd002/`.
 First cycle CD001/H11 is complete as a mathematical falsification: rank-only
 response-count claim NO-GO; 18 constructed cases and 16,380 exact evaluations.
-Mechanism/prior-art map covers seven fields; no new solver or speed advantage.
-Independent mathematical and finished-code reviews completed PASS; code review
-passed on retry after an initial service usage limit. Source/result Git freeze
-completed; see `research/HYPODIVE_BUILDER_HANDOFF.md`. No production changes or broad superiority/novelty claims. Preserve all
+Git freeze completed in commit `20ce993`.
+Second cycle CD002/H12 (Option C: Discrete Gauge Synchronization vs Spectral Sync)
+completed as a mathematical and empirical falsification: NO-GO. Exact witness proved
+cycle frustration degeneracy (K*|S_d| ties) and zero advantage over spectral sync
+on triangulated graphs. All candidate ideas saved in `research/CANDIDATE_IDEAS_LEDGER.md`
+per user instruction. Ready to pivot to Option A (CD003: Precision & Margin-Bounded Response).
+No production changes or broad superiority/novelty claims. Preserve all
 unrelated research and unfinished earlier records.
 
 The audit stop below is historical and superseded within this explicit scope.
