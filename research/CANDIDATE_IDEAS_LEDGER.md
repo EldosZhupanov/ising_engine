@@ -26,21 +26,14 @@ of knowledge.
 ## 1. Candidate Queue
 
 ### [CD002 / Option C] Discrete Gauge & Permutation Synchronization for Relational AI Coherence
-* **Status:** **ACTIVE (In Progress)**
-* **Cross-Domain Origin:** Physics (Gauge theory / Frustrated Spin Glasses) + Group Theory ($S_d, \mathbb{Z}_2$) + AI Reasoning (Multi-step consistency).
-* **The Problem:** Modern autoregressive LLMs and neural reasoning systems suffer from hallucination and relational incoherence because local token-by-token generation cannot enforce global loop-consistency across cyclic premises.
-* **The Boundary:**
-  - Continuous neural relaxations (EBMs, continuous Hopfield, contractive GNNs) fail due to the **Inertia-Erosion Dilemma** (proven in `EXP-TEN-006B`): smooth potentials either have vanishing gradients at zero crossings ($\ln\cosh$) or diffuse errors symmetrically, destroying clean bits.
-  - Classical **Spectral Synchronization** (Pachauri et al. 2013) recovers ground-truth permutations under random Gaussian noise, but breaks down catastrophically under adversarial outlier clusters and dense frustration.
-  - **Loopy Belief Propagation (Min-Sum)** oscillates on short frustrated cycles.
-* **The Transfer:** Direct combinatorial optimization of the non-abelian gauge Hamiltonian / Quadratic Assignment Problem (QAP) using Ising discrete moves (cluster flips / parallel tempering) directly on the discrete permutation manifold without continuous relaxation.
-* **Cheapest Kill-Test:** Construct a frustrated cyclic graph with adversarial corruptions where Spectral Sync and Loopy BP fail, and determine whether discrete Ising formulation provides certified recovery or suffers identical combinatorial glassiness.
-* **Primary Prior Art to Attack:** Pachauri, Kondor & Singh (2013); Singer (2011); Lucas (2014, §3); Bandeira et al. (2016); DeepCORD (2026).
+* **Status:** **FALSIFIED / NO-GO** (2026-09-19)
+* **Outcome:** Proved exact $K \cdot |S_d|$-fold ground state degeneracy on cycles; zero accuracy advantage over classical Spectral Synchronization on triangulated graphs. Fully documented in `research/breakthrough/cd002/`.
 
 ---
 
-### [CD003 / Option A] Precision & Margin-Bounded Response Programs (H11 Extension)
-* **Status:** Queued (Ready if CD002 is rejected)
+### [CD003 / Option A] Precision & Margin-Bounded Response Programs (H11 Extension / Resolution)
+* **Status:** **CONFIRMED THEOREM / COMPLETED** (2026-09-19)
+* **Outcome:** Proved and verified that $N_{\text{resp}} \le (2bK + 1)^r$. Resolves the H11 paradox: low rank bounds response count polynomially if and only if bit-precision $p \ll b/r$. Compression ratio reaches $\le 0.016$ at $b=8$. Fully documented in `research/breakthrough/cd003/`.
 * **Cross-Domain Origin:** Computational Complexity + Parametric Programming + Model Reduction.
 * **The Problem:** CD001/H11 proved that low interface rank alone does *not* bound the number of conditional ground-state responses polynomially: an exact counterexample generated $2^b$ unique responses with rank 1.
 * **The Missing Assumption:** The counterexample required exponential bit precision in coefficients ($2^i$), causing the normalized spectral gap to shrink as $1/2^b$. In physical hardware and digital architectures, precision is bounded (e.g. 8-bit or 16-bit integers).

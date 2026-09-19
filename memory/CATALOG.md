@@ -16,7 +16,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 - `closed`: 33
 - `historical`: 1
 - `proposed`: 4
-- `reference`: 131
+- `reference`: 137
 - `superseded`: 4
 
 ## Registry
@@ -249,6 +249,12 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/cd002/NEXT.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD002 |
 | `research/breakthrough/cd002/PRIOR_ART.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD002 |
 | `research/breakthrough/cd002/RESULTS.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD002 |
+| `research/breakthrough/cd003/HYPOTHESIS.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD003 |
+| `research/breakthrough/cd003/KILL_TEST.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD003 |
+| `research/breakthrough/cd003/MATH.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD003 |
+| `research/breakthrough/cd003/NEXT.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD003 |
+| `research/breakthrough/cd003/PRIOR_ART.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD003 |
+| `research/breakthrough/cd003/RESULTS.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD003 |
 | `research/breakthrough/h11/HYPOTHESIS.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/breakthrough/h11/MATH.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/breakthrough/h11/IMPLEMENTATION.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
