@@ -1,11 +1,16 @@
 # Breakthrough research state
 
+**2026-09-19: CD005/H15 (Option D: Edge-Restricted 2-Opt Escapes) completed and confirmed.**
+Proved Theorem 1 (scanning strictly $|E|$ edges is 100% complete for finding all improving 2-flips at 1-opt minima, 0 violations).
+Escaped 93.3% to 96.7% of false 1-opt traps on frustrated spin glasses with up to 24.8x speedup over O(N^2) pair scanning.
+Status: CONFIRMED ALGORITHMIC ADVANTAGE (GO).
+All candidate ideas preserved in [research/CANDIDATE_IDEAS_LEDGER.md](../CANDIDATE_IDEAS_LEDGER.md).
+Next: synthesize CD003, CD004, and CD005 into unified platform architecture.
+
 **2026-09-19: CD004/H14 (Option B: Native Soft-Conflict Learning in Ising) completed and confirmed.**
 Evaluated deletion filtering and non-chronological backjumping on frustrated Ising spin glasses.
 Achieved 33.1% to 54.4% reduction in explored search nodes with 100% exact optimality.
 Status: CONFIRMED ALGORITHMIC ADVANTAGE (GO).
-All candidate ideas preserved in [research/CANDIDATE_IDEAS_LEDGER.md](../CANDIDATE_IDEAS_LEDGER.md).
-Next: examine engine integration or evaluate CD005 / CD006.
 
 **2026-09-19: CD003/H13 (Option A: Precision-Rank Bounded Response) completed and confirmed.**
 Proved and verified that conditional ground state response count is bounded by $N_{\text{resp}} \le (2bK+1)^r$.

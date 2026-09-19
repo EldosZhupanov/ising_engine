@@ -18,17 +18,14 @@ The user explicitly selected the five-step mechanism map / boundary / transfer /
 prior-art falsification / minimal experiment workflow and requested both HYPODIVE
 skills. This lifts the earlier audit stop for this scoped investigation. Do not
 restart EXP001 or automatically execute the uncommitted EXP002 draft.
-Active bundle: `research/CANDIDATE_IDEAS_LEDGER.md`, `research/breakthrough/cd004/`.
-First cycle CD001/H11 is complete as a mathematical falsification: rank-only
-response-count claim NO-GO; 18 constructed cases and 16,380 exact evaluations (commit `20ce993`).
-Second cycle CD002/H12 (Option C: Discrete Gauge Synchronization vs Spectral Sync)
-completed as a mathematical and empirical falsification: NO-GO (commit `a900575`).
-Third cycle CD003/H13 (Option A: Precision & Margin-Bounded Response Programs)
-completed and mathematically confirmed: N_resp <= (2bK+1)^r (commit `b37c1c3`).
-Fourth cycle CD004/H14 (Option B: Native Soft-Conflict Learning & Backjumping in Ising)
-completed and confirmed: cuts explored branch-and-bound nodes by 33.1% to 54.4% across frustrated
-spin glasses with exact optimality. All candidate ideas maintained in
-`research/CANDIDATE_IDEAS_LEDGER.md`. Next: evaluate CD005/CD006 or engine integration.
+Active bundle: `research/CANDIDATE_IDEAS_LEDGER.md`, `research/breakthrough/cd005/`.
+First cycle CD001/H11: rank-only response-count claim NO-GO (commit `20ce993`).
+Second cycle CD002/H12: discrete gauge synchronization vs spectral sync NO-GO (commit `a900575`).
+Third cycle CD003/H13: precision-rank bounded response N_resp <= (2bK+1)^r CONFIRMED (commit `b37c1c3`).
+Fourth cycle CD004/H14: native soft-conflict learning cuts BnB nodes by 33-54% CONFIRMED (commit `f12ce06`).
+Fifth cycle CD005/H15 (Option D: Edge-Restricted 2-Opt Escapes) completed and confirmed:
+Theorem 1 verified (0 violations), escapes 93-97% of 1-opt local traps with up to 24.8x speedup over O(N^2) scans.
+All candidate ideas maintained in `research/CANDIDATE_IDEAS_LEDGER.md`. Next: synthesize into unified platform.
 No production changes or broad superiority/novelty claims. Preserve all
 unrelated research and unfinished earlier records.
 

@@ -91,3 +91,4 @@ scientific content of the linked record.
 | 2026-09-19 | CD002: discrete gauge synchronization vs spectral sync; K*|Sd| frustration degeneracy, scientific NO-GO | [H12](../research/breakthrough/cd002/RESULTS.md) |
 | 2026-09-19 | CD003: precision-rank bounded response; N_resp <= (2bK+1)^r confirmed, resolves H11 negative result | [H13](../research/breakthrough/cd003/RESULTS.md) |
 | 2026-09-19 | CD004: native soft-conflict learning & backjumping; 33-54% node reduction on frustrated spin glasses, GO | [H14](../research/breakthrough/cd004/RESULTS.md) |
+| 2026-09-19 | CD005: edge-restricted 2-opt escape; Theorem 1 (0 violations), 93-97% trap escape rate, up to 24.8x speedup, GO | [H15](../research/breakthrough/cd005/RESULTS.md) |
