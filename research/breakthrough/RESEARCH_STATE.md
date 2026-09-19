@@ -1,5 +1,23 @@
 # Breakthrough research state
 
+**2026-09-17: explicitly resumed by the user for cross-domain mechanisms and
+Ising with both HYPODIVE skills.** Prior stop statements below are historical.
+CD001/H11 completed an exact constructed falsification: 18 rows / 16,380 energies,
+rank-only response-count claim NO-GO. Two other broad novelty proposals were
+mapped to known reweighting and parametric optimization. No new method or speed
+advantage established. [Mechanism map](../PRIOR_ART_MATRIX.md),
+[result](h11/RESULTS.md), [handoff](../HYPODIVE_BUILDER_HANDOFF.md).
+Independent math and finished-code reviews passed (code review on retry after
+a service limit). Git freeze completed. Next: select a materially different hypothesis;
+do not rerun old series or treat earlier draft protocols as binding.
+
+**2026-09-17: audit stopped at the user's explicit request.** Follow
+[memory/NOW.md](../../memory/NOW.md); automatic goal continuations do not reopen
+review or EXP002. EXP001 has a completion marker for 4,200 rows; the old run-in-
+progress statements below describe the earlier checkpoint and are superseded.
+The uncommitted result/protocol drafts remain pending. No new benchmark or
+scientific validation was performed to record this stop; no superiority claim.
+
 **Resumed 2026-09-12 through the goal control**, which is active after the prior block. Preregistration committed as `aee6ea8`; the isolated prototype is implemented and independently reviewed PASS before data.
 
 Project handoff authority remains [memory/NOW.md](../../memory/NOW.md). This file is the requested research ledger, not a second project-task authority.
@@ -10,10 +28,10 @@ Completed: [algorithm audit](AUDIT.md), [10 hypotheses](HYPOTHESES.md), [prospec
 
 | Experiment | Hypotheses | Design | Status |
 |---|---|---|---|
-| EXP001 | H01 + H07 | full 2³ factorial: leaf response, degree-2 response, 2-opt refinement | preregistered `aee6ea8`; prototype: 9 mathematical + 3 analysis tests pass; independent instrument review PASS; no data |
+| EXP001 | H01 + H07 | full 2³ factorial: leaf response, degree-2 response, 2-opt refinement | preregistered `aee6ea8`; prototype: 9 mathematical + 3 analysis tests pass; instrument `526ddd3`, independent review PASS; single registered run in progress |
 
 Previously weak/rejected directions: consensus freezing (RC-001), generic covariance/co-flip move synthesis (RC-003), hard-vs-soft memory spelling (RC-023), naive relinking additions (RC-024–026). Their scoped negative records are preserved. No new hypothesis is experimentally rejected yet.
 
 Promising untested: conditional elimination, exact tree moves, gauge-conditioned distributions, constraint-tangent moves. Unexplained candidate outcomes: none yet. Audit anomaly: published “marginal vacuity” corollary is broader than its premises; exact counterexample derived. Benchmark anomaly: calibration null drift is large, so small timing advantages will not be claimed.
 
-Next: commit the reviewed prototype before data; run all 4,200 frozen rows, analyze failures and compute accounting, independently review results. Then select H02 or H04 based on information gained, not the most flattering result.
+Next: finish the single run already in progress; analyze all 4,200 frozen rows, failures and compute accounting; independently review results. Do not relaunch into `exp001/`. Then select H02 or H04 based on information gained, not the most flattering result.

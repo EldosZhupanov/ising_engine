@@ -3,7 +3,7 @@ id: memory-now
 kind: live-state
 status: active
 authority_scope: current-task
-updated: 2026-09-12
+updated: 2026-09-17
 immutable: false
 ---
 
@@ -11,6 +11,41 @@ immutable: false
 
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
+
+## Explicitly resumed: cross-domain mechanisms with Ising — 2026-09-17
+
+The user explicitly selected the five-step mechanism map / boundary / transfer /
+prior-art falsification / minimal experiment workflow and requested both HYPODIVE
+skills. This lifts the earlier audit stop for this scoped investigation. Do not
+restart EXP001 or automatically execute the uncommitted EXP002 draft.
+Active bundle: `research/PRIOR_ART_MATRIX.md`,
+`research/HYPODIVE_BUILDER_INTAKE.md`, and `research/breakthrough/h11/`.
+First cycle CD001/H11 is complete as a mathematical falsification: rank-only
+response-count claim NO-GO; 18 constructed cases and 16,380 exact evaluations.
+Mechanism/prior-art map covers seven fields; no new solver or speed advantage.
+Independent mathematical and finished-code reviews completed PASS; code review
+passed on retry after an initial service usage limit. Source/result Git freeze
+completed; see `research/HYPODIVE_BUILDER_HANDOFF.md`. No production changes or broad superiority/novelty claims. Preserve all
+unrelated research and unfinished earlier records.
+
+The audit stop below is historical and superseded within this explicit scope.
+
+## Audit stop — 2026-09-17
+
+The latest explicit user instruction is: «аудить не надо делать стоп аудит».
+Do not start or resume repository audits, independent review, falsification
+passes or EXP002 under an automatic goal continuation. Resume those activities
+only after an explicit user instruction lifting this stop. This does not cancel
+the broader research objective or mark it complete. Both requested HYPODIVE skills
+are already installed; their presence does not authorize an audit.
+
+Preserved checkpoint: EXP001 has a completion marker for 4,200 rows at
+`research/breakthrough/exp001/complete.json`; no rerun is required. The untracked
+EXP001 result and EXP002 protocol are drafts, not committed/frozen records.
+Post-experiment validation remains unfinished, so no new superiority claim is
+licensed. The previously written “in progress” statement below is superseded.
+No new experiments or scientific checks were run while recording this stop.
+Preserve unrelated `research/fundamental_ai/` and `results/rc027/` work.
 
 ## Current user-authorized research expansion — 2026-09-11
 
@@ -29,11 +64,19 @@ scope. EXP001 preregistration was committed as `aee6ea8` before prototype code o
 The isolated prototype and analysis instrument now pass 9 Rust mathematical
 tests and 3 Python screen tests; independent instrument review returned PASS
 (no HIGH/MEDIUM findings; reviewer repeated all 12 tests).
-Next: commit the reviewed instrument, then execute the frozen 4,200-row factorial
-suites once. No registered candidate data exist yet. The user requested and
-received preliminary findings on 2026-09-12 and explicitly directed continued
-research without a change of direction. See
-[HANDOFF.md](../research/breakthrough/HANDOFF.md) for the preserved checkpoint.
+Instrument committed as `526ddd3`; the single registered 4,200-row run is now
+in progress under `research/breakthrough/exp001/`. Do not launch it again or
+change the frozen source/protocol. Next: inspect completion and analyze the
+registered screens, then investigate any unexpected large effects. The user requested and received preliminary findings on 2026-09-12 and explicitly directed continued research without a change of direction. See [HANDOFF.md](../research/breakthrough/HANDOFF.md) for the preserved checkpoint.
+
+### Parallel Isolated Research: `research/fundamental_ai/` (2026-09-12)
+- Autonomous exploration of higher-order tensor energy dynamics ($p \ge 3$) as AI computational primitives.
+- **EXP-TEN-001** (Associative Scaling): Completed across $N \in \{128, 256, 512\}$. Published in `EXP_TEN_001_RESULT.md`.
+- **EXP-TEN-002** (Adversarial Falsification): Completed across 6 data suites. Model C proved identical to degree-3 Polynomial DAM and collapses under correlation where 1-NN achieves 100%. Published in `EXP_TEN_002_RESULT.md`.
+- **EXP-TEN-003** (Latent Compression $P \gg R$): Completed. Discovered the Sign-Erasure Pathology of odd-degree energy models ($p=3$); linear SVD outperforms CP-3 on unseen grammar ($0.773$ vs $0.322$). Published in `EXP_TEN_003_RESULT.md`.
+- **EXP-TEN-004** (Relational Composition): Completed. Confirmed inference-time compute scaling ($T=1: 0.9\% \to T=2: 100.0\%$), while pairwise Hopfield collapses to $0.0\%$. Published in `EXP_TEN_004_RESULT.md`.
+- **EXP-TEN-006A & EXP-TEN-006A-R Audit** (Prior-Art Reset & Adversarial Audit): Completed across 4,410 audit trials. Overclaims retracted. Audit proved LearnedDualEnergy was inert (Rescue Rate = 0.7%, identical to zero-interaction ablation, p=1.000). The cyclic task was algebraically reduced to Permutation Synchronization over S_d (Pachauri et al. 2013). Classical Spectral Sync (89.4%) and Loopy Min-Sum (95.1%) outperform candidate (79.6%). Published in `EXP_TEN_006_PRIOR_ART_RESET.md`, `EXP_TEN_006_STABILITY_THEORY.md`, and `EXP_TEN_006_NOVELTY_REVIEW.md`.
+- **EXP-TEN-006B** (Rigorous Energy & Contractive Synchronization Falsification): Completed. Implemented and mathematically verified Exact Analytical BPTT (TRAIN-A) and Exact Analytical Equilibrium Propagation (TRAIN-C). Pilot Gate failed decisively across all continuous models (Net Rescue <= +3.7% vs threshold > +10.0%). Discovered the Inertia-Erosion Dilemma: ln-cosh potentials create zero-crossing vanishing gradient barriers causing total inertia (Rescue Rate = 0.0%), while linear EBMs and contractive GNNs cause symmetric error diffusion that damages clean bits at nearly the same rate it rescues corrupt bits (Damage Rate 18.9%, Rescue Rate 22.6%). Classical Spectral Synchronization (+40.1%) and Loopy Min-Sum BP (+40.6%) decisively dominate continuous neural relaxations. Published in `EXP_TEN_006B_RESULT.md`. All root production code and invariants remain untouched.
 
 The pre-existing untracked `results/rc027/` remains untouched and uninspected.
 RC021 terminal evidence and all existing binding records remain immutable.

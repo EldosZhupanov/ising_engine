@@ -15,8 +15,8 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 - `binding`: 37
 - `closed`: 33
 - `historical`: 1
-- `proposed`: 2
-- `reference`: 115
+- `proposed`: 4
+- `reference`: 124
 - `superseded`: 4
 
 ## Registry
@@ -236,3 +236,14 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/h10/NEXT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
 | `research/breakthrough/h10/RESULTS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
 | `research/breakthrough/HANDOFF.md` | research-handoff | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough-resume |
+| `research/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/HYPODIVE_BUILDER_HANDOFF.md` | research-handoff | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/HYPODIVE_TRIAGE.md` | research-triage | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/PRIOR_ART_MATRIX.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/breakthrough/EXP001_RESULT.md` | research-result-draft | A2 | proposed | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/breakthrough/EXP002_PROTOCOL.md` | research-protocol-draft | A2 | proposed | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/breakthrough/h11/HYPOTHESIS.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/breakthrough/h11/MATH.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/breakthrough/h11/IMPLEMENTATION.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/breakthrough/h11/RESULTS.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/breakthrough/h11/NEXT.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |

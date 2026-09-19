@@ -20,3 +20,12 @@ Scores 1–5, higher is better. Cheapness=5 means a small exact-oracle prototype
 H01 is the exact minimal multilevel construction: QUBO → eliminable boundary analysis → conditional response tables → residual coarse QUBO → unchanged optimizer → reverse lifting → original scoring. H02 extends to bounded-treewidth conditional refinement; H10 amortizes repeated boundary computations. Correlation-based contraction u_i=r_i z_C alone restricts the feasible set and can lose the optimum: it is a proposal subspace unless a certificate proves the relation. Weak coupling does not imply a small boundary or low treewidth. H04 provides statistical proposals rather than certificates.
 
 Mathematical equivalence search covered exact elimination/star-triangle, bucket elimination, HFS/treewidth, EDA/hBOA, feasible-subspace mixers, cycle codes, r-flip formulas, spectral/analog landscape annealing, first-passage restart and context caching. Follow the linked primary papers and implementations in each hypothesis. This is a scoped novelty search, not exhaustive priority adjudication.
+
+## Subsequent cross-domain cycle — 2026-09-17
+
+[H11](h11/HYPOTHESIS.md) tested the newly proposed rank-only conditional-response
+compression assumption and rejected it by an exact Ising/QUBO counterexample.
+[CD001 result](h11/RESULTS.md): 18 constructed cases, no new solver or speed claim.
+The accompanying [mechanism map](../PRIOR_ART_MATRIX.md) also rejects novelty of
+plain exponential reweighting and narrows parameter-region memory to a known
+principle. Scientific priority of the specific counterexample is not asserted.
