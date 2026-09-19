@@ -16,7 +16,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 - `closed`: 33
 - `historical`: 1
 - `proposed`: 4
-- `reference`: 149
+- `reference`: 150
 - `superseded`: 4
 
 ## Registry
@@ -157,6 +157,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `research/ROADMAP_AUTONOMOUS_SCIENTIST.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
 | `research/STAGE_7_RESEARCH_PLATFORM.md` | research-reference | A2 | reference | 2026-07-14 | 2026-07-14 | false | research-context |
 | `research/STAGE_8_KNOWLEDGE_OS.md` | research-reference | A2 | reference | 2026-07-14 | 2026-07-14 | false | research-context |
+| `research/SYNTHESIS_CD_SOLVER_ARCHITECTURE.md` | design-spec | A1 | reference | 2026-09-19 | 2026-09-19 | false | architecture-blueprint |
 | `results/rc023/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC023 |
 | `results/rc024/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC024 |
 | `results/rc025/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC025 |
