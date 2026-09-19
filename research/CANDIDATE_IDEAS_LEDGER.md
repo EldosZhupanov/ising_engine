@@ -44,7 +44,8 @@ of knowledge.
 ---
 
 ### [CD004 / Option B] Dual-Bound Certificates & Conflict Pruning from Proof Theory (H03 Extension)
-* **Status:** Queued
+* **Status:** **CONFIRMED ALGORITHMIC ADVANTAGE / GO** (2026-09-19)
+* **Outcome:** Implemented and evaluated native soft-conflict deletion filtering and non-chronological backjumping on frustrated Ising spin glasses. Cuts explored search tree nodes by **33.1% to 54.4%** across 2D lattices, random sparse, and Sherrington-Kirkpatrick graphs with 100% exact optimality. Fully documented in `research/breakthrough/cd004/`.
 * **Cross-Domain Origin:** Automated Theorem Proving (SAT/CDCL) + Mathematical Optimization (Lagrangian Duality).
 * **The Problem:** Modern SAT solvers (CDCL) solve million-variable instances by learning conflict clauses from unit-propagation failures, pruning vast subtrees ($2^{N-k}$). In soft optimization (Ising/QUBO/MaxSAT), there are no hard unsatisfiable clauses—every configuration is feasible with a soft energy value.
 * **The Boundary:** Heuristic local search (tabu, simulated annealing) explores blindly without learning certified forbidden subcubes; branch-and-bound requires expensive linear/SDP relaxations at every tree node.
