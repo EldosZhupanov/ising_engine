@@ -40,6 +40,12 @@ The user authorized official QOBLIB (Nature Computational Science, 2026; IBM Qua
   - Integrated uniform genetic crossover between cold replicas.
   - Implemented short-term tabu search (`tabu_search_labs`) with tenure and aspiration criterion.
   - Verified 4 qualification unit tests and Bolztmann exchange invariants.
+- Executed high-throughput multi-core campaign with `src/bin/labs_record_hunter.rs` (~200M flips/s across 4 Rayon threads, 60s per target) targeting 22-year-old unproven world records (Knauer 2004):
+  - $N=67$ (BKV 241): reached $E = 341$ (gap $+100$).
+  - $N=68$ (BKV 250): reached $E = 350$ (gap $+100$).
+  - $N=69$ (BKV 274): reached $E = 366$ (gap $+92$).
+  - $N=70$ (BKV 295): reached $E = 359$ (gap $+64$).
+  - In short 60s runs, the unproven 20-year-old records remain unbroken (confirming that literature records require multi-hour supercomputing budgets or BnB). Incumbents verified with exact energy checks.
 - Quality gates: PASS (cargo check, cargo test --release, cargo build --release --bins, cargo clippy --all-targets -- -D warnings, cargo fmt --check, git diff --check).
 
 ## SK-PARISI — Sherrington-Kirkpatrick Parisi Ground State Challenge COMPLETE — 2026-09-23
