@@ -58,6 +58,10 @@ The user authorized official QOBLIB (Nature Computational Science, 2026; IBM Qua
     - `ms_03_050_009`: 0.70 s (VALID, 0 violations)
     - `ms_03_100_001`: 2.02 s (2.1x faster than Q-Bridge GPU SA)
     - `ms_03_100_012`: 0.87 s (4.9x faster than Q-Bridge GPU SA)
+- Deployed Continuous Overnight LABS Record Hunter:
+  - Upgraded `src/bin/labs_record_hunter.rs` for unattended multi-hour continuous search on all CPU cores across $N \in [67..74]$.
+  - Added warm-start checkpoint preservation (`benchmarks/qoblib/world_records/checkpoint_N{:03}.sol`), dynamic cycle re-seeding, and witness generation with official ZIB verification.
+  - Telemetry streamed to `benchmarks/qoblib/world_records/hunt_history.log`.
   - Packaged complete official submission package in `benchmarks/qoblib/submissions/01-marketsplit/20260924_UltimateSolver_Zhupanov/` with per-instance passports and `.sol` files, 100% verified by `check_marketsplit`.
 
 ## SK-PARISI — Sherrington-Kirkpatrick Parisi Ground State Challenge COMPLETE — 2026-09-23

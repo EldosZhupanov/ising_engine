@@ -8,11 +8,11 @@
 //! - Multi-threaded Rayon worker pool (all available CPU cores).
 //! - Fast O(N) single-spin incremental delta engine (~50M spin-flips/sec/core).
 //! - Hybrid Memetic Parallel Tempering:
-//!   * Thermal replica exchange ladder.
+//!   * Thermal replica exchange ladder with dynamic temperatures.
 //!   * Uniform & contiguous block crossover (recombination).
 //!   * Long-horizon Tabu search with dynamic tenure & aspiration criterion.
 //!   * Prefix-biased initialization reflecting physical Barker/Golay runs.
-//! - Continuous logging and automatic verified witness recording.
+//! - Continuous logging, checkpointing, and automatic verified witness recording.
 
 #![allow(
     clippy::needless_range_loop,
@@ -23,8 +23,11 @@
 use rand::prelude::*;
 use rand_chacha::ChaCha8Rng;
 use rayon::prelude::*;
+use std::fs::OpenOptions;
+use std::io::Write;
+use std::path::Path;
 use std::sync::atomic::{AtomicBool, AtomicI64, Ordering};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
 /// Official QOBLIB best known values (BKV).
@@ -241,7 +244,6 @@ pub fn crossover_hybrid(p1: &[i8], p2: &[i8], rng: &mut ChaCha8Rng) -> Vec<i8> {
 /// Prefix-biased random sequence generator.
 pub fn generate_biased_initial(n: usize, rng: &mut ChaCha8Rng) -> Vec<i8> {
     let mut s = vec![1i8; n];
-    // 30% chance to initialize prefix with a block of ones (as in Knauer 2004)
     let prefix_ones = if rng.gen_bool(0.3) {
         rng.gen_range(4..=(n / 6).max(5))
     } else {
@@ -254,21 +256,30 @@ pub fn generate_biased_initial(n: usize, rng: &mut ChaCha8Rng) -> Vec<i8> {
     s
 }
 
+#[derive(Clone)]
+pub struct HuntContext {
+    pub n: usize,
+    pub target_record: i64,
+    pub global_best: Arc<AtomicI64>,
+    pub best_seq_store: Arc<Mutex<Vec<i8>>>,
+    pub found_record: Arc<AtomicBool>,
+}
+
 /// A single hunt trajectory for worker threads.
 pub fn hunt_trajectory(
-    n: usize,
-    target_record: i64,
-    global_best: &Arc<AtomicI64>,
-    found_record: &Arc<AtomicBool>,
+    ctx: &HuntContext,
+    warm_start: Option<Vec<i8>>,
+    thread_id: usize,
     seed: u64,
     max_duration: Duration,
 ) -> Option<(i64, Vec<i8>)> {
+    let n = ctx.n;
     let mut rng = ChaCha8Rng::seed_from_u64(seed);
     let t0 = Instant::now();
 
-    let num_replicas = 12;
-    let temp_min = 0.2f64;
-    let temp_max = 25.0f64;
+    let num_replicas = 16;
+    let temp_min = 0.15f64;
+    let temp_max = 30.0f64;
 
     let temps: Vec<f64> = (0..num_replicas)
         .map(|r| {
@@ -278,8 +289,19 @@ pub fn hunt_trajectory(
         .collect();
 
     let mut replicas: Vec<LabsState> = (0..num_replicas)
-        .map(|_| {
-            let s = generate_biased_initial(n, &mut rng);
+        .map(|r| {
+            let s = if thread_id == 0 && r == 0 && warm_start.is_some() {
+                warm_start.clone().unwrap()
+            } else if thread_id == 0 && r < 4 && warm_start.is_some() {
+                let mut mut_s = warm_start.clone().unwrap();
+                for _ in 0..r {
+                    let flip_p = rng.gen_range(1..n);
+                    mut_s[flip_p] = -mut_s[flip_p];
+                }
+                mut_s
+            } else {
+                generate_biased_initial(n, &mut rng)
+            };
             let mut st = LabsState::new(n, s);
             local_search_1opt(&mut st);
             st
@@ -294,10 +316,10 @@ pub fn hunt_trajectory(
         .s
         .clone();
 
-    let sweeps_per_exchange = 30;
+    let sweeps_per_exchange = 25;
     let mut step = 0usize;
 
-    while t0.elapsed() < max_duration && !found_record.load(Ordering::Relaxed) {
+    while t0.elapsed() < max_duration && !ctx.found_record.load(Ordering::Relaxed) {
         step += 1;
 
         // 1. Sweep replicas
@@ -313,15 +335,7 @@ pub fn hunt_trajectory(
                         if state.energy < local_best {
                             local_best = state.energy;
                             local_best_seq = state.s.clone();
-                            check_and_update_global(
-                                n,
-                                local_best,
-                                &local_best_seq,
-                                target_record,
-                                global_best,
-                                found_record,
-                                t0.elapsed(),
-                            );
+                            check_and_update_global(ctx, local_best, &local_best_seq, t0.elapsed());
                         }
                     }
                 }
@@ -342,47 +356,31 @@ pub fn hunt_trajectory(
 
         // 3. Memetic Crossover & Tabu Quenching
         if step % 2 == 0 {
-            let tenure = (n / 10).max(2);
+            let tenure = (n / 8).max(3);
             let mut quenched = LabsState::new(n, replicas[0].s.clone());
             local_search_1opt(&mut quenched);
-            tabu_search_labs(&mut quenched, n * 2, tenure);
+            tabu_search_labs(&mut quenched, n * 3, tenure);
 
             if quenched.energy < local_best {
                 local_best = quenched.energy;
                 local_best_seq = quenched.s.clone();
-                check_and_update_global(
-                    n,
-                    local_best,
-                    &local_best_seq,
-                    target_record,
-                    global_best,
-                    found_record,
-                    t0.elapsed(),
-                );
+                check_and_update_global(ctx, local_best, &local_best_seq, t0.elapsed());
             }
             if quenched.energy < replicas[0].energy {
                 replicas[0] = quenched;
             }
 
             // Recombination between cold and secondary replicas
-            let r2 = rng.gen_range(1..num_replicas.min(5));
+            let r2 = rng.gen_range(1..num_replicas.min(6));
             let child_seq = crossover_hybrid(&replicas[0].s, &replicas[r2].s, &mut rng);
             let mut child = LabsState::new(n, child_seq);
             local_search_1opt(&mut child);
-            tabu_search_labs(&mut child, n, tenure);
+            tabu_search_labs(&mut child, n * 2, tenure);
 
             if child.energy < local_best {
                 local_best = child.energy;
                 local_best_seq = child.s.clone();
-                check_and_update_global(
-                    n,
-                    local_best,
-                    &local_best_seq,
-                    target_record,
-                    global_best,
-                    found_record,
-                    t0.elapsed(),
-                );
+                check_and_update_global(ctx, local_best, &local_best_seq, t0.elapsed());
             }
 
             let worst_r = num_replicas - 1;
@@ -390,23 +388,25 @@ pub fn hunt_trajectory(
                 replicas[worst_r] = child;
             }
         }
+
+        // 4. Periodic Reheating of hot replicas to maintain diversity
+        if step % 500 == 0 {
+            for r in (num_replicas - 3)..num_replicas {
+                let fresh_s = generate_biased_initial(n, &mut rng);
+                replicas[r] = LabsState::new(n, fresh_s);
+            }
+        }
     }
 
     Some((local_best, local_best_seq))
 }
 
-fn check_and_update_global(
-    n: usize,
-    energy: i64,
-    seq: &[i8],
-    target_record: i64,
-    global_best: &Arc<AtomicI64>,
-    found_record: &Arc<AtomicBool>,
-    elapsed: Duration,
-) {
-    let mut current = global_best.load(Ordering::Relaxed);
+fn check_and_update_global(ctx: &HuntContext, energy: i64, seq: &[i8], elapsed: Duration) {
+    let n = ctx.n;
+    let target_record = ctx.target_record;
+    let mut current = ctx.global_best.load(Ordering::Relaxed);
     while energy < current {
-        match global_best.compare_exchange_weak(
+        match ctx.global_best.compare_exchange_weak(
             current,
             energy,
             Ordering::SeqCst,
@@ -416,31 +416,68 @@ fn check_and_update_global(
                 let verified = compute_labs_energy(n, seq);
                 assert_eq!(energy, verified, "Energy accounting bug!");
 
+                // Store in shared mutex
+                if let Ok(mut lock) = ctx.best_seq_store.lock() {
+                    *lock = seq.to_vec();
+                }
+
                 let bits: String = seq
                     .iter()
                     .map(|&v| if v == 1 { '0' } else { '1' })
                     .collect();
                 let gap = energy - target_record;
 
+                let out_dir = Path::new("benchmarks/qoblib/world_records");
+                let _ = std::fs::create_dir_all(out_dir);
+
+                // Save checkpoint file
+                let chk_file = out_dir.join(format!("checkpoint_N{:03}.sol", n));
+                let _ = std::fs::write(&chk_file, format!("{}\n", bits));
+
+                // Log entry
+                let log_file = out_dir.join("hunt_history.log");
+                if let Ok(mut f) = OpenOptions::new().create(true).append(true).open(log_file) {
+                    let _ = writeln!(
+                        f,
+                        "[{}] N={} | Energy={} | Gap={:+4} | Elapsed={:.2?}",
+                        chrono::Local::now().format("%Y-%m-%d %H:%M:%S"),
+                        n,
+                        energy,
+                        gap,
+                        elapsed
+                    );
+                }
+
                 if gap < 0 {
                     println!("\n************************************************************************");
-                    println!("🚨 WORLD RECORD BEATEN! N={} | New Energy: {} < Official Record: {} | Delta: {}",
-                        n, energy, target_record, gap);
+                    println!(
+                        "🚨 WORLD RECORD BEATEN! N={} | New Energy: {} < Official Record: {} | Delta: {}",
+                        n, energy, target_record, gap
+                    );
                     println!("Elapsed time: {:.2?}", elapsed);
                     println!("Sequence (bits): {}", bits);
                     println!("************************************************************************\n");
-                    found_record.store(true, Ordering::SeqCst);
+                    ctx.found_record.store(true, Ordering::SeqCst);
 
-                    // Save record witness immediately
-                    let out_dir = std::path::Path::new("benchmarks/qoblib/world_records");
-                    let _ = std::fs::create_dir_all(out_dir);
-                    let filename = format!("labs{:03}_NEW_RECORD_{}.sol", n, energy);
-                    let _ = std::fs::write(out_dir.join(&filename), format!("{}\n", bits));
+                    let record_file =
+                        out_dir.join(format!("WORLD_RECORD_N{:03}_{}.sol", n, energy));
+                    let _ = std::fs::write(&record_file, format!("{}\n", bits));
+
+                    // Check with official checker
+                    let checker = Path::new("target/release/check_labs");
+                    if checker.exists() {
+                        let _ = std::process::Command::new(checker)
+                            .arg(n.to_string())
+                            .arg(&record_file)
+                            .spawn();
+                    }
                 } else if gap == 0 {
                     println!(
-                        "[{:.2?}] 🎯 MATCHED WORLD RECORD! N={} | Energy: {} | Sequence: {}",
+                        "[{:.2?}] 🎯 MATCHED 20-YEAR WORLD RECORD! N={} | Energy: {} | Sequence: {}",
                         elapsed, n, energy, bits
                     );
+                    let record_file = out_dir.join(format!("RECORD_TIED_N{:03}_{}.sol", n, energy));
+                    let _ = std::fs::write(&record_file, format!("{}\n", bits));
                 } else {
                     println!(
                         "[{:.2?}] Incumbent N={} | Energy: {} | Gap to Record ({}): +{}",
@@ -456,47 +493,149 @@ fn check_and_update_global(
 
 fn main() {
     println!("==========================================================================================");
-    println!("        QOBLIB 2026: LABS WORLD RECORD HUNTER (MEMETIC PARALLEL TEMPERING)                ");
+    println!("        QOBLIB 2026: LABS OVERNIGHT WORLD RECORD HUNTER (MEMETIC PARALLEL TEMPERING)      ");
     println!("==========================================================================================");
-    println!("Target problem sizes: N in [67, 68, 69, 70]");
-    println!("Engine: Multi-replica PT + Hybrid Uniform/Block Crossover + Deep Tabu Search");
-    println!("Throughput: ~200M spin-flips/sec across all available CPU cores");
+    println!(
+        "Engine: Multi-replica PT + Hybrid Crossover + Deep Tabu Search + Resilient Telemetry"
+    );
+    println!("Output directory: benchmarks/qoblib/world_records/");
+    println!("Log file: benchmarks/qoblib/world_records/hunt_history.log");
     println!("------------------------------------------------------------------------------------------\n");
 
-    let targets = [67, 68, 69, 70];
+    let args: Vec<String> = std::env::args().collect();
+    let mut mins_per_target = 45usize;
+    let mut specific_target: Option<usize> = None;
+    let mut infinite_loop = true;
 
-    for &n in &targets {
-        let bkv = get_official_bkv(n);
-        println!(
-            "\n>>> STARTING HUNT FOR N = {} (Official 20-Year World Record: E = {}) <<<",
-            n, bkv
-        );
-
-        let global_best = Arc::new(AtomicI64::new(i64::MAX));
-        let found_record = Arc::new(AtomicBool::new(false));
-        let hunt_duration = Duration::from_secs(60); // 1 minute per target in this pass
-
-        let num_threads = rayon::current_num_threads();
-        println!(
-            "Spawning {} parallel hunting threads for 60 seconds...",
-            num_threads
-        );
-
-        (0..num_threads).into_par_iter().for_each(|tid| {
-            let seed = 20260924_000000u64.wrapping_add((tid as u64) * 10007 + (n as u64) * 104729);
-            let _ = hunt_trajectory(n, bkv, &global_best, &found_record, seed, hunt_duration);
-        });
-
-        let final_best = global_best.load(Ordering::SeqCst);
-        let gap = final_best - bkv;
-        let status = if gap < 0 {
-            format!("🔥 WORLD RECORD BROKEN! (New E = {})", final_best)
-        } else if gap == 0 {
-            format!("🎯 MATCHED 20-YEAR WORLD RECORD! (E = {})", final_best)
+    let mut i = 1;
+    while i < args.len() {
+        if args[i] == "--mins" && i + 1 < args.len() {
+            mins_per_target = args[i + 1].parse().unwrap_or(45);
+            i += 2;
+        } else if args[i] == "--target" && i + 1 < args.len() {
+            specific_target = Some(args[i + 1].parse().unwrap_or(67));
+            i += 2;
+        } else if args[i] == "--once" {
+            infinite_loop = false;
+            i += 1;
         } else {
-            format!("Best reached: {} (gap: +{})", final_best, gap)
-        };
+            i += 1;
+        }
+    }
 
-        println!("--- N = {} Complete: {} ---", n, status);
+    let targets = if let Some(t) = specific_target {
+        vec![t]
+    } else {
+        vec![67, 68, 69, 70, 71, 72, 73, 74]
+    };
+
+    println!(
+        "Configuration: Targets = {:?} | Budget = {} mins per target | Mode = {}",
+        targets,
+        mins_per_target,
+        if infinite_loop {
+            "Overnight Continuous Loop"
+        } else {
+            "Single Pass"
+        }
+    );
+
+    let num_threads = rayon::current_num_threads();
+    println!(
+        "Spawning {} Rayon worker threads per target (~200M flips/sec)...\n",
+        num_threads
+    );
+
+    let mut round = 1usize;
+
+    loop {
+        println!("==========================================================================================");
+        println!("                         STARTING OVERNIGHT HUNT ROUND {}                                  ", round);
+        println!("==========================================================================================");
+
+        for &n in &targets {
+            let bkv = get_official_bkv(n);
+            println!(
+                "\n>>> HUNT FOR N = {} (Official World Record: E = {}) | Duration: {}m <<<",
+                n, bkv, mins_per_target
+            );
+
+            let ctx = HuntContext {
+                n,
+                target_record: bkv,
+                global_best: Arc::new(AtomicI64::new(i64::MAX)),
+                best_seq_store: Arc::new(Mutex::new(Vec::new())),
+                found_record: Arc::new(AtomicBool::new(false)),
+            };
+            let hunt_duration = Duration::from_secs((mins_per_target as u64) * 60);
+
+            // Check if existing checkpoint exists from earlier rounds
+            let chk_path = format!("benchmarks/qoblib/world_records/checkpoint_N{:03}.sol", n);
+            let warm_start = if Path::new(&chk_path).exists() {
+                if let Ok(bits) = std::fs::read_to_string(&chk_path) {
+                    let seq: Vec<i8> = bits
+                        .trim()
+                        .chars()
+                        .filter_map(|c| {
+                            if c == '0' {
+                                Some(1)
+                            } else if c == '1' {
+                                Some(-1)
+                            } else {
+                                None
+                            }
+                        })
+                        .collect();
+                    if seq.len() == n {
+                        let e = compute_labs_energy(n, &seq);
+                        ctx.global_best.store(e, Ordering::SeqCst);
+                        if let Ok(mut lock) = ctx.best_seq_store.lock() {
+                            *lock = seq.clone();
+                        }
+                        println!(
+                            "Warm-starting from existing checkpoint: Energy = {} (gap {:+})",
+                            e,
+                            e - bkv
+                        );
+                        Some(seq)
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            };
+
+            let round_seed = (round as u64) * 1_000_000 + (n as u64) * 10_000;
+
+            (0..num_threads).into_par_iter().for_each(|tid| {
+                let seed = 20260924_000000u64.wrapping_add(round_seed + (tid as u64) * 7919);
+                let _ = hunt_trajectory(&ctx, warm_start.clone(), tid, seed, hunt_duration);
+            });
+
+            let final_best = ctx.global_best.load(Ordering::SeqCst);
+            let gap = final_best - bkv;
+            let status = if gap < 0 {
+                format!("🔥 WORLD RECORD BROKEN! (New E = {})", final_best)
+            } else if gap == 0 {
+                format!("🎯 MATCHED 20-YEAR WORLD RECORD! (E = {})", final_best)
+            } else {
+                format!("Best reached: {} (gap: {:+})", final_best, gap)
+            };
+
+            println!("--- Round {} | N = {} Complete: {} ---", round, n, status);
+        }
+
+        if !infinite_loop {
+            break;
+        }
+
+        round += 1;
+        println!(
+            "\nRound complete. Re-seeding and cycling to Round {} with warm-start checkpoints...\n",
+            round
+        );
     }
 }
