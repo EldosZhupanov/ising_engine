@@ -1,0 +1,27 @@
+{
+  "stage": "pre-pilot instrument",
+  "python_tests": 5,
+  "rust_adapter_tests": 4,
+  "production_regression_tests": 24,
+  "commands": {
+    "python3 -m unittest discover -s research/laya_semantic -p test_*.py": "PASS",
+    "cargo test --offline --release -p research --example laya_bridge": "PASS 4/4",
+    "cargo test --offline --release -p ising_engine --test test_presolve --test test_decomposition --test test_qpbo --test test_regression_golden": "PASS 24/24",
+    "cargo check --offline -p research --example laya_bridge": "PASS",
+    "cargo build --offline --release -p research --example laya_bridge": "PASS",
+    "cargo clippy --offline -p research --example laya_bridge -- -D warnings": "PASS",
+    "rustfmt --edition 2021 --check research/examples/laya_bridge.rs": "PASS",
+    "git diff --check": "PASS"
+  },
+  "review": {
+    "reviewer": "independent laya_review agent",
+    "status": "PASS source scope",
+    "resolved_medium": [
+      "NaN energy bypass",
+      "lost bridge failure evidence"
+    ],
+    "independent_python_tests": 5
+  },
+  "memory_full_tree": "Pre-existing failure: 29 uncatalogued untracked Markdown files under fundamental_ai and rc027; not modified",
+  "scope": "No root src edits; scoped example and production numerical regression gates"
+}

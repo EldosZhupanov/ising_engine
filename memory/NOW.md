@@ -18,8 +18,9 @@ The user explicitly selected semantic Laya decisions plus verified discrete
 reconciliation, then residual conflict-graph reduction. Active bundle:
 [protocol](../research/laya_semantic/PROTOCOL.md) and
 [Builder intake](../research/laya_semantic/HYPODIVE_BUILDER_INTAKE.md).
-Next: build/test the isolated adapter, freeze it, run the fixed exploratory pilot,
-and independently review the new work. Existing presolve is reused. No root src
+Instrument implemented; 33 focused tests and scoped build/check/clippy/format
+gates pass. Independent instrument source review PASS after two fixes. Next:
+freeze the instrument and run the fixed exploratory pilot from a clean checkout. Existing presolve is reused. No root src
 or dependency changes; preserve the pre-existing ultimate.rs whitespace edit and
 all unrelated untracked research. Older task selections below are historical.
 

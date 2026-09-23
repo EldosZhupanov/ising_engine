@@ -16,7 +16,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 - `closed`: 33
 - `historical`: 1
 - `proposed`: 4
-- `reference`: 151
+- `reference`: 152
 - `superseded`: 4
 
 ## Registry
@@ -275,3 +275,4 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/h11/NEXT.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/laya_semantic/PROTOCOL.md` | research-protocol | A2 | binding | 2026-09-23 | 2026-09-23 | true | LAYA-001 |
 | `research/laya_semantic/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-23 | 2026-09-23 | false | LAYA-001 |
+| `research/laya_semantic/README.md` | research-guide | A2 | reference | 2026-09-23 | 2026-09-23 | false | LAYA-001 |
