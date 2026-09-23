@@ -1,0 +1,1761 @@
+[
+  {
+    "id": 0,
+    "seed": 9242300,
+    "truth": [
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "messages": [
+      "The job_0 operation was running earlier, but it has been stopped.",
+      "The job_1 operation has not started yet.",
+      "The job_2 operation was paused earlier, but it has resumed and is running now.",
+      "The job_3 operation is running now.",
+      "The job_4 operation was running earlier, but it has been stopped.",
+      "The job_5 operation was running earlier, but it has been stopped.",
+      "The job_6 operation has not started yet.",
+      "The job_7 operation is scheduled for tomorrow; it is not running now."
+    ],
+    "rules": [
+      [
+        "implies",
+        0,
+        3
+      ],
+      [
+        "implies",
+        0,
+        6
+      ],
+      [
+        "implies",
+        1,
+        4
+      ],
+      [
+        "exclude",
+        1,
+        5
+      ],
+      [
+        "exclude",
+        2,
+        6
+      ],
+      [
+        "exclude",
+        2,
+        7
+      ],
+      [
+        "implies",
+        4,
+        5
+      ],
+      [
+        "exclude",
+        4,
+        7
+      ],
+      [
+        "exclude",
+        5,
+        6
+      ],
+      [
+        "implies",
+        5,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 1,
+    "seed": 9242301,
+    "truth": [
+      0,
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0
+    ],
+    "messages": [
+      "The job_0 operation has not started yet.",
+      "The job_1 operation has not started yet.",
+      "The job_2 operation has started and is still in progress.",
+      "The job_3 operation was running earlier, but it has been stopped.",
+      "The job_4 operation was paused earlier, but it has resumed and is running now.",
+      "The job_5 operation was running earlier, but it has been stopped.",
+      "The job_6 operation has started and is still in progress.",
+      "The job_7 operation is scheduled for tomorrow; it is not running now."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        3
+      ],
+      [
+        "implies",
+        0,
+        5
+      ],
+      [
+        "exclude",
+        1,
+        3
+      ],
+      [
+        "exclude",
+        1,
+        5
+      ],
+      [
+        "exclude",
+        1,
+        6
+      ],
+      [
+        "exclude",
+        2,
+        3
+      ],
+      [
+        "implies",
+        2,
+        4
+      ],
+      [
+        "exclude",
+        2,
+        5
+      ],
+      [
+        "implies",
+        3,
+        4
+      ],
+      [
+        "exclude",
+        3,
+        7
+      ],
+      [
+        "implies",
+        4,
+        6
+      ],
+      [
+        "exclude",
+        5,
+        6
+      ],
+      [
+        "exclude",
+        6,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 2,
+    "seed": 9242302,
+    "truth": [
+      1,
+      0,
+      1,
+      1,
+      1,
+      0,
+      1,
+      1
+    ],
+    "messages": [
+      "The plan was to cancel job_0, but the cancellation was reversed; it is running now.",
+      "The job_1 operation was running earlier, but it has been stopped.",
+      "The job_2 operation was paused earlier, but it has resumed and is running now.",
+      "The job_3 operation was paused earlier, but it has resumed and is running now.",
+      "The job_4 operation has started and is still in progress.",
+      "The job_5 operation finished yesterday and is not running now.",
+      "The job_6 operation has started and is still in progress.",
+      "The job_7 operation has started and is still in progress."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        5
+      ],
+      [
+        "implies",
+        1,
+        2
+      ],
+      [
+        "implies",
+        1,
+        3
+      ],
+      [
+        "exclude",
+        1,
+        6
+      ],
+      [
+        "implies",
+        3,
+        6
+      ],
+      [
+        "exclude",
+        4,
+        5
+      ]
+    ]
+  },
+  {
+    "id": 3,
+    "seed": 9242303,
+    "truth": [
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "messages": [
+      "The job_0 operation was running earlier, but it has been stopped.",
+      "The job_1 operation has started and is still in progress.",
+      "The job_2 operation was paused earlier, but it has resumed and is running now.",
+      "The job_3 operation was running earlier, but it has been stopped.",
+      "The job_4 operation has not started yet.",
+      "The job_5 operation was running earlier, but it has been stopped.",
+      "The job_6 operation finished yesterday and is not running now.",
+      "The job_7 operation was paused earlier, but it has resumed and is running now."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        2
+      ],
+      [
+        "implies",
+        0,
+        4
+      ],
+      [
+        "implies",
+        0,
+        5
+      ],
+      [
+        "implies",
+        0,
+        6
+      ],
+      [
+        "implies",
+        1,
+        2
+      ],
+      [
+        "exclude",
+        1,
+        5
+      ],
+      [
+        "exclude",
+        2,
+        3
+      ],
+      [
+        "exclude",
+        2,
+        5
+      ],
+      [
+        "exclude",
+        3,
+        4
+      ],
+      [
+        "exclude",
+        3,
+        6
+      ],
+      [
+        "exclude",
+        4,
+        7
+      ],
+      [
+        "implies",
+        5,
+        6
+      ],
+      [
+        "implies",
+        5,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 4,
+    "seed": 9242304,
+    "truth": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      1,
+      0
+    ],
+    "messages": [
+      "The job_0 operation has not started yet.",
+      "The job_1 operation was running earlier, but it has been stopped.",
+      "The job_2 operation finished yesterday and is not running now.",
+      "The plan was to cancel job_3, but the cancellation was reversed; it is running now.",
+      "The plan was to cancel job_4, but the cancellation was reversed; it is running now.",
+      "The job_5 operation has not started yet.",
+      "The job_6 operation was paused earlier, but it has resumed and is running now.",
+      "The job_7 operation was running earlier, but it has been stopped."
+    ],
+    "rules": [
+      [
+        "implies",
+        0,
+        2
+      ],
+      [
+        "implies",
+        0,
+        6
+      ],
+      [
+        "implies",
+        1,
+        6
+      ],
+      [
+        "exclude",
+        2,
+        4
+      ],
+      [
+        "exclude",
+        2,
+        5
+      ],
+      [
+        "implies",
+        2,
+        6
+      ],
+      [
+        "implies",
+        2,
+        7
+      ],
+      [
+        "implies",
+        5,
+        6
+      ],
+      [
+        "exclude",
+        5,
+        7
+      ],
+      [
+        "exclude",
+        6,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 5,
+    "seed": 9242305,
+    "truth": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      1
+    ],
+    "messages": [
+      "The job_0 operation was running earlier, but it has been stopped.",
+      "The job_1 operation has not started yet.",
+      "The job_2 operation has not started yet.",
+      "The job_3 operation is running now.",
+      "The job_4 operation finished yesterday and is not running now.",
+      "The job_5 operation is scheduled for tomorrow; it is not running now.",
+      "The job_6 operation is running now.",
+      "The plan was to cancel job_7, but the cancellation was reversed; it is running now."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        1
+      ],
+      [
+        "implies",
+        0,
+        6
+      ],
+      [
+        "implies",
+        1,
+        4
+      ],
+      [
+        "exclude",
+        1,
+        5
+      ],
+      [
+        "implies",
+        2,
+        3
+      ],
+      [
+        "implies",
+        3,
+        6
+      ],
+      [
+        "exclude",
+        5,
+        6
+      ],
+      [
+        "exclude",
+        5,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 6,
+    "seed": 9242306,
+    "truth": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      1,
+      0
+    ],
+    "messages": [
+      "The job_0 operation has not started yet.",
+      "The job_1 operation was running earlier, but it has been stopped.",
+      "The job_2 operation is scheduled for tomorrow; it is not running now.",
+      "The job_3 operation was paused earlier, but it has resumed and is running now.",
+      "The job_4 operation was paused earlier, but it has resumed and is running now.",
+      "The job_5 operation finished yesterday and is not running now.",
+      "The job_6 operation has started and is still in progress.",
+      "The job_7 operation was running earlier, but it has been stopped."
+    ],
+    "rules": [
+      [
+        "implies",
+        0,
+        6
+      ],
+      [
+        "implies",
+        0,
+        7
+      ],
+      [
+        "implies",
+        1,
+        5
+      ],
+      [
+        "exclude",
+        2,
+        6
+      ],
+      [
+        "implies",
+        4,
+        6
+      ]
+    ]
+  },
+  {
+    "id": 7,
+    "seed": 9242307,
+    "truth": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      1
+    ],
+    "messages": [
+      "The job_0 operation has not started yet.",
+      "The job_1 operation is scheduled for tomorrow; it is not running now.",
+      "The job_2 operation was running earlier, but it has been stopped.",
+      "The job_3 operation finished yesterday and is not running now.",
+      "The job_4 operation is running now.",
+      "The plan was to cancel job_5, but the cancellation was reversed; it is running now.",
+      "The job_6 operation finished yesterday and is not running now.",
+      "The plan was to cancel job_7, but the cancellation was reversed; it is running now."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        2
+      ],
+      [
+        "exclude",
+        0,
+        7
+      ],
+      [
+        "implies",
+        1,
+        4
+      ],
+      [
+        "exclude",
+        1,
+        5
+      ],
+      [
+        "implies",
+        2,
+        3
+      ],
+      [
+        "exclude",
+        2,
+        7
+      ],
+      [
+        "exclude",
+        3,
+        5
+      ],
+      [
+        "exclude",
+        3,
+        6
+      ],
+      [
+        "implies",
+        4,
+        5
+      ],
+      [
+        "exclude",
+        4,
+        6
+      ],
+      [
+        "exclude",
+        6,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 8,
+    "seed": 9242308,
+    "truth": [
+      1,
+      0,
+      1,
+      1,
+      0,
+      1,
+      0,
+      0
+    ],
+    "messages": [
+      "The job_0 operation was paused earlier, but it has resumed and is running now.",
+      "The job_1 operation is scheduled for tomorrow; it is not running now.",
+      "The job_2 operation is running now.",
+      "The plan was to cancel job_3, but the cancellation was reversed; it is running now.",
+      "The job_4 operation is scheduled for tomorrow; it is not running now.",
+      "The job_5 operation is running now.",
+      "The job_6 operation has not started yet.",
+      "The job_7 operation was running earlier, but it has been stopped."
+    ],
+    "rules": [
+      [
+        "exclude",
+        1,
+        5
+      ],
+      [
+        "exclude",
+        1,
+        6
+      ],
+      [
+        "exclude",
+        6,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 9,
+    "seed": 9242309,
+    "truth": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "messages": [
+      "The job_0 operation was running earlier, but it has been stopped.",
+      "The job_1 operation is scheduled for tomorrow; it is not running now.",
+      "The job_2 operation has started and is still in progress.",
+      "The job_3 operation was running earlier, but it has been stopped.",
+      "The job_4 operation is scheduled for tomorrow; it is not running now.",
+      "The job_5 operation was paused earlier, but it has resumed and is running now.",
+      "The job_6 operation finished yesterday and is not running now.",
+      "The job_7 operation was running earlier, but it has been stopped."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        2
+      ],
+      [
+        "implies",
+        0,
+        3
+      ],
+      [
+        "exclude",
+        0,
+        6
+      ],
+      [
+        "implies",
+        1,
+        4
+      ],
+      [
+        "exclude",
+        1,
+        5
+      ],
+      [
+        "exclude",
+        1,
+        7
+      ],
+      [
+        "exclude",
+        2,
+        7
+      ],
+      [
+        "exclude",
+        3,
+        5
+      ],
+      [
+        "implies",
+        3,
+        7
+      ],
+      [
+        "exclude",
+        4,
+        5
+      ],
+      [
+        "implies",
+        4,
+        6
+      ],
+      [
+        "exclude",
+        4,
+        7
+      ],
+      [
+        "exclude",
+        5,
+        6
+      ]
+    ]
+  },
+  {
+    "id": 10,
+    "seed": 9242310,
+    "truth": [
+      1,
+      0,
+      1,
+      0,
+      1,
+      1,
+      0,
+      0
+    ],
+    "messages": [
+      "The plan was to cancel job_0, but the cancellation was reversed; it is running now.",
+      "The job_1 operation finished yesterday and is not running now.",
+      "The job_2 operation has started and is still in progress.",
+      "The job_3 operation is scheduled for tomorrow; it is not running now.",
+      "The job_4 operation was paused earlier, but it has resumed and is running now.",
+      "The job_5 operation was paused earlier, but it has resumed and is running now.",
+      "The job_6 operation has not started yet.",
+      "The job_7 operation finished yesterday and is not running now."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        1
+      ],
+      [
+        "exclude",
+        0,
+        3
+      ],
+      [
+        "exclude",
+        1,
+        7
+      ],
+      [
+        "exclude",
+        5,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 11,
+    "seed": 9242311,
+    "truth": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    "messages": [
+      "The job_0 operation is scheduled for tomorrow; it is not running now.",
+      "The job_1 operation finished yesterday and is not running now.",
+      "The job_2 operation finished yesterday and is not running now.",
+      "The job_3 operation finished yesterday and is not running now.",
+      "The job_4 operation is scheduled for tomorrow; it is not running now.",
+      "The job_5 operation has not started yet.",
+      "The plan was to cancel job_6, but the cancellation was reversed; it is running now.",
+      "The job_7 operation was running earlier, but it has been stopped."
+    ],
+    "rules": [
+      [
+        "implies",
+        0,
+        5
+      ],
+      [
+        "exclude",
+        0,
+        6
+      ],
+      [
+        "exclude",
+        0,
+        7
+      ],
+      [
+        "exclude",
+        1,
+        5
+      ],
+      [
+        "exclude",
+        1,
+        7
+      ],
+      [
+        "exclude",
+        2,
+        4
+      ],
+      [
+        "exclude",
+        2,
+        5
+      ],
+      [
+        "exclude",
+        2,
+        7
+      ],
+      [
+        "implies",
+        5,
+        7
+      ],
+      [
+        "exclude",
+        6,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 12,
+    "seed": 9242312,
+    "truth": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      1,
+      1,
+      0
+    ],
+    "messages": [
+      "The job_0 operation finished yesterday and is not running now.",
+      "The job_1 operation was running earlier, but it has been stopped.",
+      "The job_2 operation finished yesterday and is not running now.",
+      "The job_3 operation was paused earlier, but it has resumed and is running now.",
+      "The job_4 operation was running earlier, but it has been stopped.",
+      "The job_5 operation is running now.",
+      "The job_6 operation was paused earlier, but it has resumed and is running now.",
+      "The job_7 operation finished yesterday and is not running now."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        2
+      ],
+      [
+        "implies",
+        0,
+        3
+      ],
+      [
+        "exclude",
+        0,
+        6
+      ],
+      [
+        "exclude",
+        1,
+        2
+      ],
+      [
+        "exclude",
+        1,
+        3
+      ],
+      [
+        "exclude",
+        1,
+        7
+      ],
+      [
+        "exclude",
+        2,
+        3
+      ],
+      [
+        "implies",
+        2,
+        6
+      ],
+      [
+        "exclude",
+        4,
+        6
+      ],
+      [
+        "implies",
+        4,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 13,
+    "seed": 9242313,
+    "truth": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "messages": [
+      "The job_0 operation is scheduled for tomorrow; it is not running now.",
+      "The job_1 operation finished yesterday and is not running now.",
+      "The job_2 operation is scheduled for tomorrow; it is not running now.",
+      "The job_3 operation finished yesterday and is not running now.",
+      "The job_4 operation was running earlier, but it has been stopped.",
+      "The job_5 operation has not started yet.",
+      "The job_6 operation finished yesterday and is not running now.",
+      "The job_7 operation is running now."
+    ],
+    "rules": [
+      [
+        "implies",
+        0,
+        3
+      ],
+      [
+        "exclude",
+        1,
+        4
+      ],
+      [
+        "implies",
+        2,
+        3
+      ],
+      [
+        "exclude",
+        2,
+        5
+      ],
+      [
+        "implies",
+        3,
+        4
+      ],
+      [
+        "exclude",
+        3,
+        6
+      ],
+      [
+        "exclude",
+        4,
+        5
+      ],
+      [
+        "implies",
+        4,
+        6
+      ],
+      [
+        "exclude",
+        4,
+        7
+      ],
+      [
+        "implies",
+        5,
+        6
+      ],
+      [
+        "implies",
+        5,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 14,
+    "seed": 9242314,
+    "truth": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0
+    ],
+    "messages": [
+      "The job_0 operation is scheduled for tomorrow; it is not running now.",
+      "The job_1 operation finished yesterday and is not running now.",
+      "The job_2 operation was running earlier, but it has been stopped.",
+      "The plan was to cancel job_3, but the cancellation was reversed; it is running now.",
+      "The job_4 operation has not started yet.",
+      "The job_5 operation was paused earlier, but it has resumed and is running now.",
+      "The job_6 operation is scheduled for tomorrow; it is not running now.",
+      "The job_7 operation finished yesterday and is not running now."
+    ],
+    "rules": [
+      [
+        "implies",
+        1,
+        3
+      ],
+      [
+        "implies",
+        1,
+        4
+      ],
+      [
+        "exclude",
+        2,
+        4
+      ],
+      [
+        "exclude",
+        2,
+        7
+      ],
+      [
+        "exclude",
+        4,
+        6
+      ]
+    ]
+  },
+  {
+    "id": 15,
+    "seed": 9242315,
+    "truth": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "messages": [
+      "The job_0 operation has not started yet.",
+      "The job_1 operation is running now.",
+      "The job_2 operation has not started yet.",
+      "The job_3 operation is scheduled for tomorrow; it is not running now.",
+      "The job_4 operation has not started yet.",
+      "The job_5 operation has not started yet.",
+      "The job_6 operation finished yesterday and is not running now.",
+      "The job_7 operation was running earlier, but it has been stopped."
+    ],
+    "rules": [
+      [
+        "implies",
+        0,
+        1
+      ],
+      [
+        "exclude",
+        0,
+        2
+      ],
+      [
+        "implies",
+        0,
+        3
+      ],
+      [
+        "implies",
+        0,
+        4
+      ],
+      [
+        "exclude",
+        0,
+        7
+      ],
+      [
+        "exclude",
+        1,
+        5
+      ],
+      [
+        "implies",
+        2,
+        3
+      ],
+      [
+        "implies",
+        2,
+        4
+      ],
+      [
+        "implies",
+        2,
+        7
+      ],
+      [
+        "exclude",
+        3,
+        4
+      ],
+      [
+        "exclude",
+        3,
+        7
+      ],
+      [
+        "implies",
+        5,
+        6
+      ],
+      [
+        "implies",
+        6,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 16,
+    "seed": 9242316,
+    "truth": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "messages": [
+      "The job_0 operation was running earlier, but it has been stopped.",
+      "The job_1 operation has not started yet.",
+      "The job_2 operation finished yesterday and is not running now.",
+      "The job_3 operation finished yesterday and is not running now.",
+      "The job_4 operation has not started yet.",
+      "The job_5 operation is running now.",
+      "The plan was to cancel job_6, but the cancellation was reversed; it is running now.",
+      "The job_7 operation has started and is still in progress."
+    ],
+    "rules": [
+      [
+        "implies",
+        0,
+        2
+      ],
+      [
+        "implies",
+        0,
+        4
+      ],
+      [
+        "implies",
+        0,
+        7
+      ],
+      [
+        "exclude",
+        1,
+        4
+      ],
+      [
+        "exclude",
+        4,
+        5
+      ],
+      [
+        "implies",
+        5,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 17,
+    "seed": 9242317,
+    "truth": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "messages": [
+      "The job_0 operation is scheduled for tomorrow; it is not running now.",
+      "The job_1 operation is scheduled for tomorrow; it is not running now.",
+      "The job_2 operation was paused earlier, but it has resumed and is running now.",
+      "The job_3 operation has not started yet.",
+      "The job_4 operation has not started yet.",
+      "The job_5 operation finished yesterday and is not running now.",
+      "The job_6 operation was running earlier, but it has been stopped.",
+      "The job_7 operation is running now."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        1
+      ],
+      [
+        "implies",
+        0,
+        5
+      ],
+      [
+        "exclude",
+        0,
+        6
+      ],
+      [
+        "exclude",
+        1,
+        3
+      ],
+      [
+        "implies",
+        1,
+        6
+      ],
+      [
+        "exclude",
+        2,
+        5
+      ],
+      [
+        "exclude",
+        2,
+        6
+      ],
+      [
+        "exclude",
+        3,
+        6
+      ],
+      [
+        "exclude",
+        3,
+        7
+      ],
+      [
+        "implies",
+        4,
+        5
+      ],
+      [
+        "implies",
+        5,
+        6
+      ],
+      [
+        "implies",
+        5,
+        7
+      ],
+      [
+        "exclude",
+        6,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 18,
+    "seed": 9242318,
+    "truth": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "messages": [
+      "The job_0 operation has not started yet.",
+      "The job_1 operation is scheduled for tomorrow; it is not running now.",
+      "The job_2 operation has not started yet.",
+      "The job_3 operation was paused earlier, but it has resumed and is running now.",
+      "The job_4 operation has not started yet.",
+      "The job_5 operation is scheduled for tomorrow; it is not running now.",
+      "The job_6 operation is scheduled for tomorrow; it is not running now.",
+      "The job_7 operation was running earlier, but it has been stopped."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        3
+      ],
+      [
+        "exclude",
+        0,
+        5
+      ],
+      [
+        "implies",
+        0,
+        6
+      ],
+      [
+        "implies",
+        1,
+        5
+      ],
+      [
+        "exclude",
+        4,
+        6
+      ]
+    ]
+  },
+  {
+    "id": 19,
+    "seed": 9242319,
+    "truth": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "messages": [
+      "The job_0 operation was running earlier, but it has been stopped.",
+      "The job_1 operation has not started yet.",
+      "The job_2 operation is scheduled for tomorrow; it is not running now.",
+      "The job_3 operation finished yesterday and is not running now.",
+      "The job_4 operation was running earlier, but it has been stopped.",
+      "The job_5 operation was running earlier, but it has been stopped.",
+      "The job_6 operation is scheduled for tomorrow; it is not running now.",
+      "The job_7 operation was running earlier, but it has been stopped."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        1
+      ],
+      [
+        "exclude",
+        0,
+        2
+      ],
+      [
+        "implies",
+        0,
+        5
+      ],
+      [
+        "implies",
+        0,
+        6
+      ],
+      [
+        "implies",
+        1,
+        4
+      ],
+      [
+        "implies",
+        1,
+        5
+      ],
+      [
+        "implies",
+        1,
+        6
+      ],
+      [
+        "exclude",
+        2,
+        3
+      ],
+      [
+        "exclude",
+        2,
+        4
+      ],
+      [
+        "exclude",
+        2,
+        5
+      ],
+      [
+        "exclude",
+        2,
+        6
+      ],
+      [
+        "exclude",
+        3,
+        5
+      ],
+      [
+        "exclude",
+        3,
+        6
+      ],
+      [
+        "exclude",
+        3,
+        7
+      ],
+      [
+        "exclude",
+        4,
+        6
+      ],
+      [
+        "implies",
+        4,
+        7
+      ],
+      [
+        "implies",
+        5,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 20,
+    "seed": 9242320,
+    "truth": [
+      0,
+      0,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "messages": [
+      "The job_0 operation finished yesterday and is not running now.",
+      "The job_1 operation finished yesterday and is not running now.",
+      "The job_2 operation was paused earlier, but it has resumed and is running now.",
+      "The plan was to cancel job_3, but the cancellation was reversed; it is running now.",
+      "The job_4 operation was paused earlier, but it has resumed and is running now.",
+      "The job_5 operation is scheduled for tomorrow; it is not running now.",
+      "The job_6 operation was running earlier, but it has been stopped.",
+      "The job_7 operation finished yesterday and is not running now."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        3
+      ],
+      [
+        "implies",
+        0,
+        4
+      ],
+      [
+        "exclude",
+        1,
+        2
+      ],
+      [
+        "exclude",
+        1,
+        3
+      ],
+      [
+        "implies",
+        2,
+        4
+      ],
+      [
+        "exclude",
+        3,
+        5
+      ],
+      [
+        "exclude",
+        4,
+        7
+      ],
+      [
+        "exclude",
+        5,
+        6
+      ],
+      [
+        "exclude",
+        5,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 21,
+    "seed": 9242321,
+    "truth": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    "messages": [
+      "The job_0 operation is scheduled for tomorrow; it is not running now.",
+      "The job_1 operation has not started yet.",
+      "The job_2 operation finished yesterday and is not running now.",
+      "The job_3 operation was running earlier, but it has been stopped.",
+      "The job_4 operation is scheduled for tomorrow; it is not running now.",
+      "The job_5 operation finished yesterday and is not running now.",
+      "The job_6 operation is running now.",
+      "The job_7 operation has not started yet."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        1
+      ],
+      [
+        "implies",
+        0,
+        5
+      ],
+      [
+        "exclude",
+        0,
+        6
+      ],
+      [
+        "exclude",
+        2,
+        4
+      ],
+      [
+        "implies",
+        2,
+        6
+      ],
+      [
+        "exclude",
+        3,
+        6
+      ],
+      [
+        "exclude",
+        3,
+        7
+      ],
+      [
+        "exclude",
+        4,
+        5
+      ],
+      [
+        "implies",
+        4,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 22,
+    "seed": 9242322,
+    "truth": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    "messages": [
+      "The job_0 operation is scheduled for tomorrow; it is not running now.",
+      "The job_1 operation was paused earlier, but it has resumed and is running now.",
+      "The job_2 operation finished yesterday and is not running now.",
+      "The job_3 operation finished yesterday and is not running now.",
+      "The job_4 operation finished yesterday and is not running now.",
+      "The job_5 operation is scheduled for tomorrow; it is not running now.",
+      "The job_6 operation has started and is still in progress.",
+      "The job_7 operation was running earlier, but it has been stopped."
+    ],
+    "rules": [
+      [
+        "implies",
+        0,
+        1
+      ],
+      [
+        "implies",
+        0,
+        6
+      ],
+      [
+        "exclude",
+        1,
+        3
+      ],
+      [
+        "implies",
+        2,
+        3
+      ],
+      [
+        "exclude",
+        2,
+        4
+      ],
+      [
+        "exclude",
+        2,
+        6
+      ],
+      [
+        "implies",
+        3,
+        4
+      ],
+      [
+        "implies",
+        3,
+        5
+      ],
+      [
+        "implies",
+        5,
+        7
+      ]
+    ]
+  },
+  {
+    "id": 23,
+    "seed": 9242323,
+    "truth": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "messages": [
+      "The job_0 operation was paused earlier, but it has resumed and is running now.",
+      "The job_1 operation is scheduled for tomorrow; it is not running now.",
+      "The job_2 operation was running earlier, but it has been stopped.",
+      "The job_3 operation was running earlier, but it has been stopped.",
+      "The job_4 operation finished yesterday and is not running now.",
+      "The job_5 operation is scheduled for tomorrow; it is not running now.",
+      "The job_6 operation finished yesterday and is not running now.",
+      "The job_7 operation finished yesterday and is not running now."
+    ],
+    "rules": [
+      [
+        "exclude",
+        0,
+        2
+      ],
+      [
+        "implies",
+        1,
+        7
+      ],
+      [
+        "exclude",
+        2,
+        3
+      ],
+      [
+        "exclude",
+        2,
+        5
+      ],
+      [
+        "exclude",
+        2,
+        6
+      ],
+      [
+        "exclude",
+        3,
+        4
+      ],
+      [
+        "exclude",
+        3,
+        5
+      ],
+      [
+        "implies",
+        3,
+        6
+      ],
+      [
+        "implies",
+        3,
+        7
+      ],
+      [
+        "exclude",
+        4,
+        5
+      ],
+      [
+        "exclude",
+        4,
+        6
+      ],
+      [
+        "exclude",
+        4,
+        7
+      ],
+      [
+        "implies",
+        5,
+        6
+      ],
+      [
+        "implies",
+        6,
+        7
+      ]
+    ]
+  }
+]

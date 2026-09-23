@@ -1,0 +1,111 @@
+{
+  "group_id": 3,
+  "questions": {
+    "q0": {
+      "type": "noul",
+      "instructions": "The job_0 operation was running earlier, but it has been stopped. Is the operation running now?"
+    },
+    "q1": {
+      "type": "noul",
+      "instructions": "The job_1 operation has started and is still in progress. Is the operation running now?"
+    },
+    "q2": {
+      "type": "noul",
+      "instructions": "The job_2 operation was paused earlier, but it has resumed and is running now. Is the operation running now?"
+    },
+    "q3": {
+      "type": "noul",
+      "instructions": "The job_3 operation was running earlier, but it has been stopped. Is the operation running now?"
+    },
+    "q4": {
+      "type": "noul",
+      "instructions": "The job_4 operation has not started yet. Is the operation running now?"
+    },
+    "q5": {
+      "type": "noul",
+      "instructions": "The job_5 operation was running earlier, but it has been stopped. Is the operation running now?"
+    },
+    "q6": {
+      "type": "noul",
+      "instructions": "The job_6 operation finished yesterday and is not running now. Is the operation running now?"
+    },
+    "q7": {
+      "type": "noul",
+      "instructions": "The job_7 operation was paused earlier, but it has resumed and is running now. Is the operation running now?"
+    }
+  },
+  "result": {
+    "model": "laya-rl-agent",
+    "answers": {
+      "q0": {
+        "type": "noul",
+        "noul": 0.2167,
+        "confidence": 0.7833,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "q1": {
+        "type": "noul",
+        "noul": 0.7881,
+        "confidence": 0.7881,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "q2": {
+        "type": "noul",
+        "noul": 0.8507,
+        "confidence": 0.8507,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "q3": {
+        "type": "noul",
+        "noul": 0.2968,
+        "confidence": 0.7032,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "q4": {
+        "type": "noul",
+        "noul": 0.6778,
+        "confidence": 0.6778,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "q5": {
+        "type": "noul",
+        "noul": 0.2417,
+        "confidence": 0.7583,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "q6": {
+        "type": "noul",
+        "noul": 0.1372,
+        "confidence": 0.8628,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "q7": {
+        "type": "noul",
+        "noul": 0.8493,
+        "confidence": 0.8493,
+        "action": {
+          "act_probability": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 421,
+      "output_tokens": 0
+    }
+  },
+  "seconds_observation_only": 5.62042137500066
+}
