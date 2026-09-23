@@ -14,15 +14,20 @@ its claims against `git status --short` and the current branch before acting.
 
 ## SK-PARISI — Sherrington-Kirkpatrick Parisi Ground State Challenge COMPLETE — 2026-09-23
 
-The user requested execution of the hardest global benchmark and physical frontier.
-Implemented publication-grade binary `src/bin/sk_parisi_benchmark.rs` evaluating dense SK spin glass ($J_{ij} \sim \mathcal{N}(0, 1/N)$) across $N \in \{64, 128, 256, 512\}$ (up to 130,816 couplings) against the analytical Parisi ground state limit ($e_0 \approx -0.7632$).
-- Quality gates: PASS (cargo check, cargo test --release, cargo build --release --bins, cargo clippy, cargo fmt, git diff --check).
+The user requested execution of the hardest global benchmark and physical frontier, followed by an adversarial peer-review audit.
+- Exhaustive Verification: Added `test_sk_energy_exhaustive_equivalence` in `tests/test_energy.rs` asserting $|E_{\text{QUBO}}(x) - E_{\text{SK}}(\sigma(x))| < 10^{-11}$ and all 10 single-flip deltas match across all $2^{10} = 1024$ states. Confirmed CSR symmetric matrix factor 0.5 in `calculate_total_energy`.
+- Algorithmic Rigor: Refactored `src/bin/sk_parisi_benchmark.rs`:
+  - Replaced heuristic D-Wave formula with exact graph-theoretic treewidth theorem: $tw(K_N) = N - 1$. Since $tw(Z_{12}) \le 200$, direct minor embedding of $K_{256}$ and $K_{512}$ on D-Wave Advantage2 $Z_{12}$ is topologically ruled out.
+  - Multi-start Greedy (20 restarts): converges to $e \sim -0.705 \dots -0.732$, matching quenches in SK literature (Folena et al. 2024: $-0.708 \dots -0.735$).
+  - Evaluated on ensemble of independent disorder realizations (mean $\pm$ std dev).
+  - Clarified finite-size reference $\langle e_0(N) \rangle$ as an empirical ensemble reference, not an instance-specific lower bound.
+  - Acknowledged Andrea Montanari's IAMP polynomial-time algorithm ($C(\varepsilon)N^2$) and cited Talagrand (2006) and Auffinger & Chen (2017).
 - Results:
-  - $N=64$: Greedy $-0.6056$ (84.3%), UltimateSolver $-0.6806$ (94.8% of Parisi $e_0(64)=-0.7182$) in 0.8 s.
-  - $N=128$: Greedy $-0.6407$ (87.2%), UltimateSolver $-0.7202$ (98.0% of Parisi $e_0(128)=-0.7348$) in 3.4 s.
-  - $N=256$: Greedy $-0.6391$ (85.7%), UltimateSolver $-0.7419$ (99.5% of Parisi $e_0(256)=-0.7453$) in 15.3 s. D-Wave embedding impossible (requires 16,320 physical qubits vs 5,640 available on Advantage).
-  - $N=512$ (130,816 couplings): Greedy $-0.6741$ (89.6%), UltimateSolver $-0.7531$ (100.2% of finite-size predicted $e_0(512)=-0.7519$) in 92.8 s. D-Wave embedding completely impossible (requires 65,408 physical qubits, >10x largest QPU on Earth).
-No root src changes; preserve the pre-existing ultimate.rs whitespace edit and all unrelated untracked research.
+  - $N=64$ (5 instances): Greedy $-0.7054 \pm 0.0328$, UltimateSolver $-0.7188 \pm 0.0263$ (mean time 756 ms).
+  - $N=128$ (5 instances): Greedy $-0.7325 \pm 0.0183$, UltimateSolver $-0.7467 \pm 0.0146$ (mean time 3.2 s).
+  - $N=256$ (3 instances): Greedy $-0.7084 \pm 0.0063$, UltimateSolver $-0.7401 \pm 0.0080$ (mean time 15.0 s).
+  - $N=512$ (1 instance, 130,816 couplings): Greedy $-0.7293$, UltimateSolver $-0.7533$ (time ~85–92 s).
+- Quality gates: PASS (cargo check, cargo test --release, cargo build --release --bins, cargo clippy, cargo fmt, git diff --check).
 
 ## LAYA-001 — semantic reconciliation pilot COMPLETE — 2026-09-23
 

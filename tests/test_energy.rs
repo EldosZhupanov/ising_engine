@@ -143,3 +143,116 @@ fn test_delta_e_matches_bruteforce_xor_gate() {
         }
     }
 }
+
+#[test]
+fn test_sk_energy_exhaustive_equivalence() {
+    // Exact verification of the mathematical equivalence between the physical SK Hamiltonian
+    // H = - sum_{i < j} J_ij sigma_i sigma_j  (sigma in {-1, +1})
+    // and the mapped QuboModel evaluated via QuboModel::calculate_total_energy.
+    let n = 10;
+    let mut rng = rand::thread_rng();
+    use rand::Rng;
+
+    let mut j_mat = vec![vec![0.0f64; n]; n];
+    let mut sum_j_all = 0.0;
+    for i in 0..n {
+        for j in (i + 1)..n {
+            let j_val = rng.gen_range(-1.5..1.5);
+            j_mat[i][j] = j_val;
+            j_mat[j][i] = j_val;
+            sum_j_all += j_val;
+        }
+    }
+
+    let energy_offset = -sum_j_all;
+    let mut linear = vec![0.0f64; n];
+    for i in 0..n {
+        let mut row_sum = 0.0;
+        for j in 0..n {
+            if i != j {
+                row_sum += j_mat[i][j];
+            }
+        }
+        linear[i] = 2.0 * row_sum;
+    }
+
+    let mut values = Vec::new();
+    let mut col_indices = Vec::new();
+    let mut row_offsets = vec![0];
+    for i in 0..n {
+        for j in 0..n {
+            if i != j {
+                col_indices.push(j);
+                values.push(-4.0 * j_mat[i][j]);
+            }
+        }
+        row_offsets.push(col_indices.len());
+    }
+
+    let model = QuboModel {
+        energy_offset,
+        num_vars: n,
+        linear,
+        quadratic: CsrMatrix {
+            values,
+            col_indices,
+            row_offsets,
+        },
+    };
+
+    // Exhaustive test across all 2^10 = 1024 states
+    for state_idx in 0..(1 << n) {
+        let x: Vec<i8> = (0..n).map(|bit| ((state_idx >> bit) & 1) as i8).collect();
+        let sigma: Vec<f64> = x
+            .iter()
+            .map(|&bit| if bit == 0 { 1.0 } else { -1.0 })
+            .collect();
+
+        // 1. Direct SK Hamiltonian
+        let mut e_sk = 0.0;
+        for i in 0..n {
+            for j in (i + 1)..n {
+                e_sk -= j_mat[i][j] * sigma[i] * sigma[j];
+            }
+        }
+
+        // 2. QuboModel calculate_total_energy
+        let e_qubo = model.calculate_total_energy(&x);
+
+        assert!(
+            (e_qubo - e_sk).abs() < 1e-11,
+            "SK energy mismatch at state {}: E_QUBO = {}, E_SK = {}, diff = {}",
+            state_idx,
+            e_qubo,
+            e_sk,
+            (e_qubo - e_sk).abs()
+        );
+
+        // 3. Single-flip delta E equivalence for every variable
+        for var in 0..n {
+            let mut x_flipped = x.clone();
+            x_flipped[var] = 1 - x_flipped[var];
+            let delta_qubo = model.calculate_total_energy(&x_flipped) - e_qubo;
+
+            // Physical delta: flip sigma[var] -> -sigma[var]
+            let mut delta_sk = 0.0;
+            for j in 0..n {
+                if j != var {
+                    // term was - J_v,j * sigma[v] * sigma[j]
+                    // changes to + J_v,j * sigma[v] * sigma[j]
+                    // so delta = + 2 * J_v,j * sigma[v] * sigma[j]
+                    delta_sk += 2.0 * j_mat[var][j] * sigma[var] * sigma[j];
+                }
+            }
+
+            assert!(
+                (delta_qubo - delta_sk).abs() < 1e-11,
+                "Delta E mismatch at state {}, var {}: delta_qubo={}, delta_sk={}",
+                state_idx,
+                var,
+                delta_qubo,
+                delta_sk
+            );
+        }
+    }
+}
