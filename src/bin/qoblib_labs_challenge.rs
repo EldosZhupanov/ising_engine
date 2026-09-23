@@ -20,6 +20,7 @@
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 use rayon::prelude::*;
+use std::io::{self, Write};
 use std::time::Instant;
 
 /// Exact calculation of all autocorrelations C_d for d = 1..N-1.
@@ -154,6 +155,33 @@ pub fn solve_labs_pt(
     num_exchanges: usize,
     seed: u64,
 ) -> (i64, Vec<i8>) {
+    solve_labs_pt_observed(
+        n,
+        (
+            num_replicas,
+            temp_min,
+            temp_max,
+            sweeps_per_exchange,
+            num_exchanges,
+        ),
+        seed,
+        &mut |_, _| {},
+    )
+}
+
+/// Negative log acceptance ratio for exchanging configurations at two temperatures.
+fn exchange_cost(beta_cold: f64, beta_hot: f64, e_cold: i64, e_hot: i64) -> f64 {
+    (beta_cold - beta_hot) * (e_hot - e_cold) as f64
+}
+
+/// Same search as the demo, with a read-only incumbent observer for qualification.
+fn solve_labs_pt_observed(
+    n: usize,
+    config: (usize, f64, f64, usize, usize),
+    seed: u64,
+    observe: &mut dyn FnMut(i64, &[i8]),
+) -> (i64, Vec<i8>) {
+    let (num_replicas, temp_min, temp_max, sweeps_per_exchange, num_exchanges) = config;
     let mut rng = ChaCha8Rng::seed_from_u64(seed);
 
     // Initialize temperature ladder (geometric distribution)
@@ -169,6 +197,7 @@ pub fn solve_labs_pt(
         .collect();
 
     // Initialize replicas randomly (fixing s[0] = 1 to break spin-flip symmetry)
+    let mut init_best = i64::MAX;
     let mut replicas: Vec<LabsState> = (0..num_replicas)
         .map(|_| {
             let mut s = vec![1i8; n];
@@ -177,6 +206,10 @@ pub fn solve_labs_pt(
             }
             let mut st = LabsState::new(n, s);
             local_search_1opt(&mut st);
+            if st.energy < init_best {
+                init_best = st.energy;
+                observe(st.energy, &st.s);
+            }
             st
         })
         .collect();
@@ -204,6 +237,7 @@ pub fn solve_labs_pt(
                         if state.energy < best_energy {
                             best_energy = state.energy;
                             best_seq = state.s.clone();
+                            observe(best_energy, &best_seq);
                         }
                     }
                 }
@@ -214,9 +248,12 @@ pub fn solve_labs_pt(
         for r in 0..(num_replicas - 1) {
             let beta_r = 1.0 / temps[r];
             let beta_next = 1.0 / temps[r + 1];
-            let delta_beta = beta_next - beta_r;
-            let delta_e = (replicas[r + 1].energy - replicas[r].energy) as f64;
-            let delta = delta_beta * delta_e;
+            let delta = exchange_cost(
+                beta_r,
+                beta_next,
+                replicas[r].energy,
+                replicas[r + 1].energy,
+            );
 
             if delta <= 0.0 || rng.gen_range(0.0..1.0) < (-delta).exp() {
                 replicas.swap(r, r + 1);
@@ -230,6 +267,7 @@ pub fn solve_labs_pt(
             if quenched.energy < best_energy {
                 best_energy = quenched.energy;
                 best_seq = quenched.s.clone();
+                observe(best_energy, &best_seq);
             }
         }
     }
@@ -238,6 +276,9 @@ pub fn solve_labs_pt(
     let mut final_quenched = LabsState::new(n, best_seq);
     local_search_1opt(&mut final_quenched);
 
+    if final_quenched.energy < best_energy {
+        observe(final_quenched.energy, &final_quenched.s);
+    }
     (final_quenched.energy, final_quenched.s)
 }
 
@@ -248,7 +289,48 @@ struct LabsTarget {
     source: &'static str,
 }
 
+/// External supervisor owns the deadline and optimum stopping rule.
+fn qualification_cli(args: &[String]) {
+    assert_eq!(args.len(), 4, "usage: --qualify N SEED");
+    let n: usize = args[2].parse().expect("integer length");
+    let seed: u64 = args[3].parse().expect("integer seed");
+    let (sweeps, exchanges) = match n {
+        20 => (15, 15),
+        40 => (35, 30),
+        50 => (45, 35),
+        60 => (55, 40),
+        _ => panic!("qualification supports N20 smoke and N40/50/60"),
+    };
+    let mut best = i64::MAX;
+    let stdout = io::stdout();
+    let mut out = stdout.lock();
+    let mut observe = |energy, seq: &[i8]| {
+        if energy < best {
+            best = energy;
+            let bits: String = seq
+                .iter()
+                .map(|&v| if v == 1 { '0' } else { '1' })
+                .collect();
+            writeln!(out, "INC {energy} {bits}").expect("write incumbent");
+            out.flush().expect("flush incumbent");
+        }
+    };
+    for restart in 0u64.. {
+        solve_labs_pt_observed(
+            n,
+            (10, 0.2, 20.0, sweeps, exchanges),
+            seed.wrapping_add(restart.wrapping_mul(104729)),
+            &mut observe,
+        );
+    }
+}
+
 fn main() {
+    let args: Vec<String> = std::env::args().collect();
+    if args.get(1).is_some_and(|arg| arg == "--qualify") {
+        qualification_cli(&args);
+        return;
+    }
     println!("==========================================================================================");
     println!("    QOBLIB 2026: LOW AUTOCORRELATION BINARY SEQUENCES (LABS) WORLD-RECORD CHALLENGE        ");
     println!("==========================================================================================");
@@ -393,4 +475,67 @@ fn main() {
     );
     println!("3. Directly challenges unproven 20-year world records (N >= 67) from official QOBLIB suite.");
     println!("==========================================================================================");
+}
+
+#[cfg(test)]
+mod qualification_tests {
+    use super::*;
+
+    #[test]
+    fn replica_exchange_has_correct_boltzmann_sign() {
+        let cost = exchange_cost(10.0, 1.0, 0, 100);
+        assert_eq!(cost, 900.0); // moving high energy into cold replica is suppressed
+        assert_eq!(exchange_cost(10.0, 1.0, 100, 0), -900.0);
+        assert_eq!(exchange_cost(1.0, 1.0, 0, 100), 0.0);
+        let forward = (-exchange_cost(0.2, 0.1, 3, 8)).exp().min(1.0);
+        let reverse = (-exchange_cost(0.2, 0.1, 8, 3)).exp().min(1.0);
+        assert!((forward / reverse - (-0.5_f64).exp()).abs() < 1e-14);
+    }
+
+    #[test]
+    fn exhaustive_flip_deltas_and_correlations() {
+        for n in 2..=10 {
+            for mask in 0..(1 << n) {
+                let seq: Vec<i8> = (0..n)
+                    .map(|i| if mask & (1 << i) == 0 { 1 } else { -1 })
+                    .collect();
+                for p in 0..n {
+                    let mut state = LabsState::new(n, seq.clone());
+                    let predicted = state.energy + state.delta_energy_flip(p);
+                    state.apply_flip(p);
+                    assert_eq!(state.energy, predicted);
+                    assert_eq!(state.energy, compute_labs_energy(n, &state.s));
+                    assert_eq!(state.c, compute_autocorrelations(n, &state.s));
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn accumulated_flip_deltas_stay_exact() {
+        let mut rng = ChaCha8Rng::seed_from_u64(810003);
+        for n in [20, 40, 50, 60] {
+            let mut state = LabsState::new(n, vec![1; n]);
+            for _ in 0..1000 {
+                let p = rng.gen_range(0..n);
+                let expected = state.energy + state.delta_energy_flip(p);
+                state.apply_flip(p);
+                assert_eq!(expected, compute_labs_energy(n, &state.s));
+                assert_eq!(state.energy, expected);
+            }
+        }
+    }
+
+    #[test]
+    fn observer_preserves_seeded_search_and_reports_valid_incumbents() {
+        let expected = solve_labs_pt(20, 4, 0.2, 20.0, 3, 4, 810004);
+        let mut last = i64::MAX;
+        let actual = solve_labs_pt_observed(20, (4, 0.2, 20.0, 3, 4), 810004, &mut |e, s| {
+            assert!(e < last);
+            assert_eq!(e, compute_labs_energy(20, s));
+            last = e;
+        });
+        assert_eq!(actual, expected);
+        assert_eq!(last, actual.0);
+    }
 }

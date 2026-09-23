@@ -1,0 +1,73 @@
+{
+  "root_gates": [
+    {
+      "command": [
+        "cargo",
+        "check"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/labs-q001-gates/0.txt"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/labs-q001-gates/1.txt"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--bins"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/labs-q001-gates/2.txt"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/labs-q001-gates/3.txt"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/labs-q001-gates/4.txt"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/labs-q001-gates/5.txt"
+    }
+  ],
+  "release_tests": {
+    "passed": 741,
+    "failed": 0,
+    "ignored": 5,
+    "suites": 96
+  },
+  "python_tests": 8,
+  "smoke": "4 N20 runs; all reached26 and passed independent Python + QOBLIB checks; seeds810001,810002 excluded from campaign",
+  "scope": "No production solver/core/compiler/API changes; standalone LABS binary only",
+  "build_note": "Initial reference build failed because inherited CFLAGS removed dcmt include directory; fixed explicit include flag before any smoke or campaign. Initial cargo fmt --bin invocation rejected, followed by direct rustfmt and passing cargo fmt --check.",
+  "reference_observer_test": "PASS identical four seeded TabuSearch returns and counts; improvements emitted before replacement",
+  "smoke_v3": "4/4 PASS after logging correction; smoke.json preserves earlier instrumentation smoke"
+}

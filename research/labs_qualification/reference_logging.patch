@@ -1,0 +1,71 @@
+--- a/LABS.h
++++ b/LABS.h
+@@ -16,6 +16,7 @@
+ 
+ 
+ Fitness autocorrelation(Gene *seq, int N);
++void qualification_observe(const Gene *seq, int N, Fitness energy);
+ 
+ double meritFactor(Fitness f, int N);
+ 
+--- a/LABS.c
++++ b/LABS.c
+@@ -8,6 +8,7 @@
+ 
+ 
+ #include <math.h>
++#include <limits.h>
+ #include <string.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -106,3 +107,14 @@
+ }
+ 
+ 
++
++// Qualification observer only: one search worker; never changes search state/RNG.
++void qualification_observe(const Gene *seq, int N, Fitness energy) {
++    static Fitness observed_best = INT_MAX;
++    if (energy >= observed_best) return;
++    observed_best = energy;
++    printf("\nINC %d ", energy);
++    for (int i = 0; i < N; ++i) putchar(seq[i] == 1 ? '0' : '1');
++    putchar('\n');
++    fflush(stdout);
++}
+--- a/GA.c
++++ b/GA.c
+@@ -164,6 +164,7 @@
+     for(int i=0; i<gaP->populationSz; i++) {
+         initIndividual(gaP->population[i], gaP);
+         gaP->population[i]->fitness = evalIndividual(gaP->population[i], gaP);
++        qualification_observe(gaP->population[i]->chromosome, gaP->chromosomeLgth, gaP->population[i]->fitness);
+ 
+         if(_hasBetterFitnessThan_(gaP->population[i], gaP->population[bestIndividualIdx]))
+             bestIndividualIdx = i;
+--- a/TabuSearch.c
++++ b/TabuSearch.c
+@@ -12,6 +12,7 @@
+ #include <limits.h>
+ 
+ #include "TabuSearch.h"
++#include "LABS.h"
+ 
+ Fitness TabuSearch(Gene *seq, int N, Random rnd, Timer *timer, unsigned long long int* NFEs) {
+     #include "EfficientFlip.c"
+@@ -41,6 +42,7 @@
+     Fitness currentFitness = initialFitness;
+ 
+     Fitness bestFitness = initialFitness;
++    qualification_observe(seq, N, initialFitness);
+ 
+     for (int iter=1; iter<=maxIter; iter++) {
+ 
+@@ -83,6 +85,7 @@
+             if(bestMoveFitness<bestFitness) {
+                 memcpy(seq,currentSeq,N*sizeof(Gene));
+                 bestFitness = bestMoveFitness;
++                qualification_observe(seq, N, bestFitness);
+             }
+         }
+     }

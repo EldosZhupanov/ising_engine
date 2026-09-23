@@ -1,0 +1,240 @@
+[
+  {
+    "command": [
+      "/home/eldos/ising_engine/target/release/qoblib_labs_challenge",
+      "--qualify",
+      "20",
+      "810001"
+    ],
+    "n": 20,
+    "target": 26,
+    "budget": 1.0,
+    "events": [
+      {
+        "energy": 62,
+        "bits": "01010110010011110111",
+        "seconds": 0.003647536999778822,
+        "eligible": true
+      },
+      {
+        "energy": 54,
+        "bits": "00101010010011110011",
+        "seconds": 0.003647536999778822,
+        "eligible": true
+      },
+      {
+        "energy": 50,
+        "bits": "00111110011010110111",
+        "seconds": 0.003647536999778822,
+        "eligible": true
+      },
+      {
+        "energy": 38,
+        "bits": "00011110010100100010",
+        "seconds": 0.003647536999778822,
+        "eligible": true
+      },
+      {
+        "energy": 34,
+        "bits": "00100100001010111000",
+        "seconds": 0.007773052999255015,
+        "eligible": true
+      },
+      {
+        "energy": 26,
+        "bits": "00110110000100001010",
+        "seconds": 0.007773052999255015,
+        "eligible": true
+      }
+    ],
+    "errors": [],
+    "stdout": "INC 62 01010110010011110111\nINC 54 00101010010011110011\nINC 50 00111110011010110111\nINC 38 00011110010100100010\nINC 34 00100100001010111000\nINC 26 00110110000100001010\n",
+    "stderr": "",
+    "stop": "optimum",
+    "stop_seconds": 0.00799273099983111,
+    "returncode": -9,
+    "elapsed": 0.008728294000320602,
+    "arm": "pt",
+    "seed": 810001,
+    "checker": {
+      "returncode": 0,
+      "stdout": "Qbench LABS Solution Checker Version 1.0\nLABS k=20 E(S)=26 seq=22124141111\nEnergy cross-check OK: E(S)=26\nOPTIMAL\nVALID: Solution successfully verified\n",
+      "stderr": ""
+    }
+  },
+  {
+    "command": [
+      "/tmp/labs-q001-baseline-v2/solvers/lMAts-lRRts/src/lMAts",
+      "20",
+      "810001",
+      "3600",
+      "1",
+      "0"
+    ],
+    "n": 20,
+    "target": 26,
+    "budget": 1.0,
+    "events": [
+      {
+        "energy": 86,
+        "bits": "10011001011010111000",
+        "seconds": 0.09219412099992041,
+        "eligible": true
+      },
+      {
+        "energy": 46,
+        "bits": "00110001010010111110",
+        "seconds": 0.09252447899780236,
+        "eligible": true
+      },
+      {
+        "energy": 34,
+        "bits": "00000101001011001100",
+        "seconds": 0.09263198299959186,
+        "eligible": true
+      },
+      {
+        "energy": 26,
+        "bits": "00000101110100111001",
+        "seconds": 0.09546678399783559,
+        "eligible": true
+      }
+    ],
+    "errors": [],
+    "stdout": "\nLABS 20 (opt=0,inf), seed=810001, maxExecTime=3600.0(secs), threads=1\nINC 86 10011001011010111000\n\nGA( 0 - 810001) iter:            0    86  2.33  0.0(secs) 1.000000e+02(cntProbe) 2.123142e+05(speed) 0(targetReached) 0(isCensored)\nINC 46 00110001010010111110\n\nGA( 0 - 810001) iter:            8    46  4.35  0.0(secs) 3.589000e+03(cntProbe) 4.525851e+06(speed) 0(targetReached) 0(isCensored)\nINC 34 00000101001011001100\n\nGA( 0 - 810001) iter:           11    34  5.88  0.0(secs) 4.592000e+03(cntProbe) 5.029573e+06(speed) 0(targetReached) 0(isCensored)\nINC 26 00000101110100111001\n\nGA( 0 - 810001) iter:          123    26  7.69  0.0(secs) 5.016400e+04(cntProbe) 1.353224e+07(speed) 0(targetReached) 0(isCensored)",
+    "stderr": "",
+    "stop": "optimum",
+    "stop_seconds": 0.09558109199861065,
+    "returncode": -9,
+    "elapsed": 0.09630788399954326,
+    "arm": "lmats",
+    "seed": 810001,
+    "checker": {
+      "returncode": 0,
+      "stdout": "Qbench LABS Solution Checker Version 1.0\nLABS k=20 E(S)=26 seq=5113112321\nEnergy cross-check OK: E(S)=26\nOPTIMAL\nVALID: Solution successfully verified\n",
+      "stderr": ""
+    }
+  },
+  {
+    "command": [
+      "/home/eldos/ising_engine/target/release/qoblib_labs_challenge",
+      "--qualify",
+      "20",
+      "810002"
+    ],
+    "n": 20,
+    "target": 26,
+    "budget": 1.0,
+    "events": [
+      {
+        "energy": 54,
+        "bits": "00111100100010000101",
+        "seconds": 0.003377884000656195,
+        "eligible": true
+      },
+      {
+        "energy": 46,
+        "bits": "00000101011110011011",
+        "seconds": 0.003377884000656195,
+        "eligible": true
+      },
+      {
+        "energy": 42,
+        "bits": "00010001011100101101",
+        "seconds": 0.003589116000512149,
+        "eligible": true
+      },
+      {
+        "energy": 38,
+        "bits": "00010001111100101101",
+        "seconds": 0.003589116000512149,
+        "eligible": true
+      },
+      {
+        "energy": 34,
+        "bits": "01010000011110011001",
+        "seconds": 0.0036967500018363353,
+        "eligible": true
+      },
+      {
+        "energy": 26,
+        "bits": "01010000100001101100",
+        "seconds": 0.006292597001447575,
+        "eligible": true
+      }
+    ],
+    "errors": [],
+    "stdout": "INC 54 00111100100010000101\nINC 46 00000101011110011011\nINC 42 00010001011100101101\nINC 38 00010001111100101101\nINC 34 01010000011110011001\nINC 26 01010000100001101100\n",
+    "stderr": "",
+    "stop": "optimum",
+    "stop_seconds": 0.006427554002584657,
+    "returncode": -9,
+    "elapsed": 0.007430651003232924,
+    "arm": "pt",
+    "seed": 810002,
+    "checker": {
+      "returncode": 0,
+      "stdout": "Qbench LABS Solution Checker Version 1.0\nLABS k=20 E(S)=26 seq=11114142122\nEnergy cross-check OK: E(S)=26\nOPTIMAL\nVALID: Solution successfully verified\n",
+      "stderr": ""
+    }
+  },
+  {
+    "command": [
+      "/tmp/labs-q001-baseline-v2/solvers/lMAts-lRRts/src/lMAts",
+      "20",
+      "810002",
+      "3600",
+      "1",
+      "0"
+    ],
+    "n": 20,
+    "target": 26,
+    "budget": 1.0,
+    "events": [
+      {
+        "energy": 74,
+        "bits": "10111111100011001101",
+        "seconds": 0.1326422799975262,
+        "eligible": true
+      },
+      {
+        "energy": 46,
+        "bits": "00001100010010111010",
+        "seconds": 0.13316796000071918,
+        "eligible": true
+      },
+      {
+        "energy": 42,
+        "bits": "11110001110111011010",
+        "seconds": 0.13354603399784537,
+        "eligible": true
+      },
+      {
+        "energy": 34,
+        "bits": "11110111100100111010",
+        "seconds": 0.13367558999743778,
+        "eligible": true
+      },
+      {
+        "energy": 26,
+        "bits": "11001001111011110101",
+        "seconds": 0.13764926300063962,
+        "eligible": true
+      }
+    ],
+    "errors": [],
+    "stdout": "\nLABS 20 (opt=0,inf), seed=810002, maxExecTime=3600.0(secs), threads=1\nINC 74 10111111100011001101\n\nGA( 0 - 810002) iter:            0    74  2.70  0.0(secs) 1.000000e+02(cntProbe) 1.727116e+05(speed) 0(targetReached) 0(isCensored)\nINC 46 00001100010010111010\n\nGA( 0 - 810002) iter:            8    46  4.35  0.0(secs) 4.509000e+03(cntProbe) 4.011566e+06(speed) 0(targetReached) 0(isCensored)\nINC 42 11110001110111011010\n\nGA( 0 - 810002) iter:           16    42  4.76  0.0(secs) 8.077000e+03(cntProbe) 5.417170e+06(speed) 0(targetReached) 0(isCensored)\nINC 34 11110111100100111010\n\nGA( 0 - 810002) iter:           17    34  5.88  0.0(secs) 8.398000e+03(cntProbe) 5.285085e+06(speed) 0(targetReached) 0(isCensored)\nINC 26 11001001111011110101\n\nGA( 0 - 810002) iter:          171    26  7.69  0.0(secs) 7.297200e+04(cntProbe) 1.315759e+07(speed) 0(targetReached) 0(isCensored)",
+    "stderr": "",
+    "stop": "optimum",
+    "stop_seconds": 0.13777996099815937,
+    "returncode": -9,
+    "elapsed": 0.13845339199906448,
+    "arm": "lmats",
+    "seed": 810002,
+    "checker": {
+      "returncode": 0,
+      "stdout": "Qbench LABS Solution Checker Version 1.0\nLABS k=20 E(S)=26 seq=22124141111\nEnergy cross-check OK: E(S)=26\nOPTIMAL\nVALID: Solution successfully verified\n",
+      "stderr": ""
+    }
+  }
+]
