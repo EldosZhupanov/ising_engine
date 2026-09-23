@@ -145,6 +145,61 @@ pub fn local_search_1opt(state: &mut LabsState) {
     }
 }
 
+/// Short-term tabu search for LABS (Gallardo, Cotta & Fernandez / Bošković & Brest).
+/// Explores past 1-opt local traps using recency memory and aspiration criterion.
+#[inline(always)]
+pub fn tabu_search_labs(state: &mut LabsState, max_iter: usize, tenure: usize) {
+    let n = state.n;
+    let mut tabu = vec![0usize; n];
+    let mut best_overall_energy = state.energy;
+    let mut best_overall_s = state.s.clone();
+
+    for iter in 1..=max_iter {
+        let mut best_move_delta = i64::MAX;
+        let mut best_move_p = None;
+
+        for p in 1..n {
+            let d = state.delta_energy_flip(p);
+            let candidate_energy = state.energy + d;
+
+            let is_aspiration = candidate_energy < best_overall_energy;
+            let is_allowed = tabu[p] < iter || is_aspiration;
+
+            if is_allowed && d < best_move_delta {
+                best_move_delta = d;
+                best_move_p = Some(p);
+            }
+        }
+
+        if let Some(p) = best_move_p {
+            state.apply_flip(p);
+            tabu[p] = iter + tenure;
+
+            if state.energy < best_overall_energy {
+                best_overall_energy = state.energy;
+                best_overall_s = state.s.clone();
+            }
+        } else {
+            break;
+        }
+    }
+
+    if state.energy != best_overall_energy {
+        *state = LabsState::new(n, best_overall_s);
+    }
+}
+
+/// Uniform crossover between two sequences.
+#[inline(always)]
+pub fn crossover_uniform(p1: &[i8], p2: &[i8], rng: &mut ChaCha8Rng) -> Vec<i8> {
+    let n = p1.len();
+    let mut child = vec![1i8; n];
+    for i in 1..n {
+        child[i] = if rng.gen_bool(0.5) { p1[i] } else { p2[i] };
+    }
+    child
+}
+
 /// Runs Parallel Tempering for LABS across a temperature ladder with periodic 1-opt quenching.
 pub fn solve_labs_pt(
     n: usize,
@@ -260,14 +315,41 @@ fn solve_labs_pt_observed(
             }
         }
 
-        // Periodic quench of coldest replica
-        if exchange_step % 5 == 0 {
+        // Periodic quench of coldest replica + Memetic crossover + Tabu search
+        if exchange_step % 3 == 0 {
+            let tabu_tenure = (n / 10).max(2);
             let mut quenched = LabsState::new(n, replicas[0].s.clone());
             local_search_1opt(&mut quenched);
+            tabu_search_labs(&mut quenched, n, tabu_tenure);
             if quenched.energy < best_energy {
                 best_energy = quenched.energy;
                 best_seq = quenched.s.clone();
                 observe(best_energy, &best_seq);
+            }
+            if quenched.energy < replicas[0].energy {
+                replicas[0] = quenched;
+            }
+
+            // Memetic crossover between coldest replicas
+            if num_replicas >= 2 {
+                let r1 = 0;
+                let r2 = rng.gen_range(1..num_replicas.min(4));
+                let child_s = crossover_uniform(&replicas[r1].s, &replicas[r2].s, &mut rng);
+                let mut child = LabsState::new(n, child_s);
+                local_search_1opt(&mut child);
+                tabu_search_labs(&mut child, n, tabu_tenure);
+
+                if child.energy < best_energy {
+                    best_energy = child.energy;
+                    best_seq = child.s.clone();
+                    observe(best_energy, &best_seq);
+                }
+
+                // If child is better than hotter replica, inject it into the population!
+                let inject_r = num_replicas - 1;
+                if child.energy < replicas[inject_r].energy {
+                    replicas[inject_r] = child;
+                }
             }
         }
     }
@@ -275,11 +357,13 @@ fn solve_labs_pt_observed(
     // Final quench of best found
     let mut final_quenched = LabsState::new(n, best_seq);
     local_search_1opt(&mut final_quenched);
+    tabu_search_labs(&mut final_quenched, n * 2, (n / 8).max(2));
 
     if final_quenched.energy < best_energy {
+        best_energy = final_quenched.energy;
         observe(final_quenched.energy, &final_quenched.s);
     }
-    (final_quenched.energy, final_quenched.s)
+    (best_energy, final_quenched.s)
 }
 
 struct LabsTarget {

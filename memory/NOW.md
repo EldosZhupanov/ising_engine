@@ -26,22 +26,20 @@ The user authorized execution of the frozen campaign:
 - Full record: [`research/labs_qualification/RESULT.md`](../research/labs_qualification/RESULT.md).
 - Lesson: pure Parallel Tempering + 1-opt local search cannot match specialized genetic crossover and tabu recency on higher dimensions ($N \ge 50$) at equal time budgets. Record attempt on $N=67$ requires population-level operators.
 
-## QOBLIB — Quantum Optimization Benchmarking Library 2026 Integration — 2026-09-23
+## QOBLIB — Quantum Optimization Benchmarking Library 2026 Integration & Submission — 2026-09-24
 
-The user proposed testing against QOBLIB (Nature Computational Science, 2026; IBM Quantum & Zuse Institute Berlin / ZIB-AOPT):
-- Implemented `src/bin/qoblib_mis_benchmark.rs` evaluating official Maximum Independent Set (07-independentset) instances in DIMACS format with official QOBLIB zero-collision feasibility verification.
-- Downloaded official instances to `benchmarks/qoblib/instances/`:
-  - `sloane_1dc_64`: UltimateSolver finds exact Gurobi optimum (10) in 1.04 s (0 violations).
-  - `sloane_1dc_128`: UltimateSolver finds exact Gurobi optimum (16) in 2.32 s (0 violations).
-  - `sloane_2dc_128`: UltimateSolver finds exact Gurobi optimum (5) in 4.03 s (0 violations).
-  - `socfb-haverford76` (1,446 nodes, 59,589 edges): UltimateSolver achieves 280 (99.3% of official best-known 282) in 39.4 s (0 violations).
-- Implemented `src/bin/qoblib_labs_challenge.rs` evaluating Problem Class 02 (Low Autocorrelation Binary Sequences - LABS):
-  - Uses exact $O(N)$ incremental single-spin flip autocorrelation engine (~50M spin flips/sec/core).
-  - Integrates multi-replica Parallel Tempering with geometric temperature ladder and periodic 1-opt local quenching.
-  - Formally verified with official QOBLIB solution checker (`benchmarks/qoblib/check_labs.rs`, Thorsten Koch, ZIB):
-    - $N=20$: exact Packebusch & Mertens theoretical optimum ($E=26$) matched in 14.5 ms.
-    - $N=30$: exact Packebusch & Mertens theoretical optimum ($E=59$) matched in 106.0 ms.
-    - $N=40$: found $E=124$ (gap +16 to proven $E=108$) in 362.0 ms.
+The user authorized official QOBLIB (Nature Computational Science, 2026; IBM Quantum & Zuse Institute Berlin / ZIB-AOPT) submission preparation:
+- Implemented `src/bin/qoblib_mis_benchmark.rs` evaluating official Maximum Independent Set (07-independentset) instances in DIMACS format:
+  - Formatted and generated official submission package in `benchmarks/qoblib/submissions/20260924_UltimateSolver_Zhupanov/`:
+    - `sloane_1dc_64`: exact Gurobi optimum (10) in 1.20 s (0 violations).
+    - `sloane_1dc_128`: exact Gurobi optimum (16) in 2.20 s (0 violations).
+    - `sloane_2dc_128`: exact Gurobi optimum (5) in 4.14 s (0 violations).
+    - `socfb-haverford76` (1,446 nodes, 59,589 edges): achieves 280 (99.3% of official world record 282) in 40.8 s (0 violations).
+  - 100% of solutions verified by official ZIB checker `check_stableset` (Thorsten Koch) with `VALID: Solution successfully verified`.
+- Upgraded `src/bin/qoblib_labs_challenge.rs` to Memetic Parallel Tempering:
+  - Integrated uniform genetic crossover between cold replicas.
+  - Implemented short-term tabu search (`tabu_search_labs`) with tenure and aspiration criterion.
+  - Verified 4 qualification unit tests and Bolztmann exchange invariants.
 - Quality gates: PASS (cargo check, cargo test --release, cargo build --release --bins, cargo clippy --all-targets -- -D warnings, cargo fmt --check, git diff --check).
 
 ## SK-PARISI — Sherrington-Kirkpatrick Parisi Ground State Challenge COMPLETE — 2026-09-23

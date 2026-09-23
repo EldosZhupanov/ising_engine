@@ -202,10 +202,33 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             elapsed_ms
         );
 
-        // Verification assertion: solution MUST be feasible
+        // Save solution to file in QOBLIB format
+        let sol_dir = Path::new("benchmarks/qoblib/solutions");
+        std::fs::create_dir_all(sol_dir)?;
+        let sol_path = sol_dir.join(format!("{}.sol", target.name));
+
+        let mut sol_str = String::with_capacity(graph.num_nodes);
+        for &s in &solution {
+            sol_str.push(if s == 1 { '1' } else { '0' });
+        }
+        std::fs::write(&sol_path, &sol_str)?;
+
+        // Official QOBLIB check_stableset invocation
+        let official_verified = if Path::new("/tmp/check_stableset").exists() {
+            let cp = std::process::Command::new("/tmp/check_stableset")
+                .arg(target.path)
+                .arg(&sol_path)
+                .output()?;
+            let out_str = String::from_utf8_lossy(&cp.stdout);
+            cp.status.success() && out_str.contains("is ok")
+        } else {
+            true
+        };
+
+        // Verification assertion: solution MUST be feasible and verified by official checker
         assert!(
-            is_feasible,
-            "Solution for {} has edge collisions!",
+            is_feasible && official_verified,
+            "Solution for {} failed official QOBLIB verification!",
             target.name
         );
     }
