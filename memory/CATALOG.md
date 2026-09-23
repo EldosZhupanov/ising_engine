@@ -16,7 +16,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 - `closed`: 33
 - `historical`: 1
 - `proposed`: 4
-- `reference`: 156
+- `reference`: 157
 - `superseded`: 4
 
 ## Registry
@@ -281,3 +281,4 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/labs_qualification/PROTOCOL.md` | research-protocol | A2 | binding | 2026-09-23 | 2026-09-23 | true | LABS-Q001 |
 | `research/labs_qualification/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-23 | 2026-09-23 | false | LABS-Q001 |
 | `research/labs_qualification/README.md` | research-guide | A2 | reference | 2026-09-23 | 2026-09-23 | false | LABS-Q001 |
+| `research/labs_qualification/RESULT.md` | research-result | A2 | reference | 2026-09-23 | 2026-09-23 | false | LABS-Q001 |

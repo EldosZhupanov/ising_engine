@@ -12,14 +12,19 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## LABS-Q001 qualification — active — 2026-09-23
+## LABS-Q001 qualification COMPLETE — 2026-09-23
 
-User authorized qualification on N40/50/60 against an established specialist at
-an equal budget. Active bundle: [protocol](../research/labs_qualification/PROTOCOL.md)
-and [intake/map](../research/labs_qualification/HYPODIVE_BUILDER_INTAKE.md).
-Next: fix the discovered prototype PT swap-sign bug and build the frozen witness
-harness; then ten seeds per length and arm at10s. No record attempt or tuning.
-Preserve all unrelated dirty/untracked work. Earlier sections are historical.
+The user authorized execution of the frozen campaign:
+`python3 research/labs_qualification/campaign.py run --pt target/release/qoblib_labs_challenge --lmats /tmp/labs-q001-baseline-v3/solvers/lMAts-lRRts/src/lMAts --checker /tmp/labs-q001-checker --output /tmp/labs-q001-run`
+- Protocol integrity: 60/60 cells executed strictly under the 10.0 s deadline; 0 checker failures, 0 process errors.
+- Evaluated commit: `cd04ff13137264a01f5e03f90bc093f5be46f112`.
+- Quantitative findings:
+  - $N=40$ (target 108): `pt` achieved 7/10 exact optimum hits (median 108.0, 1.63 s – 9.78 s); `lmats` achieved 10/10 hits. Paired: 7 ties, 3 `lmats` wins.
+  - $N=50$ (target 153): `pt` 0/10 hits (median 185.0); `lmats` 5/10 hits (median 157.0).
+  - $N=60$ (target 218): `pt` 0/10 hits (median 282.0); `lmats` 0/10 hits (median 256.0).
+- Outcome: NOT QUALIFIED (`pt_qualified: false`). Operational threshold ($\ge 8/10$ hits at each length) was not met.
+- Full record: [`research/labs_qualification/RESULT.md`](../research/labs_qualification/RESULT.md).
+- Lesson: pure Parallel Tempering + 1-opt local search cannot match specialized genetic crossover and tabu recency on higher dimensions ($N \ge 50$) at equal time budgets. Record attempt on $N=67$ requires population-level operators.
 
 ## QOBLIB — Quantum Optimization Benchmarking Library 2026 Integration — 2026-09-23
 
