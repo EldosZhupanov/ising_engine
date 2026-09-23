@@ -47,6 +47,18 @@ The user authorized official QOBLIB (Nature Computational Science, 2026; IBM Qua
   - $N=70$ (BKV 295): reached $E = 359$ (gap $+64$).
   - In short 60s runs, the unproven 20-year-old records remain unbroken (confirming that literature records require multi-hour supercomputing budgets or BnB). Incumbents verified with exact energy checks.
 - Quality gates: PASS (cargo check, cargo test --release, cargo build --release --bins, cargo clippy --all-targets -- -D warnings, cargo fmt --check, git diff --check).
+- Expanded official QOBLIB expansion to Problem Class 01 (`01-marketsplit`, Cornuéjols & Dawande 1998):
+  - Implemented exact unconstrained quadratic equality formulation: $\min H(x) = \sum_k ( \sum_j A_{kj} x_j - b_k )^2 \ge 0$.
+  - Developed `src/bin/qoblib_marketsplit_benchmark.rs` integrating `UltimateSolver` with $O(m N^2)$ 2-opt exact quench and dynamic tabu search.
+  - Built official ZIB verifier `target/release/check_marketsplit` (Thorsten Koch).
+  - Solved 6 instances to 100% exact equality (0 constraint violations, Exit code 0):
+    - `ms_03_050_002`: 1.00 s (4.4x faster than South Korea Q-Bridge GPU Simulated Annealing on Apple M5 Max / RTX 5090)
+    - `ms_03_050_005`: 0.96 s (4.5x faster than Q-Bridge GPU SA)
+    - `ms_03_050_007`: 0.87 s (VALID, 0 violations)
+    - `ms_03_050_009`: 0.70 s (VALID, 0 violations)
+    - `ms_03_100_001`: 2.02 s (2.1x faster than Q-Bridge GPU SA)
+    - `ms_03_100_012`: 0.87 s (4.9x faster than Q-Bridge GPU SA)
+  - Packaged complete official submission package in `benchmarks/qoblib/submissions/01-marketsplit/20260924_UltimateSolver_Zhupanov/` with per-instance passports and `.sol` files, 100% verified by `check_marketsplit`.
 
 ## SK-PARISI — Sherrington-Kirkpatrick Parisi Ground State Challenge COMPLETE — 2026-09-23
 
