@@ -3,7 +3,7 @@ id: memory-now
 kind: live-state
 status: active
 authority_scope: current-task
-updated: 2026-09-17
+updated: 2026-09-23
 immutable: false
 ---
 
@@ -11,6 +11,17 @@ immutable: false
 
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
+
+## LAYA-001 — semantic reconciliation pilot — 2026-09-23
+
+The user explicitly selected semantic Laya decisions plus verified discrete
+reconciliation, then residual conflict-graph reduction. Active bundle:
+[protocol](../research/laya_semantic/PROTOCOL.md) and
+[Builder intake](../research/laya_semantic/HYPODIVE_BUILDER_INTAKE.md).
+Next: build/test the isolated adapter, freeze it, run the fixed exploratory pilot,
+and independently review the new work. Existing presolve is reused. No root src
+or dependency changes; preserve the pre-existing ultimate.rs whitespace edit and
+all unrelated untracked research. Older task selections below are historical.
 
 ## Explicitly resumed: cross-domain mechanisms with Ising — 2026-09-17
 
