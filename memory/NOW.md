@@ -12,6 +12,15 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
+## LABS-Q001 qualification — active — 2026-09-23
+
+User authorized qualification on N40/50/60 against an established specialist at
+an equal budget. Active bundle: [protocol](../research/labs_qualification/PROTOCOL.md)
+and [intake/map](../research/labs_qualification/HYPODIVE_BUILDER_INTAKE.md).
+Next: fix the discovered prototype PT swap-sign bug and build the frozen witness
+harness; then ten seeds per length and arm at10s. No record attempt or tuning.
+Preserve all unrelated dirty/untracked work. Earlier sections are historical.
+
 ## QOBLIB — Quantum Optimization Benchmarking Library 2026 Integration — 2026-09-23
 
 The user proposed testing against QOBLIB (Nature Computational Science, 2026; IBM Quantum & Zuse Institute Berlin / ZIB-AOPT):
