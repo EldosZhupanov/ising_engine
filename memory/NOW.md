@@ -21,7 +21,14 @@ The user proposed testing against QOBLIB (Nature Computational Science, 2026; IB
   - `sloane_1dc_128`: UltimateSolver finds exact Gurobi optimum (16) in 2.32 s (0 violations).
   - `sloane_2dc_128`: UltimateSolver finds exact Gurobi optimum (5) in 4.03 s (0 violations).
   - `socfb-haverford76` (1,446 nodes, 59,589 edges): UltimateSolver achieves 280 (99.3% of official best-known 282) in 39.4 s (0 violations).
-- Quality gates: PASS (cargo check, cargo test --release, cargo clippy, cargo fmt).
+- Implemented `src/bin/qoblib_labs_challenge.rs` evaluating Problem Class 02 (Low Autocorrelation Binary Sequences - LABS):
+  - Uses exact $O(N)$ incremental single-spin flip autocorrelation engine (~50M spin flips/sec/core).
+  - Integrates multi-replica Parallel Tempering with geometric temperature ladder and periodic 1-opt local quenching.
+  - Formally verified with official QOBLIB solution checker (`benchmarks/qoblib/check_labs.rs`, Thorsten Koch, ZIB):
+    - $N=20$: exact Packebusch & Mertens theoretical optimum ($E=26$) matched in 14.5 ms.
+    - $N=30$: exact Packebusch & Mertens theoretical optimum ($E=59$) matched in 106.0 ms.
+    - $N=40$: found $E=124$ (gap +16 to proven $E=108$) in 362.0 ms.
+- Quality gates: PASS (cargo check, cargo test --release, cargo build --release --bins, cargo clippy --all-targets -- -D warnings, cargo fmt --check, git diff --check).
 
 ## SK-PARISI — Sherrington-Kirkpatrick Parisi Ground State Challenge COMPLETE — 2026-09-23
 
