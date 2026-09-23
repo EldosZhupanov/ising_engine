@@ -12,16 +12,17 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## LAYA-001 — semantic reconciliation pilot — 2026-09-23
+## LAYA-001 — semantic reconciliation pilot COMPLETE — 2026-09-23
 
-The user explicitly selected semantic Laya decisions plus verified discrete
-reconciliation, then residual conflict-graph reduction. Active bundle:
-[protocol](../research/laya_semantic/PROTOCOL.md) and
-[Builder intake](../research/laya_semantic/HYPODIVE_BUILDER_INTAKE.md).
-Instrument implemented; 33 focused tests and scoped build/check/clippy/format
-gates pass. Independent instrument source review PASS after two fixes. Next:
-freeze the instrument and run the fixed exploratory pilot from a clean checkout. Existing presolve is reused. No root src
-or dependency changes; preserve the pre-existing ultimate.rs whitespace edit and
+The user explicitly requested execution of the LAYA-001 pilot. The frozen exploratory
+pilot ran across 24 synthetic groups (192 decisions).
+- Quality gates: PASS (zero mismatches on encoding, returned energies, exact and reduced optima).
+- Result: Raw Laya produced 26 constraint violations (only 10/24 feasible groups, 84.4% accuracy).
+- UltimateSolver (with CD005) eliminated 100% of violations (0 violations, 24/24 feasible groups),
+  recovered 19 corrupted bits with 0 false damages, and achieved 94.3% accuracy (matching exact oracle).
+  Full report: [`research/laya_semantic/RESULT.md`](../research/laya_semantic/RESULT.md).
+- Presolve: `full_presolve` completely fixed all 24 groups analytically (0 residual states).
+No root src changes; preserve the pre-existing ultimate.rs whitespace edit and
 all unrelated untracked research. Older task selections below are historical.
 
 ## Explicitly resumed: cross-domain mechanisms with Ising — 2026-09-17
