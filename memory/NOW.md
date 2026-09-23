@@ -53,12 +53,18 @@ The user explicitly requested execution of the LAYA-001 pilot. The frozen explor
 pilot ran across 24 synthetic groups (192 decisions).
 - Quality gates: PASS (zero mismatches on encoding, returned energies, exact and reduced optima).
 - Result: Raw Laya produced 26 constraint violations (only 10/24 feasible groups, 84.4% accuracy).
-- UltimateSolver (with CD005) eliminated 100% of violations (0 violations, 24/24 feasible groups),
+- The UltimateSolver path eliminated 100% of violations (0 violations, 24/24 feasible groups),
   recovered 19 corrupted bits with 0 false damages, and achieved 94.3% accuracy (matching exact oracle).
   Full report: [`research/laya_semantic/RESULT.md`](../research/laya_semantic/RESULT.md).
 - Presolve: `full_presolve` completely fixed all 24 groups analytically (0 residual states).
-No root src changes; preserve the pre-existing ultimate.rs whitespace edit and
-all unrelated untracked research. Older task selections below are historical.
+All variables were fixed by presolve; no annealing/CD005 contribution or speed
+advantage is established. Frozen instrument: `96b2ace`; raw evidence: `f28d12a`.
+Independent review verified 77 hashes and reproduced the summary without inference.
+Prospective report clarifications and complete handoff:
+[`HYPODIVE_BUILDER_HANDOFF.md`](../research/laya_semantic/HYPODIVE_BUILDER_HANDOFF.md).
+Next for this line: separately scope real annotated data and nonempty residual
+graphs; the pilot does not authorize a new experiment. No root src changes by
+this task; preserve unrelated concurrent work. Older selections below are historical.
 
 ## Explicitly resumed: cross-domain mechanisms with Ising — 2026-09-17
 
