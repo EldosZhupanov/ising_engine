@@ -12,6 +12,17 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
+## QOBLIB — Quantum Optimization Benchmarking Library 2026 Integration — 2026-09-23
+
+The user proposed testing against QOBLIB (Nature Computational Science, 2026; IBM Quantum & Zuse Institute Berlin / ZIB-AOPT):
+- Implemented `src/bin/qoblib_mis_benchmark.rs` evaluating official Maximum Independent Set (07-independentset) instances in DIMACS format with official QOBLIB zero-collision feasibility verification.
+- Downloaded official instances to `benchmarks/qoblib/instances/`:
+  - `sloane_1dc_64`: UltimateSolver finds exact Gurobi optimum (10) in 1.04 s (0 violations).
+  - `sloane_1dc_128`: UltimateSolver finds exact Gurobi optimum (16) in 2.32 s (0 violations).
+  - `sloane_2dc_128`: UltimateSolver finds exact Gurobi optimum (5) in 4.03 s (0 violations).
+  - `socfb-haverford76` (1,446 nodes, 59,589 edges): UltimateSolver achieves 280 (99.3% of official best-known 282) in 39.4 s (0 violations).
+- Quality gates: PASS (cargo check, cargo test --release, cargo clippy, cargo fmt).
+
 ## SK-PARISI — Sherrington-Kirkpatrick Parisi Ground State Challenge COMPLETE — 2026-09-23
 
 The user requested execution of the hardest global benchmark and physical frontier, followed by an adversarial peer-review audit.

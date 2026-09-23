@@ -145,6 +145,7 @@ fn test_delta_e_matches_bruteforce_xor_gate() {
 }
 
 #[test]
+#[allow(clippy::needless_range_loop)]
 fn test_sk_energy_exhaustive_equivalence() {
     // Exact verification of the mathematical equivalence between the physical SK Hamiltonian
     // H = - sum_{i < j} J_ij sigma_i sigma_j  (sigma in {-1, +1})
