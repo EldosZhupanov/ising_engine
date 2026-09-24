@@ -171,7 +171,47 @@ pub fn local_search_1opt(state: &mut LabsState) {
     }
 }
 
-/// Tabu search with recency list and aspiration criterion.
+/// Deterministic 2-opt local search.
+/// Exhausts all 1-flip improvements, then scans all (p, q) pairs for 2-flip improvements.
+/// Terminates only when the sequence is strictly optimal against all 1-flip and 2-flip moves.
+#[inline(always)]
+pub fn local_search_2opt(state: &mut LabsState) {
+    loop {
+        local_search_1opt(state);
+
+        let n = state.n;
+        let mut best_gain = 0i64;
+        let mut best_move: Option<(usize, usize)> = None;
+
+        'scan: for p in 1..n {
+            let d1 = state.delta_energy_flip(p);
+            state.apply_flip(p);
+
+            for q in (p + 1)..n {
+                let d2 = state.delta_energy_flip(q);
+                let total = d1 + d2;
+                if total < best_gain {
+                    best_gain = total;
+                    best_move = Some((p, q));
+                    if total <= -4 {
+                        state.apply_flip(p);
+                        break 'scan;
+                    }
+                }
+            }
+            state.apply_flip(p);
+        }
+
+        if let Some((p, q)) = best_move {
+            state.apply_flip(p);
+            state.apply_flip(q);
+        } else {
+            break;
+        }
+    }
+}
+
+/// Tabu search with recency list and aspiration criterion followed by 2-opt quench.
 pub fn tabu_search_labs(state: &mut LabsState, max_iter: usize, tenure: usize) {
     let n = state.n;
     let mut tabu = vec![0usize; n];
@@ -211,6 +251,7 @@ pub fn tabu_search_labs(state: &mut LabsState, max_iter: usize, tenure: usize) {
     if state.energy != best_overall_energy {
         *state = LabsState::new(n, best_overall_s);
     }
+    local_search_2opt(state);
 }
 
 /// Block & uniform crossover between two sequences.
@@ -277,9 +318,9 @@ pub fn hunt_trajectory(
     let mut rng = ChaCha8Rng::seed_from_u64(seed);
     let t0 = Instant::now();
 
-    let num_replicas = 16;
-    let temp_min = 0.15f64;
-    let temp_max = 30.0f64;
+    let num_replicas = 20;
+    let temp_min = 0.12f64;
+    let temp_max = 35.0f64;
 
     let temps: Vec<f64> = (0..num_replicas)
         .map(|r| {
@@ -290,20 +331,25 @@ pub fn hunt_trajectory(
 
     let mut replicas: Vec<LabsState> = (0..num_replicas)
         .map(|r| {
-            let s = if thread_id == 0 && r == 0 && warm_start.is_some() {
-                warm_start.clone().unwrap()
-            } else if thread_id == 0 && r < 4 && warm_start.is_some() {
-                let mut mut_s = warm_start.clone().unwrap();
-                for _ in 0..r {
-                    let flip_p = rng.gen_range(1..n);
-                    mut_s[flip_p] = -mut_s[flip_p];
+            let s = if let Some(ref ws) = warm_start {
+                if thread_id == 0 && r == 0 {
+                    ws.clone()
+                } else if r < 6 {
+                    let mut mut_s = ws.clone();
+                    let num_flips = ((thread_id * 2 + r) % 5) + 1;
+                    for _ in 0..num_flips {
+                        let flip_p = rng.gen_range(1..n);
+                        mut_s[flip_p] = -mut_s[flip_p];
+                    }
+                    mut_s
+                } else {
+                    generate_biased_initial(n, &mut rng)
                 }
-                mut_s
             } else {
                 generate_biased_initial(n, &mut rng)
             };
             let mut st = LabsState::new(n, s);
-            local_search_1opt(&mut st);
+            local_search_2opt(&mut st);
             st
         })
         .collect();
@@ -318,6 +364,7 @@ pub fn hunt_trajectory(
 
     let sweeps_per_exchange = 25;
     let mut step = 0usize;
+    let mut steps_since_improvement = 0usize;
 
     while t0.elapsed() < max_duration && !ctx.found_record.load(Ordering::Relaxed) {
         step += 1;
@@ -335,6 +382,7 @@ pub fn hunt_trajectory(
                         if state.energy < local_best {
                             local_best = state.energy;
                             local_best_seq = state.s.clone();
+                            steps_since_improvement = 0;
                             check_and_update_global(ctx, local_best, &local_best_seq, t0.elapsed());
                         }
                     }
@@ -354,17 +402,19 @@ pub fn hunt_trajectory(
             }
         }
 
-        // 3. Memetic Crossover & Tabu Quenching
+        // 3. Memetic Crossover & Tabu Quenching with 2-opt
         if step % 2 == 0 {
-            let tenure = (n / 8).max(3);
+            let tenure = (n / 7).max(3);
             let mut quenched = LabsState::new(n, replicas[0].s.clone());
-            local_search_1opt(&mut quenched);
             tabu_search_labs(&mut quenched, n * 3, tenure);
 
             if quenched.energy < local_best {
                 local_best = quenched.energy;
                 local_best_seq = quenched.s.clone();
+                steps_since_improvement = 0;
                 check_and_update_global(ctx, local_best, &local_best_seq, t0.elapsed());
+            } else {
+                steps_since_improvement += 1;
             }
             if quenched.energy < replicas[0].energy {
                 replicas[0] = quenched;
@@ -374,12 +424,12 @@ pub fn hunt_trajectory(
             let r2 = rng.gen_range(1..num_replicas.min(6));
             let child_seq = crossover_hybrid(&replicas[0].s, &replicas[r2].s, &mut rng);
             let mut child = LabsState::new(n, child_seq);
-            local_search_1opt(&mut child);
-            tabu_search_labs(&mut child, n * 2, tenure);
+            local_search_2opt(&mut child);
 
             if child.energy < local_best {
                 local_best = child.energy;
                 local_best_seq = child.s.clone();
+                steps_since_improvement = 0;
                 check_and_update_global(ctx, local_best, &local_best_seq, t0.elapsed());
             }
 
@@ -389,7 +439,51 @@ pub fn hunt_trajectory(
             }
         }
 
-        // 4. Periodic Reheating of hot replicas to maintain diversity
+        // 4. Cross-thread collective memory sharing (every 10 steps)
+        if step % 10 == 0 {
+            if let Ok(lock) = ctx.best_seq_store.try_lock() {
+                if !lock.is_empty() {
+                    let global_seq = lock.clone();
+                    drop(lock);
+                    let child_seq = crossover_hybrid(&replicas[0].s, &global_seq, &mut rng);
+                    let mut child = LabsState::new(n, child_seq);
+                    local_search_2opt(&mut child);
+
+                    if child.energy < local_best {
+                        local_best = child.energy;
+                        local_best_seq = child.s.clone();
+                        steps_since_improvement = 0;
+                        check_and_update_global(ctx, local_best, &local_best_seq, t0.elapsed());
+                    }
+                    if child.energy < replicas[1].energy {
+                        replicas[1] = child;
+                    }
+                }
+            }
+        }
+
+        // 5. Variable Neighborhood Shake on stagnation
+        if steps_since_improvement >= 15 {
+            steps_since_improvement = 0;
+            let mut shaken_s = replicas[0].s.clone();
+            let shake_flips = rng.gen_range(2..=5);
+            for _ in 0..shake_flips {
+                let p = rng.gen_range(1..n);
+                shaken_s[p] = -shaken_s[p];
+            }
+            let mut shaken = LabsState::new(n, shaken_s);
+            local_search_2opt(&mut shaken);
+            if shaken.energy < local_best {
+                local_best = shaken.energy;
+                local_best_seq = shaken.s.clone();
+                check_and_update_global(ctx, local_best, &local_best_seq, t0.elapsed());
+            }
+            if shaken.energy < replicas[0].energy + 8 {
+                replicas[0] = shaken;
+            }
+        }
+
+        // 6. Periodic Reheating of hot replicas to maintain diversity
         if step % 500 == 0 {
             for r in (num_replicas - 3)..num_replicas {
                 let fresh_s = generate_biased_initial(n, &mut rng);
