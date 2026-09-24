@@ -60,8 +60,9 @@ The user authorized official QOBLIB (Nature Computational Science, 2026; IBM Qua
     - `ms_03_100_012`: 0.87 s (4.9x faster than Q-Bridge GPU SA)
 - Deployed Continuous Overnight LABS Record Hunter & Focused Attack:
   - Upgraded `src/bin/labs_record_hunter.rs` with O(N^2) `local_search_2opt`, cross-thread collective memory sharing, and Variable Neighborhood Shake.
-  - Overnight run executed ~26 CPU hours across all 4 cores; compressed gaps across all N in [67..74].
-  - Option B Focused Attack launched on closest targets: within 57 seconds, crushed N=74 energy from 373 down to 365, shrinking the gap to the 22-year-old Knauer 2004 world record (341) to just +24!
+  - Overnight and daytime continuous execution reached ~61 cumulative CPU hours across all 4 cores.
+  - Option B Focused Attack on N=74 ran 15 full rounds: compressed energy down from 373 -> 365 -> 357!
+  - The gap to the 22-year-old Knauer 2004 world record (341) is now compressed to just +16!
   - 100% verified by official ZIB verifier `check_labs` (VALID).
   - Telemetry streamed to `benchmarks/qoblib/world_records/hunt_history.log`.
   - Packaged complete official submission package in `benchmarks/qoblib/submissions/01-marketsplit/20260924_UltimateSolver_Zhupanov/` with per-instance passports and `.sol` files, 100% verified by `check_marketsplit`.
