@@ -1,0 +1,138 @@
+{
+  "decision": "exact-but-slow",
+  "groups": {
+    "complete_SK_10": {
+      "count": 20,
+      "lb_calls": {
+        "max_ratio": 4.738317757009346,
+        "median_ratio": 4.299320845656698,
+        "min_ratio": 3.8598130841121496
+      },
+      "nodes": {
+        "max_ratio": 1.0,
+        "median_ratio": 1.0,
+        "min_ratio": 1.0
+      },
+      "time_wins": 0,
+      "wall_ns": {
+        "max_ratio": 7.792283281891953,
+        "median_ratio": 5.429875479966668,
+        "min_ratio": 4.567136075076333
+      }
+    },
+    "complete_SK_12": {
+      "count": 20,
+      "lb_calls": {
+        "max_ratio": 5.151057401812689,
+        "median_ratio": 4.820056708375065,
+        "min_ratio": 4.19496855345912
+      },
+      "nodes": {
+        "max_ratio": 1.0,
+        "median_ratio": 1.0,
+        "min_ratio": 1.0
+      },
+      "time_wins": 0,
+      "wall_ns": {
+        "max_ratio": 9.349470072907497,
+        "median_ratio": 6.5306139532858944,
+        "min_ratio": 4.882886683319161
+      }
+    },
+    "complete_SK_8": {
+      "count": 20,
+      "lb_calls": {
+        "max_ratio": 4.057971014492754,
+        "median_ratio": 3.8672699849170438,
+        "min_ratio": 2.8974358974358974
+      },
+      "nodes": {
+        "max_ratio": 1.0,
+        "median_ratio": 1.0,
+        "min_ratio": 1.0
+      },
+      "time_wins": 0,
+      "wall_ns": {
+        "max_ratio": 5.75520171361877,
+        "median_ratio": 4.676556811263927,
+        "min_ratio": 2.7588938601015243
+      }
+    },
+    "random_sparse_10": {
+      "count": 20,
+      "lb_calls": {
+        "max_ratio": 4.178294573643411,
+        "median_ratio": 3.842869629530021,
+        "min_ratio": 2.096774193548387
+      },
+      "nodes": {
+        "max_ratio": 1.0,
+        "median_ratio": 1.0,
+        "min_ratio": 1.0
+      },
+      "time_wins": 0,
+      "wall_ns": {
+        "max_ratio": 5.651607163705907,
+        "median_ratio": 4.528123776027566,
+        "min_ratio": 2.555779947752317
+      }
+    },
+    "random_sparse_12": {
+      "count": 20,
+      "lb_calls": {
+        "max_ratio": 4.950310559006211,
+        "median_ratio": 3.8251700680272105,
+        "min_ratio": 2.398422090729783
+      },
+      "nodes": {
+        "max_ratio": 1.0,
+        "median_ratio": 1.0,
+        "min_ratio": 1.0
+      },
+      "time_wins": 0,
+      "wall_ns": {
+        "max_ratio": 9.212164931203617,
+        "median_ratio": 4.957352053293113,
+        "min_ratio": 3.4423021183563276
+      }
+    },
+    "random_sparse_8": {
+      "count": 20,
+      "lb_calls": {
+        "max_ratio": 3.9743589743589745,
+        "median_ratio": 2.984848484848485,
+        "min_ratio": 1.5970149253731343
+      },
+      "nodes": {
+        "max_ratio": 1.0,
+        "median_ratio": 1.0,
+        "min_ratio": 1.0
+      },
+      "time_wins": 0,
+      "wall_ns": {
+        "max_ratio": 5.727408794644174,
+        "median_ratio": 3.814916952818539,
+        "min_ratio": 2.0624711485084877
+      }
+    }
+  },
+  "overall": {
+    "count": 120,
+    "lb_calls": {
+      "max_ratio": 5.151057401812689,
+      "median_ratio": 3.946109030378693,
+      "min_ratio": 1.5970149253731343
+    },
+    "nodes": {
+      "max_ratio": 1.0,
+      "median_ratio": 1.0,
+      "min_ratio": 1.0
+    },
+    "time_wins": 0,
+    "wall_ns": {
+      "max_ratio": 9.349470072907497,
+      "median_ratio": 4.87636723099865,
+      "min_ratio": 2.0624711485084877
+    }
+  }
+}
