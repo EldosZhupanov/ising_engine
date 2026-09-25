@@ -1,0 +1,360 @@
+[
+  {
+    "family": "cycle",
+    "candidate": 3,
+    "valid_blocks": 15,
+    "instances": [
+      {
+        "instance_seed": 1101,
+        "n_pairs": 5,
+        "quality_advantage": 0.11191135734072022,
+        "baseline_rmst_ms": 73.8701394,
+        "candidate_rmst_ms": 0.0816172,
+        "energy_difference": -40.4,
+        "reduced_every_seed": true
+      },
+      {
+        "instance_seed": 1102,
+        "n_pairs": 5,
+        "quality_advantage": 0.09919137466307278,
+        "baseline_rmst_ms": 100.0,
+        "candidate_rmst_ms": 0.09776460000000001,
+        "energy_difference": -36.8,
+        "reduced_every_seed": true
+      },
+      {
+        "instance_seed": 1103,
+        "n_pairs": 5,
+        "quality_advantage": 0.10142450142450142,
+        "baseline_rmst_ms": 64.154503,
+        "candidate_rmst_ms": 0.0762208,
+        "energy_difference": -35.6,
+        "reduced_every_seed": true
+      }
+    ],
+    "quality_advantage": 0.10417574447609813,
+    "baseline_rmst_ms": 79.34154746666667,
+    "candidate_rmst_ms": 0.08520086666666667,
+    "rmst_ratio": 0.0010738493183846916,
+    "quality_pass": true,
+    "time_pass": true,
+    "reduction_pass": true,
+    "verdict": "POSITIVE_CONTROL_ONLY"
+  },
+  {
+    "family": "cycle",
+    "candidate": 4,
+    "valid_blocks": 15,
+    "instances": [
+      {
+        "instance_seed": 1101,
+        "n_pairs": 5,
+        "quality_advantage": 0.054293628808864264,
+        "baseline_rmst_ms": 73.8701394,
+        "candidate_rmst_ms": 3.8827062,
+        "energy_difference": -19.6,
+        "reduced_every_seed": false
+      },
+      {
+        "instance_seed": 1102,
+        "n_pairs": 5,
+        "quality_advantage": 0.05929919137466307,
+        "baseline_rmst_ms": 100.0,
+        "candidate_rmst_ms": 6.8682694,
+        "energy_difference": -22.0,
+        "reduced_every_seed": false
+      },
+      {
+        "instance_seed": 1103,
+        "n_pairs": 5,
+        "quality_advantage": 0.0603988603988604,
+        "baseline_rmst_ms": 64.154503,
+        "candidate_rmst_ms": 3.2941670000000003,
+        "energy_difference": -21.2,
+        "reduced_every_seed": false
+      }
+    ],
+    "quality_advantage": 0.05799722686079591,
+    "baseline_rmst_ms": 79.34154746666667,
+    "candidate_rmst_ms": 4.6817142,
+    "rmst_ratio": 0.05900709463685345,
+    "quality_pass": true,
+    "time_pass": true,
+    "reduction_pass": true,
+    "verdict": "POSITIVE_CONTROL_ONLY"
+  },
+  {
+    "family": "subdivided",
+    "candidate": 3,
+    "valid_blocks": 14,
+    "instances": [
+      {
+        "instance_seed": 1101,
+        "n_pairs": 4,
+        "quality_advantage": 0.09302325581395349,
+        "baseline_rmst_ms": 65.08954975,
+        "candidate_rmst_ms": 0.935905,
+        "energy_difference": -36.0,
+        "reduced_every_seed": true
+      },
+      {
+        "instance_seed": 1102,
+        "n_pairs": 5,
+        "quality_advantage": 0.07300771208226221,
+        "baseline_rmst_ms": 30.179288200000002,
+        "candidate_rmst_ms": 1.1613644,
+        "energy_difference": -28.4,
+        "reduced_every_seed": true
+      },
+      {
+        "instance_seed": 1103,
+        "n_pairs": 5,
+        "quality_advantage": 0.08793565683646112,
+        "baseline_rmst_ms": 12.4097706,
+        "candidate_rmst_ms": 1.0978716,
+        "energy_difference": -32.8,
+        "reduced_every_seed": true
+      }
+    ],
+    "quality_advantage": 0.08465554157755895,
+    "baseline_rmst_ms": 35.89286951666667,
+    "candidate_rmst_ms": 1.065047,
+    "rmst_ratio": 0.029672941014243816,
+    "quality_pass": true,
+    "time_pass": true,
+    "reduction_pass": true,
+    "verdict": "CONTINUE_SCREEN"
+  },
+  {
+    "family": "subdivided",
+    "candidate": 4,
+    "valid_blocks": 14,
+    "instances": [
+      {
+        "instance_seed": 1101,
+        "n_pairs": 4,
+        "quality_advantage": 0.05684754521963824,
+        "baseline_rmst_ms": 65.08954975,
+        "candidate_rmst_ms": 2.87172275,
+        "energy_difference": -22.0,
+        "reduced_every_seed": false
+      },
+      {
+        "instance_seed": 1102,
+        "n_pairs": 5,
+        "quality_advantage": 0.02365038560411311,
+        "baseline_rmst_ms": 30.179288200000002,
+        "candidate_rmst_ms": 3.9168331999999997,
+        "energy_difference": -9.2,
+        "reduced_every_seed": false
+      },
+      {
+        "instance_seed": 1103,
+        "n_pairs": 5,
+        "quality_advantage": 0.0353887399463807,
+        "baseline_rmst_ms": 12.4097706,
+        "candidate_rmst_ms": 4.3587526,
+        "energy_difference": -13.2,
+        "reduced_every_seed": false
+      }
+    ],
+    "quality_advantage": 0.03862889025671068,
+    "baseline_rmst_ms": 35.89286951666667,
+    "candidate_rmst_ms": 3.7157695166666667,
+    "rmst_ratio": 0.1035238911433723,
+    "quality_pass": true,
+    "time_pass": true,
+    "reduction_pass": true,
+    "verdict": "CONTINUE_SCREEN"
+  },
+  {
+    "family": "sparse",
+    "candidate": 3,
+    "valid_blocks": 15,
+    "instances": [
+      {
+        "instance_seed": 1101,
+        "n_pairs": 5,
+        "quality_advantage": -0.006727037516170764,
+        "baseline_rmst_ms": 96.0724666,
+        "candidate_rmst_ms": 100.0,
+        "energy_difference": 5.2,
+        "reduced_every_seed": true
+      },
+      {
+        "instance_seed": 1102,
+        "n_pairs": 5,
+        "quality_advantage": 0.00834575260804769,
+        "baseline_rmst_ms": 25.2737494,
+        "candidate_rmst_ms": 14.7032912,
+        "energy_difference": -5.6,
+        "reduced_every_seed": true
+      },
+      {
+        "instance_seed": 1103,
+        "n_pairs": 5,
+        "quality_advantage": 0.0018018018018018018,
+        "baseline_rmst_ms": 55.496179,
+        "candidate_rmst_ms": 7.9096262,
+        "energy_difference": -1.2,
+        "reduced_every_seed": true
+      }
+    ],
+    "quality_advantage": 0.0011401722978929092,
+    "baseline_rmst_ms": 58.947465,
+    "candidate_rmst_ms": 40.870972466666665,
+    "rmst_ratio": 0.6933457183725655,
+    "quality_pass": false,
+    "time_pass": false,
+    "reduction_pass": true,
+    "verdict": "ARCHIVE_ON_THIS_FAMILY"
+  },
+  {
+    "family": "sparse",
+    "candidate": 4,
+    "valid_blocks": 15,
+    "instances": [
+      {
+        "instance_seed": 1101,
+        "n_pairs": 5,
+        "quality_advantage": 0.031047865459249677,
+        "baseline_rmst_ms": 96.0724666,
+        "candidate_rmst_ms": 20.0687694,
+        "energy_difference": -24.0,
+        "reduced_every_seed": false
+      },
+      {
+        "instance_seed": 1102,
+        "n_pairs": 5,
+        "quality_advantage": 0.03695976154992549,
+        "baseline_rmst_ms": 25.2737494,
+        "candidate_rmst_ms": 10.3182914,
+        "energy_difference": -24.8,
+        "reduced_every_seed": false
+      },
+      {
+        "instance_seed": 1103,
+        "n_pairs": 5,
+        "quality_advantage": 0.05345345345345345,
+        "baseline_rmst_ms": 55.496179,
+        "candidate_rmst_ms": 11.6675462,
+        "energy_difference": -35.6,
+        "reduced_every_seed": false
+      }
+    ],
+    "quality_advantage": 0.04048702682087621,
+    "baseline_rmst_ms": 58.947465,
+    "candidate_rmst_ms": 14.018202333333333,
+    "rmst_ratio": 0.23780839995974945,
+    "quality_pass": true,
+    "time_pass": true,
+    "reduction_pass": true,
+    "verdict": "CONTINUE_SCREEN"
+  },
+  {
+    "family": "dense",
+    "candidate": 3,
+    "verdict": "INSTRUMENT_INCONCLUSIVE",
+    "valid_blocks": 0,
+    "valid_per_instance": {
+      "1101": 0,
+      "1102": 0,
+      "1103": 0
+    }
+  },
+  {
+    "family": "dense",
+    "candidate": 4,
+    "verdict": "INSTRUMENT_INCONCLUSIVE",
+    "valid_blocks": 0,
+    "valid_per_instance": {
+      "1101": 0,
+      "1102": 0,
+      "1103": 0
+    }
+  },
+  {
+    "family": "field",
+    "candidate": 3,
+    "valid_blocks": 15,
+    "instances": [
+      {
+        "instance_seed": 1101,
+        "n_pairs": 5,
+        "quality_advantage": 0.0040100250626566416,
+        "baseline_rmst_ms": 82.7136834,
+        "candidate_rmst_ms": 62.7755944,
+        "energy_difference": -3.2,
+        "reduced_every_seed": true
+      },
+      {
+        "instance_seed": 1102,
+        "n_pairs": 5,
+        "quality_advantage": -0.002824858757062147,
+        "baseline_rmst_ms": 52.211595800000005,
+        "candidate_rmst_ms": 30.613466000000003,
+        "energy_difference": 2.0,
+        "reduced_every_seed": true
+      },
+      {
+        "instance_seed": 1103,
+        "n_pairs": 5,
+        "quality_advantage": 0.014005602240896359,
+        "baseline_rmst_ms": 34.8217914,
+        "candidate_rmst_ms": 27.9531786,
+        "energy_difference": -10.0,
+        "reduced_every_seed": true
+      }
+    ],
+    "quality_advantage": 0.005063589515496951,
+    "baseline_rmst_ms": 56.582356866666665,
+    "candidate_rmst_ms": 40.447413000000005,
+    "rmst_ratio": 0.714841431849723,
+    "quality_pass": false,
+    "time_pass": false,
+    "reduction_pass": true,
+    "verdict": "ARCHIVE_ON_THIS_FAMILY"
+  },
+  {
+    "family": "field",
+    "candidate": 4,
+    "valid_blocks": 15,
+    "instances": [
+      {
+        "instance_seed": 1101,
+        "n_pairs": 5,
+        "quality_advantage": 0.034085213032581455,
+        "baseline_rmst_ms": 82.7136834,
+        "candidate_rmst_ms": 20.872014,
+        "energy_difference": -27.2,
+        "reduced_every_seed": false
+      },
+      {
+        "instance_seed": 1102,
+        "n_pairs": 5,
+        "quality_advantage": 0.020903954802259886,
+        "baseline_rmst_ms": 52.211595800000005,
+        "candidate_rmst_ms": 7.0991637999999995,
+        "energy_difference": -14.8,
+        "reduced_every_seed": false
+      },
+      {
+        "instance_seed": 1103,
+        "n_pairs": 5,
+        "quality_advantage": 0.026330532212885154,
+        "baseline_rmst_ms": 34.8217914,
+        "candidate_rmst_ms": 16.0683692,
+        "energy_difference": -18.8,
+        "reduced_every_seed": false
+      }
+    ],
+    "quality_advantage": 0.027106566682575498,
+    "baseline_rmst_ms": 56.582356866666665,
+    "candidate_rmst_ms": 14.679848999999999,
+    "rmst_ratio": 0.2594421620610871,
+    "quality_pass": true,
+    "time_pass": true,
+    "reduction_pass": true,
+    "verdict": "CONTINUE_SCREEN"
+  }
+]
