@@ -12,17 +12,23 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## CD003-MR1 structural gate in progress — 2026-09-25
+## CD003-MR1 structural gate complete — 2026-09-25
 
-The user authorized the next independent research step. The
+The [result](../research/experiments/cd003_market_residual/RESULT.md) records
+10/10 valid official Market Split residual-field probes and an independently
+recomputed **NO-GO** for boundary-field caching on the preregistered split:
+presolve fixed 0 variables, while the 22,528 tested boundary assignments
+produced distinct internal field vectors within their respective instances. The earlier
 [applicability triage](../research/breakthrough/cd003/APPLICABILITY_TRIAGE.md)
-narrows CD003: a small response table does not imply a cheap conditional solve.
-The [binding protocol](../research/experiments/cd003_market_residual/protocol.md)
-freezes a deterministic ten-instance Market Split residual-field diagnostic
-before its instrument and data. Next: implement an isolated probe using the
-existing scalar `full_presolve`, verify it, run once, and independently check
-the raw output. Do not edit the protocol after this freeze. No production
-solver/MSC/Laya bridge changes are in scope. Preserve unrelated untracked work.
+also narrows CD003: a small response table does not imply a cheap conditional
+solve. This does not refute CD003's scoped theorem, test conditional optimal
+responses, or compare solver speed. Do not optimize this partition on the ten
+opened files or integrate CD003 based on this diagnostic. Next scoped choice:
+find a naturally repeated, bounded-precision interface in an independent
+domain under a new protocol, or study a different certified graph reduction.
+No second campaign follows automatically from this result. The production
+solver, MSC family, and Laya bridge were unchanged. Preserve unrelated
+untracked drafts.
 
 ## EXP-007W complete — 2026-09-25
 

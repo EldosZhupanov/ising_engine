@@ -97,3 +97,4 @@ scientific content of the linked record.
 | 2026-09-25 | CD005-Q2 equal-time MIS qualification: 18/18 ties; post-result proof that 1-opt makes strict 2-opt inert for this encoding; application NO-GO | [Result](../research/cd005_equal_time/RESULT.md) |
 | 2026-09-25 | EXP-007W vertex-weighted MIS qualification preregistered with six frozen synthetic graphs and equal-time CD005 comparison | [Protocol](../research/experiments/exp007_weighted_mis/protocol.md) |
 | 2026-09-25 | EXP-007W completed: improving pairs in 58/60 weighted-MIS starts, but 60/60 equal-time best-result ties; no production gain established | [Result](../research/experiments/exp007_weighted_mis/RESULT.md) |
+| 2026-09-25 | CD003-MR1 closed: 10/10 Market Split residuals nonempty, but 22,528/22,528 boundary fields distinct within their instances; fixed-split field-cache NO-GO | [Result](../research/experiments/cd003_market_residual/RESULT.md) |

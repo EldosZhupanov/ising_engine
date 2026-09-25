@@ -13,10 +13,10 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 
 - `active`: 17
 - `binding`: 45
-- `closed`: 36
+- `closed`: 37
 - `historical`: 2
 - `proposed`: 4
-- `reference`: 175
+- `reference`: 176
 - `superseded`: 4
 
 ## Registry
@@ -293,6 +293,8 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/cd005_equal_time/RESULT.md` | research-result | A1 | closed | 2026-09-25 | 2026-09-25 | true | CD005-Q2 |
 | `research/experiments/exp007_weighted_mis/protocol.md` | research-protocol | A1 | binding | 2026-09-25 | 2026-09-25 | true | EXP-007W |
 | `research/experiments/cd003_market_residual/protocol.md` | research-protocol | A1 | binding | 2026-09-25 | 2026-09-25 | true | CD003-MR1 |
+| `research/experiments/cd003_market_residual/RESULT.md` | research-result | A1 | closed | 2026-09-25 | 2026-09-25 | true | CD003-MR1 |
+| `research/experiments/cd003_market_residual/results/run001/README.md` | run-guide | A3 | reference | 2026-09-25 | 2026-09-25 | false | CD003-MR1 |
 | `research/experiments/exp007_weighted_mis/HYPODIVE_BUILDER_HANDOFF.md` | research-handoff | A2 | reference | 2026-09-25 | 2026-09-25 | false | EXP-007W |
 | `research/experiments/exp007_weighted_mis/RESULT.md` | research-result | A1 | closed | 2026-09-25 | 2026-09-25 | true | EXP-007W |
 | `research/experiments/exp007_weighted_mis/results/run001/README.md` | run-guide | A3 | reference | 2026-09-25 | 2026-09-25 | false | EXP-007W |
