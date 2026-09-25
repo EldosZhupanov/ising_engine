@@ -94,3 +94,4 @@ scientific content of the linked record.
 | 2026-09-19 | CD005: edge-restricted 2-opt escape; Theorem 1 (0 violations), 93-97% trap escape rate, up to 24.8x speedup, GO | [H15](../research/breakthrough/cd005/RESULTS.md) |
 | 2026-09-23 | LAYA-001 completed once on frozen source; 24 synthetic groups, exhaustive reconciliation checks PASS, all variables fixed by existing presolve; no search/speed claim | [Handoff](../research/laya_semantic/HYPODIVE_BUILDER_HANDOFF.md) |
 | 2026-09-25 | CD004-R correction: historical backjumping misses an optimum; certified-core recheck exact 120/120 but no node/time win; CD004 integration blocked | [Result](../research/breakthrough/cd004_recheck/RESULT.md) |
+| 2026-09-25 | CD005-Q2 equal-time MIS qualification: 18/18 ties; post-result proof that 1-opt makes strict 2-opt inert for this encoding; application NO-GO | [Result](../research/cd005_equal_time/RESULT.md) |

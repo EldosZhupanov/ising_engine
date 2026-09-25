@@ -12,19 +12,24 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## CD005-Q equal-time qualification active — 2026-09-25
+## CD005-Q2 equal-time qualification complete — 2026-09-25
 
-The user selected the next action after CD004-R: qualify the existing CD005
-two-spin finishing operator on held-out applied graphs at equal wall-clock
-budget. The [binding protocol](../research/cd005_equal_time/PROTOCOL.md) and
-[prospective metadata correction](../research/cd005_equal_time/AMENDMENT_1.md) fix
-six previously unused QOBLIB MIS graphs, 18 paired five-second campaigns and
-the decision gate before code or data access. The current task is to build the
-isolated measurement harness, validate it on old examples, run the frozen
-CD005-Q2 campaign once and record the result. The Q1 fetch stopped at a blob-ID
-transcription error before any solver run; the amendment records access. Do not
-modify either solver family or reuse the four already evaluated MIS graphs as
-holdout evidence. Older sections below are historical context.
+The user selected CD005 qualification after CD004-R. The
+[result](../research/cd005_equal_time/RESULT.md) and
+[handoff](../research/cd005_equal_time/HYPODIVE_BUILDER_HANDOFF.md) record one
+frozen evaluation on six QOBLIB MIS graphs: 18/18 valid paired cells, 0 wins,
+18 ties, 0 losses at equal five-second wall-clock budgets; decision **NO-GO**.
+For this unweighted MIS QUBO with penalty `P=2`, complete 1-opt descent already
+precludes any strict 2-flip improvement. This is an objective-specific
+algebraic limit, not a retraction of CD005's separate spin-glass evidence.
+The Q1 fetch stopped at a blob-ID transcription error before any solver run;
+the [prospective amendment](../research/cd005_equal_time/AMENDMENT_1.md)
+discloses the prior byte access. Do not turn on CD005 for this MIS encoding
+based solely on graph topology. Next scoped choice: study CD003 on nonempty
+residual graphs, or qualify CD005 on a different objective only after proving
+that improving two-flips exist. No new empirical campaign is automatically
+authorized by this note. Preserve unrelated untracked drafts. Older sections
+below are historical context.
 
 ## CD004-R correction — 2026-09-25
 

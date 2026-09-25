@@ -55,8 +55,8 @@ of knowledge.
 ---
 
 ### [CD005 / Option D] Gauge-Aligned Cross-Curvature Barrier Audit & 2-Opt Escapes (H07)
-* **Status:** **CONFIRMED ALGORITHMIC ADVANTAGE / GO** (2026-09-19)
-* **Outcome:** Proved Theorem 1 (scanning strictly $|E|$ edges is 100% complete for finding all improving 2-flips at 1-opt minima, 0 violations). Escaped **93.3% to 96.7%** of false 1-opt traps on frustrated spin glasses with up to **24.8× speedup** over $O(N^2)$ pair scanning. Fully documented in `research/breakthrough/cd005/`.
+* **Status:** **GO in the 2026-09-19 synthetic spin-glass scope; NO-GO for the 2026-09-25 equal-time unweighted MIS application**.
+* **Outcome:** [Original CD005](breakthrough/cd005/RESULTS.md) proved Theorem 1 (scanning strictly $|E|$ edges is complete for improving 2-flips at 1-opt minima, 0 violations) and reported 93.3–96.7% trap escape on frustrated spin glasses with up to 24.8× speedup over $O(N^2)$ pair scanning. [CD005-Q2](cd005_equal_time/RESULT.md) found 0 wins/18 ties on held-out MIS and showed algebraically that this encoding has no improving 2-flips after 1-opt. Objective semantics, not graph topology alone, control whether the operator has headroom.
 * **Cross-Domain Origin:** Differential Geometry / Statistical Mechanics.
 * **The Problem:** Metropolis/Glauber dynamics get trapped in 1-flip local minima for exponential time $O(e^{\Delta E / T})$ when negative-curvature directions require simultaneous coordinated 2-spin or cycle flips.
 * **The Hypothesis:** Closed-form $O(1)$ evaluation of pairwise Hessian/curvature blocks allows instantaneous detection of negative 2-opt escape directions without exhaustive $O(N^2)$ candidate evaluation.
