@@ -1,0 +1,4 @@
+# Preserve byte-for-byte historical documents and their published SHA-256 values.
+# Their original whitespace and damaged formulas are audited prospectively.
+*.md whitespace=-blank-at-eol,-blank-at-eof
+Cargo.toml whitespace=-blank-at-eof
