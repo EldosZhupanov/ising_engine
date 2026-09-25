@@ -12,6 +12,18 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
+## CD003-MR1 structural gate in progress — 2026-09-25
+
+The user authorized the next independent research step. The
+[applicability triage](../research/breakthrough/cd003/APPLICABILITY_TRIAGE.md)
+narrows CD003: a small response table does not imply a cheap conditional solve.
+The [binding protocol](../research/experiments/cd003_market_residual/protocol.md)
+freezes a deterministic ten-instance Market Split residual-field diagnostic
+before its instrument and data. Next: implement an isolated probe using the
+existing scalar `full_presolve`, verify it, run once, and independently check
+the raw output. Do not edit the protocol after this freeze. No production
+solver/MSC/Laya bridge changes are in scope. Preserve unrelated untracked work.
+
 ## EXP-007W complete — 2026-09-25
 
 The [result](../research/experiments/exp007_weighted_mis/RESULT.md) and

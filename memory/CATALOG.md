@@ -12,11 +12,11 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 ## Summary
 
 - `active`: 17
-- `binding`: 44
+- `binding`: 45
 - `closed`: 36
 - `historical`: 2
 - `proposed`: 4
-- `reference`: 174
+- `reference`: 175
 - `superseded`: 4
 
 ## Registry
@@ -268,6 +268,7 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/cd003/NEXT.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD003 |
 | `research/breakthrough/cd003/PRIOR_ART.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD003 |
 | `research/breakthrough/cd003/RESULTS.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD003 |
+| `research/breakthrough/cd003/APPLICABILITY_TRIAGE.md` | research-triage | A2 | reference | 2026-09-25 | 2026-09-25 | false | CD003-applicability |
 | `research/breakthrough/cd004/HYPOTHESIS.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD004 |
 | `research/breakthrough/cd004/KILL_TEST.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD004 |
 | `research/breakthrough/cd004/MATH.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD004 |
@@ -291,6 +292,7 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/cd005_equal_time/PROTOCOL.md` | research-protocol | A2 | binding | 2026-09-25 | 2026-09-25 | true | CD005-Q |
 | `research/cd005_equal_time/RESULT.md` | research-result | A1 | closed | 2026-09-25 | 2026-09-25 | true | CD005-Q2 |
 | `research/experiments/exp007_weighted_mis/protocol.md` | research-protocol | A1 | binding | 2026-09-25 | 2026-09-25 | true | EXP-007W |
+| `research/experiments/cd003_market_residual/protocol.md` | research-protocol | A1 | binding | 2026-09-25 | 2026-09-25 | true | CD003-MR1 |
 | `research/experiments/exp007_weighted_mis/HYPODIVE_BUILDER_HANDOFF.md` | research-handoff | A2 | reference | 2026-09-25 | 2026-09-25 | false | EXP-007W |
 | `research/experiments/exp007_weighted_mis/RESULT.md` | research-result | A1 | closed | 2026-09-25 | 2026-09-25 | true | EXP-007W |
 | `research/experiments/exp007_weighted_mis/results/run001/README.md` | run-guide | A3 | reference | 2026-09-25 | 2026-09-25 | false | EXP-007W |
