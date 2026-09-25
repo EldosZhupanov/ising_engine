@@ -12,11 +12,11 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 ## Summary
 
 - `active`: 17
-- `binding`: 41
+- `binding`: 42
 - `closed`: 34
 - `historical`: 2
 - `proposed`: 4
-- `reference`: 170
+- `reference`: 171
 - `superseded`: 4
 
 ## Registry
@@ -70,7 +70,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `memory/DECISIONS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
 | `memory/INDEX.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
 | `memory/NEXT_TASK_RC027.md` | task-bundle | A1 | active | 2026-08-30 | 2026-08-30 | false | RC027 |
-| `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-08-30 | false | current-task |
+| `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-09-25 | false | current-task |
 | `memory/OBSIDIAN.md` | workspace-guide | A3 | reference | 2026-08-26 | 2026-08-26 | false | navigation |
 | `memory/OPEN_PROBLEMS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-30 | false | navigation |
 | `memory/PERFORMANCE.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
@@ -285,6 +285,8 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/cd005/NEXT.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD005 |
 | `research/breakthrough/cd005/PRIOR_ART.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD005 |
 | `research/breakthrough/cd005/RESULTS.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD005 |
+| `research/cd005_equal_time/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-25 | 2026-09-25 | false | CD005-Q |
+| `research/cd005_equal_time/PROTOCOL.md` | research-protocol | A2 | binding | 2026-09-25 | 2026-09-25 | true | CD005-Q |
 | `research/breakthrough/h11/HYPOTHESIS.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/breakthrough/h11/MATH.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/breakthrough/h11/IMPLEMENTATION.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |

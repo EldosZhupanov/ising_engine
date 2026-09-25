@@ -3,7 +3,7 @@ id: memory-now
 kind: live-state
 status: active
 authority_scope: current-task
-updated: 2026-09-23
+updated: 2026-09-25
 immutable: false
 ---
 
@@ -11,6 +11,18 @@ immutable: false
 
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
+
+## CD005-Q equal-time qualification active — 2026-09-25
+
+The user selected the next action after CD004-R: qualify the existing CD005
+two-spin finishing operator on held-out applied graphs at equal wall-clock
+budget. The [binding protocol](../research/cd005_equal_time/PROTOCOL.md) fixes
+six previously unused QOBLIB MIS graphs, 18 paired five-second campaigns and
+the decision gate before code or data access. The current task is to build the
+isolated measurement harness, validate it on old examples, run the frozen
+campaign once and record the result. Do not modify either solver family or
+reuse the four already evaluated MIS graphs as holdout evidence. Older sections
+below are historical context.
 
 ## CD004-R correction — 2026-09-25
 
