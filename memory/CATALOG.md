@@ -12,7 +12,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 ## Summary
 
 - `active`: 17
-- `binding`: 40
+- `binding`: 41
 - `closed`: 33
 - `historical`: 1
 - `proposed`: 4
@@ -274,6 +274,7 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/cd004/NEXT.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD004 |
 | `research/breakthrough/cd004/PRIOR_ART.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD004 |
 | `research/breakthrough/cd004/RESULTS.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD004 |
+| `research/breakthrough/cd004_recheck/AMENDMENT_1.md` | research-protocol-amendment | A2 | binding | 2026-09-25 | 2026-09-25 | true | breakthrough-CD004-R |
 | `research/breakthrough/cd004_recheck/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-25 | 2026-09-25 | false | breakthrough-CD004-R |
 | `research/breakthrough/cd004_recheck/PROTOCOL.md` | research-protocol | A2 | binding | 2026-09-25 | 2026-09-25 | true | breakthrough-CD004-R |
 | `research/breakthrough/cd005/HYPOTHESIS.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD005 |
