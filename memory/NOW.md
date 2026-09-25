@@ -16,13 +16,15 @@ its claims against `git status --short` and the current branch before acting.
 
 The user selected the next action after CD004-R: qualify the existing CD005
 two-spin finishing operator on held-out applied graphs at equal wall-clock
-budget. The [binding protocol](../research/cd005_equal_time/PROTOCOL.md) fixes
+budget. The [binding protocol](../research/cd005_equal_time/PROTOCOL.md) and
+[prospective metadata correction](../research/cd005_equal_time/AMENDMENT_1.md) fix
 six previously unused QOBLIB MIS graphs, 18 paired five-second campaigns and
 the decision gate before code or data access. The current task is to build the
 isolated measurement harness, validate it on old examples, run the frozen
-campaign once and record the result. Do not modify either solver family or
-reuse the four already evaluated MIS graphs as holdout evidence. Older sections
-below are historical context.
+CD005-Q2 campaign once and record the result. The Q1 fetch stopped at a blob-ID
+transcription error before any solver run; the amendment records access. Do not
+modify either solver family or reuse the four already evaluated MIS graphs as
+holdout evidence. Older sections below are historical context.
 
 ## CD004-R correction — 2026-09-25
 
