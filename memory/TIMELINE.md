@@ -96,3 +96,4 @@ scientific content of the linked record.
 | 2026-09-25 | CD004-R correction: historical backjumping misses an optimum; certified-core recheck exact 120/120 but no node/time win; CD004 integration blocked | [Result](../research/breakthrough/cd004_recheck/RESULT.md) |
 | 2026-09-25 | CD005-Q2 equal-time MIS qualification: 18/18 ties; post-result proof that 1-opt makes strict 2-opt inert for this encoding; application NO-GO | [Result](../research/cd005_equal_time/RESULT.md) |
 | 2026-09-25 | EXP-007W vertex-weighted MIS qualification preregistered with six frozen synthetic graphs and equal-time CD005 comparison | [Protocol](../research/experiments/exp007_weighted_mis/protocol.md) |
+| 2026-09-25 | EXP-007W completed: improving pairs in 58/60 weighted-MIS starts, but 60/60 equal-time best-result ties; no production gain established | [Result](../research/experiments/exp007_weighted_mis/RESULT.md) |
