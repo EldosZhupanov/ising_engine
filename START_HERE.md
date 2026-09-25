@@ -31,6 +31,7 @@ cost on an independently replicated domain.
 | Why the project exists | [`SOUL.md`](SOUL.md) |
 | Direction | [`research/ISING_ENGINE_CONSTITUTION.md`](research/ISING_ENGINE_CONSTITUTION.md) |
 | Definition of a finished product | [`PRODUCT_SPEC.md`](PRODUCT_SPEC.md) |
+| Projects and untracked work | [`PROJECTS.md`](PROJECTS.md) and [`memory/FILE_MAP.tsv`](memory/FILE_MAP.tsv) |
 | Engineering rules | [`AGENTS.md`](AGENTS.md) |
 | Architecture decisions | [`research/architecture/ADR/`](research/architecture/ADR/) |
 | Active scientific/product sequence | [`PROJECT_PLAN.md`](PROJECT_PLAN.md) |

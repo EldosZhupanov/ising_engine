@@ -1,5 +1,27 @@
 # Ising Engine — Roadmap
 
+## Current ordered backlog (repository recovery, 2026-09-25)
+
+This queue records the current recovery work. [memory/NOW.md](memory/NOW.md)
+selects the active step; [PROJECT_PLAN.md](PROJECT_PLAN.md) remains the binding
+order for product research gates. Statuses below are evidence states, not
+percent-complete estimates. The stage percentages later in this file are
+historical inventory until independently re-audited.
+
+| Priority | Task | Exit evidence |
+|---|---|---|
+| P0 — COMPLETE | Make the full checkout discoverable and stop invalid Market Split candidates from appearing as solutions. | [PROJECTS.md](PROJECTS.md), `memory/FILE_MAP.tsv`, catalogue coverage; all five rejected candidates preserved outside `solutions/`, seven remaining files accepted by checker. |
+| P0 — ACTIVE | Preserve and qualify untracked source and results before any clean clone or submission. | Hashes, protocol/commit links, independent checkers; unresolved files explicitly marked UNKNOWN. |
+| P1 | Repair provenance errors prospectively, including the RC027 instrument-commit typo; avoid editing frozen results. | Actual commit plus source SHA match recorded in a new current-state note. |
+| P1 | Qualify the later LABS memetic hunter against lMAts at equal time before another record campaign. | Independent seed block, official checker, frozen raw TTS/quality. |
+| P2 | Run a blind Market Split lattice/UltimateSolver ablation only as an algorithmic benchmark. | Label-free `(A,b)`, preprocessing inside wall budget, strong specialist baseline, censored outcomes. |
+| P2 | Audit `fundamental_ai` raw/protocol chronology and external baselines before promotion. | Standalone tests plus independent reproduction and claim ledger. |
+| P3 | Validate website and old root scripts only when they enter the active product path. | Own build/typecheck and call-site map. |
+| RESEARCH | Test direct fourth-order HUBO against quadratization on held-out cases. | Registered matched-cost comparison and independent energy checks. |
+| CLEANUP | Classify ignored `experiments/` and `archive/`; retain significant results, remove nothing by age alone. | Inventory rows with provenance and explicit disposition. |
+
+---
+
 > The single source of truth for **direction** is
 > `research/ISING_ENGINE_CONSTITUTION.md`. This roadmap is the **status** view:
 > what exists, what is being built, what is planned, and where we are going.

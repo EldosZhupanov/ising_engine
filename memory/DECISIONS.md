@@ -8,6 +8,15 @@ Record a new ADR when you change structure, a boundary, or a cross-cutting
 guarantee. An ADR states: context, the decision, alternatives considered,
 consequences, and links to superseded/related ADRs.
 
+## Current research dispositions (not architecture ADRs)
+
+| Decision | Why | Evidence |
+|---|---|---|
+| Treat the selected 41 Market Split files as known-feasible benchmarks, never first-known-solution targets. | Official `.dat` comments contain 41 checker-valid binary witnesses. | [EXP-005 triage](../research/EXP005_MARKETSPLIT_TRIAGE.md) |
+| Keep lattice and `fundamental_ai` work experimental while untracked. | A passing build/test is narrower than an accepted scientific claim or a frozen source state. | [Project map](../PROJECTS.md), [current state](NOW.md) |
+| Preserve checker-rejected candidates away from submission directories. | A `.sol` filename alone is not a certificate; five local candidates fail the checker, including `ms_13_050_003` with 13/13 violated rows. | `benchmarks/qoblib/marketsplit/rejected_candidates/verification.txt`, [project map](../PROJECTS.md) |
+| Correct the RC027 instrument identifier prospectively. | The literal hash in the result cannot be resolved, but the actual commit's source SHA-256 matches. | [RC027 result](../results/rc027/RESULT.md), `fdec0dfdf245c32925d71ffd745a34b7357cbaa4` |
+
 ## The twelve, in one line each
 
 | ADR | Decision |

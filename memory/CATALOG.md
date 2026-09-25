@@ -1,6 +1,10 @@
 # Document catalogue
 
 This sidecar catalogue classifies every Markdown document without modifying frozen evidence. Paths are the stable identifiers. Dates come from Git history; they describe chronology but do not establish authority.
+Its enforced scope is Git-tracked plus nonignored untracked Markdown (345 files
+at this audit). The 55 Git-ignored Markdown reports and download READMEs are
+classified separately as historical evidence in [FILE_MAP.tsv](FILE_MAP.tsv);
+the catalogue gate intentionally excludes ignored paths.
 
 ## Field meanings
 
@@ -11,12 +15,12 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 
 ## Summary
 
-- `active`: 17
+- `active`: 18
 - `binding`: 45
 - `closed`: 37
 - `historical`: 2
-- `proposed`: 4
-- `reference`: 176
+- `proposed`: 42
+- `reference`: 197
 - `superseded`: 4
 
 ## Registry
@@ -58,25 +62,25 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `CONTEXT.md` | historical-summary | A4 | superseded | 2026-07-05 | 2026-08-19 | false | none |
 | `design_spec.md` | design-spec | A2 | reference | 2026-03-12 | 2026-03-12 | false | design |
 | `gnn_design_spec.md` | design-spec | A2 | reference | 2026-03-12 | 2026-03-12 | false | design |
-| `INDEX.md` | navigation | A3 | reference | 2026-07-05 | 2026-08-26 | false | compatibility |
+| `INDEX.md` | navigation | A3 | reference | 2026-07-05 | 2026-09-25 | false | compatibility |
 | `MEMORY.md` | historical-summary | A4 | superseded | 2026-07-05 | 2026-08-19 | false | none |
 | `memory/ARCHITECTURE.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
 | `memory/AUTHORITY.md` | governance-map | A0 | active | 2026-08-26 | 2026-08-26 | false | document-governance |
 | `memory/BENCHMARKS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
-| `memory/CATALOG.md` | document-registry | A1 | active | 2026-08-26 | 2026-08-27 | false | document-catalogue |
+| `memory/CATALOG.md` | document-registry | A1 | active | 2026-08-26 | 2026-09-25 | false | document-catalogue |
 | `memory/CLAUDE_PRODUCT_COMPARISON_TASK.md` | historical-instruction | A4 | historical | 2026-08-22 | 2026-08-26 | false | none |
 | `memory/CURRENT_HANDOFF.md` | historical-handoff | A4 | superseded | 2026-08-22 | 2026-08-26 | false | compatibility |
 | `memory/CURRENT_TASK.md` | historical-handoff | A4 | superseded | 2026-08-19 | 2026-08-26 | false | compatibility |
-| `memory/DECISIONS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
+| `memory/DECISIONS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-09-25 | false | navigation |
 | `memory/INDEX.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
 | `memory/NEXT_TASK_RC027.md` | task-bundle | A1 | active | 2026-08-30 | 2026-08-30 | false | RC027 |
 | `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-09-25 | false | current-task |
 | `memory/OBSIDIAN.md` | workspace-guide | A3 | reference | 2026-08-26 | 2026-08-26 | false | navigation |
 | `memory/OPEN_PROBLEMS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-30 | false | navigation |
 | `memory/PERFORMANCE.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
-| `memory/RESEARCH.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
+| `memory/RESEARCH.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-09-25 | false | navigation |
 | `memory/ROADMAP.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
-| `memory/TIMELINE.md` | chronology | A1 | active | 2026-08-26 | 2026-08-30 | false | project-chronology |
+| `memory/TIMELINE.md` | chronology | A1 | active | 2026-08-26 | 2026-09-25 | false | project-chronology |
 | `PERF.md` | engineering-reference | A1 | active | 2026-07-05 | 2026-07-06 | false | engineering |
 | `portfolio_design_spec.md` | design-spec | A2 | reference | 2026-03-13 | 2026-03-13 | false | design |
 | `PRODUCT_SPEC.md` | product-spec | A0 | active | 2026-08-22 | 2026-08-26 | false | finished-product |
@@ -174,11 +178,11 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `results/rc024/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC024 |
 | `results/rc025/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC025 |
 | `results/rc026/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC026 |
-| `ROADMAP.md` | stage-inventory | A1 | active | 2026-07-05 | 2026-08-26 | false | implementation-status |
+| `ROADMAP.md` | stage-inventory | A1 | active | 2026-07-05 | 2026-09-25 | false | implementation-status |
 | `SECURITY.md` | engineering-reference | A1 | active | 2026-03-11 | 2026-03-11 | false | engineering |
 | `SKILL.md` | reference | A3 | reference | 2026-03-11 | 2026-03-11 | false | none |
 | `SOUL.md` | mission | A0 | active | 2026-07-15 | 2026-07-15 | false | project-mission |
-| `START_HERE.md` | navigation | A0 | active | 2026-08-26 | 2026-08-26 | false | startup |
+| `START_HERE.md` | navigation | A0 | active | 2026-08-26 | 2026-09-25 | false | startup |
 | `VERIFY.md` | engineering-reference | A1 | active | 2026-07-05 | 2026-07-05 | false | engineering |
 | `website/AGENTS.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
 | `website/ARCHITECTURE_REVIEW.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
@@ -253,6 +257,7 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/HYPODIVE_BUILDER_HANDOFF.md` | research-handoff | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/HYPODIVE_TRIAGE.md` | research-triage | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/EXP005_MARKETSPLIT_TRIAGE.md` | research-triage | A2 | reference | 2026-09-25 | 2026-09-25 | false | EXP-005 |
 | `research/PRIOR_ART_MATRIX.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/breakthrough/EXP001_RESULT.md` | research-result-draft | A2 | proposed | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/breakthrough/EXP002_PROTOCOL.md` | research-protocol-draft | A2 | proposed | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
@@ -312,3 +317,70 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/labs_qualification/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-23 | 2026-09-23 | false | LABS-Q001 |
 | `research/labs_qualification/README.md` | research-guide | A2 | reference | 2026-09-23 | 2026-09-23 | false | LABS-Q001 |
 | `research/labs_qualification/RESULT.md` | research-result | A2 | reference | 2026-09-23 | 2026-09-23 | false | LABS-Q001 |
+
+## Discovered local documents (2026-09-25 audit)
+
+These untracked documents have no Git chronology yet; `—` is intentional.
+Their listing records existence, not scientific acceptance.
+
+| Path | Kind | Authority | Lifecycle | Created | Last changed | Immutable | Canonical scope |
+|---|---|---:|---|---|---|---|---|
+| `.agents/agents/benchmark-engineer.md` | agent-role | A3 | reference | — | — | false | agent-tooling |
+| `.agents/agents/falsification-agent.md` | agent-role | A3 | reference | — | — | false | agent-tooling |
+| `.agents/agents/literature-researcher.md` | agent-role | A3 | reference | — | — | false | agent-tooling |
+| `.agents/agents/paper-reviewer.md` | agent-role | A3 | reference | — | — | false | agent-tooling |
+| `.agents/agents/reproducibility-auditor.md` | agent-role | A3 | reference | — | — | false | agent-tooling |
+| `.agents/agents/research-lead.md` | agent-role | A3 | reference | — | — | false | agent-tooling |
+| `.agents/agents/solver-engineer.md` | agent-role | A3 | reference | — | — | false | agent-tooling |
+| `.agents/agents/theory-reviewer.md` | agent-role | A3 | reference | — | — | false | agent-tooling |
+| `.agents/skills/claim-audit/SKILL.md` | research-skill | A3 | reference | — | — | false | research-method |
+| `.agents/skills/experimental-methodology/SKILL.md` | research-skill | A3 | reference | — | — | false | research-method |
+| `.agents/skills/paper-writing/SKILL.md` | research-skill | A3 | reference | — | — | false | research-method |
+| `.agents/skills/performance-engineering/SKILL.md` | research-skill | A3 | reference | — | — | false | research-method |
+| `.agents/skills/qoblib-benchmark/SKILL.md` | research-skill | A3 | reference | — | — | false | research-method |
+| `.agents/skills/reproducibility/SKILL.md` | research-skill | A3 | reference | — | — | false | research-method |
+| `.agents/skills/research-literature/SKILL.md` | research-skill | A3 | reference | — | — | false | research-method |
+| `.agents/skills/solver-validation/SKILL.md` | research-skill | A3 | reference | — | — | false | research-method |
+| `.agents/skills/statistics/SKILL.md` | research-skill | A3 | reference | — | — | false | research-method |
+| `DECISIONS.md` | navigation-pointer | A3 | reference | 2026-09-25 | 2026-09-25 | false | navigation |
+| `NOW.md` | navigation-pointer | A3 | reference | 2026-09-25 | 2026-09-25 | false | navigation |
+| `PROJECTS.md` | project-map | A1 | active | 2026-09-25 | 2026-09-25 | false | project-navigation |
+| `RESEARCH.md` | navigation-pointer | A3 | reference | 2026-09-25 | 2026-09-25 | false | navigation |
+| `research/CLAIMS.md` | research-local | A2 | proposed | — | — | false | research-triage |
+| `research/FAILED_IDEAS.md` | research-local | A2 | proposed | — | — | false | research-triage |
+| `research/ISING_ENGINE_RESEARCH_AUDIT.md` | research-local | A2 | proposed | — | — | false | research-triage |
+| `research/KNOWLEDGE_BASE.md` | research-local | A2 | proposed | — | — | false | research-triage |
+| `research/LITERATURE_MAP.md` | research-local | A2 | proposed | — | — | false | research-triage |
+| `research/NEXT_10_EXPERIMENTS.md` | research-local | A2 | proposed | — | — | false | research-triage |
+| `research/OPEN_QUESTIONS.md` | research-local | A2 | proposed | — | — | false | research-triage |
+| `research/PROJECT_STATE.md` | research-local | A2 | proposed | — | — | false | research-triage |
+| `research/RESEARCH_LOOP.md` | research-local | A2 | proposed | — | — | false | research-triage |
+| `research/fundamental_ai/ANOMALIES.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXPERIMENT_PROTOCOL.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_001_RESULT.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_002_PROTOCOL.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_002_RESULT.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_003_PROTOCOL.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_003_RESULT.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_004_PROTOCOL.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_004_RESULT.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_005_PROTOCOL.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_005_RESULT.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_006B_PROTOCOL.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_006B_RESULT.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_006_NOVELTY_REVIEW.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_006_PRIOR_ART_RESET.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_006_PROTOCOL.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_006_RESULT.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_006_STABILITY_THEORY.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/EXP_TEN_006_THEORY.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/HYPOTHESES.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/MATH.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/NEGATIVE_RESULTS.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/NEXT.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/NOVELTY_LEDGER.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/PRIOR_ART.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/README.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/RESEARCH_GRAPH.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `research/fundamental_ai/THEORY_SIGNAL_CROSSTALK.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
+| `results/rc027/RESULT.md` | research-result-local | A2 | proposed | — | — | false | RC027 |

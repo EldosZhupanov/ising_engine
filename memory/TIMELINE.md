@@ -26,6 +26,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-08-30 | RC-026 registered run | The shape of the comparison was hiding a real effect: embedding raises the gain monotonically over five rungs at an unchanged budget, and 478 wins with 0 losses in 630 trials close the never-worse invariant | [`RESULT.md`](../results/rc026/RESULT.md) |
 | 2026-08-30 | wall-time protocol | Incremental relinking measured at 5.72x against the host's own calibrated null, with bit-identity proven by reproducing two artifacts published before the change — the first wall-time claim the project was entitled to make | [`PERF_INCREMENTAL_RELINK.md`](../research/PERF_INCREMENTAL_RELINK.md) |
 | 2026-08-30 | benchmark audit | The guide axis is unidentifiable on 54.5 % of 242 public MaxCut instances and G-Set is 30/30 degenerate on both axes; only 60 instances in the whole ecosystem are clean | [`BENCHMARK_DEGENERACY_AUDIT.md`](../research/BENCHMARK_DEGENERACY_AUDIT.md) |
+| 2026-09-25 | working-tree audit at `11418e3` | Whole-repository map includes tracked, untracked, and selected ignored evidence. Five purported Market Split solutions failed the official checker and were retained as rejected candidates; the 41 selected inputs themselves publish checker-valid answers. | [`PROJECTS.md`](../PROJECTS.md), [`FILE_MAP.tsv`](FILE_MAP.tsv), [`EXP005 triage`](../research/EXP005_MARKETSPLIT_TRIAGE.md) |
 
 ## Research-cycle chronology
 
