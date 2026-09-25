@@ -1,0 +1,18 @@
+Candidate: ms_13_050_003.sol
+Instance: ../unsolved_instances/ms_13_050_003.dat
+SHA-256: 9e92bc7a2cf1eebe0b45a53b7ce49adcd5c6058af281a776698489ef25775514
+Status: REJECTED, preserved from unsolved_solutions on 2026-09-25.
+Checker: target/release/check_marketsplit instance candidate
+Checker exit: 21 (INFEASIBLE: violates constraints).
+Independent integer calculation: 13/13 constraints violated; sum of squared residuals 7645985; maximum absolute residual 871.
+This file is evidence of a failed candidate and must not be submitted as a solution.
+
+Additional candidates moved intact from the tracked solutions/ directory on 2026-09-25
+after git grep found no references to their old .sol paths. All match their
+same-named instance under instances/ and are rejected by check_marketsplit
+with exit code 21. Independent integer Ax-b and sum-of-squares results:
+ms_04_050_001.sol: [0, 0, 0, -1]; E=1
+ms_05_050_001.sol: [0, 0, 0, 1, 0]; E=1
+ms_06_050_001.sol: [-2, 1, 1, -2, 1, -1]; E=12
+ms_13_050_000.sol: [4, 3, -5, -8, -6, -4, 6, 4, -1, -1, -10, 2, -3]; E=333
+The seven files left in solutions/ passed the same official checker (exit 0).
