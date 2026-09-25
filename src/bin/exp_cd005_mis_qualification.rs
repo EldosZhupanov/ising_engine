@@ -223,6 +223,7 @@ fn run_arm(
 
 #[derive(Serialize)]
 struct Cell {
+    evaluation_id: &'static str,
     graph: String,
     n: usize,
     edges: usize,
@@ -265,6 +266,7 @@ fn run(data_dir: &Path, output: &Path) -> Result<(), Box<dyn Error>> {
             let valid = baseline.valid && candidate.valid && delta.is_some();
             failures += usize::from(!valid);
             let cell = Cell {
+                evaluation_id: "CD005-Q2",
                 graph: (*name).to_string(),
                 n: graph.n,
                 edges: graph.edges.len(),

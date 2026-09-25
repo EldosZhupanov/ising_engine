@@ -6,7 +6,7 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-from fetch import FILES, git_blob_sha1
+from fetch import EVALUATION_ID, FILES, git_blob_sha1
 
 
 def read_graph(path):
@@ -55,6 +55,8 @@ def analyze(raw_path, data_dir):
     late = {"baseline": 0, "candidate": 0}
     invalid_cells = []
     for row in rows:
+        if row["evaluation_id"] != EVALUATION_ID:
+            raise ValueError("unexpected evaluation iteration")
         name, campaign = row["graph"], row["campaign"]
         graph_index = list(FILES).index(name)
         n, edges = graphs[name]

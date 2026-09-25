@@ -47,7 +47,8 @@ class FrozenToolChecks(unittest.TestCase):
                     if invalid:
                         baseline = {"completed": 0, "late_completions": 1,
                                     "best_size": None, "valid": False, "solutions": []}
-                    rows.append({"graph": name, "campaign": campaign, "n": 3,
+                    rows.append({"evaluation_id": "CD005-Q2", "graph": name,
+                                 "campaign": campaign, "n": 3,
                                  "edges": 2, "baseline": baseline,
                                  "candidate": candidate,
                                  "delta": None if invalid else 0,
