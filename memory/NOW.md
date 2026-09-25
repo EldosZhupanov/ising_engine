@@ -12,6 +12,19 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
+## EXP-007W active — 2026-09-25
+
+The user selected a new strict-protocol study of CD005 on vertex-weighted MIS.
+The [binding protocol](../research/experiments/exp007_weighted_mis/protocol.md)
+and deterministic [inputs](../research/experiments/exp007_weighted_mis/instances.json)
+fix six graphs, 10 paired two-second campaigns per graph, 60 structural probes,
+independent solution checks, and the GO/NO-GO gate before solver access. The
+current task is to freeze the isolated instrument, calibrate it on a separate
+small graph, execute one held-out evaluation, and record raw data plus a
+reproducibility handoff. Do not change either solver family, retune from these
+six inputs, or treat weighted-edge variation as equivalent to weighted-vertex
+MIS. The CD005-Q2 section below remains the prior result, not the live task.
+
 ## CD005-Q2 equal-time qualification complete — 2026-09-25
 
 The user selected CD005 qualification after CD004-R. The
