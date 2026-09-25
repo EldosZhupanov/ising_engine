@@ -18,7 +18,7 @@ authority.
 | RESEARCH — LABS | `research/labs_qualification/`, `src/bin/labs_record_hunter.rs`, `benchmarks/qoblib/world_records/` | The frozen PT qualification is REPRODUCED as NOT QUALIFIED versus lMAts at 10 s. Eight local checkpoint files pass `check_labs`; N=74 has E=357 versus the listed best-known 341. The hunter/checkpoints are a separate untracked campaign, so record-reaching probability is UNKNOWN. | Qualify the later memetic hunter against lMAts on an independent equal-time campaign before a record run. |
 | RESEARCH — Market Split | `research/EXP005_MARKETSPLIT_TRIAGE.md`, `src/core/lattice.rs`, four untracked `qoblib_*` binaries | The claim of 41 first-known solutions is FALSIFIED: official input files contain validated Boolean answers. LLL/hybrid code is EXPERIMENTAL and uncommitted. Five checker-rejected `.sol` files are preserved under `rejected_candidates/`; see the table below. | Blind `(A,b)` comparison with preprocessing inside budget, strong specialized baseline and ablation. |
 | RESEARCH — Laya | `research/laya_semantic/` | REPRODUCED synthetic pilot; all 24 residuals were fully fixed by presolve. General semantic benefit on real annotated data is UNKNOWN. | External annotated corpus with nonempty residual graphs. |
-| RESEARCH — fundamental AI | `research/fundamental_ai/` | Separate untracked Rust crate; its tests pass in this checkout. Several model-novelty and discrete-synchronization hypotheses are recorded as FALSIFIED locally. The track is IN PROGRESS, not part of the main Cargo workspace. | Audit raw/protocol chronology and external baselines before promoting claims or code. |
+| RESEARCH — fundamental AI | `research/fundamental_ai/` | Separate untracked Rust crate; its tests pass in this checkout. Several model-novelty and discrete-synchronization hypotheses are recorded as FALSIFIED locally. The track is IN PROGRESS, not part of the main Cargo workspace. Its EXP-TEN-006 audit report overstates the raw row count (4,410 versus 3,360) and has damaged formula formatting; see the independent check below. | Audit raw/protocol chronology and external baselines before promoting claims or code. |
 | RESEARCH — RC/CD cycles | `research/RC*.md`, `research/breakthrough/`, `results/` | Mixed REPRODUCED, FALSIFIED and INCONCLUSIVE. [memory/RESEARCH.md](memory/RESEARCH.md) and the immutable result records govern the claim, not later summaries. | Reopen a failed result only with a new assumption and protocol. |
 | MODELS | `src/engine_v2/ai_scientist/`, `research/fundamental_ai/src/`, `research/laya_semantic/` | Model code and pilot results exist; no tracked model-weight directory or supported general foundation model was found. Any installed local Laya weights live outside this repo. | Record model version and dataset provenance before inference claims. |
 | EXPERIMENTS | `experiments/`, `research/experiments/`, `research/breakthrough/exp001/` | `experiments/` is Git-ignored generated platform state but includes ~55 MB of reports/data. EXP001 raw and target hashes match its result record. Binding protocols remain immutable. | Preserve significant ignored runs with manifests before treating them as durable evidence. |
@@ -56,3 +56,14 @@ Reproduce each rejection with
 `target/release/check_marketsplit benchmarks/qoblib/marketsplit/instances/NAME.dat benchmarks/qoblib/marketsplit/rejected_candidates/NAME.sol`.
 The four commands exit 21; the seven files left in `solutions/` exit 0. A `.sol`
 suffix is never an evidence status.
+
+The first REPO-002 raw-data check counted 3,360 data rows plus one header in
+`research/fundamental_ai/EXP_TEN_006_AUDIT_RAW.tsv`, while
+`EXP_TEN_006_NOVELTY_REVIEW.md` says 4,410 evaluations. For the exact slice
+`cycle_k=16`, `noise=0.20`, `step=16`, 20 seeds per method, recomputed means of
+`mean_accuracy` are 0.7965 for `Candidate_LearnedEnergy`, 0.8936 for
+`SYNC1_Spectral_Sync`, and 0.9510 for `SYNC5_Loopy_MinSum` (rounded to four
+decimals). The qualitative ordering survives this check; the reported count
+does not. The review Markdown also contains damaged formula/percentage text.
+Treat its exact printed statistics as INCONCLUSIVE until independently
+recomputed. The raw TSV is untracked and has a SHA-256 row in `FILE_MAP.tsv`.

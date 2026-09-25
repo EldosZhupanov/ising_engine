@@ -36,6 +36,11 @@ then decide which files deserve a reviewed, isolated commit. Do not conflate a
 passing test with a scientific verdict. [ROADMAP.md](../ROADMAP.md) is the
 ordered backlog; [FILE_MAP.tsv](FILE_MAP.tsv) gives each inspected file's
 tracking state, SHA-256 and review status.
+The first raw check found 3,360 EXP-TEN-006 audit data rows versus 4,410 in its
+review; recomputed K=16/noise 0.20/T=16 means preserve the qualitative ordering
+of candidate < spectral < min-sum. [PROJECTS.md](../PROJECTS.md) records the
+numbers and the damaged report formatting. Next: reproduce the remaining
+reported aggregates from the raw data before promoting that local review.
 
 ## EXP-005 Market Split premise correction — 2026-09-25
 
