@@ -12,6 +12,19 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
+## Research continuity and duplicate prevention — 2026-09-25
+
+The user asked to connect a year of prototypes and avoid repeating research.
+The [research pointer](RESEARCH.md) now routes recent CD, RC, Laya and LABS work
+to primary evidence and distinguishes a confirmed research result from a
+production integration. The document catalogue includes the tracked QOBLIB
+submission guides. Untracked drafts and record-hunt checkpoints remain local
+and are not silently promoted to canonical evidence.
+Next for any new idea: locate its nearest prior result and code call sites, name
+the changed assumption and cheapest falsifying check, then select an explicit
+integration gate before touching either solver family. The LABS and other
+sections below preserve their historical outcome.
+
 ## LABS-Q001 qualification COMPLETE — 2026-09-23
 
 The user authorized execution of the frozen campaign:

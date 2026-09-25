@@ -1,7 +1,32 @@
 # memory/RESEARCH.md — pointer + the standing/retracted ledger
 
+## Recent work: find the result before starting again
+
+This is a navigation map, not a new verdict or live task list. The linked
+records govern their own claims; [NOW.md](NOW.md) alone selects current work.
+"Confirmed" means the stated test passed in its recorded scope, not that the
+method is integrated or superior in production. Check Git status before opening
+untracked research: those drafts are not durable project evidence yet.
+
+| Question to check first | Durable result | Implementation boundary / next gate |
+|---|---|---|
+| Does low-rank coupling alone make exact elimination small? | [CD001 counterexample](../research/breakthrough/h11/RESULTS.md) says no; [CD003](../research/breakthrough/cd003/RESULTS.md) establishes a precision-bounded response count. | CD003 is a scoped theorem and research instrument; a compiler integration needs its own energy-equivalence and benchmark gates. |
+| Should we retry discrete gauge synchronization as a new relational-AI mechanism? | [CD002](../research/breakthrough/cd002/RESULTS.md) is NO-GO against spectral synchronization on its tested construction. | Reopen only with a materially different assumption and a new kill-test. |
+| Is soft-conflict learning already part of the production optimizer? | [CD004](../research/breakthrough/cd004/RESULTS.md) measured a reduction in exact-search nodes. | Research prototype; no production call site was found in `src/`. Integration needs an explicit architectural task. |
+| Is graph-restricted two-spin escape available in production? | [CD005](../research/breakthrough/cd005/RESULTS.md) established the local-search result. | `src/solver/local_search.rs` is called by `UltimateSolver` only when `with_2opt(true)` is set; default is false. This is not an MSC-family implementation. |
+| Did marginal/covariance or synthesized-move work yield a production selector win? | Earlier findings and retractions are below; [RC-024](../results/rc024/RESULT.md) and [RC-026](../results/rc026/RESULT.md) found small gains with important cost limits. | No independently replicated equal-cost production win is recorded. Check [open problems](OPEN_PROBLEMS.md) and the [project plan](../PROJECT_PLAN.md) before another mechanism cycle. |
+| Does Laya plus QUBO require hard residual search? | [LAYA-001 handoff](../research/laya_semantic/HYPODIVE_BUILDER_HANDOFF.md) verifies the bridge on synthetic data. | Existing presolve fixed every pilot variable; real annotated data and nonempty residual graphs remain untested. No production integration. |
+| Is our LABS method ready to attack a best-known value? | [LABS-Q001](../research/labs_qualification/RESULT.md) found the earlier PT prototype unqualified against lMAts at the registered budget. | The later memetic record hunter is a separate standalone binary; its checkpoint data are local and untracked. Qualify its new behavior before treating its progress as a repeatable record strategy. |
+| Which changes are authoritative architecture decisions? | [ADR index](DECISIONS.md) distinguishes accepted from proposed decisions. | Read the ADR and current code together; a synthesis drawing or roadmap is not proof of implementation. |
+
+Before a new experiment, search this table, [the document catalogue](CATALOG.md),
+the [candidate ledger](../research/CANDIDATE_IDEAS_LEDGER.md), and exact symbols in
+`src/`. Record the question, closest prior result, its failure boundary, the
+new differentiating assumption, and the smallest decisive test. Store new
+evidence in its own frozen record; update this pointer only after the verdict.
+
 > **START HERE: `../research/RESEARCH_INVENTORY.md`** — the complete register of
-> every research cycle (RC-001…RC-011) with motivation, hypothesis, method,
+> the earlier research cycles (RC-001…RC-011) with motivation, hypothesis, method,
 > dataset, derivation, result, status, implications, limitations and follow-up;
 > plus the **revocation register**, validation matrix, reproduction commands,
 > code-integration decisions, CI coverage and dependency graph. This file is the

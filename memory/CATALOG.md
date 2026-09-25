@@ -16,7 +16,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 - `closed`: 33
 - `historical`: 1
 - `proposed`: 4
-- `reference`: 157
+- `reference`: 169
 - `superseded`: 4
 
 ## Registry
@@ -41,6 +41,18 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `ARCHITECTURE.md` | engineering-reference | A1 | active | 2026-03-11 | 2026-03-11 | false | engineering |
 | `bayesian_design_spec.md` | design-spec | A2 | reference | 2026-03-12 | 2026-03-12 | false | design |
 | `benchmark_suite/README.md` | reference | A3 | reference | 2026-07-07 | 2026-07-07 | false | none |
+| `benchmarks/qoblib/submissions/01-marketsplit/20260924_UltimateSolver_Zhupanov/README.md` | benchmark-submission-guide | A3 | reference | 2026-09-24 | 2026-09-24 | false | QOBLIB-submission |
+| `benchmarks/qoblib/submissions/01-marketsplit/20260924_UltimateSolver_Zhupanov/ms_03_050_002/README.md` | benchmark-submission-guide | A3 | reference | 2026-09-24 | 2026-09-24 | false | QOBLIB-submission |
+| `benchmarks/qoblib/submissions/01-marketsplit/20260924_UltimateSolver_Zhupanov/ms_03_050_005/README.md` | benchmark-submission-guide | A3 | reference | 2026-09-24 | 2026-09-24 | false | QOBLIB-submission |
+| `benchmarks/qoblib/submissions/01-marketsplit/20260924_UltimateSolver_Zhupanov/ms_03_050_007/README.md` | benchmark-submission-guide | A3 | reference | 2026-09-24 | 2026-09-24 | false | QOBLIB-submission |
+| `benchmarks/qoblib/submissions/01-marketsplit/20260924_UltimateSolver_Zhupanov/ms_03_050_009/README.md` | benchmark-submission-guide | A3 | reference | 2026-09-24 | 2026-09-24 | false | QOBLIB-submission |
+| `benchmarks/qoblib/submissions/01-marketsplit/20260924_UltimateSolver_Zhupanov/ms_03_100_001/README.md` | benchmark-submission-guide | A3 | reference | 2026-09-24 | 2026-09-24 | false | QOBLIB-submission |
+| `benchmarks/qoblib/submissions/01-marketsplit/20260924_UltimateSolver_Zhupanov/ms_03_100_012/README.md` | benchmark-submission-guide | A3 | reference | 2026-09-24 | 2026-09-24 | false | QOBLIB-submission |
+| `benchmarks/qoblib/submissions/20260924_UltimateSolver_Zhupanov/README.md` | benchmark-submission-guide | A3 | reference | 2026-09-24 | 2026-09-24 | false | QOBLIB-submission |
+| `benchmarks/qoblib/submissions/20260924_UltimateSolver_Zhupanov/sloane_1dc_128/README.md` | benchmark-submission-guide | A3 | reference | 2026-09-24 | 2026-09-24 | false | QOBLIB-submission |
+| `benchmarks/qoblib/submissions/20260924_UltimateSolver_Zhupanov/sloane_1dc_64/README.md` | benchmark-submission-guide | A3 | reference | 2026-09-24 | 2026-09-24 | false | QOBLIB-submission |
+| `benchmarks/qoblib/submissions/20260924_UltimateSolver_Zhupanov/sloane_2dc_128/README.md` | benchmark-submission-guide | A3 | reference | 2026-09-24 | 2026-09-24 | false | QOBLIB-submission |
+| `benchmarks/qoblib/submissions/20260924_UltimateSolver_Zhupanov/socfb-haverford76/README.md` | benchmark-submission-guide | A3 | reference | 2026-09-24 | 2026-09-24 | false | QOBLIB-submission |
 | `benchmarks/report.md` | reference | A3 | reference | 2026-07-06 | 2026-07-07 | false | none |
 | `CLAUDE.md` | agent-operations | A1 | active | 2026-07-05 | 2026-08-26 | false | claude-operation |
 | `CONTEXT.md` | historical-summary | A4 | superseded | 2026-07-05 | 2026-08-19 | false | none |
