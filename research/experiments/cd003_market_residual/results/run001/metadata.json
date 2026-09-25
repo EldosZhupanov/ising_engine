@@ -1,0 +1,30 @@
+{
+  "binary_sha256": "1af437b303592f7993bdc919d325754f3a0443b4efc35b8c7c358a69cf3e9a99",
+  "build_command": "cargo build --release --bin exp_cd003_market_residual",
+  "cpu_model": "AMD Ryzen 7 170 with Radeon Graphics",
+  "git_dirty": true,
+  "input_sha256": {
+    "ms_03_050_002.dat": "63c20e7146a3807f935c4be2478c4028ddd0a9c190b6e485c5376375f0ae0d2e",
+    "ms_03_050_005.dat": "eb466cc3d49a385bff22f9920a8fc108f9885ef503209e50e0509380ad472d54",
+    "ms_03_050_007.dat": "ec24fe50b1bca3c170126ef807835b7b5090fc913dfc2f8d778c38216f26df5c",
+    "ms_03_050_009.dat": "72bad55ffce20187ec1290abfafee407bb6f2733d8a7e1e54b1c7b429c5d930e",
+    "ms_03_100_001.dat": "a003697b274970998f1f986c1d71ae339b489c19e5344875cc346ac13d383924",
+    "ms_03_100_012.dat": "f8aee6493d86f8a37fc25b471755eeee5ae1ae65463bdc23e15d8c9bdb954f93",
+    "ms_04_050_001.dat": "a6884b557d99f3292faeae2bcdf0073ebf6f9f707f30bae5d16845ee4b52e9cc",
+    "ms_04_050_003.dat": "899fa884ceac5f233e6dfae49b33a2027db7cd478294453ac7515ac360392646",
+    "ms_04_050_004.dat": "dc0289a1603d0ca0a714cbd76a87f06b14568330ffe5af1b988f907ddda7609f",
+    "ms_04_050_005.dat": "cb6264c9e00135dae941558d9100117e856c7362047d1279d6b5b4963a168405"
+  },
+  "mem_total": "9153664 kB",
+  "platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "protocol_sha256": "2129e7de5e091149efbfd3be0862de9f3b68bf9d17066b940b6c86b925afd46f",
+  "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+  "rayon_num_threads": 1,
+  "run_command": "python3 research/experiments/cd003_market_residual/study.py run /home/eldos/ising_engine/target/release/exp_cd003_market_residual /home/eldos/ising_engine/research/experiments/cd003_market_residual/results/run001",
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+  "source_commit": "e4ea5e262d58f1bc3bf70f4fc79766e3526d9e2b",
+  "source_paths_clean": true,
+  "timeout_seconds_per_instance": 60,
+  "utc_completed": "2026-09-25T13:32:43.579797+00:00",
+  "utc_started": "2026-09-25T13:32:42.974493+00:00"
+}
