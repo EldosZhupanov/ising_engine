@@ -1,13 +1,20 @@
 ---
 id: cd-solver-architecture
 kind: design-spec
-status: active
-authority_scope: architecture-blueprint
+status: historical
+authority_scope: none
 created: 2026-09-19
 immutable: false
 ---
 
 # The CD-Solver Architecture: Unified Synthesis of Breakthrough Operators
+
+**Historical proposal, not an implementation plan.** The later
+[CD004-R correction](breakthrough/cd004_recheck/RESULT.md) found that the
+CD004 backjumping code can miss the optimum and that its exact core-cache
+replacement gives no node or time benefit on the registered 120 cases. All
+claims below that Stage 3 is validated, exact, or ready for integration are
+withdrawn. The separate CD003 and CD005 evidence is not retested here.
 
 ## 1. Executive Summary
 

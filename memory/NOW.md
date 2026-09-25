@@ -12,6 +12,23 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
+## CD004-R correction — 2026-09-25
+
+The [prospective recheck](../research/breakthrough/cd004_recheck/RESULT.md)
+found an exact counterexample to the historical CD004 backjump solver. The
+corrected certified-core prototype matched exhaustive optima in 120/120 new
+instances, but visited the same nodes as chronological BnB and was slower
+(median wall ratio 4.876; 0/120 time wins). The historical 33–54% node
+reduction is not an established exact-search advantage. Do not integrate CD004
+or use it in a graph-structure selector until a new exact and matched-cost
+mechanism passes its own protocol. CD003 and CD005 retain their separate scoped
+evidence; this recheck did not evaluate them. The old CD004 entries below are
+historical checkpoints, superseded for present decisions by this correction.
+
+Next scoped research choice: study CD003 on real low-rank residual graphs or
+qualify CD005 at equal cost on a held-out application; no new experiment is
+automatically authorized by this note. Preserve unrelated untracked drafts.
+
 ## Research continuity and duplicate prevention — 2026-09-25
 
 The user asked to connect a year of prototypes and avoid repeating research.

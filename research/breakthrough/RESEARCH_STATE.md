@@ -1,5 +1,11 @@
 # Breakthrough research state
 
+**2026-09-25 correction:** [CD004-R](cd004_recheck/RESULT.md) invalidates the
+CD004 exactness and acceleration claim below. Legacy backjumping can miss the
+optimum; an exact core-cache repair had no node or time win in 120 new cases.
+The synthesis proposal is historical. CD003 and CD005 are unaffected by this
+specific check. Follow [NOW](../../memory/NOW.md) for the active decision.
+
 **2026-09-19: CD005/H15 (Option D: Edge-Restricted 2-Opt Escapes) completed and confirmed.**
 Proved Theorem 1 (scanning strictly $|E|$ edges is 100% complete for finding all improving 2-flips at 1-opt minima, 0 violations).
 Escaped 93.3% to 96.7% of false 1-opt traps on frustrated spin glasses with up to 24.8x speedup over O(N^2) pair scanning.

@@ -13,8 +13,8 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 
 - `active`: 17
 - `binding`: 41
-- `closed`: 33
-- `historical`: 1
+- `closed`: 34
+- `historical`: 2
 - `proposed`: 4
 - `reference`: 170
 - `superseded`: 4
@@ -169,7 +169,7 @@ This sidecar catalogue classifies every Markdown document without modifying froz
 | `research/ROADMAP_AUTONOMOUS_SCIENTIST.md` | research-reference | A2 | reference | 2026-08-19 | 2026-08-19 | false | research-context |
 | `research/STAGE_7_RESEARCH_PLATFORM.md` | research-reference | A2 | reference | 2026-07-14 | 2026-07-14 | false | research-context |
 | `research/STAGE_8_KNOWLEDGE_OS.md` | research-reference | A2 | reference | 2026-07-14 | 2026-07-14 | false | research-context |
-| `research/SYNTHESIS_CD_SOLVER_ARCHITECTURE.md` | design-spec | A1 | reference | 2026-09-19 | 2026-09-19 | false | architecture-blueprint |
+| `research/SYNTHESIS_CD_SOLVER_ARCHITECTURE.md` | design-spec | A4 | historical | 2026-09-19 | 2026-09-25 | false | none |
 | `results/rc023/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC023 |
 | `results/rc024/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC024 |
 | `results/rc025/RESULT.md` | research-record | A1 | closed | 2026-08-30 | 2026-08-30 | true | RC025 |
@@ -275,8 +275,10 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/cd004/PRIOR_ART.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD004 |
 | `research/breakthrough/cd004/RESULTS.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD004 |
 | `research/breakthrough/cd004_recheck/AMENDMENT_1.md` | research-protocol-amendment | A2 | binding | 2026-09-25 | 2026-09-25 | true | breakthrough-CD004-R |
+| `research/breakthrough/cd004_recheck/HYPODIVE_BUILDER_HANDOFF.md` | research-handoff | A2 | reference | 2026-09-25 | 2026-09-25 | false | breakthrough-CD004-R |
 | `research/breakthrough/cd004_recheck/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-25 | 2026-09-25 | false | breakthrough-CD004-R |
 | `research/breakthrough/cd004_recheck/PROTOCOL.md` | research-protocol | A2 | binding | 2026-09-25 | 2026-09-25 | true | breakthrough-CD004-R |
+| `research/breakthrough/cd004_recheck/RESULT.md` | research-record | A2 | closed | 2026-09-25 | 2026-09-25 | true | breakthrough-CD004-R |
 | `research/breakthrough/cd005/HYPOTHESIS.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD005 |
 | `research/breakthrough/cd005/KILL_TEST.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD005 |
 | `research/breakthrough/cd005/MATH.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | breakthrough-CD005 |
