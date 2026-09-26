@@ -12,6 +12,8 @@
 #![allow(clippy::needless_range_loop)]
 #![allow(clippy::inconsistent_digit_grouping)]
 
+#[path = "common/marketsplit_args.rs"]
+mod marketsplit_args;
 #[path = "common/marketsplit_certificate.rs"]
 mod marketsplit_certificate;
 
@@ -394,6 +396,12 @@ pub fn solve_hybrid(
     kernel: &[Vec<i64>],
     timeout: Option<Duration>,
 ) -> Option<Vec<i8>> {
+    if kernel.is_empty() {
+        return x0
+            .iter()
+            .all(|&value| value == 0 || value == 1)
+            .then(|| x0.iter().map(|&value| value as i8).collect());
+    }
     let t0 = Instant::now();
     let r = kernel.len();
     let n = x0.len();
@@ -740,25 +748,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
     println!("------------------------------------------------------------------------------------------\n");
 
-    let args: Vec<String> = std::env::args().collect();
-    let mut single_instance: Option<PathBuf> = None;
-    let mut timeout_secs: Option<u64> = None;
-
-    let mut i = 1;
-    while i < args.len() {
-        if args[i] == "--instance" && i + 1 < args.len() {
-            single_instance = Some(PathBuf::from(&args[i + 1]));
-            i += 2;
-        } else if args[i] == "--timeout" && i + 1 < args.len() {
-            let t = args[i + 1].parse().unwrap_or(0);
-            if t > 0 {
-                timeout_secs = Some(t);
-            }
-            i += 2;
-        } else {
-            i += 1;
-        }
-    }
+    let args = marketsplit_args::parse(&std::env::args().collect::<Vec<_>>())?;
+    let single_instance = args.instance;
+    let timeout_secs = args.timeout_secs;
 
     let unsolved_dir = Path::new("benchmarks/qoblib/marketsplit/unsolved_instances");
     let sol_dir = Path::new("benchmarks/qoblib/marketsplit/unsolved_solutions");
@@ -863,4 +855,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod lattice_guard_tests {
+    use super::*;
+
+    #[test]
+    fn empty_extracted_kernel_does_not_start_hybrid_search() {
+        let inst = MarketSplitInstance {
+            name: "toy".to_string(),
+            path: PathBuf::new(),
+            num_cons: 1,
+            num_vars: 2,
+            matrix: vec![vec![1, 1]],
+            rhs: vec![1],
+        };
+        assert_eq!(solve_hybrid(&inst, &[2, -1], &[], None), None);
+        assert_eq!(solve_hybrid(&inst, &[1, 0], &[], None), Some(vec![1, 0]));
+    }
 }
