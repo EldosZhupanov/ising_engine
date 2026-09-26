@@ -12,7 +12,39 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Active — HUBO-Q002 complete; next prospective comparison design, 2026-09-27
+## Active — application discovery, 2026-09-27
+
+User redirected work to finding useful applications with Hypodive before further
+solver development. [Application triage](../research/HYPODIVE_TRIAGE.md) and
+[primary-source matrix](../research/PRIOR_ART_MATRIX.md) now distinguish five
+opportunities: entity resolution, external SAT, weight rounding, binary-alloy
+cluster expansions and quantum-error decoding. No application advantage or new
+AI training method is established. Existing higher-order/rounding/cluster-editing
+prior art materially narrows novelty claims.
+
+Five [deterministic checks](../research/application_triage/checks.py) PASS;
+[retained output](../research/application_triage/checks.json) records source SHA
+and base `3af7c25`. Includes 218,624 exact energies for a counterexample to CD003's
+overbroad polynomial-response condition. The historical CD003 report is preserved;
+the correction is prospective. These are algebraic checks, not new solver runs.
+
+**Next task:** APP-01 intake: inspect real entity labels/splits, candidate-graph
+semantics and score availability; design an exact small-partition oracle and a
+binding matched-cost pilot. Laya's value must be tested separately from the
+optimizer's. If usable data/nontrivial residuals fail intake, APP-02 external
+SAT qualification is the fallback. No automatic training or full campaign.
+The penalty/schedule comparison below remains deferred inventory.
+
+Production source, both solver families and cached weights are unchanged.
+No long-running job was launched. The known incomplete upstream clone remains
+untouched; it is not a benchmark source.
+
+Independent finished-artifact review **PASS**: five checks replayed exactly,
+source/inventory hashes match, retained output refuses overwrite. Memory/link
+gate passes 357 Markdown / 91 immutable; `git diff --check` passes. Cargo gates
+were not rerun because production Rust/Cargo are unchanged.
+
+## HUBO-Q002 complete — 2026-09-27
 
 [Phase B result](../research/experiments/hubo_corpus_qualification/RESULT_PHASE_B.md):
 **MIXED**, 240/240 valid cells, 4,079 main incumbents and 240 final witnesses.
@@ -34,7 +66,7 @@ correctness-only evidence: 24 retained local/global reductions, local penalties
 9–97 versus 1,537–18,417 global. Its historical NOT RUN statement about Phase B
 is superseded by the new Phase B record, not edited retroactively.
 
-**Next task (design first):** formulate a fresh independent holdout and a
+**Deferred comparison design:** formulate a fresh independent holdout and a
 within-kernel local/global-penalty comparison crossed with representation-derived
 versus common-endpoint schedules, with native/OpenJij controls. Declare any narrower
 population prospectively; never filter Q002 into a successful overall result.

@@ -39,6 +39,13 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 
 ## Research-cycle chronology
 
+2026-09-27 application discovery (base `3af7c25`): user redirected to Hypodive
+Mode A. Five application hypotheses mapped to actual capabilities and primary
+competitors; five exact algebra checks PASS. A rank-one witness narrows CD003's
+polynomial-response claim prospectively. No application benchmark, production
+change or model training. [Triage](../research/HYPODIVE_TRIAGE.md) selects
+entity-resolution intake, with external SAT as fallback.
+
 | Cycle | State | First recorded | What survives | Sources |
 |---|---|---:|---|---|
 | RC-001 | closed/refuted | 2026-08-19 | Ensemble-consensus thermostat missed its materiality criterion | [`RC001`](../research/RC001_ENSEMBLE_THERMOSTAT.md) |

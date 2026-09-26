@@ -60,3 +60,32 @@ We did not exhaust patents, unpublished work, all solvers, or every language.
 No result here establishes an unoccupied scientific direction. A possible future
 question is a *specified*, precision-aware class of response programs that can be
 learned cheaply and certified; its novelty and usefulness remain UNKNOWN.
+
+---
+
+## Application search — 2026-09-27
+
+Scoped discovery for [Hypodive application triage](HYPODIVE_TRIAGE.md), base
+`3af7c25`; preserves the earlier CD001 matrix. Publisher/author sources inspected,
+not a systematic review or verification of every source's performance claims.
+Reading depth is explicit; a preprint is not presented as a peer-reviewed result.
+
+| Candidate | Primary source / verified metadata | Inspected evidence | Novelty boundary |
+|---|---|---|---|
+| APP-01 transitive entity matching | Baas, Dastani, Feelders, [arXiv:2104.12589](https://arxiv.org/abs/2104.12589), 2021; [full text](https://arxiv.org/html/2104.12589) | §2 and cluster-editing formulation: pair scores and transitivity, risks of naive closure | General architecture OVERLAPPING; native cubic implementation with a measured cost/quality advantage UNKNOWN |
+| APP-01 external data | [WDC Products official benchmark](https://webdatacommons.org/largescaleproductcorpus/wdc-products/) | Benchmark design and download descriptions; no samples or test labels downloaded | Data candidate, not evidence that Laya scores it well; label/split/license intake pending |
+| APP-02 higher-order SAT | Ahsan et al., Nature Communications 17,5293 (2026), [DOI 10.1038/s41467-026-71937-4](https://www.nature.com/articles/s41467-026-71937-4) | Publisher metadata (published Apr16; version of record Jun16), formulation, experiment/comparison sections | Native higher-order SAT and avoiding auxiliaries are established; our superiority UNKNOWN |
+| APP-02 executable comparison | [Authors' NeuroSA-HO](https://github.com/aimlab-wustl/NeuroSA-HO), [SATLIB](https://www.cs.ubc.ca/~hoos/SATLIB/benchm.html), [Kissat](https://github.com/arminbiere/kissat) | README CPU variants and CLI; SATLIB index; Kissat official repository only | Pin revisions and inspect actual RNG/witness behavior before benchmarking. `trial-id` is an output label. No code executed; no reproduction of the paper claimed |
+| APP-03 rounding as QUBO | Nagel et al., ICML2020, PMLR119:7197–7206, [paper](https://proceedings.mlr.press/v119/nagel20a/nagel20a.pdf), [supplement](https://proceedings.mlr.press/v119/nagel20a/nagel20a-supp.pdf) | §3.1 local QUBO; supplement §A/Table1: generic qbsolv underperformed nearest rounding in its particular first-layer test | General QUBO rounding NOT NOVEL. That historical experiment does not falsify every modern QUBO solver |
+| APP-03 exact reconstruction / row decomposition | [arXiv:2510.16075](https://arxiv.org/abs/2510.16075), “Optimization of the quantization of dense neural networks from an exact QUBO formulation,” submitted Oct17 2025; [full text](https://arxiv.org/html/2510.16075v1) | Exact local reconstruction formulation and row-wise decomposition; primary preprint | Exact QUBO and row decomposition already overlap; arbitrary blocks require preserved conditional interactions |
+| APP-03 strong model-specific control | Frantar et al., [GPTQ arXiv:2210.17323](https://arxiv.org/abs/2210.17323), [author code](https://github.com/IST-DASLab/gptq) | Primary metadata/code discovery; no complete method reproduction here | Candidate control, not an assertion of current universal SOTA or applicability to every architecture |
+| APP-04 cluster expansion | Ångqvist et al., Advanced Theory and Simulations2,1900015(2019), DOI10.1002/adts.201900015; [authors' publication/data page](https://materialsmodeling.org/publications/2019-icet-A-Python-library-for-constructing-and-sampling-alloy-cluster-expansions/) | Metadata, workflow and associated-data pointer; [official MIP source](https://icet.materialsmodeling.org/_modules/icet/tools/ground_state_finder.html) documents HiGHS and fixed-composition binary systems | Higher-order alloy models and exact ground-state MIP are known; adapter correctness and search benefit untested |
+| APP-05 decoding | Higgott/Gidney, Quantum9,1600(2025), [DOI10.22331/q-2025-01-20-1600](https://quantum-journal.org/papers/q-2025-01-20-1600/); [PyMatching docs](https://pymatching.readthedocs.io/en/stable/), [source](https://github.com/oscarhiggott/PyMatching) | Metadata, graphlike decoder documentation and correlation-enabled API discovery | Do not use independence-only baseline while claiming benefit from correlations; no speed comparison performed |
+| APP-05 logical degeneracy | Iyer/Poulin, [arXiv:1310.3235](https://arxiv.org/abs/1310.3235) | Independent review identified primary discussion of optimal decoding and degeneracy; local explicit toy independently verified | Error-MAP versus logical-class MAP is a known distinction, not our discovery |
+
+Queries covered entity matching/transitivity/cluster editing, WDC Products,
+AdaRound/QUBO rounding/GPTQ, exact QUBO neural quantization, icet cluster expansion
+and ground-state search, higher-order Ising/MAX-SAT code, PyMatching/correlations,
+and quantum-decoding degeneracy. No exhaustive patents, industrial deployments,
+unpublished results or latest leaderboard census. No claim of an empty field,
+commercial demand, guaranteed publication or a world record is justified.

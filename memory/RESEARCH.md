@@ -25,6 +25,24 @@ artifact durable, but does not ratify its original scientific interpretation.
 | Is RC027 provenance intact? | [RC027 result](../results/rc027/RESULT.md) raw/stderr SHA-256 values match the local files. Its printed instrument commit is a typo; actual `fdec0dfdf245c32925d71ffd745a34b7357cbaa4` produces the recorded source SHA-256. | Keep the result immutable; cite the corrected hash prospectively. The finding remains below the 1% materiality floor. |
 | Which changes are authoritative architecture decisions? | [ADR index](DECISIONS.md) distinguishes accepted from proposed decisions. | Read the ADR and current code together; a synthesis drawing or roadmap is not proof of implementation. |
 
+### Application triage and prospective CD003 correction — 2026-09-27
+
+[Hypodive application triage](../research/HYPODIVE_TRIAGE.md) ranks entity
+resolution, external SAT, weight rounding, binary-alloy cluster expansions and
+QEC. All application advantages remain **HYPOTHESIS / INCONCLUSIVE**; the
+[source matrix](../research/PRIOR_ART_MATRIX.md) identifies overlapping prior art.
+The five [exact checks](../research/application_triage/checks.json) support only
+the stated algebra/counterexamples, not application quality or speed.
+
+**FALSIFIED in scope:** CD003's `p << b/r` condition is not sufficient for a
+polynomial number of conditional responses. Rank-one, all-nonzero-boundary
+construction b=k², p=k−1 gives `2^k+b-k` responses; k5..8 enumerate 218,624 energies.
+The derivation and exact reproduction command are in the triage. The old counting
+bound survives; polynomial count follows sufficiently from
+`r log(2bK+1)=O(log b)`, and counting alone gives no interior-runtime bound.
+Preserve [the historical report](../research/breakthrough/cd003/RESULTS.md).
+This prospective correction does not establish new compression or a solver.
+
 Before a new experiment, search this table, [the document catalogue](CATALOG.md),
 the [candidate ledger](../research/CANDIDATE_IDEAS_LEDGER.md), and exact symbols in
 `src/`. Record the question, closest prior result, its failure boundary, the
