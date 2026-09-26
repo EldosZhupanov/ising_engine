@@ -16,7 +16,7 @@ the catalogue gate intentionally excludes ignored paths.
 ## Summary
 
 - `active`: 18
-- `binding`: 45
+- `binding`: 46
 - `closed`: 37
 - `historical`: 2
 - `proposed`: 42
@@ -27,6 +27,7 @@ the catalogue gate intentionally excludes ignored paths.
 
 | Path | Kind | Authority | Lifecycle | Created | Last changed | Immutable | Canonical scope |
 |---|---|---:|---|---|---|---|---|
+| `research/experiments/labs_q002/protocol.md` | preregistration | A0 | binding | 2026-09-26 | 2026-09-26 | true | LABS-Q002 |
 | `.claude/agents/doc-keeper.md` | agent-role | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
 | `.claude/agents/explorer.md` | agent-role | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
 | `.claude/agents/implementer.md` | agent-role | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |

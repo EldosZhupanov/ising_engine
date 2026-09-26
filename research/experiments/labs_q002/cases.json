@@ -1,0 +1,5 @@
+{
+  "objective": "ordinary aperiodic LABS: sum(d=1..N-1, sum(i=0..N-d-1, s[i]*s[i+d])^2), s in {-1,+1}",
+  "targets": {"40": 108, "50": 153, "60": 218},
+  "target_source": "retained QOBLIB checker and LABS-Q001 protocol; no solution sequences are supplied"
+}

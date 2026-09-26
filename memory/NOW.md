@@ -62,11 +62,13 @@ record. Four targeted release tests, the complete selected quality gate and
 independent review passed. This changes publication correctness, not evidence of
 search quality or speed; no new qualification or record campaign was run.
 
-**Next action:** preregister and run an equal-time qualification of the later
-LABS memetic hunter against lMAts on held-out seeds before any long record
-campaign. Add a seed-controlled, single-worker observation mode without warm
-starts and adapt the existing deadline supervisor under a new frozen protocol;
-the earlier LABS-Q001 source and records remain unchanged. The
+**Active LABS-Q002:** [protocol](../research/experiments/labs_q002/protocol.md)
+sets N=40/50/60, new seeds 740001..740010, ten seconds per cell and one worker
+against the retained lMAts baseline. No qualification data have been collected.
+Next: add a seed-controlled observation mode without warm starts and adapt the
+existing deadline supervisor, then pass correctness tests and independent review
+before source freeze and one complete 60-cell campaign. The earlier LABS-Q001
+source and records remain unchanged. The
 lattice boundary repair is a separate P1 task, required before production use.
 [ROADMAP.md](../ROADMAP.md) lists the gates; [FILE_MAP.tsv](FILE_MAP.tsv)
 records each file's tracking state and SHA-256.
