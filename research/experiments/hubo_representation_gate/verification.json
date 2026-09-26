@@ -1,0 +1,28 @@
+[
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--release",
+      "--test",
+      "test_hubo_representation",
+      "--",
+      "--nocapture"
+    ],
+    "returncode": 0,
+    "log": "test_0.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--release",
+      "--test",
+      "test_hubo_qpa",
+      "--test",
+      "test_anls"
+    ],
+    "returncode": 0,
+    "log": "test_1.log"
+  }
+]

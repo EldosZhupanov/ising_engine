@@ -17,7 +17,7 @@ the catalogue gate intentionally excludes ignored paths.
 
 - `active`: 18
 - `binding`: 47
-- `closed`: 38
+- `closed`: 39
 - `historical`: 2
 - `proposed`: 42
 - `reference`: 198
@@ -28,6 +28,7 @@ the catalogue gate intentionally excludes ignored paths.
 | Path | Kind | Authority | Lifecycle | Created | Last changed | Immutable | Canonical scope |
 |---|---|---:|---|---|---|---|---|
 | `research/experiments/labs_q002/RESULT.md` | research-result | A1 | closed | 2026-09-26 | 2026-09-26 | true | LABS-Q002 |
+| `research/experiments/hubo_representation_gate/RESULT.md` | research-result | A1 | closed | 2026-09-27 | 2026-09-27 | true | HUBO-RG001 |
 | `research/experiments/hubo_representation_gate/protocol.md` | preregistration | A0 | binding | 2026-09-27 | 2026-09-27 | true | HUBO-RG001 |
 | `research/experiments/labs_q002/protocol.md` | preregistration | A0 | binding | 2026-09-26 | 2026-09-26 | true | LABS-Q002 |
 | `.claude/agents/doc-keeper.md` | agent-role | A3 | reference | 2026-07-05 | 2026-07-05 | false | agent-tooling |
@@ -314,7 +315,7 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/h11/NEXT.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/laya_semantic/PROTOCOL.md` | research-protocol | A2 | binding | 2026-09-23 | 2026-09-23 | true | LAYA-001 |
 | `research/laya_semantic/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-23 | 2026-09-23 | false | LAYA-001 |
-| `research/laya_semantic/README.md` | research-guide | A2 | reference | 2026-09-23 | 2026-09-23 | false | LAYA-001 |
+| `research/laya_semantic/README.md` | research-guide | A2 | reference | 2026-09-23 | 2026-09-27 | false | LAYA-001 |
 | `research/laya_semantic/RESULT.md` | research-result | A2 | reference | 2026-09-23 | 2026-09-23 | false | LAYA-001 |
 | `research/laya_semantic/HYPODIVE_BUILDER_HANDOFF.md` | research-handoff | A2 | reference | 2026-09-23 | 2026-09-23 | false | LAYA-001 |
 | `research/labs_qualification/PROTOCOL.md` | research-protocol | A2 | binding | 2026-09-23 | 2026-09-23 | true | LABS-Q001 |

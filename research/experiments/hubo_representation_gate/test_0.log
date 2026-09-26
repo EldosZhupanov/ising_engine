@@ -1,0 +1,15 @@
+
+running 6 tests
+test insufficient_penalty_is_detected ... ok
+13 fixtures: 832 lane energies, 2880 lane deltas
+test native_energy_and_deltas_match_integer_oracle_in_every_lane ... ok
+test missing_incident_edge_is_detected ... ok
+test omitted_offset_is_detected_without_changing_deltas ... ok
+test substitution_truth_table_is_zero_exactly_for_and ... ok
+194 fixed-x minima, 4506 expanded states
+test quadratization_minimum_and_all_minimizers_are_exact ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Finished `release` profile [optimized] target(s) in 0.69s
+     Running tests/test_hubo_representation.rs (target/release/deps/test_hubo_representation-d1d0506911d76b9c)

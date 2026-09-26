@@ -3,7 +3,7 @@ id: memory-now
 kind: live-state
 status: active
 authority_scope: current-task
-updated: 2026-09-26
+updated: 2026-09-27
 immutable: false
 ---
 
@@ -12,7 +12,7 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Active — HUBO representation gate, 2026-09-27
+## Active — HUBO comparison design after correctness gate, 2026-09-27
 
 The user selected direct HUBO versus quadratization research and requested a
 Laya training-feasibility assessment. This overrides the deferred LABS budget
@@ -25,11 +25,18 @@ Current production `UltimateSolver::solve` accepts QuboModel; arbitrary
 higher-order input exists at the MSC kernel level, not that public entry point.
 Keep constants in an explicit experiment adapter; the native model has no offset.
 
-Next: freeze the correctness protocol, implement exhaustive and adversarial
-checks without production changes, independently review, preserve the result.
-Only then design a separate matched-cost comparison with strong baselines.
+[HUBO-RG001 result](../research/experiments/hubo_representation_gate/RESULT.md):
+6/6 tests passed after protocol `7542602` and source `b9b99fe`; 832 lane energies,
+2,880 deltas and 4,506 expanded assignments agreed with exact integer checks.
+All three injected defects were detected; 3/3 relevant existing tests passed.
+Next: separately preregister a matched-cost comparison, isolate representation
+with the same search kernel, and include a strong external baseline before
+claiming competitive advantage. Correctness alone establishes no speed gain.
 Laya training is feasibility research only; no checkpoint modification or
-training job is authorized by this active protocol.
+training job is authorized by this active protocol. The [existing Laya guide](../research/laya_semantic/README.md)
+records a solver-informed training hypothesis and overlapping prior art. The
+local checkpoint has 421,293,830 stored tensor elements (not the old 1B label);
+its previous temporary Python environment is absent.
 
 ## Repository recovery and LABS-Q002 complete — 2026-09-26
 
