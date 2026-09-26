@@ -2,7 +2,7 @@
 set -euo pipefail
 
 echo "================================================================================"
-echo "          ISING ENGINE: RESEARCH QUALITY & SOUNDNESS GATES                     "
+echo "          ISING ENGINE: SELECTED RESEARCH QUALITY GATES                       "
 echo "================================================================================"
 
 echo ">>> 1. Type Check (cargo check)..."
@@ -24,7 +24,11 @@ echo ">>> 6. Git Diff Invariants..."
 git diff --check
 git diff --cached --check
 
-echo ">>> 7. Build and exercise local QOBLIB checkers..."
+echo ">>> 7. Test standalone fundamental-AI crate and audit its retained raw TSV..."
+cargo test --manifest-path research/fundamental_ai/Cargo.toml
+python3 scripts/audit_exp006_raw.py
+
+echo ">>> 8. Build and exercise local QOBLIB checkers..."
 rustc --edition=2021 -O benchmarks/qoblib/check_labs.rs -o target/release/check_labs
 rustc --edition=2021 -O benchmarks/qoblib/check_marketsplit.rs -o target/release/check_marketsplit
 rustc --edition=2021 -O benchmarks/qoblib/check_stableset.rs -o target/release/check_stableset
@@ -55,5 +59,5 @@ target/release/check_stableset \
     | grep -q "VALID: Solution successfully verified"
 
 echo "================================================================================"
-echo "          ALL RESEARCH QUALITY GATES PASSED (GREEN)                            "
+echo "          SELECTED ROOT, FUNDAMENTAL-AI AND CHECKER GATES PASSED               "
 echo "================================================================================"

@@ -16,6 +16,18 @@ DEFAULT_RAW = (
     / "research/fundamental_ai/EXP_TEN_006_AUDIT_RAW.tsv"
 )
 METRICS = ("mean_accuracy", "rescue_rate", "damage_rate", "net_rescue", "exact_solve")
+EXPECTED_DIMENSIONS = {
+    "cycle_k": {"4", "8", "16"},
+    "noise": {"0.20"},
+    "step": {"0", "1", "2", "4", "8", "16", "32"},
+    "seed": {str(seed) for seed in range(20)},
+    "model": {
+        "Ablation_RandomSymmetric", "Ablation_ZeroInteraction",
+        "Candidate_LearnedEnergy", "N0_Unconstrained_Attn",
+        "N1_Damped_Attn_0.25", "N4_Symmetric_Energy_Attn",
+        "SYNC1_Spectral_Sync", "SYNC5_Loopy_MinSum",
+    },
+}
 
 
 def read_rows(path: Path) -> list[dict[str, str]]:
@@ -35,6 +47,8 @@ def read_rows(path: Path) -> list[dict[str, str]]:
         field: {r[field] for r in rows}
         for field in ("cycle_k", "noise", "step", "seed", "model")
     }
+    if dimensions != EXPECTED_DIMENSIONS:
+        raise ValueError("unexpected EXP-TEN-006A-R design dimensions")
     expected = 1
     for values in dimensions.values():
         expected *= len(values)

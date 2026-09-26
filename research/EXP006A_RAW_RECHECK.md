@@ -1,9 +1,9 @@
 # EXP-TEN-006A-R raw-data recheck (prospective audit, 2026-09-26)
 
-This record audits the untracked local corpus without editing its protocol,
-report, source or raw TSV. **Decision: NO-GO for a claimed active reasoning or
-exact-solve advantage on this evaluated synthetic setting.** It does not prove
-that all learned energy methods fail.
+This record audits a corpus that was untracked when first examined, without
+editing its protocol, report, source or raw TSV. **Decision: NO-GO for a claimed
+active reasoning or exact-solve advantage on this evaluated synthetic
+setting.** It does not prove that all learned energy methods fail.
 
 ## Claim, competing explanation and decisive check
 
@@ -19,8 +19,9 @@ The source loops over 3 cycle lengths × 1 noise level × 7 step counts × 20
 seeds × 8 methods = **3,360** rows. The current source produced 3,360 rows;
 the header and all **14 non-timing fields matched in all 3,361 lines** against
 the retained TSV. `wall_time_us` varied as expected. This links the *current*
-source to the raw observations. Both source and TSV remain untracked, so their
-historical September 12 freeze and evaluated commit are **UNKNOWN**.
+source to the raw observations. Both source and TSV are now preserved at
+`004385e`; their historical September 12 freeze and evaluated commit are
+**UNKNOWN**.
 
 | K=16, noise 0.20, T=16; 20 paired seeds | Mean bit accuracy | Rescue | Damage | Exact graphs |
 |---|---:|---:|---:|---:|
