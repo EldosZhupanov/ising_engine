@@ -12,7 +12,7 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Active — HUBO comparison design after correctness gate, 2026-09-27
+## Active — HUBO-C001 four-arm comparison, 2026-09-27
 
 The user selected direct HUBO versus quadratization research and requested a
 Laya training-feasibility assessment. This overrides the deferred LABS budget
@@ -29,9 +29,11 @@ Keep constants in an explicit experiment adapter; the native model has no offset
 6/6 tests passed after protocol `7542602` and source `b9b99fe`; 832 lane energies,
 2,880 deltas and 4,506 expanded assignments agreed with exact integer checks.
 All three injected defects were detected; 3/3 relevant existing tests passed.
-Next: separately preregister a matched-cost comparison, isolate representation
-with the same search kernel, and include a strong external baseline before
-claiming competitive advantage. Correctness alone establishes no speed gain.
+Next: execute the reviewed [HUBO-C001 protocol](../research/experiments/hubo_comparison/protocol.md)
+only after source/analysis freeze: four arms, ten new synthetic instances, ten
+seeds and two-second warm-runtime budgets. Retained OpenJij/dimod in
+`benchmark-env` provide external controls. Correctness alone establishes no
+speed gain; conservative penalties and untuned schedules limit any result.
 Laya training is feasibility research only; no checkpoint modification or
 training job is authorized by this active protocol. The [existing Laya guide](../research/laya_semantic/README.md)
 records a solver-informed training hypothesis and overlapping prior art. The
