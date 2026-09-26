@@ -1,0 +1,70 @@
+{
+  "budget_s": 2.0,
+  "clocks": {
+    "boot_ns": 145466103617846,
+    "boot_unix_ns": 1790463864072918241,
+    "finish_ns": 145468740421622,
+    "finish_unix_ns": 1790463866709721365,
+    "go_ns": 145466725020703,
+    "go_unix_ns": 1790463864694319866,
+    "stop_ns": 145468726215174,
+    "term_ns": 145468726255771
+  },
+  "command": [
+    "/home/eldos/ising_engine/benchmark-env/bin/python3",
+    "/home/eldos/ising_engine/research/experiments/hubo_comparison/worker.py",
+    "--arm",
+    "oj_native",
+    "--seed",
+    "970001",
+    "--engine",
+    "/home/eldos/ising_engine/target/release/examples/hubo_compare"
+  ],
+  "errors": [],
+  "events": [
+    {
+      "event": {
+        "bits": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "energy": -18,
+        "kind": "inc",
+        "steps": 0
+      },
+      "received_s": 0.011091568
+    },
+    {
+      "event": {
+        "hot": 1624.474616040973,
+        "kind": "meta",
+        "model_n": 128,
+        "model_terms": 3898,
+        "penalty": 0,
+        "transform_s": 0.001088310993509367
+      },
+      "received_s": 0.011091568
+    },
+    {
+      "event": {
+        "bits": "11000011000111001110010010001001110011111101010111110100010011000101100001101111111011010111111010101001110100110001110110110001",
+        "energy": -276,
+        "kind": "inc",
+        "steps": 1000
+      },
+      "received_s": 0.10095816
+    }
+  ],
+  "identity": {
+    "arm": "oj_native",
+    "case": "n128_d4_964003",
+    "seed": 970001,
+    "sequence": 220
+  },
+  "load1": 1.4384765625,
+  "pid": 1647347,
+  "returncode": -15,
+  "startup_s": 0.621402857,
+  "stderr": "",
+  "stdout": "READY\n{\"kind\":\"inc\",\"energy\":-18,\"bits\":\"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"steps\":0}\n{\"kind\":\"meta\",\"model_n\":128,\"model_terms\":3898,\"penalty\":0,\"hot\":1624.474616040973,\"transform_s\":0.001088310993509367}\n{\"kind\":\"inc\",\"energy\":-276,\"bits\":\"11000011000111001110010010001001110011111101010111110100010011000101100001101111111011010111111010101001110100110001110110110001\",\"steps\":1000}\n",
+  "stop_s": 2.001194471,
+  "survivors": [],
+  "termination_s": 2.015400919
+}

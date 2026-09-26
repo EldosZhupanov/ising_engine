@@ -1,0 +1,70 @@
+{
+  "budget_s": 2.0,
+  "clocks": {
+    "boot_ns": 145103303903717,
+    "boot_unix_ns": 1790463501273204682,
+    "finish_ns": 145106020443560,
+    "finish_unix_ns": 1790463503989743864,
+    "go_ns": 145104002486982,
+    "go_unix_ns": 1790463501971786294,
+    "stop_ns": 145106003190058,
+    "term_ns": 145106003229132
+  },
+  "command": [
+    "/home/eldos/ising_engine/benchmark-env/bin/python3",
+    "/home/eldos/ising_engine/research/experiments/hubo_comparison/worker.py",
+    "--arm",
+    "oj_native",
+    "--seed",
+    "970003",
+    "--engine",
+    "/home/eldos/ising_engine/target/release/examples/hubo_compare"
+  ],
+  "errors": [],
+  "events": [
+    {
+      "event": {
+        "bits": "0000000000000000000000000000000000000000000000000000000000000000",
+        "energy": 28,
+        "kind": "inc",
+        "steps": 0
+      },
+      "received_s": 0.004103023
+    },
+    {
+      "event": {
+        "hot": 1396.5287995805165,
+        "kind": "meta",
+        "model_n": 64,
+        "model_terms": 1799,
+        "penalty": 0,
+        "transform_s": 0.0005957829998806119
+      },
+      "received_s": 0.004869856
+    },
+    {
+      "event": {
+        "bits": "1111100001010011010001010000111011100010110000001011100101110101",
+        "energy": -134,
+        "kind": "inc",
+        "steps": 1000
+      },
+      "received_s": 0.046347428
+    }
+  ],
+  "identity": {
+    "arm": "oj_native",
+    "case": "n64_d4_962002",
+    "seed": 970003,
+    "sequence": 85
+  },
+  "load1": 1.0537109375,
+  "pid": 1643486,
+  "returncode": -15,
+  "startup_s": 0.698583265,
+  "stderr": "",
+  "stdout": "READY\n{\"kind\":\"inc\",\"energy\":28,\"bits\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"steps\":0}\n{\"kind\":\"meta\",\"model_n\":64,\"model_terms\":1799,\"penalty\":0,\"hot\":1396.5287995805165,\"transform_s\":0.0005957829998806119}\n{\"kind\":\"inc\",\"energy\":-134,\"bits\":\"1111100001010011010001010000111011100010110000001011100101110101\",\"steps\":1000}\n",
+  "stop_s": 2.000703076,
+  "survivors": [],
+  "termination_s": 2.017956578
+}

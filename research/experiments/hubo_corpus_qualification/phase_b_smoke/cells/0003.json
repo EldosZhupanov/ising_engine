@@ -1,0 +1,88 @@
+{
+  "budget_s": 2.0,
+  "clocks": {
+    "boot_ns": 144856885021486,
+    "boot_unix_ns": 1790463254854322072,
+    "finish_ns": 144859537144719,
+    "finish_unix_ns": 1790463257506445074,
+    "go_ns": 144857521149154,
+    "go_unix_ns": 1790463255490448376,
+    "stop_ns": 144859522184096,
+    "term_ns": 144859522234011
+  },
+  "command": [
+    "/home/eldos/ising_engine/benchmark-env/bin/python3",
+    "/home/eldos/ising_engine/research/experiments/hubo_comparison/worker.py",
+    "--arm",
+    "msc_native",
+    "--seed",
+    "980002",
+    "--engine",
+    "/home/eldos/ising_engine/target/release/examples/hubo_compare"
+  ],
+  "errors": [],
+  "events": [
+    {
+      "event": {
+        "bits": "000000",
+        "energy": -2,
+        "kind": "inc",
+        "steps": 0
+      },
+      "received_s": 0.000435448
+    },
+    {
+      "event": {
+        "hot": 103.87404294400537,
+        "kind": "meta",
+        "model_n": 6,
+        "model_terms": 20,
+        "penalty": 0,
+        "transform_s": 1.8324994016438723e-05
+      },
+      "received_s": 0.000481295
+    },
+    {
+      "event": {
+        "bits": "111001",
+        "energy": 0,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.002752685
+    },
+    {
+      "event": {
+        "bits": "101011",
+        "energy": -2,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.002752685
+    },
+    {
+      "event": {
+        "bits": "110010",
+        "energy": -4,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.002752685
+    }
+  ],
+  "identity": {
+    "arm": "msc_native",
+    "case": "smoke6",
+    "seed": 980002,
+    "sequence": 3
+  },
+  "load1": 0.59814453125,
+  "pid": 1640172,
+  "returncode": -15,
+  "startup_s": 0.636127668,
+  "stderr": "",
+  "stdout": "READY\n{\"kind\":\"inc\",\"energy\":-2,\"bits\":\"000000\",\"steps\":0}\n{\"kind\":\"meta\",\"model_n\":6,\"model_terms\":20,\"penalty\":0,\"hot\":103.87404294400537,\"transform_s\":1.8324994016438723e-05}\n{\"bits\":\"111001\",\"energy\":0,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"101011\",\"energy\":-2,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"110010\",\"energy\":-4,\"kind\":\"inc\",\"steps\":1}\n",
+  "stop_s": 2.001034942,
+  "survivors": [],
+  "termination_s": 2.015995565
+}
