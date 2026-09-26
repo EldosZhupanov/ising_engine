@@ -12,6 +12,25 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
+## Active — HUBO representation gate, 2026-09-27
+
+The user selected direct HUBO versus quadratization research and requested a
+Laya training-feasibility assessment. This overrides the deferred LABS budget
+diagnosis as the next task. Start with
+[HUBO-RG001](../research/experiments/hubo_representation_gate/protocol.md): an
+isolated deterministic energy/reduction gate, not a performance campaign.
+The completed breakthrough EXP001 concerns elimination/pair refinement; the
+similarly numbered HUBO item in NEXT_10_EXPERIMENTS is only a proposal.
+Current production `UltimateSolver::solve` accepts QuboModel; arbitrary
+higher-order input exists at the MSC kernel level, not that public entry point.
+Keep constants in an explicit experiment adapter; the native model has no offset.
+
+Next: freeze the correctness protocol, implement exhaustive and adversarial
+checks without production changes, independently review, preserve the result.
+Only then design a separate matched-cost comparison with strong baselines.
+Laya training is feasibility research only; no checkpoint modification or
+training job is authorized by this active protocol.
+
 ## Repository recovery and LABS-Q002 complete — 2026-09-26
 
 The user requested a whole-checkout inventory, including untracked and ignored
@@ -71,7 +90,7 @@ verification; independent raw audit and statistical replay passed. Source
 freeze `6668e76`, raw evidence `7449724`. No new record campaign is justified
 by this result. The earlier LABS-Q001 source and records remain unchanged.
 
-**Next action:** formulate a separate LABS budget-allocation diagnosis on new
+**Deferred after the 2026-09-27 user decision:** formulate a separate LABS budget-allocation diagnosis on new
 diagnostic seeds: measure initialization, PT, tabu and 2-opt costs before
 selecting any algorithm change. Register that profile/ablation independently;
 do not tune on Q002 seeds or extend their budgets. The
