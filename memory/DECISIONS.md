@@ -13,8 +13,11 @@ consequences, and links to superseded/related ADRs.
 | Decision | Why | Evidence |
 |---|---|---|
 | Treat the selected 41 Market Split files as known-feasible benchmarks, never first-known-solution targets. | Official `.dat` comments contain 41 checker-valid binary witnesses. | [EXP-005 triage](../research/EXP005_MARKETSPLIT_TRIAGE.md) |
-| Keep lattice and `fundamental_ai` work experimental while untracked. | A passing build/test is narrower than an accepted scientific claim or a frozen source state. | [Project map](../PROJECTS.md), [current state](NOW.md) |
+| Keep lattice and `fundamental_ai` work experimental after preservation commits. | Tracking and passing tests do not establish kernel completeness, algorithmic advantage, or the historical source freeze. | [Project map](../PROJECTS.md), [current state](NOW.md) |
 | Preserve checker-rejected candidates away from submission directories. | A `.sol` filename alone is not a certificate; five local candidates fail the checker, including `ms_13_050_003` with 13/13 violated rows. | `benchmarks/qoblib/marketsplit/rejected_candidates/verification.txt`, [project map](../PROJECTS.md) |
+| Require a successful local QOBLIB checker before an experimental Market Split binary promotes or announces a solution. | The prior four binaries could write to `unsolved_solutions/` and print `SOLVED` without checking the verifier exit status. | `src/bin/common/marketsplit_certificate.rs`, its pass/fail/missing-checker tests |
+| Preserve original research and public-input bytes, including old whitespace, with narrowly scoped Git attributes. | Changing imported text would invalidate retained SHA-256 evidence and obscure the damaged formulas that the audit records. | `research/fundamental_ai/.gitattributes`, `research/breakthrough/exp001/.gitattributes`, `benchmarks/qoblib/marketsplit/unsolved_instances/.gitattributes` |
+| Treat LABS checker exit 0 above N=66 as an energy and format check, not proof of optimality. | Its optimum table ends before the eight preserved N=67…74 checkpoints; independent autocorrelation energy agrees, including N=74 E=357. | [Project map](../PROJECTS.md), `benchmarks/qoblib/check_labs.rs` |
 | Correct the RC027 instrument identifier prospectively. | The literal hash in the result cannot be resolved, but the actual commit's source SHA-256 matches. | [RC027 result](../results/rc027/RESULT.md), `fdec0dfdf245c32925d71ffd745a34b7357cbaa4` |
 
 ## The twelve, in one line each

@@ -86,6 +86,15 @@ def kind_for(path: str) -> str:
 def lifecycle_for(path: str, tracking: str, catalog: dict[str, tuple[str, str]]) -> str:
     if tracking == "deleted_tracked":
         return "SUPERSEDED"
+    if path in {
+        "src/core/lattice.rs",
+        "src/bin/qoblib_unsolved_marketsplit_hunter.rs",
+        "src/bin/qoblib_lll_screening.rs",
+        "src/bin/qoblib_lambda_lattice_solver.rs",
+        "src/bin/qoblib_lattice_ultimate_hybrid.rs",
+        "tests/test_lattice.rs",
+    }:
+        return "UNKNOWN"  # tracked experimental code, not qualified solver evidence
     if path in catalog:
         return {
             "active": "CURRENT",
@@ -117,13 +126,17 @@ def evidence_for(path: str) -> str:
     if path.startswith("benchmarks/qoblib/marketsplit/solutions/") and path.endswith(".sol"):
         return "check_marketsplit exit 0 in 2026-09-25 audit"
     if path.startswith("benchmarks/qoblib/world_records/") and path.endswith(".sol"):
-        return "check_labs exit 0 in 2026-09-25 audit"
+        return "independent autocorrelation energy matched; checker optimum table absent for N>=67"
+    if path == "benchmarks/qoblib/upstream/":
+        return "incomplete external clone; broken Git HEAD; not a benchmark source"
     if path.startswith("results/rc027/"):
         return "raw hash matched; see RESULT.md"
     if path.startswith("research/breakthrough/exp001/"):
-        return "raw/target hashes matched; see EXP001_RESULT.md"
+        return "raw/target hashes matched; four derived outputs replayed byte-for-byte"
     if path.startswith("benchmarks/qoblib/marketsplit/unsolved_instances/"):
         return "official byte match; contains public # Solution label"
+    if path == "research/fundamental_ai/EXP_TEN_006_AUDIT_RAW.tsv":
+        return "3360 rows; all non-timing fields replayed from current source; see EXP006A_RAW_RECHECK.md"
     if path.startswith("research/fundamental_ai/") and path.endswith(".rs"):
         return "standalone cargo test passed; claim not assessed"
     if path.startswith(("src/", "tests/")):

@@ -3,7 +3,7 @@ id: memory-now
 kind: live-state
 status: active
 authority_scope: current-task
-updated: 2026-09-25
+updated: 2026-09-26
 immutable: false
 ---
 
@@ -12,7 +12,7 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## REPO-001 evidence and navigation recovery — COMPLETE; REPO-002 active, 2026-09-25
+## REPO-001 mapping complete; REPO-002 preservation complete, qualification active — 2026-09-26
 
 The user requested a whole-checkout inventory, including untracked and ignored
 research. [PROJECTS.md](../PROJECTS.md) now separates projects and evidence;
@@ -24,23 +24,35 @@ Market Split candidates are preserved **without deletion** in
 `rejected_candidates/`; the seven remaining `solutions/` files pass the local
 official checker. The 41 selected official inputs publish valid Boolean
 answers. RC027's printed instrument-commit typo is corrected prospectively in
-[RESEARCH.md](RESEARCH.md), not in its frozen result. Significant untracked LLL
-code, fundamental-AI research, EXP001 data, RC027 data, and LABS checkpoints
-remain preserved and explicitly classified; none is silently promoted to an
-accepted claim.
+[RESEARCH.md](RESEARCH.md), not in its frozen result. The formerly untracked
+lattice code (`cffaee3`), fundamental-AI source/raw (`004385e`), EXP001
+evidence (`31de138`), RC027 data (`4435ae9`), LABS checkpoints (`683c5a7`),
+41 labeled Market Split inputs (`4924772`) and provisional audit/agent notes
+(`d179e39`) are preserved in separate commits. The local checker gate is now
+executable (`59e5808`). None of those commits upgrades a scientific claim.
+The only remaining visible untracked tree is the incomplete external
+`benchmarks/qoblib/upstream/` clone with broken Git HEAD; it is **not** a
+benchmark source and is retained untouched.
 
-**Active REPO-002:** preserve and qualify the significant untracked research
-corpus before any clean clone or submission. Start with raw hashes and source
-chronology for `research/fundamental_ai/` and the untracked lattice binaries;
-then decide which files deserve a reviewed, isolated commit. Do not conflate a
-passing test with a scientific verdict. [ROADMAP.md](../ROADMAP.md) is the
-ordered backlog; [FILE_MAP.tsv](FILE_MAP.tsv) gives each inspected file's
-tracking state, SHA-256 and review status.
-The first raw check found 3,360 EXP-TEN-006 audit data rows versus 4,410 in its
-review; recomputed K=16/noise 0.20/T=16 means preserve the qualitative ordering
-of candidate < spectral < min-sum. [PROJECTS.md](../PROJECTS.md) records the
-numbers and the damaged report formatting. Next: reproduce the remaining
-reported aggregates from the raw data before promoting that local review.
+**Active REPO-002 qualification:** [EXP-TEN-006A-R recheck](../research/EXP006A_RAW_RECHECK.md)
+reproduced 3,360 non-timing rows from current source, versus 4,410 claimed
+in the prior review. At K=16/noise 0.20/T=16, all eight methods had 0/20
+exact graph solves; classical spectral/min-sum improved partial bit accuracy.
+Historical September 12 source freeze and external-baseline fairness remain
+UNKNOWN. The four experimental Market Split binaries promote a candidate only
+after the local QOBLIB checker returns success; the LLL kernel's completeness,
+integer-overflow safety and solver benefit remain unproved. A separate reviewer
+could not complete the code review because of an agent usage-limit error;
+therefore no integration or superiority verdict is licensed. `check_labs`
+computes the checkpoint energies but has no optimum table for N=67…74, so
+its exit 0 does **not** establish optimality. Independently recomputed N=74
+energy is 357, above the listed best-known 341.
+
+**Next action:** finish the code review when a reviewer is available, then
+preregister and run an equal-time qualification of the later LABS memetic
+hunter against lMAts on held-out seeds before any long record campaign.
+[ROADMAP.md](../ROADMAP.md) lists the gates; [FILE_MAP.tsv](FILE_MAP.tsv)
+records each file's tracking state and SHA-256.
 
 ## EXP-005 Market Split premise correction — 2026-09-25
 
@@ -49,7 +61,7 @@ found that all 41 locally selected QOBLIB instance files publish a binary
 `# Solution:` assignment in their comments. Independent integer evaluation and
 the local `check_marketsplit` accepted 41/41. Thus these files cannot support a
 first-known-solution claim; the untracked EXP-005 protocol's opposite premise
-is contradicted. The untracked LLL/hybrid code remains a prototype. A new
+is contradicted. The tracked LLL/hybrid code remains a prototype. A new
 algorithmic benchmark would need comment-stripped solver inputs, a separate
 answer oracle, matched budgets, strong baselines, and an arm-0 ablation.
 Preserve the original protocol and other agents' untracked work.
