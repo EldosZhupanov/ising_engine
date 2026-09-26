@@ -1,0 +1,35 @@
+{
+  "protocol_commit": "feb9a76",
+  "review": "Independent pre-data review PASS by /root/cd004_reviewer; no HIGH/MEDIUM blocker; no smoke/main data accessed.",
+  "checks": [
+    {
+      "command": "benchmark-env/bin/python3 -m unittest discover -s research/experiments/hubo_comparison -p 'test_*.py'",
+      "result": "14 passed; independent replay 14 passed"
+    },
+    {
+      "command": "cargo test --release -p research --example hubo_compare",
+      "result": "2 passed; independent replay 2 passed"
+    },
+    {
+      "command": "cargo build --release -p research --example hubo_compare",
+      "result": "PASS"
+    },
+    {
+      "command": "cargo clippy -p research --example hubo_compare -- -D warnings",
+      "result": "PASS"
+    },
+    {
+      "command": "cargo fmt --check",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    },
+    {
+      "command": "bash scripts/check_memory_docs.sh",
+      "result": "PASS: 352 Markdown / 87 immutable"
+    }
+  ],
+  "scope": "Research adapter/harness only; production src and dependencies unchanged; no performance claim"
+}
