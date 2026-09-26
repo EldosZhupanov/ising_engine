@@ -397,10 +397,7 @@ pub fn solve_hybrid(
     timeout: Option<Duration>,
 ) -> Option<Vec<i8>> {
     if kernel.is_empty() {
-        return x0
-            .iter()
-            .all(|&value| value == 0 || value == 1)
-            .then(|| x0.iter().map(|&value| value as i8).collect());
+        return verify_solution(inst, x0).then(|| x0.iter().map(|&value| value as i8).collect());
     }
     let t0 = Instant::now();
     let r = kernel.len();
@@ -873,5 +870,6 @@ mod lattice_guard_tests {
         };
         assert_eq!(solve_hybrid(&inst, &[2, -1], &[], None), None);
         assert_eq!(solve_hybrid(&inst, &[1, 0], &[], None), Some(vec![1, 0]));
+        assert_eq!(solve_hybrid(&inst, &[0, 0], &[], None), None);
     }
 }

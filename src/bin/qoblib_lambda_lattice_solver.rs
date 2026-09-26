@@ -256,6 +256,19 @@ impl LambdaState {
 }
 
 /// Solves the instance in lambda-kernel space using 4 distinct parallel meta-heuristic search arms.
+fn verify_solution(inst: &MarketSplitInstance, x: &[i64]) -> bool {
+    if x.len() != inst.num_vars || x.iter().any(|&value| value != 0 && value != 1) {
+        return false;
+    }
+    (0..inst.num_cons).all(|k| {
+        let sum: i128 = (0..inst.num_vars)
+            .filter(|&j| x[j] == 1)
+            .map(|j| i128::from(inst.matrix[k][j]))
+            .sum();
+        sum == i128::from(inst.rhs[k])
+    })
+}
+
 pub fn solve_in_lambda_space(
     inst: &MarketSplitInstance,
     x0: &[i64],
@@ -263,10 +276,7 @@ pub fn solve_in_lambda_space(
     timeout: Option<Duration>,
 ) -> Option<Vec<i8>> {
     if kernel.is_empty() {
-        return x0
-            .iter()
-            .all(|&value| value == 0 || value == 1)
-            .then(|| x0.iter().map(|&value| value as i8).collect());
+        return verify_solution(inst, x0).then(|| x0.iter().map(|&value| value as i8).collect());
     }
     let t0 = Instant::now();
     let r = kernel.len();
@@ -283,11 +293,11 @@ pub fn solve_in_lambda_space(
         raw_state.out_of_bounds, n, raw_state.cost, cvp_state.out_of_bounds, n, cvp_state.cost
     );
 
-    if raw_state.is_solved() {
+    if raw_state.is_solved() && verify_solution(inst, &raw_state.x) {
         let bool_sol: Vec<i8> = raw_state.x.iter().map(|&v| v as i8).collect();
         return Some(bool_sol);
     }
-    if cvp_state.is_solved() {
+    if cvp_state.is_solved() && verify_solution(inst, &cvp_state.x) {
         let bool_sol: Vec<i8> = cvp_state.x.iter().map(|&v| v as i8).collect();
         return Some(bool_sol);
     }
@@ -328,26 +338,10 @@ pub fn solve_in_lambda_space(
         while !is_timeout(t0) && !solved_flag.load(Ordering::Relaxed) {
             step += 1;
 
-            if state.is_solved() {
-                // Strict mathematical verification of Ax == b
-                let mut valid = true;
-                for k in 0..inst.num_cons {
-                    let mut sum = 0i64;
-                    for j in 0..inst.num_vars {
-                        if state.x[j] == 1 {
-                            sum += inst.matrix[k][j];
-                        }
-                    }
-                    if sum != inst.rhs[k] {
-                        valid = false;
-                        break;
-                    }
-                }
-                if valid {
-                    solved_flag.store(true, Ordering::SeqCst);
-                    let bool_sol: Vec<i8> = state.x.iter().map(|&v| v as i8).collect();
-                    return Some(bool_sol);
-                }
+            if state.is_solved() && verify_solution(inst, &state.x) {
+                solved_flag.store(true, Ordering::SeqCst);
+                let bool_sol: Vec<i8> = state.x.iter().map(|&v| v as i8).collect();
+                return Some(bool_sol);
             }
 
             match tid % 4 {
@@ -625,5 +619,6 @@ mod lattice_guard_tests {
             solve_in_lambda_space(&inst, &[1, 0], &[], None),
             Some(vec![1, 0])
         );
+        assert_eq!(solve_in_lambda_space(&inst, &[0, 0], &[], None), None);
     }
 }
