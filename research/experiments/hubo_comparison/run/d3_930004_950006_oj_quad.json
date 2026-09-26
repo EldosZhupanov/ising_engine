@@ -1,0 +1,70 @@
+{
+  "budget_s": 2.0,
+  "command": [
+    "/home/eldos/ising_engine/benchmark-env/bin/python3",
+    "/home/eldos/ising_engine/research/experiments/hubo_comparison/worker.py",
+    "--arm",
+    "oj_quad",
+    "--seed",
+    "950006",
+    "--engine",
+    "/home/eldos/ising_engine/target/release/examples/hubo_compare"
+  ],
+  "errors": [],
+  "events": [
+    {
+      "event": {
+        "bits": "00000000000000000000000000000000",
+        "energy": 4,
+        "kind": "inc",
+        "steps": 0
+      },
+      "received_s": 0.0009484040201641619
+    },
+    {
+      "event": {
+        "hot": 23419.268598750543,
+        "kind": "meta",
+        "model_n": 97,
+        "model_terms": 537,
+        "penalty": 769,
+        "transform_s": 0.008123273990349844
+      },
+      "received_s": 0.009304541017627344
+    },
+    {
+      "event": {
+        "bits": "10010101111100011011001001000111",
+        "energy": -6,
+        "kind": "inc",
+        "steps": 2000
+      },
+      "received_s": 0.03162874700501561
+    },
+    {
+      "event": {
+        "bits": "00011100011010100011010010110111",
+        "energy": -36,
+        "kind": "inc",
+        "steps": 8000
+      },
+      "received_s": 0.07160067799850367
+    },
+    {
+      "event": {
+        "bits": "00010111101011001111110100000001",
+        "energy": -38,
+        "kind": "inc",
+        "steps": 32000
+      },
+      "received_s": 0.2311084580142051
+    }
+  ],
+  "load1": 1.53369140625,
+  "returncode": -15,
+  "startup_s": 0.6755906679900363,
+  "stderr": "",
+  "stdout": "READY\n{\"kind\":\"inc\",\"energy\":4,\"bits\":\"00000000000000000000000000000000\",\"steps\":0}\n{\"kind\":\"meta\",\"model_n\":97,\"model_terms\":537,\"penalty\":769,\"hot\":23419.268598750543,\"transform_s\":0.008123273990349844}\n{\"kind\":\"inc\",\"energy\":-6,\"bits\":\"10010101111100011011001001000111\",\"steps\":2000}\n{\"kind\":\"inc\",\"energy\":-36,\"bits\":\"00011100011010100011010010110111\",\"steps\":8000}\n{\"kind\":\"inc\",\"energy\":-38,\"bits\":\"00010111101011001111110100000001\",\"steps\":32000}\n",
+  "stop_s": 2.000693495006999,
+  "termination_s": 2.0190897959982976
+}

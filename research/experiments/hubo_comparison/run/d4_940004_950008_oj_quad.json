@@ -1,0 +1,70 @@
+{
+  "budget_s": 2.0,
+  "command": [
+    "/home/eldos/ising_engine/benchmark-env/bin/python3",
+    "/home/eldos/ising_engine/research/experiments/hubo_comparison/worker.py",
+    "--arm",
+    "oj_quad",
+    "--seed",
+    "950008",
+    "--engine",
+    "/home/eldos/ising_engine/target/release/examples/hubo_compare"
+  ],
+  "errors": [],
+  "events": [
+    {
+      "event": {
+        "bits": "00000000000000000000000000000000",
+        "energy": -14,
+        "kind": "inc",
+        "steps": 0
+      },
+      "received_s": 0.0018760480161290616
+    },
+    {
+      "event": {
+        "hot": 214409.0088917951,
+        "kind": "meta",
+        "model_n": 154,
+        "model_terms": 1153,
+        "penalty": 4497,
+        "transform_s": 0.013646954001160339
+      },
+      "received_s": 0.015738672023871914
+    },
+    {
+      "event": {
+        "bits": "10101001010011101111001000101111",
+        "energy": -22,
+        "kind": "inc",
+        "steps": 13000
+      },
+      "received_s": 0.17449958200450055
+    },
+    {
+      "event": {
+        "bits": "01000100011011100101111111100101",
+        "energy": -24,
+        "kind": "inc",
+        "steps": 34000
+      },
+      "received_s": 0.4149705849995371
+    },
+    {
+      "event": {
+        "bits": "10110101000111101010100001100101",
+        "energy": -32,
+        "kind": "inc",
+        "steps": 117000
+      },
+      "received_s": 1.440048372023739
+    }
+  ],
+  "load1": 1.39501953125,
+  "returncode": -15,
+  "startup_s": 0.6376544789818581,
+  "stderr": "",
+  "stdout": "READY\n{\"kind\":\"inc\",\"energy\":-14,\"bits\":\"00000000000000000000000000000000\",\"steps\":0}\n{\"kind\":\"meta\",\"model_n\":154,\"model_terms\":1153,\"penalty\":4497,\"hot\":214409.0088917951,\"transform_s\":0.013646954001160339}\n{\"kind\":\"inc\",\"energy\":-22,\"bits\":\"10101001010011101111001000101111\",\"steps\":13000}\n{\"kind\":\"inc\",\"energy\":-24,\"bits\":\"01000100011011100101111111100101\",\"steps\":34000}\n{\"kind\":\"inc\",\"energy\":-32,\"bits\":\"10110101000111101010100001100101\",\"steps\":117000}\n",
+  "stop_s": 2.0006719660013914,
+  "termination_s": 2.019573018013034
+}

@@ -1,0 +1,151 @@
+{
+  "budget_s": 2.0,
+  "command": [
+    "/home/eldos/ising_engine/benchmark-env/bin/python3",
+    "/home/eldos/ising_engine/research/experiments/hubo_comparison/worker.py",
+    "--arm",
+    "msc_quad",
+    "--seed",
+    "950007",
+    "--engine",
+    "/home/eldos/ising_engine/target/release/examples/hubo_compare"
+  ],
+  "errors": [],
+  "events": [
+    {
+      "event": {
+        "bits": "00000000000000000000000000000000",
+        "energy": 14,
+        "kind": "inc",
+        "steps": 0
+      },
+      "received_s": 0.0025326070026494563
+    },
+    {
+      "event": {
+        "hot": 174178.01498156544,
+        "kind": "meta",
+        "model_n": 146,
+        "model_terms": 1130,
+        "penalty": 4465,
+        "transform_s": 0.02064595598494634
+      },
+      "received_s": 0.023353249998763204
+    },
+    {
+      "event": {
+        "bits": "11101110100011011111000000111101",
+        "energy": 6,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.028903605008963495
+    },
+    {
+      "event": {
+        "bits": "11101100010101001111110100100100",
+        "energy": -10,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.028903605008963495
+    },
+    {
+      "event": {
+        "bits": "11110010010000111010011110110110",
+        "energy": -14,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.028903605008963495
+    },
+    {
+      "event": {
+        "bits": "10101011011101100001001111111101",
+        "energy": -18,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.028903605008963495
+    },
+    {
+      "event": {
+        "bits": "11101010111111111111011010100101",
+        "energy": -20,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.029046778014162555
+    },
+    {
+      "event": {
+        "bits": "01101110100110100110111110100111",
+        "energy": -26,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.029046778014162555
+    },
+    {
+      "event": {
+        "bits": "11111111111111111101110011001100",
+        "energy": -30,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.029217461997177452
+    },
+    {
+      "event": {
+        "bits": "10111011101110101011011110001011",
+        "energy": -44,
+        "kind": "inc",
+        "steps": 12
+      },
+      "received_s": 0.04501452500699088
+    },
+    {
+      "event": {
+        "bits": "01111100000111100000101011111110",
+        "energy": -46,
+        "kind": "inc",
+        "steps": 108
+      },
+      "received_s": 0.1799067190149799
+    },
+    {
+      "event": {
+        "bits": "10111111011100100101001010101111",
+        "energy": -50,
+        "kind": "inc",
+        "steps": 113
+      },
+      "received_s": 0.1862660729966592
+    },
+    {
+      "event": {
+        "bits": "11101011010110100011111000101011",
+        "energy": -52,
+        "kind": "inc",
+        "steps": 534
+      },
+      "received_s": 0.7830935069941916
+    },
+    {
+      "event": {
+        "bits": "11111100100101110010111101100100",
+        "energy": -54,
+        "kind": "inc",
+        "steps": 659
+      },
+      "received_s": 0.9586985390051268
+    }
+  ],
+  "load1": 1.0439453125,
+  "returncode": -15,
+  "startup_s": 0.7195378739852458,
+  "stderr": "",
+  "stdout": "READY\n{\"kind\":\"inc\",\"energy\":14,\"bits\":\"00000000000000000000000000000000\",\"steps\":0}\n{\"kind\":\"meta\",\"model_n\":146,\"model_terms\":1130,\"penalty\":4465,\"hot\":174178.01498156544,\"transform_s\":0.02064595598494634}\n{\"bits\":\"11101110100011011111000000111101\",\"energy\":6,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"11101100010101001111110100100100\",\"energy\":-10,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"11110010010000111010011110110110\",\"energy\":-14,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"10101011011101100001001111111101\",\"energy\":-18,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"11101010111111111111011010100101\",\"energy\":-20,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"01101110100110100110111110100111\",\"energy\":-26,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"11111111111111111101110011001100\",\"energy\":-30,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"10111011101110101011011110001011\",\"energy\":-44,\"kind\":\"inc\",\"steps\":12}\n{\"bits\":\"01111100000111100000101011111110\",\"energy\":-46,\"kind\":\"inc\",\"steps\":108}\n{\"bits\":\"10111111011100100101001010101111\",\"energy\":-50,\"kind\":\"inc\",\"steps\":113}\n{\"bits\":\"11101011010110100011111000101011\",\"energy\":-52,\"kind\":\"inc\",\"steps\":534}\n{\"bits\":\"11111100100101110010111101100100\",\"energy\":-54,\"kind\":\"inc\",\"steps\":659}\n",
+  "stop_s": 2.0003534620045684,
+  "termination_s": 2.026963976008119
+}

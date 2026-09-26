@@ -1,0 +1,61 @@
+{
+  "budget_s": 2.0,
+  "command": [
+    "/home/eldos/ising_engine/benchmark-env/bin/python3",
+    "/home/eldos/ising_engine/research/experiments/hubo_comparison/worker.py",
+    "--arm",
+    "oj_native",
+    "--seed",
+    "950003",
+    "--engine",
+    "/home/eldos/ising_engine/target/release/examples/hubo_compare"
+  ],
+  "errors": [],
+  "events": [
+    {
+      "event": {
+        "bits": "00000000000000000000000000000000",
+        "energy": 14,
+        "kind": "inc",
+        "steps": 0
+      },
+      "received_s": 0.002915088989539072
+    },
+    {
+      "event": {
+        "hot": 1252.2592954916204,
+        "kind": "meta",
+        "model_n": 32,
+        "model_terms": 773,
+        "penalty": 0,
+        "transform_s": 0.00017103500431403518
+      },
+      "received_s": 0.003128474985715002
+    },
+    {
+      "event": {
+        "bits": "11111111011100110000011000000010",
+        "energy": -64,
+        "kind": "inc",
+        "steps": 1000
+      },
+      "received_s": 0.02539094298845157
+    },
+    {
+      "event": {
+        "bits": "11011110001101010001111001101111",
+        "energy": -66,
+        "kind": "inc",
+        "steps": 5000
+      },
+      "received_s": 0.0873375269875396
+    }
+  ],
+  "load1": 1.22802734375,
+  "returncode": -15,
+  "startup_s": 0.7585029379988555,
+  "stderr": "",
+  "stdout": "READY\n{\"kind\":\"inc\",\"energy\":14,\"bits\":\"00000000000000000000000000000000\",\"steps\":0}\n{\"kind\":\"meta\",\"model_n\":32,\"model_terms\":773,\"penalty\":0,\"hot\":1252.2592954916204,\"transform_s\":0.00017103500431403518}\n{\"kind\":\"inc\",\"energy\":-64,\"bits\":\"11111111011100110000011000000010\",\"steps\":1000}\n{\"kind\":\"inc\",\"energy\":-66,\"bits\":\"11011110001101010001111001101111\",\"steps\":5000}\n",
+  "stop_s": 2.0004672989889514,
+  "termination_s": 2.0185215039819013
+}
