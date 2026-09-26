@@ -1,0 +1,135 @@
+{
+  "command": [
+    "/tmp/labs-q002-baseline-20260926/solvers/lMAts-lRRts/src/lMAts",
+    "40",
+    "740006",
+    "3600",
+    "1",
+    "0"
+  ],
+  "n": 40,
+  "target": 108,
+  "budget": 10.0,
+  "events": [
+    {
+      "energy": 560,
+      "bits": "0010001111101001011100111100100011000100",
+      "seconds": 0.06184749200474471,
+      "eligible": true
+    },
+    {
+      "energy": 380,
+      "bits": "0110000110110000001001111010101011010111",
+      "seconds": 0.0619976680027321,
+      "eligible": true
+    },
+    {
+      "energy": 352,
+      "bits": "1010100000110000110010001100100001011010",
+      "seconds": 0.0619976680027321,
+      "eligible": true
+    },
+    {
+      "energy": 296,
+      "bits": "0010100111011001111011011011100000101010",
+      "seconds": 0.062177851010346785,
+      "eligible": true
+    },
+    {
+      "energy": 252,
+      "bits": "0011100111011001111011011011100000101010",
+      "seconds": 0.062177851010346785,
+      "eligible": true
+    },
+    {
+      "energy": 248,
+      "bits": "0011100111011001111011011011000000101010",
+      "seconds": 0.06235697100055404,
+      "eligible": true
+    },
+    {
+      "energy": 212,
+      "bits": "0011100111001001111011011011000000101010",
+      "seconds": 0.06235697100055404,
+      "eligible": true
+    },
+    {
+      "energy": 200,
+      "bits": "0011100111001001111111011011000000101010",
+      "seconds": 0.06252936901000794,
+      "eligible": true
+    },
+    {
+      "energy": 196,
+      "bits": "0011100110000001111111011011101001101010",
+      "seconds": 0.06252936901000794,
+      "eligible": true
+    },
+    {
+      "energy": 144,
+      "bits": "0011100010001111110111011011101001011010",
+      "seconds": 0.06277616901206784,
+      "eligible": true
+    },
+    {
+      "energy": 140,
+      "bits": "0001110101000011011010011001001110111111",
+      "seconds": 0.07291543501196429,
+      "eligible": true
+    },
+    {
+      "energy": 136,
+      "bits": "1111111100100100111100011011000110101010",
+      "seconds": 0.08502526000665966,
+      "eligible": true
+    },
+    {
+      "energy": 124,
+      "bits": "1101011111010011110001000011011101100010",
+      "seconds": 0.08772430301178247,
+      "eligible": true
+    },
+    {
+      "energy": 120,
+      "bits": "0110111011010001000010011010100000111000",
+      "seconds": 0.09370714600663632,
+      "eligible": true
+    },
+    {
+      "energy": 116,
+      "bits": "0011000100100001010011101011101000001111",
+      "seconds": 0.21672630999819376,
+      "eligible": true
+    },
+    {
+      "energy": 108,
+      "bits": "0000111100001001011011101001000100010001",
+      "seconds": 1.1106659440119984,
+      "eligible": true
+    }
+  ],
+  "errors": [],
+  "stdout": "\nLABS 40 (opt=0,inf), seed=740006, maxExecTime=3600.0(secs), threads=1\nINC 560 0010001111101001011100111100100011000100\n\nINC 380 0110000110110000001001111010101011010111\n\nINC 352 1010100000110000110010001100100001011010\n\nGA( 0 - 740006) iter:            0   352  2.27  0.0(secs) 1.000000e+02(cntProbe) 2.314815e+05(speed) 0(targetReached) 0(isCensored)\nINC 296 0010100111011001111011011011100000101010\n\nINC 252 0011100111011001111011011011100000101010\n\nINC 248 0011100111011001111011011011000000101010\n\nINC 212 0011100111001001111011011011000000101010\n\nINC 200 0011100111001001111111011011000000101010\n\nINC 196 0011100110000001111111011011101001101010\n\nINC 144 0011100010001111110111011011101001011010\n\nGA( 0 - 740006) iter:            2   204  3.92  0.0(secs) 3.583000e+03(cntProbe) 3.104853e+06(speed) 0(targetReached) 0(isCensored)\nGA( 0 - 740006) iter:           14   180  4.44  0.0(secs) 2.143500e+04(cntProbe) 1.159903e+07(speed) 0(targetReached) 0(isCensored)\nGA( 0 - 740006) iter:           18   176  4.55  0.0(secs) 2.827900e+04(cntProbe) 1.342145e+07(speed) 0(targetReached) 0(isCensored)\nGA( 0 - 740006) iter:           19   172  4.65  0.0(secs) 2.952000e+04(cntProbe) 1.348561e+07(speed) 0(targetReached) 0(isCensored)\nGA( 0 - 740006) iter:           34   144  5.56  0.0(secs) 5.421500e+04(cntProbe) 1.826651e+07(speed) 0(targetReached) 0(isCensored)\nINC 140 0001110101000011011010011001001110111111\n\nGA( 0 - 740006) iter:          428   140  5.71  0.0(secs) 6.639290e+05(cntProbe) 2.919011e+07(speed) 0(targetReached) 0(isCensored)\nINC 136 1111111100100100111100011011000110101010\n\nGA( 0 - 740006) iter:          460   136  5.88  0.0(secs) 7.160410e+05(cntProbe) 2.871285e+07(speed) 0(targetReached) 0(isCensored)\nINC 124 1101011111010011110001000011011101100010\n\nINC 120 0110111011010001000010011010100000111000\n\nGA( 0 - 740006) iter:          764   124  6.45  0.0(secs) 1.195705e+06(cntProbe) 2.898468e+07(speed) 0(targetReached) 0(isCensored)\nGA( 0 - 740006) iter:          977   120  6.67  0.1(secs) 1.549438e+06(cntProbe) 2.933042e+07(speed) 0(targetReached) 0(isCensored)\nINC 116 0011000100100001010011101011101000001111\n\nGA( 0 - 740006) iter:         2939   116  6.90  0.2(secs) 4.671000e+06(cntProbe) 2.704706e+07(speed) 0(targetReached) 0(isCensored)\nINC 108 0000111100001001011011101001000100010001\n",
+  "stderr": "",
+  "stop": "optimum",
+  "stop_seconds": 1.110834174003685,
+  "returncode": -9,
+  "elapsed": 1.1113994290062692,
+  "arm": "lmats",
+  "seed": 740006,
+  "load_after": [
+    0.97900390625,
+    0.4970703125,
+    0.3232421875
+  ],
+  "checker": {
+    "returncode": 0,
+    "stdout": "Qbench LABS Solution Checker Version 1.0\nLABS k=40 E(S)=108 seq=44412112131121313131\nEnergy cross-check OK: E(S)=108\nOPTIMAL\nVALID: Solution successfully verified\n",
+    "stderr": ""
+  },
+  "load_before": [
+    0.97900390625,
+    0.4970703125,
+    0.3232421875
+  ]
+}

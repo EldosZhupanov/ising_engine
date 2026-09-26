@@ -1,0 +1,61 @@
+{
+  "command": [
+    "/home/eldos/ising_engine/target/release/labs_record_hunter",
+    "--qualify",
+    "60",
+    "740002"
+  ],
+  "n": 60,
+  "target": 218,
+  "budget": 10.0,
+  "events": [
+    {
+      "energy": 354,
+      "bits": "010100100000010100110110111001000001110001110010001110111000",
+      "seconds": 0.012984783999854699,
+      "eligible": true
+    },
+    {
+      "energy": 338,
+      "bits": "010011001100011001101001111010000011101011110000010000101000",
+      "seconds": 0.06868178000149783,
+      "eligible": true
+    },
+    {
+      "energy": 330,
+      "bits": "011011001100000110000000110111100110000101101010010100010101",
+      "seconds": 0.20459323799877893,
+      "eligible": true
+    },
+    {
+      "energy": 274,
+      "bits": "011001100111001101001100001111010111010000101111111010111111",
+      "seconds": 0.2177335989981657,
+      "eligible": true
+    }
+  ],
+  "errors": [],
+  "stdout": "INC 354 010100100000010100110110111001000001110001110010001110111000\nINC 338 010011001100011001101001111010000011101011110000010000101000\nINC 330 011011001100000110000000110111100110000101101010010100010101\nINC 274 011001100111001101001100001111010111010000101111111010111111\n",
+  "stderr": "",
+  "stop": "deadline",
+  "stop_seconds": 10.000544971000636,
+  "returncode": -9,
+  "elapsed": 10.001273717003642,
+  "arm": "memetic",
+  "seed": 740002,
+  "load_after": [
+    1.3623046875,
+    0.9609375,
+    0.5634765625
+  ],
+  "checker": {
+    "returncode": 20,
+    "stdout": "Qbench LABS Solution Checker Version 1.0\nLABS k=60 E(S)=274 seq=1222232211224411131141171116\nEnergy cross-check OK: E(S)=274\nNOT OPTIMAL, expected E(S)=218\nSUBOPTIMAL: Valid solution file, but it is not optimal\n",
+    "stderr": ""
+  },
+  "load_before": [
+    1.33349609375,
+    0.9423828125,
+    0.55322265625
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "command": [
+    "/home/eldos/ising_engine/target/release/labs_record_hunter",
+    "--qualify",
+    "20",
+    "820002"
+  ],
+  "n": 20,
+  "target": 26,
+  "budget": 1.0,
+  "events": [
+    {
+      "energy": 34,
+      "bits": "00001001110010111010",
+      "seconds": 0.0033010789920808747,
+      "eligible": true
+    },
+    {
+      "energy": 26,
+      "bits": "00000101110100111001",
+      "seconds": 0.01171975999022834,
+      "eligible": true
+    }
+  ],
+  "errors": [],
+  "stdout": "INC 34 00001001110010111010\nINC 26 00000101110100111001\n",
+  "stderr": "",
+  "stop": "optimum",
+  "stop_seconds": 0.011868952991790138,
+  "returncode": -9,
+  "elapsed": 0.01245038399065379,
+  "arm": "memetic",
+  "seed": 820002,
+  "load_after": [
+    0.38134765625,
+    0.3603515625,
+    0.27099609375
+  ],
+  "checker": {
+    "returncode": 0,
+    "stdout": "Qbench LABS Solution Checker Version 1.0\nLABS k=20 E(S)=26 seq=5113112321\nEnergy cross-check OK: E(S)=26\nOPTIMAL\nVALID: Solution successfully verified\n",
+    "stderr": ""
+  },
+  "load_before": [
+    0.38134765625,
+    0.3603515625,
+    0.27099609375
+  ]
+}

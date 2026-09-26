@@ -1,0 +1,79 @@
+{
+  "command": [
+    "/home/eldos/ising_engine/target/release/labs_record_hunter",
+    "--qualify",
+    "40",
+    "740006"
+  ],
+  "n": 40,
+  "target": 108,
+  "budget": 10.0,
+  "events": [
+    {
+      "energy": 164,
+      "bits": "0101010001101000010010000001101111001100",
+      "seconds": 0.0045172910031396896,
+      "eligible": true
+    },
+    {
+      "energy": 152,
+      "bits": "0011100101110001010110001011011000000010",
+      "seconds": 0.005474069999763742,
+      "eligible": true
+    },
+    {
+      "energy": 144,
+      "bits": "0101011001010011100010011111000010000001",
+      "seconds": 0.015951465000398457,
+      "eligible": true
+    },
+    {
+      "energy": 140,
+      "bits": "0100101100110011101010100000000001111000",
+      "seconds": 0.02426393300993368,
+      "eligible": true
+    },
+    {
+      "energy": 128,
+      "bits": "0011001011001100001011000010111111110101",
+      "seconds": 0.06862853800703306,
+      "eligible": true
+    },
+    {
+      "energy": 124,
+      "bits": "0000011111100111100111011011010101011011",
+      "seconds": 0.30002411900204606,
+      "eligible": true
+    },
+    {
+      "energy": 116,
+      "bits": "0010010110111000000011000001100010101011",
+      "seconds": 1.2993891640071524,
+      "eligible": true
+    }
+  ],
+  "errors": [],
+  "stdout": "INC 164 0101010001101000010010000001101111001100\nINC 152 0011100101110001010110001011011000000010\nINC 144 0101011001010011100010011111000010000001\nINC 140 0100101100110011101010100000000001111000\nINC 128 0011001011001100001011000010111111110101\nINC 124 0000011111100111100111011011010101011011\nINC 116 0010010110111000000011000001100010101011\n",
+  "stderr": "",
+  "stop": "deadline",
+  "stop_seconds": 10.001013216999127,
+  "returncode": -9,
+  "elapsed": 10.001596486996277,
+  "arm": "memetic",
+  "seed": 740006,
+  "load_after": [
+    1.06298828125,
+    0.53076171875,
+    0.33642578125
+  ],
+  "checker": {
+    "returncode": 20,
+    "stdout": "Qbench LABS Solution Checker Version 1.0\nLABS k=40 E(S)=116 seq=21211213725231111112\nEnergy cross-check OK: E(S)=116\nNOT OPTIMAL, expected E(S)=108\nSUBOPTIMAL: Valid solution file, but it is not optimal\n",
+    "stderr": ""
+  },
+  "load_before": [
+    0.97900390625,
+    0.4970703125,
+    0.3232421875
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "commit": "6668e76024365d5aeb4b67f50cb4caf4fe5d55ef",
+  "binaries": {
+    "memetic": "/home/eldos/ising_engine/target/release/labs_record_hunter",
+    "lmats": "/tmp/labs-q002-baseline-20260926/solvers/lMAts-lRRts/src/lMAts",
+    "checker": "/home/eldos/ising_engine/target/release/check_labs"
+  },
+  "binary_sha256": {
+    "memetic": "75ee12db4dda53d1da3e4685daf9e319874c015ab8be6f3a339c841193600bd3",
+    "lmats": "a9601894c72f9ff1bea1449d0a6de19ee40e19d45d045d880b42efc8230aeb4c",
+    "checker": "edb7738fba835c96b786ac8561e1c8b8e627a3212b2db7377d3fbb228c34d5db"
+  },
+  "source_sha256": {
+    "research/experiments/labs_q002/campaign.py": "9f013ee2d0fae4d661f656daa7bdfcf51adb82052c31222776f4b1fe5fa9eb41",
+    "research/experiments/labs_q002/test_campaign.py": "6c4931a4f0890064fbaa26c80abeae6255c7547b8e00043473bb358fb427424b",
+    "research/experiments/labs_q002/protocol.md": "36ed100c602024c498ed149f81a5fe6becce0ac4b0c4c5bd68fd41cc74249053",
+    "research/experiments/labs_q002/cases.json": "dfa43a17e8e6966faac1572e95cb758d54068c75005e45536637d6c26bfb1b1a",
+    "src/bin/labs_record_hunter.rs": "652fc39d23ab0333e8c664ad685e38f267c9c22bbc8058b65706792f44da327c",
+    "Cargo.lock": "f548566400dfb252ff1cc251fa0bd10bee0766f231e9424303fc8e0c50eee012",
+    "Cargo.toml": "7a44a00e9bfac701ccda251df127670bfa54189a7bfe4d023194d08374b3fe43",
+    ".cargo/config.toml": "bb56eb7dc83977540c8e0af388973773d3f4b0be969f0e864a9fffd79ba77cf5",
+    "benchmarks/qoblib/check_labs.rs": "521a89ea4ae02e98461b053ec614d024899365631fe02c3b73b3b45e71c8beb9",
+    "research/labs_qualification/campaign.py": "d36cbd1f1c462255f7405fa43da0a49488f6c1ff8ac5f9d8f20e726656dfa785",
+    "research/labs_qualification/reference.json": "dac5b5f657c9fb8ae23238290ffadbae6d00a5107204abfc1768b0f096b477dc",
+    "research/labs_qualification/reference.tar.gz": "0a154a91ef32c050c50edf8babee8cb07278c88c3c2fb8499b35446f9a37bf5a",
+    "research/labs_qualification/reference_logging.patch": "69659afc1f1aa606879ff7351d832f720ad80055fbd80ec125e4ff82a5e10d06",
+    "research/labs_qualification/build_reference.py": "46ec659e2ba322f540ca57560722f74c172c67f9f59a707bd8d88e2ee67e06fc"
+  },
+  "platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "cpu": "processor\t: 0\nvendor_id\t: AuthenticAMD\ncpu family\t: 25\nmodel\t\t: 68\nmodel name\t: AMD Ryzen 7 170 with Radeon Graphics\nstepping\t: 1\nmicrocode\t: 0xffffffff\ncpu MHz\t\t: 3193.914\ncache size\t: 512 KB\nphysical id\t: 0\nsiblings\t: 4\ncore id\t\t: 0\ncpu cores\t: 2\napicid\t\t: 0\ninitial apicid\t: 0\nfpu\t\t: yes\nfpu_exception\t: yes\ncpuid level\t: 13\nwp\t\t: yes\nflags\t\t: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl tsc_reliable nonstop_tsc cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext perfctr_core ssbd ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves clzero xsaveerptr arat npt nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload umip vaes vpclmulqdq rdpid fsrm\nbugs\t\t: sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass srso ibpb_no_ret tsa\nbogomips\t: 6387.82\nTLB size\t: 2560 4K pages\nclflush size\t: 64\ncache_alignment\t: 64\naddress sizes\t: 48 bits physical, 48 bits virtual\npower management:\n\nprocessor\t: 1\nvendor_id\t: AuthenticAMD\ncpu family\t: 25\nmodel\t\t: 68\nmodel name\t: AMD Ryzen 7 170 with Radeon Graphics\nstepping\t: 1\nmicrocode\t: 0xffffffff\ncpu MHz\t\t: 3193.914\ncache size\t: 512 KB\nphysical id\t: 0\nsiblings\t: 4\ncore id\t\t: 0\ncpu cores\t: 2\napicid\t\t: 1\ninitial apicid\t: 1\nfpu\t\t: yes\nfpu_exception\t: yes\ncpuid level\t: 13\nwp\t\t: yes\nflags\t\t: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl tsc_reliable nonstop_tsc cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext perfctr_core ssbd ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves clzero xsaveerptr arat npt nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload umip vaes vpclmulqdq rdpid fsrm\nbugs\t\t: sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass srso ibpb_no_ret tsa\nbogomips\t: 6387.82\nTLB size\t: 2560 4K pages\nclflush size\t: 64\ncache_alignment\t: 64\naddress sizes\t: 48 bits physical, 48 bits virtual\npower management:\n\nprocessor\t: 2\nvendor_id\t: AuthenticAMD\ncpu family\t: 25\nmodel\t\t: 68\nmodel name\t: AMD Ryzen 7 170 with Radeon Graphics\nstepping\t: 1\nmicrocode\t: 0xffffffff\ncpu MHz\t\t: 3193.914\ncache size\t: 512 KB\nphysical id\t: 0\nsiblings\t: 4\ncore id\t\t: 1\ncpu cores\t: 2\napicid\t\t: 2\ninitial apicid\t: 2\nfpu\t\t: yes\nfpu_exception\t: yes\ncpuid level\t: 13\nwp\t\t: yes\nflags\t\t: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl tsc_reliable nonstop_tsc cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext perfctr_core ssbd ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves clzero xsaveerptr arat npt nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload umip vaes vpclmulqdq rdpid fsrm\nbugs\t\t: sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass srso ibpb_no_ret tsa\nbogomips\t: 6387.82\nTLB size\t: 2560 4K pages\nclflush size\t: 64\ncache_alignment\t: 64\naddress sizes\t: 48 bits physical, 48 bits virtual\npower management:\n\nprocessor\t: 3\nvendor_id\t: AuthenticAMD\ncpu family\t: 25\nmodel\t\t: 68\nmodel name\t: AMD Ryzen 7 170 with Radeon Graphics\nstepping\t: 1\nmicrocode\t: 0xffffffff\ncpu MHz\t\t: 3193.914\ncache size\t: 512 KB\nphysical id\t: 0\nsiblings\t: 4\ncore id\t\t: 1\ncpu cores\t: 2\napicid\t\t: 3\ninitial apicid\t: 3\nfpu\t\t: yes\nfpu_exception\t: yes\ncpuid level\t: 13\nwp\t\t: yes\nflags\t\t: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl tsc_reliable nonstop_tsc cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext perfctr_core ssbd ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves clzero xsaveerptr arat npt nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload umip vaes vpclmulqdq rdpid fsrm\nbugs\t\t: sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass srso ibpb_no_ret tsa\nbogomips\t: 6387.82\nTLB size\t: 2560 4K pages\nclflush size\t: 64\ncache_alignment\t: 64\naddress sizes\t: 48 bits physical, 48 bits virtual\npower management:\n\n",
+  "memory": "MemTotal:        9153664 kB\nMemFree:          536056 kB\nMemAvailable:    6271008 kB\nBuffers:          300084 kB\nCached:          5186176 kB\nSwapCached:        17612 kB\nActive:          3386676 kB\nInactive:        4400584 kB\nActive(anon):     140660 kB\nInactive(anon):  2183340 kB\nActive(file):    3246016 kB\nInactive(file):  2217244 kB\nUnevictable:           0 kB\nMlocked:               0 kB\nSwapTotal:      12582912 kB\nSwapFree:       12466548 kB\nDirty:              2144 kB\nWriteback:             0 kB\nAnonPages:       2294848 kB\nMapped:           427688 kB\nShmem:             23000 kB\nKReclaimable:     472456 kB\nSlab:             562288 kB\nSReclaimable:     472456 kB\nSUnreclaim:        89832 kB\nKernelStack:        7768 kB\nPageTables:        21312 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    17159744 kB\nCommitted_AS:    6608448 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:       35256 kB\nVmallocChunk:          0 kB\nPercpu:             2080 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nUnaccepted:            0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:       64512 kB\nDirectMap2M:     6225920 kB\nDirectMap1G:    12582912 kB\n",
+  "initial_load": [
+    0.38134765625,
+    0.3603515625,
+    0.27099609375
+  ],
+  "python": "3.14.4",
+  "rustflags_env": null,
+  "compiler_versions": {
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)\n",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)\n",
+    "gcc": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+  },
+  "targets": {
+    "20": 26
+  },
+  "seeds": [
+    820001,
+    820002
+  ],
+  "budget": 1.0,
+  "thread_environment": {
+    "RAYON_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "smoke": true
+}

@@ -1,0 +1,73 @@
+{
+  "command": [
+    "/home/eldos/ising_engine/target/release/labs_record_hunter",
+    "--qualify",
+    "40",
+    "740001"
+  ],
+  "n": 40,
+  "target": 108,
+  "budget": 10.0,
+  "events": [
+    {
+      "energy": 144,
+      "bits": "0011100011010010011011000100111111101010",
+      "seconds": 0.004838622000534087,
+      "eligible": true
+    },
+    {
+      "energy": 140,
+      "bits": "0000000000111100001101010100101100110011",
+      "seconds": 0.019411615998251364,
+      "eligible": true
+    },
+    {
+      "energy": 136,
+      "bits": "0000000011011000110110100111000110101010",
+      "seconds": 0.043036584989749826,
+      "eligible": true
+    },
+    {
+      "energy": 120,
+      "bits": "0010101000010010000100110111110011000011",
+      "seconds": 0.1847247289988445,
+      "eligible": true
+    },
+    {
+      "energy": 116,
+      "bits": "0010010110111000000011000001100010101011",
+      "seconds": 0.8537260570010403,
+      "eligible": true
+    },
+    {
+      "energy": 108,
+      "bits": "0000111100001001011011101001000100010001",
+      "seconds": 6.584488470994984,
+      "eligible": true
+    }
+  ],
+  "errors": [],
+  "stdout": "INC 144 0011100011010010011011000100111111101010\nINC 140 0000000000111100001101010100101100110011\nINC 136 0000000011011000110110100111000110101010\nINC 120 0010101000010010000100110111110011000011\nINC 116 0010010110111000000011000001100010101011\nINC 108 0000111100001001011011101001000100010001\n",
+  "stderr": "",
+  "stop": "optimum",
+  "stop_seconds": 6.584701806990779,
+  "returncode": -9,
+  "elapsed": 6.585407338992809,
+  "arm": "memetic",
+  "seed": 740001,
+  "load_after": [
+    0.3662109375,
+    0.3525390625,
+    0.2724609375
+  ],
+  "checker": {
+    "returncode": 0,
+    "stdout": "Qbench LABS Solution Checker Version 1.0\nLABS k=40 E(S)=108 seq=44412112131121313131\nEnergy cross-check OK: E(S)=108\nOPTIMAL\nVALID: Solution successfully verified\n",
+    "stderr": ""
+  },
+  "load_before": [
+    0.25048828125,
+    0.330078125,
+    0.263671875
+  ]
+}
