@@ -52,10 +52,21 @@ computes the checkpoint energies but has no optimum table for N=67…74, so
 its exit 0 does **not** establish optimality. Independently recomputed N=74
 energy is 357, above the listed best-known 341.
 
+**LABS publication integrity (`66e9934`):** the later hunter now serializes
+best-energy/sequence/checkpoint publication, writes witnesses through a synced
+temporary file and atomic rename, and fails on checkpoint-write errors. Strict
+CLI parsing supports an isolated `--output-dir`; different processes must use
+different directories. Below-BKV search stopping now requires synchronous local
+checker success, and messages describe a locally listed BKV rather than a world
+record. Four targeted release tests, the complete selected quality gate and
+independent review passed. This changes publication correctness, not evidence of
+search quality or speed; no new qualification or record campaign was run.
+
 **Next action:** preregister and run an equal-time qualification of the later
 LABS memetic hunter against lMAts on held-out seeds before any long record
-campaign. First isolate the hunter's checkpoint/output paths and verify its
-concurrent best-sequence update so no race can corrupt a candidate. The
+campaign. Add a seed-controlled, single-worker observation mode without warm
+starts and adapt the existing deadline supervisor under a new frozen protocol;
+the earlier LABS-Q001 source and records remain unchanged. The
 lattice boundary repair is a separate P1 task, required before production use.
 [ROADMAP.md](../ROADMAP.md) lists the gates; [FILE_MAP.tsv](FILE_MAP.tsv)
 records each file's tracking state and SHA-256.
