@@ -119,6 +119,8 @@ def lifecycle_for(path: str, tracking: str, catalog: dict[str, tuple[str, str]])
 
 
 def evidence_for(path: str) -> str:
+    if path.startswith("research/experiments/hubo_corpus_qualification/"):
+        return "HUBO-Q002 Phase A: 24 exact reduction certificates; Phase B NOT RUN; see RESULT_PHASE_A.md"
     if path.startswith("research/experiments/hubo_comparison/") or path == "research/examples/hubo_compare.rs":
         return "HUBO-C001: 400 valid cells; native representation benefit scoped; 100 native OpenJij ties; see RESULT.md"
     if path.startswith("research/experiments/hubo_representation_gate/") or path == "tests/test_hubo_representation.rs":

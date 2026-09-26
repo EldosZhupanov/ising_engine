@@ -12,18 +12,28 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Active — HUBO-Q002 Phase A preparation, 2026-09-27
+## Active — HUBO-Q002 Phase A complete; Phase B instrument next, 2026-09-27
 
-The user accepted the next measurement-design task. Read the new
-[HUBO-Q002 protocol](../research/experiments/hubo_corpus_qualification/protocol.md)
-and its inputs.json before any new work. Twelve fresh synthetic inputs cover
-n=64/128, degree3/4, three cases per stratum. Phase A implements/checks certified
-local substitution penalties and input provenance; no main solver outcomes exist.
-Phase B will require its own instrument/analysis freeze before the registered
-240 native-only two-second cells. The operational VARIATION_PRESENT gate must
-not be called statistical separability, intrinsic hardness or solver superiority.
-Production code and all C001 scientific artifacts stay unchanged. Do not run
-Q002 via C001's hardcoded controller or reuse its exposed seeds as holdout.
+Read the [HUBO-Q002 protocol](../research/experiments/hubo_corpus_qualification/protocol.md)
+and [Phase A result](../research/experiments/hubo_corpus_qualification/RESULT_PHASE_A.md).
+Protocol `9438f15`, implementation `2017661`, static certificates `cd2fc6e`.
+Twelve fresh synthetic inputs cover n=64/128 and degree3/4. Eight deterministic
+tests pass, including 1,184 small expanded states. All 24 local/global reductions
+preserve the objective by step certificates: local penalties 9–97 versus
+instance-global penalties 1,537–18,417, with identical pair plans. This is
+correctness and coefficient-size evidence, not measured search improvement.
+No new solver endpoints have been accessed; **Phase B has not run**.
+
+**Next task:** build the task-local Phase B controller/analysis with explicit
+sequence IDs/timestamps, portable raw verification separated from optional runtime
+matching, strict whole-process deadlines and regression tests for the symmetric
+variation classification. Then obtain independent review and freeze source before
+disjoint smoke and the registered 240 native-only two-second cells. Do not use
+C001's hardcoded controller or tune on its exposed inputs. VARIATION_PRESENT is
+an operational criterion, not proof of hardness, statistical separability or
+superiority. All twelve Q002 cases must remain in the report regardless of winner.
+Production source and both solver families stay untouched. No Laya training,
+quadratic performance campaign, record hunt or production routing in this task.
 
 ## HUBO-C001 completed, 2026-09-27
 
