@@ -41,16 +41,22 @@ exact graph solves; classical spectral/min-sum improved partial bit accuracy.
 Historical September 12 source freeze and external-baseline fairness remain
 UNKNOWN. The four experimental Market Split binaries promote a candidate only
 after the local QOBLIB checker returns success; the LLL kernel's completeness,
-integer-overflow safety and solver benefit remain unproved. A separate reviewer
-could not complete the code review because of an agent usage-limit error;
-therefore no integration or superiority verdict is licensed. `check_labs`
+integer-overflow safety and solver benefit remain unproved. Independent review
+found and prompted fixes for empty-kernel crashes and malformed timeouts
+(`e04301f`), while flagging unresolved module-boundary debt: preprocessing and
+QUBO encoding are in `core/`, search math in `bin/`. The source is preserved as
+an experimental snapshot, not a production integration or superiority result.
+The standalone `fundamental_ai` tests and raw-design audit are now part of the
+selected checker gate (`47c7e07`). `check_labs`
 computes the checkpoint energies but has no optimum table for N=67…74, so
 its exit 0 does **not** establish optimality. Independently recomputed N=74
 energy is 357, above the listed best-known 341.
 
-**Next action:** finish the code review when a reviewer is available, then
-preregister and run an equal-time qualification of the later LABS memetic
-hunter against lMAts on held-out seeds before any long record campaign.
+**Next action:** preregister and run an equal-time qualification of the later
+LABS memetic hunter against lMAts on held-out seeds before any long record
+campaign. First isolate the hunter's checkpoint/output paths and verify its
+concurrent best-sequence update so no race can corrupt a candidate. The
+lattice boundary repair is a separate P1 task, required before production use.
 [ROADMAP.md](../ROADMAP.md) lists the gates; [FILE_MAP.tsv](FILE_MAP.tsv)
 records each file's tracking state and SHA-256.
 
