@@ -12,33 +12,43 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Active — HUBO-C001 four-arm comparison, 2026-09-27
+## HUBO-C001 complete — next: design a discriminating measurement, 2026-09-27
 
-The user selected direct HUBO versus quadratization research and requested a
-Laya training-feasibility assessment. This overrides the deferred LABS budget
-diagnosis as the next task. Start with
-[HUBO-RG001](../research/experiments/hubo_representation_gate/protocol.md): an
-isolated deterministic energy/reduction gate, not a performance campaign.
-The completed breakthrough EXP001 concerns elimination/pair refinement; the
-similarly numbered HUBO item in NEXT_10_EXPERIMENTS is only a proposal.
-Current production `UltimateSolver::solve` accepts QuboModel; arbitrary
-higher-order input exists at the MSC kernel level, not that public entry point.
-Keep constants in an explicit experiment adapter; the native model has no offset.
+[HUBO-C001 result](../research/experiments/hubo_comparison/RESULT.md):
+**NOT_QUALIFIED_FOR_ADVANTAGE**, 400/400 valid two-second cells. MSC native
+beats MSC quadratic and OpenJij quadratic in 100/100 paired cells each, but
+**ties native OpenJij in 100/100**. Native endpoint energy has zero seed variation
+within every instance. This does not establish optima or solver equivalence.
+Representation benefit is supported only against the registered conservative
+reduction/settings on ten synthetic n=32 cases. It is not a novel algorithm,
+world record or production-UltimateSolver result.
 
-[HUBO-RG001 result](../research/experiments/hubo_representation_gate/RESULT.md):
-6/6 tests passed after protocol `7542602` and source `b9b99fe`; 832 lane energies,
-2,880 deltas and 4,506 expanded assignments agreed with exact integer checks.
-All three injected defects were detected; 3/3 relevant existing tests passed.
-Next: execute the reviewed [HUBO-C001 protocol](../research/experiments/hubo_comparison/protocol.md)
-only after source/analysis freeze: four arms, ten new synthetic instances, ten
-seeds and two-second warm-runtime budgets. Retained OpenJij/dimod in
-`benchmark-env` provide external controls. Correctness alone establishes no
-speed gain; conservative penalties and untuned schedules limit any result.
-Laya training is feasibility research only; no checkpoint modification or
-training job is authorized by this active protocol. The [existing Laya guide](../research/laya_semantic/README.md)
-records a solver-informed training hypothesis and overlapping prior art. The
-local checkpoint has 421,293,830 stored tensor elements (not the old 1B label);
-its previous temporary Python environment is absent.
+Protocol `feb9a76`, source/analysis `23d300f`, raw `a196745` preserve the full
+experiment: 3,487 main incumbents, 400 final witnesses, environment/hashes,
+8 disjoint smoke cells. [Handoff](../research/experiments/hubo_comparison/HYPODIVE_BUILDER_HANDOFF.md)
+links the independent audit (PASS: all witnesses, incumbents, summary fields and
+recorded source/package hashes) and reproduction commands. Production source and
+both solver families remain unchanged. Do not rerun/tune on these ten opened
+instances or launch a record hunt based on this comparison.
+
+**Next scoped task:** design and preregister an independent corpus-qualification
+study that can distinguish the native methods before changing algorithms.
+Specify new instances, hardness/discrimination criteria, and how tighter
+quadratic penalties and their induced schedules will be controlled. This is a
+measurement-design task, not permission to extend or silently rescue HUBO-C001.
+No follow-up solver campaign has begun. Keep the prior LABS allocation diagnosis
+and lattice architectural repair in the backlog; no production routing claim.
+
+[HUBO-RG001](../research/experiments/hubo_representation_gate/RESULT.md) remains
+the deterministic correctness gate (6/6 tests); direct higher-order input is
+available at the MSC kernel, while public UltimateSolver::solve accepts QuboModel.
+Constants require explicit external accounting. The executed breakthrough EXP001
+concerned graph elimination/pair refinement, not this HUBO comparison.
+
+Laya remains feasibility research only. The [existing guide](../research/laya_semantic/README.md)
+records solver-informed training as a hypothesis and cites overlapping prior art.
+The local checkpoint has 421,293,830 stored tensor elements; its old temporary
+Python environment is absent. No training or checkpoint modification occurred.
 
 ## Repository recovery and LABS-Q002 complete — 2026-09-26
 
