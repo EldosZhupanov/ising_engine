@@ -119,6 +119,8 @@ def lifecycle_for(path: str, tracking: str, catalog: dict[str, tuple[str, str]])
 
 
 def evidence_for(path: str) -> str:
+    if path.startswith("research/experiments/labs_q002/"):
+        return "Q002 NOT_QUALIFIED; independent 60-witness/881-incumbent audit PASS; see RESULT.md"
     if path.startswith("benchmarks/qoblib/marketsplit/solutions/") and not (ROOT / path).exists():
         return "checker-rejected file moved to rejected_candidates; see PROJECTS.md"
     if path.startswith("benchmarks/qoblib/marketsplit/rejected_candidates/"):

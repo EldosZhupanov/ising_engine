@@ -1,0 +1,398 @@
+{
+  "budget_seconds": 10.0,
+  "arms": {
+    "memetic": {
+      "40": {
+        "energies": [
+          108,
+          108,
+          116,
+          116,
+          108,
+          116,
+          116,
+          116,
+          108,
+          116
+        ],
+        "hits": 4,
+        "runs": 10,
+        "failures": [],
+        "success_rate": 0.4,
+        "wilson95": [
+          0.16818032970623614,
+          0.6873262302663417
+        ],
+        "distribution": {
+          "mean": 112.8,
+          "median": 116.0,
+          "sample_sd": 4.1311822359545785,
+          "min": 108,
+          "max": 116,
+          "q25": 108.0,
+          "q75": 116.0,
+          "iqr": 8.0
+        },
+        "relative_gaps": [
+          0.0,
+          0.0,
+          0.07407407407407407,
+          0.07407407407407407,
+          0.0,
+          0.07407407407407407,
+          0.07407407407407407,
+          0.07407407407407407,
+          0.0,
+          0.07407407407407407
+        ],
+        "hit_seconds": [
+          6.584488470994984,
+          3.3975255349942017,
+          null,
+          null,
+          4.435438574990258,
+          null,
+          null,
+          null,
+          2.792942600004608,
+          null
+        ],
+        "non_hits_right_censored_at": 10.0,
+        "restart_tts99_plugin_seconds": 100.0,
+        "hit_threshold_met": false
+      },
+      "50": {
+        "energies": [
+          201,
+          161,
+          177,
+          169,
+          193,
+          177,
+          161,
+          169,
+          161,
+          185
+        ],
+        "hits": 0,
+        "runs": 10,
+        "failures": [],
+        "success_rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.2775327998628892
+        ],
+        "distribution": {
+          "mean": 175.4,
+          "median": 173.0,
+          "sample_sd": 14.00952057233461,
+          "min": 161,
+          "max": 201,
+          "q25": 163.0,
+          "q75": 183.0,
+          "iqr": 20.0
+        },
+        "relative_gaps": [
+          0.3137254901960784,
+          0.05228758169934641,
+          0.1568627450980392,
+          0.10457516339869281,
+          0.26143790849673204,
+          0.1568627450980392,
+          0.05228758169934641,
+          0.10457516339869281,
+          0.05228758169934641,
+          0.20915032679738563
+        ],
+        "hit_seconds": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "non_hits_right_censored_at": 10.0,
+        "restart_tts99_plugin_seconds": null,
+        "hit_threshold_met": false
+      },
+      "60": {
+        "energies": [
+          274,
+          274,
+          290,
+          290,
+          282,
+          258,
+          282,
+          278,
+          266,
+          290
+        ],
+        "hits": 0,
+        "runs": 10,
+        "failures": [],
+        "success_rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.2775327998628892
+        ],
+        "distribution": {
+          "mean": 278.4,
+          "median": 280.0,
+          "sample_sd": 10.741404832598842,
+          "min": 258,
+          "max": 290,
+          "q25": 274.0,
+          "q75": 288.0,
+          "iqr": 14.0
+        },
+        "relative_gaps": [
+          0.25688073394495414,
+          0.25688073394495414,
+          0.3302752293577982,
+          0.3302752293577982,
+          0.29357798165137616,
+          0.1834862385321101,
+          0.29357798165137616,
+          0.27522935779816515,
+          0.22018348623853212,
+          0.3302752293577982
+        ],
+        "hit_seconds": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "non_hits_right_censored_at": 10.0,
+        "restart_tts99_plugin_seconds": null,
+        "hit_threshold_met": false
+      }
+    },
+    "lmats": {
+      "40": {
+        "energies": [
+          108,
+          108,
+          108,
+          108,
+          108,
+          108,
+          108,
+          108,
+          108,
+          108
+        ],
+        "hits": 10,
+        "runs": 10,
+        "failures": [],
+        "success_rate": 1.0,
+        "wilson95": [
+          0.7224672001371107,
+          0.9999999999999999
+        ],
+        "distribution": {
+          "mean": 108,
+          "median": 108.0,
+          "sample_sd": 0.0,
+          "min": 108,
+          "max": 108,
+          "q25": 108.0,
+          "q75": 108.0,
+          "iqr": 0.0
+        },
+        "relative_gaps": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "hit_seconds": [
+          0.47874397100531496,
+          1.8020636709989049,
+          0.3473958859976847,
+          0.5126479659957113,
+          1.2597266369994031,
+          1.1106659440119984,
+          3.1167458390118554,
+          1.6013847869908204,
+          0.9834529020008631,
+          0.22262723100720905
+        ],
+        "non_hits_right_censored_at": 10.0,
+        "restart_tts99_plugin_seconds": 10.0,
+        "hit_threshold_met": true
+      },
+      "50": {
+        "energies": [
+          153,
+          153,
+          153,
+          153,
+          153,
+          161,
+          153,
+          153,
+          153,
+          161
+        ],
+        "hits": 8,
+        "runs": 10,
+        "failures": [],
+        "success_rate": 0.8,
+        "wilson95": [
+          0.49016247153664183,
+          0.9433178485456247
+        ],
+        "distribution": {
+          "mean": 154.6,
+          "median": 153.0,
+          "sample_sd": 3.3730961708462712,
+          "min": 153,
+          "max": 161,
+          "q25": 153.0,
+          "q75": 153.0,
+          "iqr": 0.0
+        },
+        "relative_gaps": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.05228758169934641,
+          0.0,
+          0.0,
+          0.0,
+          0.05228758169934641
+        ],
+        "hit_seconds": [
+          5.228739967002184,
+          1.4148690120055107,
+          7.661318473998108,
+          5.051270715004648,
+          6.628065622004215,
+          null,
+          0.5601012159895618,
+          9.480001331990934,
+          7.648717774995021,
+          null
+        ],
+        "non_hits_right_censored_at": 10.0,
+        "restart_tts99_plugin_seconds": 30.0,
+        "hit_threshold_met": true
+      },
+      "60": {
+        "energies": [
+          222,
+          234,
+          242,
+          242,
+          226,
+          254,
+          258,
+          234,
+          250,
+          234
+        ],
+        "hits": 0,
+        "runs": 10,
+        "failures": [],
+        "success_rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.2775327998628892
+        ],
+        "distribution": {
+          "mean": 239.6,
+          "median": 238.0,
+          "sample_sd": 11.80583659796195,
+          "min": 222,
+          "max": 258,
+          "q25": 234.0,
+          "q75": 248.0,
+          "iqr": 14.0
+        },
+        "relative_gaps": [
+          0.01834862385321101,
+          0.07339449541284404,
+          0.11009174311926606,
+          0.11009174311926606,
+          0.03669724770642202,
+          0.1651376146788991,
+          0.1834862385321101,
+          0.07339449541284404,
+          0.14678899082568808,
+          0.07339449541284404
+        ],
+        "hit_seconds": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "non_hits_right_censored_at": 10.0,
+        "restart_tts99_plugin_seconds": null,
+        "hit_threshold_met": false
+      }
+    }
+  },
+  "paired": {
+    "40": {
+      "memetic_wins": 0,
+      "ties": 4,
+      "lmats_wins": 6,
+      "invalid_pairs": 0,
+      "median_relative_gain": -0.07407407407407407,
+      "wilcoxon_exact_p": 0.03125,
+      "holm_p": 0.03125,
+      "local_superiority_gate": false
+    },
+    "50": {
+      "memetic_wins": 0,
+      "ties": 0,
+      "lmats_wins": 10,
+      "invalid_pairs": 0,
+      "median_relative_gain": -0.10457516339869281,
+      "wilcoxon_exact_p": 0.001953125,
+      "holm_p": 0.005859375,
+      "local_superiority_gate": false
+    },
+    "60": {
+      "memetic_wins": 0,
+      "ties": 0,
+      "lmats_wins": 10,
+      "invalid_pairs": 0,
+      "median_relative_gain": -0.19319064773610228,
+      "wilcoxon_exact_p": 0.001953125,
+      "holm_p": 0.005859375,
+      "local_superiority_gate": false
+    }
+  },
+  "failures": [],
+  "scope": "these implementations/settings/host; no general speed or SOTA claim",
+  "verdict": "NOT_QUALIFIED"
+}

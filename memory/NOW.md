@@ -12,7 +12,7 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## REPO-001 mapping complete; REPO-002 preservation complete, qualification active — 2026-09-26
+## Repository recovery and LABS-Q002 complete — 2026-09-26
 
 The user requested a whole-checkout inventory, including untracked and ignored
 research. [PROJECTS.md](../PROJECTS.md) now separates projects and evidence;
@@ -60,15 +60,21 @@ different directories. Below-BKV search stopping now requires synchronous local
 checker success, and messages describe a locally listed BKV rather than a world
 record. Four targeted release tests, the complete selected quality gate and
 independent review passed. This changes publication correctness, not evidence of
-search quality or speed; no new qualification or record campaign was run.
+search quality or speed. The subsequent Q002 qualification is recorded below.
 
-**Active LABS-Q002:** [protocol](../research/experiments/labs_q002/protocol.md)
-sets N=40/50/60, new seeds 740001..740010, ten seconds per cell and one worker
-against the retained lMAts baseline. No qualification data have been collected.
-Next: add a seed-controlled observation mode without warm starts and adapt the
-existing deadline supervisor, then pass correctness tests and independent review
-before source freeze and one complete 60-cell campaign. The earlier LABS-Q001
-source and records remain unchanged. The
+**LABS-Q002 completed:** [result](../research/experiments/labs_q002/RESULT.md)
+records an integrity-valid **NOT_QUALIFIED** outcome from 60 frozen cells at
+ten seconds and one worker. Hunter optimum hits at N40/50/60: 4/10, 0/10, 0/10;
+lMAts: 10/10, 8/10, 0/10. Paired endpoints: 0 hunter wins, 4 ties, 26 losses.
+All 881 main-run incumbents and all 60 final witnesses passed independent
+verification; independent raw audit and statistical replay passed. Source
+freeze `6668e76`, raw evidence `7449724`. No new record campaign is justified
+by this result. The earlier LABS-Q001 source and records remain unchanged.
+
+**Next action:** formulate a separate LABS budget-allocation diagnosis on new
+diagnostic seeds: measure initialization, PT, tabu and 2-opt costs before
+selecting any algorithm change. Register that profile/ablation independently;
+do not tune on Q002 seeds or extend their budgets. The
 lattice boundary repair is a separate P1 task, required before production use.
 [ROADMAP.md](../ROADMAP.md) lists the gates; [FILE_MAP.tsv](FILE_MAP.tsv)
 records each file's tracking state and SHA-256.
