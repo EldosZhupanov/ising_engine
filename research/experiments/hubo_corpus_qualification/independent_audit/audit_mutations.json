@@ -1,0 +1,26 @@
+{
+  "audited_utc": "2026-09-26T23:07:12.346065+00:00",
+  "auditor_sha256": "17b0810e27fa98de9b5e61b6fbe1ee727cbe6be4c0bfbcf32be861480fb9398e",
+  "mutations_rejected": 3,
+  "outcomes": {
+    "altered_summary": {
+      "rejection": "summary.incumbents",
+      "status": "PASS"
+    },
+    "corrupted_raw_sha": {
+      "rejection": "raw SHA: cells/0000.json",
+      "status": "PASS"
+    },
+    "wrong_late_energy": {
+      "cell": "0239.json",
+      "reason": "No complete late incumbents in recorded campaign",
+      "receipt_s": 2.007706593,
+      "rejection": "reported objective vs independent energy",
+      "status": "PASS",
+      "synthetic_late_event": true
+    }
+  },
+  "scope": "Only in-memory rows and temporary copies mutated; no solver calls or original raw writes",
+  "status": "PASS",
+  "test_sha256": "2bff0cfccdc669788e854203e0aa737e5256ae0d47e6c75b8f5cd2e4dd5c51db"
+}

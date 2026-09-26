@@ -12,33 +12,34 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Active — HUBO-Q002 Phase B instrument prepared; execution pending, 2026-09-27
+## Active — HUBO-Q002 complete; next prospective comparison design, 2026-09-27
 
-Read the [HUBO-Q002 protocol](../research/experiments/hubo_corpus_qualification/protocol.md)
-and [Phase A result](../research/experiments/hubo_corpus_qualification/RESULT_PHASE_A.md).
-Protocol `9438f15`, implementation `2017661`, static certificates `cd2fc6e`.
-Twelve fresh synthetic inputs cover n=64/128 and degree3/4. Eight deterministic
-tests pass, including 1,184 small expanded states. All 24 local/global reductions
-preserve the objective by step certificates: local penalties 9–97 versus
-instance-global penalties 1,537–18,417, with identical pair plans. This is
-correctness and coefficient-size evidence, not measured search improvement.
-No new solver endpoints have been accessed; **Phase B has not run**.
+[Phase B result](../research/experiments/hubo_corpus_qualification/RESULT_PHASE_B.md):
+**MIXED**, 240/240 valid cells, 4,079 main incumbents and 240 final witnesses.
+Operational variation qualifies 6/12 instances and 2/4 strata (both n128 groups);
+the preregistered >=3/4 overall success threshold was not met. Descriptive MSC
+lower/equal/higher energies: 27/82/11. No superiority, optimum or record claim.
+All twelve opened synthetic inputs remain in the result, never a later holdout.
 
-**Current:** task-local `phase_b.py` and `test_phase_b.py` are prepared for
-source freeze after independent review. Thirteen deterministic/fake-process tests
-pass; the eight Phase A tests remain green. No Phase B solver outcomes have been
-accessed. Portable analysis checks archived settings and frozen Git objects;
-`--runtime` additionally checks currently installed binaries/packages. Explicit
-sequence IDs, monotonic/UTC clocks, process-group termination and all raw complete
-or partial stdout are retained. Any failure invalidates the campaign without retry.
+Protocol `9438f15`, reviewed instrument/analysis `5e9ea62`, raw data `d5a2a63`.
+Thirteen instrument tests, eight unchanged Phase A tests and three independent
+auditor corruption checks pass. Independent raw audit PASS: all main witnesses,
+four smoke cells/eleven incumbents, 244 final .sol files, 202 source files and 500
+archive files, clocks/order and summary. The optional runtime check also matches.
+Production source and both solver families are unchanged; no campaign remains
+running. Only the previously known incomplete upstream clone is visibly untracked.
 
-**Next task:** freeze reviewed source, run the disjoint explicit n=6 smoke with
-seeds980001/980002, then the registered 240 native-only two-second cells and an
-independent raw audit. VARIATION_PRESENT is operational, not proof of hardness,
-statistical separability or superiority. All twelve Q002 cases remain in the
-report regardless of winner. Production source and both solver families stay
-untouched. No Laya training, quadratic performance campaign, record hunt or
-production routing in this task; no automatic further campaign after Q002.
+[Phase A](../research/experiments/hubo_corpus_qualification/RESULT_PHASE_A.md) remains
+correctness-only evidence: 24 retained local/global reductions, local penalties
+9–97 versus 1,537–18,417 global. Its historical NOT RUN statement about Phase B
+is superseded by the new Phase B record, not edited retroactively.
+
+**Next task (design first):** formulate a fresh independent holdout and a
+within-kernel local/global-penalty comparison crossed with representation-derived
+versus common-endpoint schedules, with native/OpenJij controls. Declare any narrower
+population prospectively; never filter Q002 into a successful overall result.
+Obtain a new binding protocol before new outcomes. No further campaign, Laya
+training, production routing or record hunt follows automatically from Q002.
 
 ## HUBO-C001 completed, 2026-09-27
 

@@ -1,8 +1,8 @@
 # Document catalogue
 
 This sidecar catalogue classifies every Markdown document without modifying frozen evidence. Paths are the stable identifiers. Dates come from Git history; they describe chronology but do not establish authority.
-Its enforced scope is Git-tracked plus nonignored untracked Markdown (345 files
-at this audit). The 55 Git-ignored Markdown reports and download READMEs are
+Its enforced scope is Git-tracked plus nonignored untracked Markdown (357 files
+at this update). The 55 Git-ignored Markdown reports and download READMEs are
 classified separately as historical evidence in [FILE_MAP.tsv](FILE_MAP.tsv);
 the catalogue gate intentionally excludes ignored paths.
 
@@ -17,7 +17,7 @@ the catalogue gate intentionally excludes ignored paths.
 
 - `active`: 18
 - `binding`: 49
-- `closed`: 41
+- `closed`: 42
 - `historical`: 2
 - `proposed`: 42
 - `reference`: 200
@@ -28,6 +28,7 @@ the catalogue gate intentionally excludes ignored paths.
 | Path | Kind | Authority | Lifecycle | Created | Last changed | Immutable | Canonical scope |
 |---|---|---:|---|---|---|---|---|
 | `research/experiments/labs_q002/RESULT.md` | research-result | A1 | closed | 2026-09-26 | 2026-09-26 | true | LABS-Q002 |
+| `research/experiments/hubo_corpus_qualification/RESULT_PHASE_B.md` | research-result | A1 | closed | 2026-09-27 | 2026-09-27 | true | HUBO-Q002-Phase-B |
 | `research/experiments/hubo_corpus_qualification/RESULT_PHASE_A.md` | research-result | A1 | closed | 2026-09-27 | 2026-09-27 | true | HUBO-Q002-Phase-A |
 | `research/experiments/hubo_corpus_qualification/protocol.md` | preregistration | A0 | binding | 2026-09-27 | 2026-09-27 | true | HUBO-Q002 |
 | `research/experiments/hubo_comparison/RESULT.md` | research-result | A1 | closed | 2026-09-27 | 2026-09-27 | true | HUBO-C001 |
