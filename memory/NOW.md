@@ -12,7 +12,7 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Active — HUBO-Q002 Phase A complete; Phase B instrument next, 2026-09-27
+## Active — HUBO-Q002 Phase B instrument prepared; execution pending, 2026-09-27
 
 Read the [HUBO-Q002 protocol](../research/experiments/hubo_corpus_qualification/protocol.md)
 and [Phase A result](../research/experiments/hubo_corpus_qualification/RESULT_PHASE_A.md).
@@ -24,16 +24,21 @@ instance-global penalties 1,537–18,417, with identical pair plans. This is
 correctness and coefficient-size evidence, not measured search improvement.
 No new solver endpoints have been accessed; **Phase B has not run**.
 
-**Next task:** build the task-local Phase B controller/analysis with explicit
-sequence IDs/timestamps, portable raw verification separated from optional runtime
-matching, strict whole-process deadlines and regression tests for the symmetric
-variation classification. Then obtain independent review and freeze source before
-disjoint smoke and the registered 240 native-only two-second cells. Do not use
-C001's hardcoded controller or tune on its exposed inputs. VARIATION_PRESENT is
-an operational criterion, not proof of hardness, statistical separability or
-superiority. All twelve Q002 cases must remain in the report regardless of winner.
-Production source and both solver families stay untouched. No Laya training,
-quadratic performance campaign, record hunt or production routing in this task.
+**Current:** task-local `phase_b.py` and `test_phase_b.py` are prepared for
+source freeze after independent review. Thirteen deterministic/fake-process tests
+pass; the eight Phase A tests remain green. No Phase B solver outcomes have been
+accessed. Portable analysis checks archived settings and frozen Git objects;
+`--runtime` additionally checks currently installed binaries/packages. Explicit
+sequence IDs, monotonic/UTC clocks, process-group termination and all raw complete
+or partial stdout are retained. Any failure invalidates the campaign without retry.
+
+**Next task:** freeze reviewed source, run the disjoint explicit n=6 smoke with
+seeds980001/980002, then the registered 240 native-only two-second cells and an
+independent raw audit. VARIATION_PRESENT is operational, not proof of hardness,
+statistical separability or superiority. All twelve Q002 cases remain in the
+report regardless of winner. Production source and both solver families stay
+untouched. No Laya training, quadratic performance campaign, record hunt or
+production routing in this task; no automatic further campaign after Q002.
 
 ## HUBO-C001 completed, 2026-09-27
 
