@@ -12,7 +12,20 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## HUBO-C001 complete — next: design a discriminating measurement, 2026-09-27
+## Active — HUBO-Q002 Phase A preparation, 2026-09-27
+
+The user accepted the next measurement-design task. Read the new
+[HUBO-Q002 protocol](../research/experiments/hubo_corpus_qualification/protocol.md)
+and its inputs.json before any new work. Twelve fresh synthetic inputs cover
+n=64/128, degree3/4, three cases per stratum. Phase A implements/checks certified
+local substitution penalties and input provenance; no main solver outcomes exist.
+Phase B will require its own instrument/analysis freeze before the registered
+240 native-only two-second cells. The operational VARIATION_PRESENT gate must
+not be called statistical separability, intrinsic hardness or solver superiority.
+Production code and all C001 scientific artifacts stay unchanged. Do not run
+Q002 via C001's hardcoded controller or reuse its exposed seeds as holdout.
+
+## HUBO-C001 completed, 2026-09-27
 
 [HUBO-C001 result](../research/experiments/hubo_comparison/RESULT.md):
 **NOT_QUALIFIED_FOR_ADVANTAGE**, 400/400 valid two-second cells. MSC native
@@ -31,13 +44,11 @@ recorded source/package hashes) and reproduction commands. Production source and
 both solver families remain unchanged. Do not rerun/tune on these ten opened
 instances or launch a record hunt based on this comparison.
 
-**Next scoped task:** design and preregister an independent corpus-qualification
-study that can distinguish the native methods before changing algorithms.
-Specify new instances, hardness/discrimination criteria, and how tighter
-quadratic penalties and their induced schedules will be controlled. This is a
-measurement-design task, not permission to extend or silently rescue HUBO-C001.
-No follow-up solver campaign has begun. Keep the prior LABS allocation diagnosis
-and lattice architectural repair in the backlog; no production routing claim.
+The follow-up is Q002's prospective endpoint-variation qualification and local
+penalty correctness gate above. A later competitive comparison still requires a
+fresh holdout and controls for the penalty-induced schedules; Q002 does not
+license a record hunt. LABS allocation diagnosis and lattice boundary repair
+remain in the backlog.
 
 [HUBO-RG001](../research/experiments/hubo_representation_gate/RESULT.md) remains
 the deterministic correctness gate (6/6 tests); direct higher-order input is

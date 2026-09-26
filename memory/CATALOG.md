@@ -16,7 +16,7 @@ the catalogue gate intentionally excludes ignored paths.
 ## Summary
 
 - `active`: 18
-- `binding`: 48
+- `binding`: 49
 - `closed`: 40
 - `historical`: 2
 - `proposed`: 42
@@ -28,6 +28,7 @@ the catalogue gate intentionally excludes ignored paths.
 | Path | Kind | Authority | Lifecycle | Created | Last changed | Immutable | Canonical scope |
 |---|---|---:|---|---|---|---|---|
 | `research/experiments/labs_q002/RESULT.md` | research-result | A1 | closed | 2026-09-26 | 2026-09-26 | true | LABS-Q002 |
+| `research/experiments/hubo_corpus_qualification/protocol.md` | preregistration | A0 | binding | 2026-09-27 | 2026-09-27 | true | HUBO-Q002 |
 | `research/experiments/hubo_comparison/RESULT.md` | research-result | A1 | closed | 2026-09-27 | 2026-09-27 | true | HUBO-C001 |
 | `research/experiments/hubo_comparison/HYPODIVE_BUILDER_HANDOFF.md` | research-handoff | A2 | reference | 2026-09-27 | 2026-09-27 | false | HUBO-C001 |
 | `research/experiments/hubo_comparison/protocol.md` | preregistration | A0 | binding | 2026-09-27 | 2026-09-27 | true | HUBO-C001 |
