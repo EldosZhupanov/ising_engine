@@ -1,8 +1,7 @@
-//! High-Throughput World Record Hunter for Low Autocorrelation Binary Sequences (LABS).
+//! Experimental best-known-value hunter for Low Autocorrelation Binary Sequences (LABS).
 //!
 //! Target: QOBLIB 2026 Problem Class 02 (Nature Computational Science, ZIB / IBM Quantum).
-//! Focuses on unproven problem sizes N >= 67, aiming to beat the 22-year-old Knauer (2004)
-//! best-known solutions.
+//! Focuses on selected N >= 67 targets from the locally recorded QOBLIB table.
 //!
 //! Architecture:
 //! - Multi-threaded Rayon worker pool (all available CPU cores).
@@ -12,7 +11,7 @@
 //!   * Uniform & contiguous block crossover (recombination).
 //!   * Long-horizon Tabu search with dynamic tenure & aspiration criterion.
 //!   * Prefix-biased initialization reflecting physical Barker/Golay runs.
-//! - Continuous logging, checkpointing, and automatic verified witness recording.
+//! - Continuous logging and independently checkable witness recording.
 
 #![allow(
     clippy::needless_range_loop,
@@ -23,21 +22,21 @@
 use rand::prelude::*;
 use rand_chacha::ChaCha8Rng;
 use rayon::prelude::*;
-use std::fs::OpenOptions;
+use std::fs::{self, File, OpenOptions};
 use std::io::Write;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, AtomicI64, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
-/// Official QOBLIB best known values (BKV).
+/// Locally recorded QOBLIB best-known values (BKV); current standing is unverified.
 pub fn get_official_bkv(n: usize) -> i64 {
     match n {
         40 => 108,
         50 => 153,
         60 => 218,
         66 => 257,
-        67 => 241, // Knauer (2004) - 22-year-old unproven world record
+        67 => 241,
         68 => 250, // Knauer (2004)
         69 => 274, // Knauer (2004)
         70 => 295, // Knauer (2004)
@@ -304,6 +303,8 @@ pub struct HuntContext {
     pub global_best: Arc<AtomicI64>,
     pub best_seq_store: Arc<Mutex<Vec<i8>>>,
     pub found_record: Arc<AtomicBool>,
+    pub output_dir: PathBuf,
+    pub checker_path: PathBuf,
 }
 
 /// A single hunt trajectory for worker threads.
@@ -498,124 +499,204 @@ pub fn hunt_trajectory(
 fn check_and_update_global(ctx: &HuntContext, energy: i64, seq: &[i8], elapsed: Duration) {
     let n = ctx.n;
     let target_record = ctx.target_record;
-    let mut current = ctx.global_best.load(Ordering::Relaxed);
-    while energy < current {
-        match ctx.global_best.compare_exchange_weak(
-            current,
-            energy,
-            Ordering::SeqCst,
-            Ordering::Relaxed,
-        ) {
-            Ok(_) => {
-                let verified = compute_labs_energy(n, seq);
-                assert_eq!(energy, verified, "Energy accounting bug!");
+    let mut lock = ctx
+        .best_seq_store
+        .lock()
+        .expect("best sequence lock poisoned");
+    if energy < ctx.global_best.load(Ordering::SeqCst) {
+        let verified = compute_labs_energy(n, seq);
+        assert_eq!(energy, verified, "Energy accounting bug!");
 
-                // Store in shared mutex
-                if let Ok(mut lock) = ctx.best_seq_store.lock() {
-                    *lock = seq.to_vec();
-                }
+        let bits: String = seq
+            .iter()
+            .map(|&v| if v == 1 { '0' } else { '1' })
+            .collect();
+        let gap = energy - target_record;
 
-                let bits: String = seq
-                    .iter()
-                    .map(|&v| if v == 1 { '0' } else { '1' })
-                    .collect();
-                let gap = energy - target_record;
+        let out_dir = ctx.output_dir.as_path();
+        write_witness_atomic(out_dir, &format!("checkpoint_N{:03}.sol", n), &bits)
+            .expect("failed to publish verified LABS checkpoint");
 
-                let out_dir = Path::new("benchmarks/qoblib/world_records");
-                let _ = std::fs::create_dir_all(out_dir);
+        // Hold the lock through durable checkpoint publication: a slower
+        // worker must never overwrite the newer energy's sequence on disk.
+        *lock = seq.to_vec();
+        ctx.global_best.store(energy, Ordering::SeqCst);
 
-                // Save checkpoint file
-                let chk_file = out_dir.join(format!("checkpoint_N{:03}.sol", n));
-                let _ = std::fs::write(&chk_file, format!("{}\n", bits));
+        // Log entry
+        let log_file = out_dir.join("hunt_history.log");
+        if let Ok(mut f) = OpenOptions::new().create(true).append(true).open(log_file) {
+            let _ = writeln!(
+                f,
+                "[{}] N={} | Energy={} | Gap={:+4} | Elapsed={:.2?}",
+                chrono::Local::now().format("%Y-%m-%d %H:%M:%S"),
+                n,
+                energy,
+                gap,
+                elapsed
+            );
+        }
 
-                // Log entry
-                let log_file = out_dir.join("hunt_history.log");
-                if let Ok(mut f) = OpenOptions::new().create(true).append(true).open(log_file) {
-                    let _ = writeln!(
-                        f,
-                        "[{}] N={} | Energy={} | Gap={:+4} | Elapsed={:.2?}",
-                        chrono::Local::now().format("%Y-%m-%d %H:%M:%S"),
-                        n,
-                        energy,
-                        gap,
-                        elapsed
-                    );
-                }
-
-                if gap < 0 {
-                    println!("\n************************************************************************");
-                    println!(
-                        "🚨 WORLD RECORD BEATEN! N={} | New Energy: {} < Official Record: {} | Delta: {}",
-                        n, energy, target_record, gap
-                    );
-                    println!("Elapsed time: {:.2?}", elapsed);
-                    println!("Sequence (bits): {}", bits);
-                    println!("************************************************************************\n");
-                    ctx.found_record.store(true, Ordering::SeqCst);
-
-                    let record_file =
-                        out_dir.join(format!("WORLD_RECORD_N{:03}_{}.sol", n, energy));
-                    let _ = std::fs::write(&record_file, format!("{}\n", bits));
-
-                    // Check with official checker
-                    let checker = Path::new("target/release/check_labs");
-                    if checker.exists() {
-                        let _ = std::process::Command::new(checker)
-                            .arg(n.to_string())
-                            .arg(&record_file)
-                            .spawn();
+        if gap < 0 {
+            let candidate_file = write_witness_atomic(
+                out_dir,
+                &format!("BKV_CANDIDATE_N{:03}_{}.sol", n, energy),
+                &bits,
+            )
+            .expect("failed to publish below-BKV LABS witness");
+            println!("\n************************************************************************");
+            println!(
+                "Below locally listed BKV: N={} | Energy: {} < BKV: {} | Delta: {}",
+                n, energy, target_record, gap
+            );
+            println!("Elapsed time: {:.2?}", elapsed);
+            println!("Sequence (bits): {}", bits);
+            println!("************************************************************************\n");
+            // The local checker validates the sequence and energy, not the
+            // current global standing of a best-known value above N=66.
+            if ctx.checker_path.exists() {
+                match std::process::Command::new(&ctx.checker_path)
+                    .arg(n.to_string())
+                    .arg(&candidate_file)
+                    .output()
+                {
+                    Ok(output) if output.status.success() => {
+                        println!(
+                            "Local QOBLIB checker accepted the candidate's sequence and energy."
+                        );
+                        ctx.found_record.store(true, Ordering::SeqCst);
                     }
-                } else if gap == 0 {
-                    println!(
-                        "[{:.2?}] 🎯 MATCHED 20-YEAR WORLD RECORD! N={} | Energy: {} | Sequence: {}",
-                        elapsed, n, energy, bits
-                    );
-                    let record_file = out_dir.join(format!("RECORD_TIED_N{:03}_{}.sol", n, energy));
-                    let _ = std::fs::write(&record_file, format!("{}\n", bits));
-                } else {
-                    println!(
-                        "[{:.2?}] Incumbent N={} | Energy: {} | Gap to Record ({}): +{}",
-                        elapsed, n, energy, target_record, gap
-                    );
+                    Ok(output) => eprintln!(
+                        "Local QOBLIB checker rejected candidate: {}",
+                        String::from_utf8_lossy(&output.stderr)
+                    ),
+                    Err(error) => eprintln!("Local QOBLIB checker failed: {error}"),
                 }
-                break;
+            } else {
+                eprintln!("Local QOBLIB checker unavailable; candidate remains unverified.");
             }
-            Err(actual) => current = actual,
+        } else if gap == 0 {
+            write_witness_atomic(
+                out_dir,
+                &format!("BKV_TIE_CANDIDATE_N{:03}_{}.sol", n, energy),
+                &bits,
+            )
+            .expect("failed to publish BKV-tied LABS witness");
+            println!(
+                "[{:.2?}] Matched locally listed BKV: N={} | Energy: {} | Sequence: {}",
+                elapsed, n, energy, bits
+            );
+        } else {
+            println!(
+                "[{:.2?}] Incumbent N={} | Energy: {} | Gap to Record ({}): +{}",
+                elapsed, n, energy, target_record, gap
+            );
         }
     }
 }
 
-fn main() {
+fn write_witness_atomic(out_dir: &Path, name: &str, bits: &str) -> std::io::Result<PathBuf> {
+    fs::create_dir_all(out_dir)?;
+    let destination = out_dir.join(name);
+    let nonce = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_err(std::io::Error::other)?
+        .as_nanos();
+    let temporary = out_dir.join(format!(".{name}.tmp-{}-{nonce}", std::process::id()));
+    let write = (|| -> std::io::Result<()> {
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&temporary)?;
+        writeln!(file, "{bits}")?;
+        file.sync_all()?;
+        fs::rename(&temporary, &destination)?;
+        File::open(out_dir)?.sync_all()?;
+        Ok(())
+    })();
+    if write.is_err() {
+        let _ = fs::remove_file(&temporary);
+    }
+    write.map(|()| destination)
+}
+
+struct HuntOptions {
+    mins_per_target: usize,
+    specific_target: Option<usize>,
+    infinite_loop: bool,
+    output_dir: PathBuf,
+}
+
+fn parse_hunt_options(args: &[String]) -> Result<HuntOptions, String> {
+    let mut options = HuntOptions {
+        mins_per_target: 45,
+        specific_target: None,
+        infinite_loop: true,
+        output_dir: PathBuf::from("benchmarks/qoblib/world_records"),
+    };
+    let mut i = 1;
+    while i < args.len() {
+        match args[i].as_str() {
+            "--mins" | "--target" | "--output-dir" => {
+                let flag = &args[i];
+                let value = args
+                    .get(i + 1)
+                    .filter(|value| !value.is_empty() && !value.starts_with('-'))
+                    .ok_or_else(|| format!("{flag} requires a value"))?;
+                match flag.as_str() {
+                    "--mins" => {
+                        options.mins_per_target = value
+                            .parse::<usize>()
+                            .map_err(|_| "--mins requires positive integer minutes".to_string())?;
+                        if options.mins_per_target == 0 {
+                            return Err("--mins must be greater than zero".to_string());
+                        }
+                    }
+                    "--target" => {
+                        let target = value
+                            .parse::<usize>()
+                            .map_err(|_| "--target requires a known LABS length".to_string())?;
+                        if get_official_bkv(target) == 999_999 {
+                            return Err("--target requires a known LABS length".to_string());
+                        }
+                        options.specific_target = Some(target);
+                    }
+                    "--output-dir" => options.output_dir = PathBuf::from(value),
+                    _ => unreachable!(),
+                }
+                i += 2;
+            }
+            "--once" => {
+                options.infinite_loop = false;
+                i += 1;
+            }
+            other => return Err(format!("unknown argument: {other}")),
+        }
+    }
+    Ok(options)
+}
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("==========================================================================================");
-    println!("        QOBLIB 2026: LABS OVERNIGHT WORLD RECORD HUNTER (MEMETIC PARALLEL TEMPERING)      ");
+    println!("        LABS BKV CANDIDATE HUNTER (MEMETIC PARALLEL TEMPERING)                            ");
     println!("==========================================================================================");
     println!(
         "Engine: Multi-replica PT + Hybrid Crossover + Deep Tabu Search + Resilient Telemetry"
     );
-    println!("Output directory: benchmarks/qoblib/world_records/");
-    println!("Log file: benchmarks/qoblib/world_records/hunt_history.log");
     println!("------------------------------------------------------------------------------------------\n");
 
     let args: Vec<String> = std::env::args().collect();
-    let mut mins_per_target = 45usize;
-    let mut specific_target: Option<usize> = None;
-    let mut infinite_loop = true;
-
-    let mut i = 1;
-    while i < args.len() {
-        if args[i] == "--mins" && i + 1 < args.len() {
-            mins_per_target = args[i + 1].parse().unwrap_or(45);
-            i += 2;
-        } else if args[i] == "--target" && i + 1 < args.len() {
-            specific_target = Some(args[i + 1].parse().unwrap_or(67));
-            i += 2;
-        } else if args[i] == "--once" {
-            infinite_loop = false;
-            i += 1;
-        } else {
-            i += 1;
-        }
-    }
+    let options = parse_hunt_options(&args)?;
+    let HuntOptions {
+        mins_per_target,
+        specific_target,
+        infinite_loop,
+        output_dir,
+    } = options;
+    println!("Output directory: {}", output_dir.display());
+    println!(
+        "Log file: {}",
+        output_dir.join("hunt_history.log").display()
+    );
 
     let targets = if let Some(t) = specific_target {
         vec![t]
@@ -650,7 +731,7 @@ fn main() {
         for &n in &targets {
             let bkv = get_official_bkv(n);
             println!(
-                "\n>>> HUNT FOR N = {} (Official World Record: E = {}) | Duration: {}m <<<",
+                "\n>>> HUNT FOR N = {} (locally listed BKV: E = {}) | Duration: {}m <<<",
                 n, bkv, mins_per_target
             );
 
@@ -660,12 +741,14 @@ fn main() {
                 global_best: Arc::new(AtomicI64::new(i64::MAX)),
                 best_seq_store: Arc::new(Mutex::new(Vec::new())),
                 found_record: Arc::new(AtomicBool::new(false)),
+                output_dir: output_dir.clone(),
+                checker_path: PathBuf::from("target/release/check_labs"),
             };
             let hunt_duration = Duration::from_secs((mins_per_target as u64) * 60);
 
             // Check if existing checkpoint exists from earlier rounds
-            let chk_path = format!("benchmarks/qoblib/world_records/checkpoint_N{:03}.sol", n);
-            let warm_start = if Path::new(&chk_path).exists() {
+            let chk_path = output_dir.join(format!("checkpoint_N{:03}.sol", n));
+            let warm_start = if chk_path.exists() {
                 if let Ok(bits) = std::fs::read_to_string(&chk_path) {
                     let seq: Vec<i8> = bits
                         .trim()
@@ -712,9 +795,12 @@ fn main() {
             let final_best = ctx.global_best.load(Ordering::SeqCst);
             let gap = final_best - bkv;
             let status = if gap < 0 {
-                format!("🔥 WORLD RECORD BROKEN! (New E = {})", final_best)
+                format!(
+                    "Below locally listed BKV (E = {}); verify current standing",
+                    final_best
+                )
             } else if gap == 0 {
-                format!("🎯 MATCHED 20-YEAR WORLD RECORD! (E = {})", final_best)
+                format!("Matched locally listed BKV (E = {})", final_best)
             } else {
                 format!("Best reached: {} (gap: {:+})", final_best, gap)
             };
@@ -731,5 +817,147 @@ fn main() {
             "\nRound complete. Re-seeding and cycling to Round {} with warm-start checkpoints...\n",
             round
         );
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod checkpoint_tests {
+    use super::*;
+
+    #[test]
+    fn output_dir_requires_a_real_value_and_unknown_flags_fail() {
+        let args = |parts: &[&str]| {
+            parts
+                .iter()
+                .map(|part| (*part).to_string())
+                .collect::<Vec<_>>()
+        };
+        assert!(parse_hunt_options(&args(&["bin", "--output-dir"])).is_err());
+        assert!(parse_hunt_options(&args(&["bin", "--output-dir", "--once"])).is_err());
+        assert!(parse_hunt_options(&args(&["bin", "--unknown"])).is_err());
+        let parsed = parse_hunt_options(&args(&[
+            "bin",
+            "--target",
+            "40",
+            "--mins",
+            "1",
+            "--once",
+            "--output-dir",
+            "/tmp/labs-isolated",
+        ]))
+        .unwrap();
+        assert_eq!(parsed.output_dir, PathBuf::from("/tmp/labs-isolated"));
+        assert!(!parsed.infinite_loop);
+        assert_eq!(parsed.mins_per_target, 1);
+        assert_eq!(parsed.specific_target, Some(40));
+    }
+
+    #[test]
+    fn checkpoint_writer_rejects_unwritable_output_path() {
+        let path = std::env::temp_dir().join(format!(
+            "labs-output-file-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        fs::write(&path, b"occupied").unwrap();
+        assert!(write_witness_atomic(&path, "checkpoint_N008.sol", "01010101").is_err());
+        assert_eq!(fs::read(&path).unwrap(), b"occupied");
+        fs::remove_file(path).unwrap();
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn below_bkv_candidate_stops_only_after_checker_success() {
+        use std::os::unix::fs::PermissionsExt;
+
+        let root = std::env::temp_dir().join(format!(
+            "labs-checker-test-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        fs::create_dir_all(&root).unwrap();
+        let seq = vec![1; 8];
+        let energy = compute_labs_energy(8, &seq);
+        for (exit_code, accepted) in [(1, false), (0, true)] {
+            let checker_path = root.join(format!("checker-{exit_code}.sh"));
+            fs::write(&checker_path, format!("#!/bin/sh\nexit {exit_code}\n")).unwrap();
+            fs::set_permissions(&checker_path, fs::Permissions::from_mode(0o700)).unwrap();
+            let ctx = HuntContext {
+                n: 8,
+                target_record: energy + 1,
+                global_best: Arc::new(AtomicI64::new(i64::MAX)),
+                best_seq_store: Arc::new(Mutex::new(Vec::new())),
+                found_record: Arc::new(AtomicBool::new(false)),
+                output_dir: root.join(format!("output-{exit_code}")),
+                checker_path,
+            };
+            check_and_update_global(&ctx, energy, &seq, Duration::ZERO);
+            assert_eq!(ctx.found_record.load(Ordering::SeqCst), accepted);
+            assert!(ctx.output_dir.join("checkpoint_N008.sol").exists());
+            assert!(ctx
+                .output_dir
+                .join(format!("BKV_CANDIDATE_N008_{energy}.sol"))
+                .exists());
+        }
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn concurrent_improvements_keep_energy_sequence_and_file_consistent() {
+        let n = 8;
+        let output_dir = std::env::temp_dir().join(format!(
+            "labs-checkpoint-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let ctx = HuntContext {
+            n,
+            target_record: 0,
+            global_best: Arc::new(AtomicI64::new(i64::MAX)),
+            best_seq_store: Arc::new(Mutex::new(Vec::new())),
+            found_record: Arc::new(AtomicBool::new(false)),
+            output_dir: output_dir.clone(),
+            checker_path: PathBuf::from("target/release/check_labs"),
+        };
+        let sequences = [
+            vec![1; n],
+            vec![1, 1, 1, 1, -1, -1, -1, -1],
+            vec![1, -1, 1, -1, 1, 1, -1, -1],
+            vec![1, 1, -1, 1, -1, 1, -1, -1],
+        ];
+        let expected = sequences
+            .iter()
+            .map(|seq| compute_labs_energy(n, seq))
+            .min()
+            .unwrap();
+        std::thread::scope(|scope| {
+            for seq in &sequences {
+                scope.spawn(|| {
+                    check_and_update_global(&ctx, compute_labs_energy(n, seq), seq, Duration::ZERO);
+                });
+            }
+        });
+        let best = ctx.global_best.load(Ordering::SeqCst);
+        let stored = ctx.best_seq_store.lock().unwrap();
+        assert_eq!(best, expected);
+        assert_eq!(compute_labs_energy(n, &stored), best);
+        let bits = std::fs::read_to_string(output_dir.join("checkpoint_N008.sol")).unwrap();
+        let persisted: Vec<i8> = bits
+            .trim()
+            .chars()
+            .map(|bit| if bit == '0' { 1 } else { -1 })
+            .collect();
+        assert_eq!(persisted.as_slice(), stored.as_slice());
+        std::fs::remove_dir_all(output_dir).unwrap();
     }
 }
