@@ -305,6 +305,7 @@ pub struct HuntContext {
     pub found_record: Arc<AtomicBool>,
     pub output_dir: PathBuf,
     pub checker_path: PathBuf,
+    pub observe_only: bool,
 }
 
 /// A single hunt trajectory for worker threads.
@@ -314,6 +315,17 @@ pub fn hunt_trajectory(
     thread_id: usize,
     seed: u64,
     max_duration: Duration,
+) -> Option<(i64, Vec<i8>)> {
+    hunt_with_step_limit(ctx, warm_start, thread_id, seed, max_duration, None)
+}
+
+fn hunt_with_step_limit(
+    ctx: &HuntContext,
+    warm_start: Option<Vec<i8>>,
+    thread_id: usize,
+    seed: u64,
+    max_duration: Duration,
+    max_steps: Option<usize>,
 ) -> Option<(i64, Vec<i8>)> {
     let n = ctx.n;
     let mut rng = ChaCha8Rng::seed_from_u64(seed);
@@ -363,11 +375,20 @@ pub fn hunt_trajectory(
         .s
         .clone();
 
+    if ctx.observe_only {
+        // Report initialization without changing the pre-existing collective
+        // memory semantics, RNG stream or subsequent search decisions.
+        emit_incumbent(local_best, &local_best_seq);
+    }
+
     let sweeps_per_exchange = 25;
     let mut step = 0usize;
     let mut steps_since_improvement = 0usize;
 
-    while t0.elapsed() < max_duration && !ctx.found_record.load(Ordering::Relaxed) {
+    while t0.elapsed() < max_duration
+        && !ctx.found_record.load(Ordering::Relaxed)
+        && max_steps.is_none_or(|limit| step < limit)
+    {
         step += 1;
 
         // 1. Sweep replicas
@@ -507,6 +528,13 @@ fn check_and_update_global(ctx: &HuntContext, energy: i64, seq: &[i8], elapsed: 
         let verified = compute_labs_energy(n, seq);
         assert_eq!(energy, verified, "Energy accounting bug!");
 
+        if ctx.observe_only {
+            emit_incumbent(energy, seq);
+            *lock = seq.to_vec();
+            ctx.global_best.store(energy, Ordering::SeqCst);
+            return;
+        }
+
         let bits: String = seq
             .iter()
             .map(|&v| if v == 1 { '0' } else { '1' })
@@ -594,6 +622,17 @@ fn check_and_update_global(ctx: &HuntContext, energy: i64, seq: &[i8], elapsed: 
     }
 }
 
+fn emit_incumbent(energy: i64, seq: &[i8]) {
+    let bits: String = seq
+        .iter()
+        .map(|&spin| if spin == 1 { '0' } else { '1' })
+        .collect();
+    println!("INC {energy} {bits}");
+    std::io::stdout()
+        .flush()
+        .expect("failed to flush incumbent");
+}
+
 fn write_witness_atomic(out_dir: &Path, name: &str, bits: &str) -> std::io::Result<PathBuf> {
     fs::create_dir_all(out_dir)?;
     let destination = out_dir.join(name);
@@ -676,6 +715,31 @@ fn parse_hunt_options(args: &[String]) -> Result<HuntOptions, String> {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let args: Vec<String> = std::env::args().collect();
+    if args.get(1).is_some_and(|arg| arg == "--qualify") {
+        if args.len() != 4 {
+            return Err("usage: --qualify N SEED".into());
+        }
+        let n: usize = args[2].parse()?;
+        if ![20, 40, 50, 60].contains(&n) {
+            return Err("qualification supports N=20,40,50,60".into());
+        }
+        let seed: u64 = args[3].parse()?;
+        let ctx = HuntContext {
+            n,
+            target_record: 0,
+            global_best: Arc::new(AtomicI64::new(i64::MAX)),
+            best_seq_store: Arc::new(Mutex::new(Vec::new())),
+            found_record: Arc::new(AtomicBool::new(false)),
+            output_dir: PathBuf::new(),
+            checker_path: PathBuf::new(),
+            observe_only: true,
+        };
+        // The common external supervisor owns the ten-second cutoff and
+        // optimum stop; this arm has no checkpoint or internal target access.
+        hunt_trajectory(&ctx, None, 0, seed, Duration::from_secs(3600));
+        return Ok(());
+    }
     println!("==========================================================================================");
     println!("        LABS BKV CANDIDATE HUNTER (MEMETIC PARALLEL TEMPERING)                            ");
     println!("==========================================================================================");
@@ -684,7 +748,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
     println!("------------------------------------------------------------------------------------------\n");
 
-    let args: Vec<String> = std::env::args().collect();
     let options = parse_hunt_options(&args)?;
     let HuntOptions {
         mins_per_target,
@@ -743,6 +806,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 found_record: Arc::new(AtomicBool::new(false)),
                 output_dir: output_dir.clone(),
                 checker_path: PathBuf::from("target/release/check_labs"),
+                observe_only: false,
             };
             let hunt_duration = Duration::from_secs((mins_per_target as u64) * 60);
 
@@ -897,6 +961,7 @@ mod checkpoint_tests {
                 found_record: Arc::new(AtomicBool::new(false)),
                 output_dir: root.join(format!("output-{exit_code}")),
                 checker_path,
+                observe_only: false,
             };
             check_and_update_global(&ctx, energy, &seq, Duration::ZERO);
             assert_eq!(ctx.found_record.load(Ordering::SeqCst), accepted);
@@ -928,6 +993,7 @@ mod checkpoint_tests {
             found_record: Arc::new(AtomicBool::new(false)),
             output_dir: output_dir.clone(),
             checker_path: PathBuf::from("target/release/check_labs"),
+            observe_only: false,
         };
         let sequences = [
             vec![1; n],
@@ -959,5 +1025,117 @@ mod checkpoint_tests {
             .collect();
         assert_eq!(persisted.as_slice(), stored.as_slice());
         std::fs::remove_dir_all(output_dir).unwrap();
+    }
+}
+
+#[cfg(test)]
+mod qualification_tests {
+    use super::*;
+
+    fn direct_energy(spins: &[i8]) -> i64 {
+        (1..spins.len())
+            .map(|lag| {
+                let correlation: i64 = spins[..spins.len() - lag]
+                    .iter()
+                    .zip(&spins[lag..])
+                    .map(|(&a, &b)| i64::from(a) * i64::from(b))
+                    .sum();
+                correlation * correlation
+            })
+            .sum()
+    }
+
+    #[test]
+    fn exhaustive_single_flip_deltas_match_direct_energy() {
+        for n in 2..=10 {
+            for mask in 0..(1 << n) {
+                let spins: Vec<i8> = (0..n)
+                    .map(|i| if mask & (1 << i) == 0 { 1 } else { -1 })
+                    .collect();
+                let mut state = LabsState::new(n, spins.clone());
+                let before = direct_energy(&spins);
+                assert_eq!(state.energy, before);
+                for p in 0..n {
+                    let delta = state.delta_energy_flip(p);
+                    state.apply_flip(p);
+                    assert_eq!(state.energy, direct_energy(&state.s));
+                    assert_eq!(state.energy - before, delta);
+                    state.apply_flip(p);
+                    assert_eq!(state.s, spins);
+                    assert_eq!(state.energy, before);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn repeated_flips_and_quenches_preserve_integer_energy() {
+        let mut rng = ChaCha8Rng::seed_from_u64(17);
+        for n in [12, 20, 40, 50, 60] {
+            let mut state = LabsState::new(n, generate_biased_initial(n, &mut rng));
+            for _ in 0..200 {
+                state.apply_flip(rng.gen_range(0..n));
+                assert_eq!(state.energy, direct_energy(&state.s));
+            }
+            let before = state.energy;
+            tabu_search_labs(&mut state, 20, 3);
+            assert!(state.energy <= before);
+            assert_eq!(state.energy, direct_energy(&state.s));
+            for p in 1..n {
+                assert!(state.delta_energy_flip(p) >= 0);
+                let initial = state.energy;
+                state.apply_flip(p);
+                for q in p + 1..n {
+                    assert!(state.energy + state.delta_energy_flip(q) >= initial);
+                }
+                state.apply_flip(p);
+            }
+        }
+    }
+
+    #[test]
+    fn observation_preserves_fixed_step_trajectory_and_collective_memory() {
+        let root = std::env::temp_dir().join(format!(
+            "labs-observer-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        for seed in [17, 29] {
+            let mut results = Vec::new();
+            for observe_only in [false, true] {
+                let output_dir = root.join(format!("{seed}-{observe_only}"));
+                let ctx = HuntContext {
+                    n: 40,
+                    target_record: 0,
+                    global_best: Arc::new(AtomicI64::new(i64::MAX)),
+                    best_seq_store: Arc::new(Mutex::new(Vec::new())),
+                    found_record: Arc::new(AtomicBool::new(false)),
+                    output_dir: output_dir.clone(),
+                    checker_path: PathBuf::new(),
+                    observe_only,
+                };
+                let outcome =
+                    hunt_with_step_limit(&ctx, None, 0, seed, Duration::from_secs(60), Some(12));
+                results.push((
+                    outcome,
+                    ctx.global_best.load(Ordering::SeqCst),
+                    ctx.best_seq_store.lock().unwrap().clone(),
+                ));
+                if observe_only {
+                    assert!(!output_dir.exists(), "observer must not write checkpoints");
+                }
+            }
+            assert_eq!(results[0], results[1]);
+            assert!(
+                results[0].1 < i64::MAX,
+                "test must exercise incumbent publication"
+            );
+        }
+        if root.exists() {
+            fs::remove_dir_all(root).unwrap();
+        }
     }
 }
