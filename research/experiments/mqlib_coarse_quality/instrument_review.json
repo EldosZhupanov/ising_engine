@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "reviewer": "/root/mqlib_explorer",
+  "scope": "read-only independent agent instrument review before observations",
+  "new_tests": {
+    "passed": 12
+  },
+  "inherited_tests": {
+    "passed": 25,
+    "run_by": "/root"
+  },
+  "findings_resolved": [
+    "Exactly2.1s kill boundary accepted; nextafter rejected",
+    "Duplicate JSON rejection test expects actual AssertionError"
+  ],
+  "dimensions": {
+    "correctness": "PASS",
+    "performance_claims": "PASS",
+    "architecture": "PASS",
+    "api": "PASS",
+    "memory": "PASS",
+    "safety": "PASS",
+    "regression": "PASS",
+    "tests": "PASS"
+  },
+  "sources": {
+    "bindings.py": "aacb8f46ddbad52a62905f6b49ba143c4f2165319cf6e7b6b3caf1dd2b12f0c1",
+    "freeze.py": "01079c80346f94daea4c6b403c84b6aed89bf8da63635ce39f8fb9be68aafa00",
+    "campaign.py": "cbd87e789f7468448ec9b64dcaced31712877a63da2665d81506ff541644464e",
+    "check.py": "d76f685e3dae3a7cbd1484aece965f420d6626b632dd38638d639a18cd973134",
+    "test_campaign.py": "302763aa44f2672fb9c9262266bac4db2ba3cf0e987e88be5b1f17998a277125"
+  },
+  "remaining": "Committed provenance freeze, then one20-cell admission; independent admission review before main."
+}
