@@ -26,11 +26,16 @@ Final independent read-only review PASS (comparison_explorer); the prior
 reviewer service-limit interruption is retained in verification.json.
 Production solvers/APIs unchanged.
 
-**Next task:** design a prospective difficulty-corpus qualification with strong
-fixed baselines, separate qualification/holdout and predeclared cost curves.
-Current eight cases are now exposed and cannot become an unseen validation set.
-Do not train a selector or start a new execution campaign before its gates pass.
-Parent S3/X3 requirements remain for subsequent advantage/selector research.
+**Successor design:** [MQ-DESIGN-002](../research/experiments/mqlib_screen/NEXT_DESIGN.md)
+is proposed, not executable preregistration. It separates corpus qualification,
+configuration development and untouched evaluation; cold-start delivery and
+optional warm-worker timing; quality and target-time claims. No new solver runs.
+
+**Next task:** read-only corpus provenance/family/target and baseline inventory,
+then a prospectively frozen no-search timing calibration. Resolve parent S3/X3
+or a narrowly scoped prospective qualification amendment before execution.
+Freeze exact hashes/configurations/seeds and obtain independent review before
+any new campaign. The eight completed cases are exposed, not an unseen test set.
 
 ## Previous — MQ-QUAL-001 complete, 2026-09-27
 

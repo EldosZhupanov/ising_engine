@@ -1,7 +1,7 @@
 # Document catalogue
 
 This sidecar catalogue classifies every Markdown document without modifying frozen evidence. Paths are the stable identifiers. Dates come from Git history; they describe chronology but do not establish authority.
-Its enforced scope is Git-tracked plus nonignored untracked Markdown (366 files
+Its enforced scope is Git-tracked plus nonignored untracked Markdown (367 files
 at this update). The 55 Git-ignored Markdown reports and download READMEs are
 classified separately as historical evidence in [FILE_MAP.tsv](FILE_MAP.tsv);
 the catalogue gate intentionally excludes ignored paths.
@@ -19,7 +19,7 @@ the catalogue gate intentionally excludes ignored paths.
 - `binding`: 52
 - `closed`: 44
 - `historical`: 2
-- `proposed`: 42
+- `proposed`: 43
 - `reference`: 204
 - `superseded`: 4
 
@@ -412,3 +412,5 @@ Their listing records existence, not scientific acceptance.
 | `research/experiments/mqlib_screen/run001/README.md` | run-guide | A3 | reference | 2026-09-27 | 2026-09-27 | false | MQ-SCREEN-001-run001 |
 
 | `research/experiments/mqlib_screen/RESULT.md` | research-result | A1 | closed | 2026-09-27 | 2026-09-27 | true | MQ-SCREEN-001 |
+
+| `research/experiments/mqlib_screen/NEXT_DESIGN.md` | research-design | A2 | proposed | 2026-09-27 | 2026-09-27 | false | MQ-DESIGN-002 |
