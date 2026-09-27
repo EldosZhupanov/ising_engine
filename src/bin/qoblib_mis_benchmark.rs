@@ -2,7 +2,7 @@
 //!
 //! Benchmark against the official Quantum Optimization Benchmarking Library (QOBLIB):
 //! Nature Computational Science (2026) / IBM Quantum & Zuse Institute Berlin (ZIB).
-//! Official repository: https://github.com/ZIB-AOPT/QOBLIB/tree/main/07-independentset
+//! Official repository: <https://github.com/ZIB-AOPT/QOBLIB/tree/main/07-independentset>
 //!
 //! Evaluates UltimateSolver against:
 //! 1. Official proven optima (Gurobi exact .opt.sol) and best-known solutions (.bst.sol).

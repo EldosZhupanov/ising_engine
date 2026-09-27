@@ -1664,7 +1664,7 @@ fn control_null_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
 }
 
 /// RC-017 Control 2: Prefix identity — independently executed common prefixes
-/// have identical state digest, ledger digest & audit, RNG probe, and StepEvent[0] sensor bits.
+/// have identical state digest, ledger digest & audit, RNG probe, and `StepEvent[0]` sensor bits.
 fn control_prefix_identity_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
     let mut ok = true;
     let backend = DecisionEngine::analyze(ir).select_backend();
@@ -1884,7 +1884,7 @@ fn control_inert_zero_budget_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bo
     i == 0.0
 }
 
-/// RC-017 Control 7: A recorder that only reads StepEvent[0] leaves final state
+/// RC-017 Control 7: A recorder that only reads `StepEvent[0]` leaves final state
 /// and energy bit-identical compared to an unrecorded execution.
 fn control_recorder_non_interference_rc017(ir: &ProblemIR, reg: &OperatorRegistry) -> bool {
     let mut ok = true;
