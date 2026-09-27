@@ -87,18 +87,18 @@ the catalogue gate intentionally excludes ignored paths.
 | `memory/DECISIONS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-09-26 | false | navigation |
 | `memory/INDEX.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
 | `memory/NEXT_TASK_RC027.md` | task-bundle | A1 | active | 2026-08-30 | 2026-08-30 | false | RC027 |
-| `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-09-26 | false | current-task |
+| `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-09-27 | false | current-task |
 | `memory/OBSIDIAN.md` | workspace-guide | A3 | reference | 2026-08-26 | 2026-08-26 | false | navigation |
 | `memory/OPEN_PROBLEMS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-30 | false | navigation |
 | `memory/PERFORMANCE.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
 | `memory/RESEARCH.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-09-26 | false | navigation |
 | `memory/ROADMAP.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
-| `memory/TIMELINE.md` | chronology | A1 | active | 2026-08-26 | 2026-09-26 | false | project-chronology |
+| `memory/TIMELINE.md` | chronology | A1 | active | 2026-08-26 | 2026-09-27 | false | project-chronology |
 | `PERF.md` | engineering-reference | A1 | active | 2026-07-05 | 2026-07-06 | false | engineering |
 | `portfolio_design_spec.md` | design-spec | A2 | reference | 2026-03-13 | 2026-03-13 | false | design |
 | `PRODUCT_SPEC.md` | product-spec | A0 | active | 2026-08-22 | 2026-08-26 | false | finished-product |
 | `PROJECT_PLAN.md` | active-plan | A0 | active | 2026-08-22 | 2026-08-30 | false | ordered-gates |
-| `README.md` | public-overview | A2 | active | 2026-03-11 | 2026-07-06 | false | public-overview |
+| `README.md` | public-overview | A2 | active | 2026-03-11 | 2026-09-27 | false | public-overview |
 | `research/CANDIDATE_IDEAS_LEDGER.md` | research-reference | A2 | reference | 2026-09-19 | 2026-09-19 | false | research-backlog |
 | `research/adversarial_architecture_review.md` | research-reference | A2 | reference | 2026-07-07 | 2026-07-07 | false | research-context |
 | `research/architecture/ADR/ADR-0000-adr-system-and-knowledge-graph.md` | architecture-decision | A1 | binding | 2026-07-14 | 2026-07-14 | true | architecture |
@@ -195,7 +195,7 @@ the catalogue gate intentionally excludes ignored paths.
 | `SECURITY.md` | engineering-reference | A1 | active | 2026-03-11 | 2026-03-11 | false | engineering |
 | `SKILL.md` | reference | A3 | reference | 2026-03-11 | 2026-03-11 | false | none |
 | `SOUL.md` | mission | A0 | active | 2026-07-15 | 2026-07-15 | false | project-mission |
-| `START_HERE.md` | navigation | A0 | active | 2026-08-26 | 2026-09-25 | false | startup |
+| `START_HERE.md` | navigation | A0 | active | 2026-08-26 | 2026-09-27 | false | startup |
 | `VERIFY.md` | engineering-reference | A1 | active | 2026-07-05 | 2026-07-05 | false | engineering |
 | `website/AGENTS.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
 | `website/ARCHITECTURE_REVIEW.md` | publication | A3 | reference | 2026-08-19 | 2026-08-19 | false | website |
@@ -269,7 +269,7 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/HANDOFF.md` | research-handoff | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough-resume |
 | `research/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; ER-001 |
 | `research/HYPODIVE_BUILDER_HANDOFF.md` | research-handoff | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; ER-001 |
-| `research/HYPODIVE_TRIAGE.md` | research-triage | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; application-discovery; prospective-CD003-correction |
+| `research/HYPODIVE_TRIAGE.md` | research-triage | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; application-discovery; prospective-CD003-correction; GitHub-opportunity-triage; Graft-qualification; scientific-ecosystem-triage; GitHub-publication-correction |
 | `research/EXP005_MARKETSPLIT_TRIAGE.md` | research-triage | A2 | reference | 2026-09-25 | 2026-09-25 | false | EXP-005 |
 | `research/EXP006A_RAW_RECHECK.md` | prospective-audit | A2 | reference | 2026-09-26 | 2026-09-26 | false | EXP-TEN-006A-R |
 | `research/PRIOR_ART_MATRIX.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; application-discovery-primary-sources |
@@ -360,7 +360,7 @@ Their listing records existence, not scientific acceptance.
 | `NOW.md` | navigation-pointer | A3 | reference | 2026-09-25 | 2026-09-25 | false | navigation |
 | `PROJECTS.md` | project-map | A1 | active | 2026-09-25 | 2026-09-26 | false | project-navigation |
 | `RESEARCH.md` | navigation-pointer | A3 | reference | 2026-09-25 | 2026-09-25 | false | navigation |
-| `research/CLAIMS.md` | research-local | A2 | proposed | — | — | false | research-triage |
+| `research/CLAIMS.md` | research-local | A2 | proposed | — | 2026-09-27 | false | research-triage; benchmark-and-tuner-corrections |
 | `research/FAILED_IDEAS.md` | research-local | A2 | proposed | — | — | false | research-triage |
 | `research/ISING_ENGINE_RESEARCH_AUDIT.md` | research-local | A2 | proposed | — | — | false | research-triage |
 | `research/KNOWLEDGE_BASE.md` | research-local | A2 | proposed | — | — | false | research-triage |

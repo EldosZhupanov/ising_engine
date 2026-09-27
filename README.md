@@ -18,6 +18,33 @@ Ising Engine is a high-performance optimization framework designed for combinato
 
 The project provides a modular Rust implementation of modern optimization algorithms with support for Ising, QUBO and HUBO models, parallel execution, SIMD-oriented computation and reproducible benchmarking.
 
+## Current state and evidence
+
+Start with [START_HERE.md](START_HERE.md) and [memory/NOW.md](memory/NOW.md).
+The latter is the sole live task/status document. [PROJECTS.md](PROJECTS.md)
+maps production, experimental and historical work; the
+[research catalogue](memory/CATALOG.md) links results and their corrections.
+Older reports and prototypes remain for provenance and may contain claims later
+rejected by the linked rechecks. Their presence is not a current endorsement.
+
+- `UltimateSolver` is the production optimizer. `engine_v2` already provides
+  problem analysis, an operator registry and plan selection, but an independently
+  replicated equal-cost advantage of its selected plans is not established.
+- The historical `gset_official_benchmark` executable is a seeded **synthetic
+  Max-Cut demonstration**, not an original Gset input. Its former fixed 45-second
+  Gurobi comparison and G1 optimum comparison were invalid and have been removed.
+  It reports only its measured solve time, cut and energy.
+- `RandomSearchOrchestrator` performs random parameter sampling and local random
+  perturbations. `BayesianOrchestrator` remains a compatibility alias; no Bayesian
+  surrogate or acquisition function is implemented by that tuner.
+- Single-slice energy regressions are covered by tests. Multi-slice Trotter
+  coupling is still experimental: energy/delta consistency alone does not
+  establish physically correct SQA. No quantum-advantage claim is established.
+
+See the [audit and prospective corrections](research/HYPODIVE_TRIAGE.md).
+Report a commit SHA with every audit: repository name and date alone do not
+identify the code being reviewed.
+
 ---
 
 ## Features
@@ -121,7 +148,7 @@ cargo bench
 
 The project follows several engineering principles:
 
-- Performance-first implementation
+- Correctness and architectural boundaries before measured performance
 - Modular architecture
 - Clean Rust codebase
 - Research-friendly design

@@ -483,3 +483,45 @@ No solver rearchitecture, training, heavy scientific dependency, GPU purchase or
 record-hunting run was performed. Final independent review is still unavailable
 because of the reviewer service limit; findings retain their stated verification
 scope rather than claiming a completed whole-repository audit.
+
+
+## GitHub publication correction — 2026-09-27
+
+The user authorized updating the GitHub repository after discovering that its
+`master` still pointed to March commit `7df051b`. Local c8391a6 is 253 commits
+ahead of that ancestor. Publish by ordinary fast-forward only; do not rewrite
+remote history. This record prospectively supersedes the corresponding current-
+code findings above; historical audit bytes and benchmark artifacts remain.
+
+- The historical `gset_official_benchmark` binary now explicitly labels its input
+  synthetic, seeds graph generation, prints actual graph size, and reports only
+  measured solve time and recomputed cut/energy. No G1 optimum, fictitious Gurobi
+  time, speedup ratio, GNN or quantum comparison is emitted. It still does not
+  load an original Gset file.
+- A real formulation defect was also found: each sampled edge previously reduced
+  only the first endpoint's linear coefficient. Both now receive `-w`, restoring
+  `E(x) = -cut(x)`. A complete three-vertex graph is exhaustively checked against
+  the independent `k*(3-k)` cut formula; a seeded sparse six-vertex graph checks
+  all states plus repeatability.
+- `RandomSearchOrchestrator` names the actual random-search/local-perturbation
+  method; `BayesianOrchestrator` remains a public compatibility alias. Descriptions
+  no longer imply posterior modeling, gradients, or certified optimal parameters.
+  The wrapper uses canonical model energy, fixing omission of `energy_offset`;
+  a regression checks a nonzero-offset model through the public solve method.
+- Solver kernels, family boundaries, public solve signatures, and existing
+  research protocols are unchanged. Multi-slice SQA validation remains open.
+  No new speed claim or external comparison run is made by these fixes.
+
+The README now routes GitHub/connector readers to START_HERE, NOW, projects and
+research evidence, including negative results and the remaining SQA limitation.
+Graft integration has since passed independent re-review. Publication gates and
+remote verification are recorded in NOW and the Git history, not inferred from
+older reports.
+
+Publication validation: full workspace release tests **787 passed, 0 failed,
+5 intentionally ignored profiling cases**; check, release binaries, strict
+all-target Clippy, formatting and Rustdoc PASS. Rustdoc initially rejected one
+bare URL and two `StepEvent[0]` comment references in historical binaries; only
+Markdown markup was corrected. [Retained commands/logs](publication_checks/20260927.json)
+preserve the failures and successful rerun. Frozen scientific records were not
+edited. These checks establish the stated engineering scope, not performance.

@@ -12,7 +12,43 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Active — ER-001 complete; scorer/blocking design next, 2026-09-27
+## Current — verified publication bundle; external baseline next, 2026-09-27
+
+The user authorized synchronizing GitHub's default `master` with the current
+local project. Its previous fetched tip was March commit `7df051b`; local c8391a6
+contained 253 additional commits. Publication uses ordinary fast-forward, never
+force-push. Audit the exact Git commit, not an assumed date or cached remote copy.
+
+[Publication corrections](../research/HYPODIVE_TRIAGE.md#github-publication-correction--2026-09-27):
+synthetic Max-Cut output no longer claims G1/Gurobi results; both endpoints receive
+the correct linear coefficient. RandomSearchOrchestrator accurately names its
+method, preserves the old public alias, and includes the model energy offset.
+README directs readers to current evidence. Three Rustdoc markup errors were
+fixed without changing experimental behavior. Solver kernels and architecture
+remain unchanged; original Gset loading and multi-slice SQA physics remain open.
+
+Verification: workspace check, release tests **787 passed / 0 failed / 5 ignored**,
+release binaries, all-target strict Clippy, all-workspace formatting, strict
+Rustdoc, memory/link checks **359 Markdown / 93 immutable**, and diff checks PASS.
+The five ignored cases are opt-in profiling/benchmark tests, not hidden failures.
+[Retained publication checks](../research/publication_checks/20260927.json) record
+commands, raw output, source hashes and the initial Rustdoc failures. Independent
+code review and Graft final review PASS; all required gates are closed. No new speed result or quantum-advantage claim was produced.
+
+Graft 0.20.0 optional navigation is installed; twelve compatibility checks PASS.
+Sources/data: `scripts/graft.sh`, `research/graft_qualification/`. The
+[scientific ecosystem triage](../research/HYPODIVE_TRIAGE.md#scientific-ecosystem-and-remote-audit-reconciliation--2026-09-27)
+and `research/literature/scientific_ecosystem_20260927.json` preserve the earlier
+read-only audit. Corrections are prospective; historical evidence is retained.
+
+**Next task:** scope the MQLib baseline adapter with exhaustive small-model
+energy/sign/offset checks; amend the recorded external-comparison protocol
+handoff before a new campaign. ER-001 scorer/blocking continuation below remains
+research inventory, not an instruction to restart its frozen experiment.
+
+The incomplete untracked `benchmarks/qoblib/upstream/` clone and ignored caches
+remain local. All intentional Graft, audit and publication-check artifacts are
+explicitly included in this publication bundle.
 
 [ER-001 result](../research/experiments/entity_resolution/RESULT.md): verified
 real-data reconciliation capability; **H1 PASS, H2 FAIL, H3 PASS**. Twelve WDC
@@ -42,7 +78,8 @@ The reusable research CLI in `research/experiments/entity_resolution/core.py`
 accepts complete integer scores for1..8 records and returns an exact consistent
 partition; it certifies objective/constraints, not semantic truth. Production
 source, both solver families and weights are unchanged. Pilot processes finished.
-Only the known incomplete upstream clone remains visibly untracked and untouched.
+The known incomplete upstream clone remains untouched; current Graft artifacts
+are explicitly inventoried above.
 
 ## Application discovery completed — 2026-09-27
 
