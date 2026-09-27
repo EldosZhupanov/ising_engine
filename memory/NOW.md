@@ -36,12 +36,13 @@ unverified. Candidate native MQLib MST2 and Katayama2000 are identified, not qua
 
 [MQ-CAL-001](../research/experiments/mqlib_timing_calibration/protocol.md) freezes
 480 no-search Python echo cells (22.2s nominal total budget) with identical-arm
-and known-delay controls. **NOT RUN; instrument not implemented.** Fixtures,
+and known-delay controls. **NOT RUN; instrument implemented and independently reviewed.** Twelve fabricated
+record tests, Python syntax and diff checks PASS. Fixtures,
 hashes, timing thresholds and source inventory are retained. No new solver runs.
 Its scope is only echo delivery/deadline qualification, not native solver speed.
 
-**Next task:** implement/review MQ-CAL-001 instrument, test synthetic deadline/
-censoring cases, then run its separate smoke and registered calibration under
+**Next task:** commit the reviewed MQ-CAL-001 instrument, then run its separate
+schema smoke and registered calibration under
 that protocol. Solver comparison remains closed until target/format validation,
 untouched split clearance and parent S3/X3 or an explicit scoped amendment.
 Do not reuse exposed screen cases or silently treat old BiqMac files as holdout.
