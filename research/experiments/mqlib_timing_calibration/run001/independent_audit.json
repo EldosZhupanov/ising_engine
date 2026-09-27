@@ -1,0 +1,162 @@
+{
+  "audit": "PASS",
+  "run": "research/experiments/mqlib_timing_calibration/run001",
+  "cells": 480,
+  "messages_rescored": 236,
+  "source_hashes": 9,
+  "registered_status": "FAIL",
+  "groups": [
+    {
+      "fixture": "echo_n8.json",
+      "budget_ns": 10000000,
+      "status": "FAIL",
+      "counts": {
+        "null_a": 0,
+        "null_b": 0,
+        "delay": 0
+      },
+      "gates": {
+        "completion": false,
+        "pairs": false,
+        "deadline": false,
+        "delivery": false,
+        "null": false,
+        "positive": false,
+        "sleep": false
+      }
+    },
+    {
+      "fixture": "echo_n8.json",
+      "budget_ns": 25000000,
+      "status": "FAIL",
+      "counts": {
+        "null_a": 0,
+        "null_b": 0,
+        "delay": 0
+      },
+      "gates": {
+        "completion": false,
+        "pairs": false,
+        "deadline": true,
+        "delivery": false,
+        "null": false,
+        "positive": false,
+        "sleep": false
+      }
+    },
+    {
+      "fixture": "echo_n8.json",
+      "budget_ns": 50000000,
+      "status": "PASS",
+      "counts": {
+        "null_a": 20,
+        "null_b": 20,
+        "delay": 20
+      },
+      "gates": {
+        "completion": true,
+        "pairs": true,
+        "deadline": true,
+        "delivery": true,
+        "null": true,
+        "positive": true,
+        "sleep": true
+      }
+    },
+    {
+      "fixture": "echo_n8.json",
+      "budget_ns": 100000000,
+      "status": "PASS",
+      "counts": {
+        "null_a": 20,
+        "null_b": 20,
+        "delay": 20
+      },
+      "gates": {
+        "completion": true,
+        "pairs": true,
+        "deadline": true,
+        "delivery": true,
+        "null": true,
+        "positive": true,
+        "sleep": true
+      }
+    },
+    {
+      "fixture": "echo_n128.json",
+      "budget_ns": 10000000,
+      "status": "FAIL",
+      "counts": {
+        "null_a": 0,
+        "null_b": 0,
+        "delay": 0
+      },
+      "gates": {
+        "completion": false,
+        "pairs": false,
+        "deadline": false,
+        "delivery": false,
+        "null": false,
+        "positive": false,
+        "sleep": false
+      }
+    },
+    {
+      "fixture": "echo_n128.json",
+      "budget_ns": 25000000,
+      "status": "FAIL",
+      "counts": {
+        "null_a": 0,
+        "null_b": 0,
+        "delay": 0
+      },
+      "gates": {
+        "completion": false,
+        "pairs": false,
+        "deadline": false,
+        "delivery": false,
+        "null": false,
+        "positive": false,
+        "sleep": false
+      }
+    },
+    {
+      "fixture": "echo_n128.json",
+      "budget_ns": 50000000,
+      "status": "FAIL",
+      "counts": {
+        "null_a": 20,
+        "null_b": 20,
+        "delay": 14
+      },
+      "gates": {
+        "completion": false,
+        "pairs": false,
+        "deadline": true,
+        "delivery": true,
+        "null": true,
+        "positive": false,
+        "sleep": false
+      }
+    },
+    {
+      "fixture": "echo_n128.json",
+      "budget_ns": 100000000,
+      "status": "PASS",
+      "counts": {
+        "null_a": 20,
+        "null_b": 20,
+        "delay": 20
+      },
+      "gates": {
+        "completion": true,
+        "pairs": true,
+        "deadline": true,
+        "delivery": true,
+        "null": true,
+        "positive": true,
+        "sleep": true
+      }
+    }
+  ]
+}

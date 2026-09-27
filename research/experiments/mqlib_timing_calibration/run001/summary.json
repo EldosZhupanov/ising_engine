@@ -1,0 +1,745 @@
+{
+  "status": "FAIL",
+  "cells": 480,
+  "groups": [
+    {
+      "fixture": "echo_n8.json",
+      "budget_ns": 10000000,
+      "status": "FAIL",
+      "gates": {
+        "completion": false,
+        "pairs": false,
+        "deadline": false,
+        "delivery": false,
+        "null": false,
+        "positive": false,
+        "sleep": false
+      },
+      "latency_ns_by_arm": {
+        "null_a": {
+          "n": 0
+        },
+        "null_b": {
+          "n": 0
+        },
+        "delay": {
+          "n": 0
+        }
+      },
+      "completion_by_arm": {
+        "null_a": 0.0,
+        "null_b": 0.0,
+        "delay": 0.0
+      },
+      "deadline_overshoot_ns": {
+        "n": 60,
+        "mean": 675207.7833333333,
+        "median": 570771.0,
+        "std": 563068.6970089319,
+        "min": 148610,
+        "max": 3984430,
+        "q25": 306316.5,
+        "q75": 933712.0,
+        "q95_nearest_rank": 1125783
+      },
+      "delivery_lag_ns": {
+        "n": 0
+      },
+      "null_difference_ns": {
+        "n": 0
+      },
+      "positive_difference_ns": {
+        "n": 0
+      },
+      "actual_delay_sleep_ns": {
+        "n": 0
+      },
+      "oversleep_ns": {
+        "n": 0
+      },
+      "on_time_delay_sleep_count": 0,
+      "late_messages": 0,
+      "absent_messages": 60
+    },
+    {
+      "fixture": "echo_n8.json",
+      "budget_ns": 25000000,
+      "status": "FAIL",
+      "gates": {
+        "completion": false,
+        "pairs": false,
+        "deadline": true,
+        "delivery": false,
+        "null": false,
+        "positive": false,
+        "sleep": false
+      },
+      "latency_ns_by_arm": {
+        "null_a": {
+          "n": 0
+        },
+        "null_b": {
+          "n": 0
+        },
+        "delay": {
+          "n": 0
+        }
+      },
+      "completion_by_arm": {
+        "null_a": 0.0,
+        "null_b": 0.0,
+        "delay": 0.0
+      },
+      "deadline_overshoot_ns": {
+        "n": 60,
+        "mean": 634383.9666666667,
+        "median": 506762.5,
+        "std": 378136.6243957761,
+        "min": 160248,
+        "max": 1356724,
+        "q25": 288107.25,
+        "q75": 1027197.25,
+        "q95_nearest_rank": 1173636
+      },
+      "delivery_lag_ns": {
+        "n": 0
+      },
+      "null_difference_ns": {
+        "n": 0
+      },
+      "positive_difference_ns": {
+        "n": 0
+      },
+      "actual_delay_sleep_ns": {
+        "n": 0
+      },
+      "oversleep_ns": {
+        "n": 0
+      },
+      "on_time_delay_sleep_count": 0,
+      "late_messages": 0,
+      "absent_messages": 60
+    },
+    {
+      "fixture": "echo_n8.json",
+      "budget_ns": 50000000,
+      "status": "PASS",
+      "gates": {
+        "completion": true,
+        "pairs": true,
+        "deadline": true,
+        "delivery": true,
+        "null": true,
+        "positive": true,
+        "sleep": true
+      },
+      "latency_ns_by_arm": {
+        "null_a": {
+          "n": 20,
+          "mean": 30035634.65,
+          "median": 29371527.5,
+          "std": 2574878.3807425015,
+          "min": 26302672,
+          "max": 35895374,
+          "q25": 27934316.75,
+          "q75": 31683861.25,
+          "q95_nearest_rank": 34798999
+        },
+        "null_b": {
+          "n": 20,
+          "mean": 30440993.4,
+          "median": 29534231.5,
+          "std": 3103830.5028009247,
+          "min": 25327405,
+          "max": 36400916,
+          "q25": 28393632.0,
+          "q75": 32518579.25,
+          "q95_nearest_rank": 36342449
+        },
+        "delay": {
+          "n": 20,
+          "mean": 42646559.15,
+          "median": 41555625.0,
+          "std": 2779165.067080836,
+          "min": 39496944,
+          "max": 49034902,
+          "q25": 40588450.5,
+          "q75": 43365096.0,
+          "q95_nearest_rank": 48945844
+        }
+      },
+      "completion_by_arm": {
+        "null_a": 1.0,
+        "null_b": 1.0,
+        "delay": 1.0
+      },
+      "deadline_overshoot_ns": {
+        "n": 60,
+        "mean": 867982.0333333333,
+        "median": 860874.5,
+        "std": 385601.43332625926,
+        "min": 199989,
+        "max": 2059463,
+        "q25": 611903.25,
+        "q75": 1088959.75,
+        "q95_nearest_rank": 1629221
+      },
+      "delivery_lag_ns": {
+        "n": 60,
+        "mean": 146585.08333333334,
+        "median": 129151.0,
+        "std": 49539.719135353625,
+        "min": 83068,
+        "max": 255225,
+        "q25": 101816.75,
+        "q75": 183394.5,
+        "q95_nearest_rank": 227483
+      },
+      "null_difference_ns": {
+        "n": 20,
+        "mean": 405358.75,
+        "median": -213900.5,
+        "std": 3392753.286204803,
+        "min": -5221260,
+        "max": 8378328,
+        "q25": -1479196.0,
+        "q75": 790611.5,
+        "q95_nearest_rank": 8041162
+      },
+      "positive_difference_ns": {
+        "n": 20,
+        "mean": 12610924.5,
+        "median": 12960714.0,
+        "std": 3871179.326229444,
+        "min": 4162086,
+        "max": 21163608,
+        "q25": 11323055.0,
+        "q75": 14647563.0,
+        "q95_nearest_rank": 17441975
+      },
+      "actual_delay_sleep_ns": {
+        "n": 20,
+        "mean": 12675675.1,
+        "median": 12673809.5,
+        "std": 33854.47321979771,
+        "min": 12590083,
+        "max": 12745509,
+        "q25": 12658685.0,
+        "q75": 12689835.75,
+        "q95_nearest_rank": 12732524
+      },
+      "oversleep_ns": {
+        "n": 20,
+        "mean": 175675.1,
+        "median": 173809.5,
+        "std": 33854.47321979771,
+        "min": 90083,
+        "max": 245509,
+        "q25": 158685.0,
+        "q75": 189835.75,
+        "q95_nearest_rank": 232524
+      },
+      "on_time_delay_sleep_count": 20,
+      "late_messages": 0,
+      "absent_messages": 0
+    },
+    {
+      "fixture": "echo_n8.json",
+      "budget_ns": 100000000,
+      "status": "PASS",
+      "gates": {
+        "completion": true,
+        "pairs": true,
+        "deadline": true,
+        "delivery": true,
+        "null": true,
+        "positive": true,
+        "sleep": true
+      },
+      "latency_ns_by_arm": {
+        "null_a": {
+          "n": 20,
+          "mean": 31580795.8,
+          "median": 29275045.0,
+          "std": 4544911.36388154,
+          "min": 26409750,
+          "max": 42444438,
+          "q25": 28282642.0,
+          "q75": 33574070.5,
+          "q95_nearest_rank": 38973137
+        },
+        "null_b": {
+          "n": 20,
+          "mean": 31731071.45,
+          "median": 31730543.5,
+          "std": 3436383.617657151,
+          "min": 26379187,
+          "max": 39029352,
+          "q25": 28866403.25,
+          "q75": 33486997.25,
+          "q95_nearest_rank": 38534493
+        },
+        "delay": {
+          "n": 20,
+          "mean": 57076802.6,
+          "median": 56304731.5,
+          "std": 3514605.8841175265,
+          "min": 52377329,
+          "max": 63685564,
+          "q25": 53859547.25,
+          "q75": 60561924.5,
+          "q95_nearest_rank": 62100089
+        }
+      },
+      "completion_by_arm": {
+        "null_a": 1.0,
+        "null_b": 1.0,
+        "delay": 1.0
+      },
+      "deadline_overshoot_ns": {
+        "n": 60,
+        "mean": 984749.2666666667,
+        "median": 908214.5,
+        "std": 499949.7844773635,
+        "min": 192667,
+        "max": 2174394,
+        "q25": 578854.25,
+        "q75": 1221858.75,
+        "q95_nearest_rank": 1974625
+      },
+      "delivery_lag_ns": {
+        "n": 60,
+        "mean": 161011.16666666666,
+        "median": 135036.5,
+        "std": 62616.283790817724,
+        "min": 83449,
+        "max": 357289,
+        "q25": 107241.25,
+        "q75": 208128.5,
+        "q95_nearest_rank": 271266
+      },
+      "null_difference_ns": {
+        "n": 20,
+        "mean": 150275.65,
+        "median": 494478.0,
+        "std": 4610331.616040805,
+        "min": -10549968,
+        "max": 8570129,
+        "q25": -2105679.0,
+        "q75": 2726736.0,
+        "q95_nearest_rank": 7350018
+      },
+      "positive_difference_ns": {
+        "n": 20,
+        "mean": 25496006.8,
+        "median": 24968532.5,
+        "std": 4796080.793122845,
+        "min": 14607276,
+        "max": 34128149,
+        "q25": 23258788.75,
+        "q75": 28547359.25,
+        "q95_nearest_rank": 33424129
+      },
+      "actual_delay_sleep_ns": {
+        "n": 20,
+        "mean": 25206696.05,
+        "median": 25188495.5,
+        "std": 54598.911025289686,
+        "min": 25146834,
+        "max": 25369352,
+        "q25": 25173206.25,
+        "q75": 25222611.25,
+        "q95_nearest_rank": 25335022
+      },
+      "oversleep_ns": {
+        "n": 20,
+        "mean": 206696.05,
+        "median": 188495.5,
+        "std": 54598.911025289686,
+        "min": 146834,
+        "max": 369352,
+        "q25": 173206.25,
+        "q75": 222611.25,
+        "q95_nearest_rank": 335022
+      },
+      "on_time_delay_sleep_count": 20,
+      "late_messages": 0,
+      "absent_messages": 0
+    },
+    {
+      "fixture": "echo_n128.json",
+      "budget_ns": 10000000,
+      "status": "FAIL",
+      "gates": {
+        "completion": false,
+        "pairs": false,
+        "deadline": false,
+        "delivery": false,
+        "null": false,
+        "positive": false,
+        "sleep": false
+      },
+      "latency_ns_by_arm": {
+        "null_a": {
+          "n": 0
+        },
+        "null_b": {
+          "n": 0
+        },
+        "delay": {
+          "n": 0
+        }
+      },
+      "completion_by_arm": {
+        "null_a": 0.0,
+        "null_b": 0.0,
+        "delay": 0.0
+      },
+      "deadline_overshoot_ns": {
+        "n": 60,
+        "mean": 752944.8833333333,
+        "median": 773977.5,
+        "std": 532578.7226394201,
+        "min": 156614,
+        "max": 3812676,
+        "q25": 345401.75,
+        "q75": 1071268.25,
+        "q95_nearest_rank": 1252958
+      },
+      "delivery_lag_ns": {
+        "n": 0
+      },
+      "null_difference_ns": {
+        "n": 0
+      },
+      "positive_difference_ns": {
+        "n": 0
+      },
+      "actual_delay_sleep_ns": {
+        "n": 0
+      },
+      "oversleep_ns": {
+        "n": 0
+      },
+      "on_time_delay_sleep_count": 0,
+      "late_messages": 0,
+      "absent_messages": 60
+    },
+    {
+      "fixture": "echo_n128.json",
+      "budget_ns": 25000000,
+      "status": "FAIL",
+      "gates": {
+        "completion": false,
+        "pairs": false,
+        "deadline": false,
+        "delivery": false,
+        "null": false,
+        "positive": false,
+        "sleep": false
+      },
+      "latency_ns_by_arm": {
+        "null_a": {
+          "n": 0
+        },
+        "null_b": {
+          "n": 0
+        },
+        "delay": {
+          "n": 0
+        }
+      },
+      "completion_by_arm": {
+        "null_a": 0.0,
+        "null_b": 0.0,
+        "delay": 0.0
+      },
+      "deadline_overshoot_ns": {
+        "n": 60,
+        "mean": 1051701.7833333334,
+        "median": 1133320.5,
+        "std": 394484.20876705536,
+        "min": 143318,
+        "max": 2113699,
+        "q25": 917209.25,
+        "q75": 1282813.0,
+        "q95_nearest_rank": 1495925
+      },
+      "delivery_lag_ns": {
+        "n": 0
+      },
+      "null_difference_ns": {
+        "n": 0
+      },
+      "positive_difference_ns": {
+        "n": 0
+      },
+      "actual_delay_sleep_ns": {
+        "n": 0
+      },
+      "oversleep_ns": {
+        "n": 0
+      },
+      "on_time_delay_sleep_count": 0,
+      "late_messages": 0,
+      "absent_messages": 60
+    },
+    {
+      "fixture": "echo_n128.json",
+      "budget_ns": 50000000,
+      "status": "FAIL",
+      "gates": {
+        "completion": false,
+        "pairs": false,
+        "deadline": true,
+        "delivery": true,
+        "null": true,
+        "positive": false,
+        "sleep": false
+      },
+      "latency_ns_by_arm": {
+        "null_a": {
+          "n": 20,
+          "mean": 37373881.9,
+          "median": 37367273.5,
+          "std": 3592919.26367042,
+          "min": 31146385,
+          "max": 43538613,
+          "q25": 34736475.75,
+          "q75": 39411972.5,
+          "q95_nearest_rank": 42628210
+        },
+        "null_b": {
+          "n": 20,
+          "mean": 37232605.9,
+          "median": 34973672.5,
+          "std": 4633494.377613831,
+          "min": 32773813,
+          "max": 48157737,
+          "q25": 33869315.25,
+          "q75": 38594240.5,
+          "q95_nearest_rank": 44886967
+        },
+        "delay": {
+          "n": 14,
+          "mean": 46676483.5,
+          "median": 46033601.5,
+          "std": 1159376.417116654,
+          "min": 45236382,
+          "max": 48808634,
+          "q25": 45816709.5,
+          "q75": 47366418.0,
+          "q95_nearest_rank": 48808634
+        }
+      },
+      "completion_by_arm": {
+        "null_a": 1.0,
+        "null_b": 1.0,
+        "delay": 0.7
+      },
+      "deadline_overshoot_ns": {
+        "n": 60,
+        "mean": 868090.3666666667,
+        "median": 832678.5,
+        "std": 464765.86089209,
+        "min": 220138,
+        "max": 2228647,
+        "q25": 498209.0,
+        "q75": 1019894.75,
+        "q95_nearest_rank": 2081520
+      },
+      "delivery_lag_ns": {
+        "n": 54,
+        "mean": 185885.33333333334,
+        "median": 168455.5,
+        "std": 48431.631215789355,
+        "min": 127472,
+        "max": 307234,
+        "q25": 146984.25,
+        "q75": 225248.5,
+        "q95_nearest_rank": 272779
+      },
+      "null_difference_ns": {
+        "n": 20,
+        "mean": -141276,
+        "median": -589214.0,
+        "std": 6286501.433083866,
+        "min": -10608697,
+        "max": 11875035,
+        "q25": -4782592.75,
+        "q75": 3490624.75,
+        "q95_nearest_rank": 10704451
+      },
+      "positive_difference_ns": {
+        "n": 14,
+        "mean": 9729091.285714285,
+        "median": 10436665.0,
+        "std": 3860963.202209918,
+        "min": 2985352,
+        "max": 15530142,
+        "q25": 6579164.25,
+        "q75": 12156232.5,
+        "q95_nearest_rank": 15530142
+      },
+      "actual_delay_sleep_ns": {
+        "n": 16,
+        "mean": 12681295.5625,
+        "median": 12669074.0,
+        "std": 54810.652414663826,
+        "min": 12626505,
+        "max": 12877280,
+        "q25": 12660235.0,
+        "q75": 12684523.0,
+        "q95_nearest_rank": 12877280
+      },
+      "oversleep_ns": {
+        "n": 16,
+        "mean": 181295.5625,
+        "median": 169074.0,
+        "std": 54810.652414663826,
+        "min": 126505,
+        "max": 377280,
+        "q25": 160235.0,
+        "q75": 184523.0,
+        "q95_nearest_rank": 377280
+      },
+      "on_time_delay_sleep_count": 14,
+      "late_messages": 2,
+      "absent_messages": 4
+    },
+    {
+      "fixture": "echo_n128.json",
+      "budget_ns": 100000000,
+      "status": "PASS",
+      "gates": {
+        "completion": true,
+        "pairs": true,
+        "deadline": true,
+        "delivery": true,
+        "null": true,
+        "positive": true,
+        "sleep": true
+      },
+      "latency_ns_by_arm": {
+        "null_a": {
+          "n": 20,
+          "mean": 36577318.4,
+          "median": 34404423.5,
+          "std": 4756170.434659217,
+          "min": 30464876,
+          "max": 45955895,
+          "q25": 33098737.5,
+          "q75": 39964336.75,
+          "q95_nearest_rank": 45920271
+        },
+        "null_b": {
+          "n": 20,
+          "mean": 38043619.2,
+          "median": 36388775.0,
+          "std": 4654444.06687244,
+          "min": 31789778,
+          "max": 45070941,
+          "q25": 33845279.75,
+          "q75": 42769218.25,
+          "q95_nearest_rank": 44833083
+        },
+        "delay": {
+          "n": 20,
+          "mean": 60175024.95,
+          "median": 59543543.0,
+          "std": 3048833.0041788854,
+          "min": 55396748,
+          "max": 67460672,
+          "q25": 58165058.25,
+          "q75": 61455414.75,
+          "q95_nearest_rank": 66072848
+        }
+      },
+      "completion_by_arm": {
+        "null_a": 1.0,
+        "null_b": 1.0,
+        "delay": 1.0
+      },
+      "deadline_overshoot_ns": {
+        "n": 60,
+        "mean": 890871.0833333334,
+        "median": 781404.5,
+        "std": 560204.5062950462,
+        "min": 220560,
+        "max": 3333415,
+        "q25": 528770.25,
+        "q75": 1039445.75,
+        "q95_nearest_rank": 2129896
+      },
+      "delivery_lag_ns": {
+        "n": 60,
+        "mean": 189098.35,
+        "median": 184901.5,
+        "std": 45526.66840245945,
+        "min": 123935,
+        "max": 303578,
+        "q25": 150308.75,
+        "q75": 217486.25,
+        "q95_nearest_rank": 271466
+      },
+      "null_difference_ns": {
+        "n": 20,
+        "mean": 1466300.8,
+        "median": 2394145.5,
+        "std": 6828435.401003692,
+        "min": -14130493,
+        "max": 9936909,
+        "q25": 262342.0,
+        "q75": 6894029.5,
+        "q95_nearest_rank": 9646526
+      },
+      "positive_difference_ns": {
+        "n": 20,
+        "mean": 23597706.55,
+        "median": 24147249.5,
+        "std": 5013835.609884836,
+        "min": 13582491,
+        "max": 31877105,
+        "q25": 19899510.5,
+        "q75": 28123164.5,
+        "q95_nearest_rank": 29772637
+      },
+      "actual_delay_sleep_ns": {
+        "n": 20,
+        "mean": 25181085.05,
+        "median": 25177388.5,
+        "std": 19804.58442501382,
+        "min": 25149421,
+        "max": 25227142,
+        "q25": 25165661.5,
+        "q75": 25195173.5,
+        "q95_nearest_rank": 25211136
+      },
+      "oversleep_ns": {
+        "n": 20,
+        "mean": 181085.05,
+        "median": 177388.5,
+        "std": 19804.58442501382,
+        "min": 149421,
+        "max": 227142,
+        "q25": 165661.5,
+        "q75": 195173.5,
+        "q95_nearest_rank": 211136
+      },
+      "on_time_delay_sleep_count": 20,
+      "late_messages": 0,
+      "absent_messages": 0
+    }
+  ],
+  "qualified_echo_budget_ns": [
+    100000000
+  ],
+  "scope": "Python echo only; not native solver budget admission",
+  "elapsed_seconds": 23.711729142,
+  "raw_sha256": "0c29db636ac43c32fcac734c422e6eed045fd8e98a8a96ad86b825f45af71f06",
+  "load_end": [
+    0.6201171875,
+    0.328125,
+    0.255859375
+  ]
+}

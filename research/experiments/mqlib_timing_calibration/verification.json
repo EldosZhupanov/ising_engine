@@ -1,0 +1,19 @@
+{
+  "protocol_commit": "2d9cb9c",
+  "instrument_commit": "3aaac7c",
+  "unit_tests": {
+    "command": "python3 -m unittest discover -s research/experiments/mqlib_timing_calibration -p 'test_*.py' -v",
+    "passed": 12,
+    "failed": 0,
+    "scope": "fabricated records only; no registered timing data used to tune tests"
+  },
+  "python_syntax": "PASS",
+  "diff_check": "PASS",
+  "independent_agent_review": {
+    "reviewer": "/root/calibration_reviewer",
+    "pre_execution": "PASS after fixing INVALID precedence, recording kill/reap, pinning parent CPU; malformed-schema and source-deletion handling checked",
+    "post_execution": "PASS; independent script imports no instrument, rescored smoke+main, no worker runs"
+  },
+  "outcome": "FAIL overall;only100ms passes both echo shapes; no native-solver admission",
+  "source_changes": "research instrumentation only; no production src/Cargo edits; no cargo tests run"
+}
