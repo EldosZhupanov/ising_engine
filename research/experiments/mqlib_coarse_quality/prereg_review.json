@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "scope": "preregistration only",
+  "reviewer": "/root/comparison_explorer",
+  "checks": [
+    "24inputhashes and inheritedmanifest",
+    "unchanged H1/H2/arms/seeds/settings",
+    "20admission+960maincells",
+    "transparent postfailure admissionrevision"
+  ],
+  "clarification": "manifest key renamed max_kill_request_overshoot_seconds to match protocol kill_seconds-2s; no scientific change",
+  "protocol_sha256": "5069958e758ca067fc8d57e397305775bb0af5fcbd560d936aadae35dc2df061",
+  "manifest_sha256": "284eaab2640322eb99346a99cc58575ef1ad327d6e4211f4cacdfe45ea27de84",
+  "observations": 0
+}

@@ -12,7 +12,24 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-DIFFICULTY-001 closed; main not admitted, 2026-09-28
+## Current — MQ-QUALITY-002 preregistered; instrument next, 2026-09-28
+
+[Prospective continuation](../research/experiments/mqlib_coarse_quality/protocol.md)
+retains the same untested2s H1/H2,24qualification inputs, four configurations and
+explicitly transfers unused main seeds61101..61110. Admission is revised after
+MQ-DIFFICULTY-001 failed; it is not an uninformed new primary experiment.
+No short-budget ranking, holdout, learned-selector, S3/X3 or superiority claim.
+Independent preregistration review PASS; no observations under this version.
+
+**Next task:** implement new Python orchestration and independent audit, reusing
+immutable run_cell/native workers without calling or modifying the old main gate.
+Commit and review before20admission cells at2s (16readiness+4tinyactualsmokes).
+Success with independent artifact review licenses one960-cell main at2s; cumulative
+cap3000s. Eligibility remains receipt AND independent validation strictly<2s.
+Check kill-request overshoot<=100ms, not the earlier cutoff timestamp. Preserve
+all outcomes and stop this version on failure. No production/Cargo changes needed.
+
+## Previous — MQ-DIFFICULTY-001 closed; main not admitted, 2026-09-28
 
 [Closure](../research/experiments/mqlib_difficulty_qualification/closure/RESULT.md):
 one registered preflight completed on committed instrument `f76991d` after

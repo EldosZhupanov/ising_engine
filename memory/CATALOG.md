@@ -1,7 +1,7 @@
 # Document catalogue
 
 This sidecar catalogue classifies every Markdown document without modifying frozen evidence. Paths are the stable identifiers. Dates come from Git history; they describe chronology but do not establish authority.
-Its enforced scope is Git-tracked plus nonignored untracked Markdown (381 files
+Its enforced scope is Git-tracked plus nonignored untracked Markdown (382 files
 at this update). The 55 Git-ignored Markdown reports and download READMEs are
 classified separately as historical evidence in [FILE_MAP.tsv](FILE_MAP.tsv);
 the catalogue gate intentionally excludes ignored paths.
@@ -16,7 +16,7 @@ the catalogue gate intentionally excludes ignored paths.
 ## Summary
 
 - `active`: 18
-- `binding`: 56
+- `binding`: 57
 - `closed`: 48
 - `historical`: 2
 - `proposed`: 43
@@ -432,3 +432,4 @@ Their listing records existence, not scientific acceptance.
 | `research/experiments/mqlib_difficulty_qualification/protocol.md` | preregistration | A0 | binding | 2026-09-28 | 2026-09-28 | true | MQ-DIFFICULTY-001; qualification-only exception |
 | `research/experiments/mqlib_difficulty_qualification/preflight001/README.md` | run-artifact | A1 | reference | 2026-09-28 | 2026-09-28 | false | MQ-DIFFICULTY-001-preflight |
 | `research/experiments/mqlib_difficulty_qualification/closure/RESULT.md` | research-result | A1 | closed | 2026-09-28 | 2026-09-28 | true | MQ-DIFFICULTY-001 |
+| `research/experiments/mqlib_coarse_quality/protocol.md` | preregistration | A0 | binding | 2026-09-28 | 2026-09-28 | true | MQ-QUALITY-002 |
