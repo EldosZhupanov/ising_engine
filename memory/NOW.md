@@ -12,15 +12,19 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-MST2-001 preparation, 2026-09-28
+## Current — MQ-MST2-001 instrument preparation, 2026-09-28
 
 [Prospective protocol](../research/experiments/mqlib_mst2_qualification/protocol.md):
 qualify PALUBECKIS2004bMST2 on12 exposed tiny artificial models,544 exact state
 identities and144 callback/process cells. No comparative performance claim,
 real corpus or held-out data. Explorer confirms callback replaces runtime check,
 false from STS can be followed by another callback, and tiny variable selection
-clamps its dimension. Next: protocol review/freeze, isolated bridge and rejection
-tests, independent instrument review/freeze, one retained run and independent audit.
+clamps its dimension. Protocol `f6fa9e9` committed after independent design PASS.
+Isolated C++ bridge builds with strict warnings;13 fabricated/mock tests PASS.
+Initial review found two failure-reporting issues, corrected before execution.
+Independent final instrument review PASS (`mqlib_explorer` after the first
+reviewer hit a service usage limit). Next: commit, nondevelopment rebuild, one
+retained run and independent raw audit. No optimizer runs have occurred yet.
 Original MERZ adapter, production kernels/APIs/Cargo and old evidence stay unchanged.
 Parent S3/X3 and holdout gates remain in force.
 

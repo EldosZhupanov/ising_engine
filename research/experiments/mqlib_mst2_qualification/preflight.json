@@ -1,0 +1,40 @@
+{
+  "protocol_commit": "f6fa9e9",
+  "optimizer_executions_before_freeze": 0,
+  "checks": [
+    {
+      "command": "python3 -m unittest discover -s research/experiments/mqlib_mst2_qualification -p test_*.py -v",
+      "result": "13 passed; no optimizer executed; mocked processes only"
+    },
+    {
+      "command": "python3 research/experiments/mqlib_mst2_qualification/build.py --development",
+      "result": "strict g++ -Wall -Wextra -Werror build PASS"
+    },
+    {
+      "command": "python3 -m py_compile research/experiments/mqlib_mst2_qualification/*.py",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "review_corrections": [
+    "Preserve scientific/parser/source FAIL over coincident campaign cap.",
+    "Oversized numeric JSON becomes retained validation failure, not uncaught OverflowError."
+  ],
+  "production": "src and Cargo unchanged; no Cargo gate invoked for isolated C++/Python scope",
+  "review_service_interruption": {
+    "agent": "/root/calibration_reviewer",
+    "stage": "final instrument re-review after two fixes",
+    "reason": "service usage limit",
+    "fallback": "read-only final review requested from /root/mqlib_explorer",
+    "optimizer_runs_before_final_review": 0
+  },
+  "independent_instrument_review": {
+    "agent": "/root/mqlib_explorer",
+    "status": "PASS",
+    "tests": "13/13 fabricated tests independently repeated; no optimizer execution",
+    "required_next": "commit then nondevelopment rebuild; current development manifest stale by design"
+  }
+}
