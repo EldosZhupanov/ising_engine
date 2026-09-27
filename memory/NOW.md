@@ -12,29 +12,37 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Active — ER-001 real-data reconciliation pilot, 2026-09-27
+## Active — ER-001 complete; scorer/blocking design next, 2026-09-27
 
-User selected APP-01. [Protocol](../research/experiments/entity_resolution/protocol.md)
-and [Builder intake](../research/HYPODIVE_BUILDER_INTAKE.md) scope a development
-pilot on twelve label-blind six-record WDC training blocks. Fixed title-token
-utilities, independent partition oracle, threshold/closure/greedy controls and
-unchanged native MSC kernel; no Laya inference/training or production changes.
-Validation/test archive members remain unopened; these development labels are
-reference annotations, not proof of semantic truth. Cross-block pairs unresolved.
+[ER-001 result](../research/experiments/entity_resolution/RESULT.md): verified
+real-data reconciliation capability; **H1 PASS, H2 FAIL, H3 PASS**. Twelve WDC
+training blocks/72 records,120 native cells,1,344 incumbents; independent audit
+PASS. Nine blocks have inconsistent pair decisions. Exact and greedy both attain
+F1=0.705314 and the same optimal partitions on all12; native optimum witnesses
+120/120 do not establish added search value. Native-wrapper F1 variation is due
+to optimal ties; five selected fallback endpoints have separate native-optimal
+witnesses and are disclosed. Cross-block/unselected pairs remain unresolved.
 
-Instrument and fourteen synthetic checks implemented; Rust example tests 2/2 and
-release build pass. Independent preflight found identity/inventory gaps, repaired
-with seed/clock checks, exact raw/source manifests, binary/environment checks and
-retained invalid markers. Exact rational F1 gates and native-only success counting
-exclude rounding artifacts and fallback-only successes. Independent final
-preflight **PASS**: 14 tests, input hash/design and diff check; code ready to freeze.
-No real solver outcomes have been accessed. Planned main budget120x2seconds,
-seeds990001..990010; H1/H2/H3 thresholds frozen in protocol. All failed outcomes
-must remain; no tuning or new campaign follows automatically.
+Protocol/instrument96b0c23; raw a91481c. [Handoff](../research/HYPODIVE_BUILDER_HANDOFF.md)
+and [independent executable audit](../research/experiments/entity_resolution/independent_audit.py)
+preserve reproduction. Fourteen Python tests and2/2 unchanged Rust example tests
+PASS; build/targeted Clippy PASS; analysis replay equals saved summary. Independent
+review recomputed147 main raw hashes,203 source/Git hashes, binary, every cell,
+energy/partition, confusion count and gate. Source/cases are frozen; no rerun.
+Final publication review PASS; memory/link gate359 Markdown/93 immutable and
+`git diff --check` PASS. Reusable independent audit source/report are preserved.
 
-**Next:** freeze reviewed instrument/protocol, synthetic smoke,
-then main unchanged pilot, independent audit and result/handoff. The incomplete
-untracked upstream clone remains untouched. No other solver-family task is active.
+**Next task (design first):** qualify blocking coverage and lexical/model scores
+on newly frozen entity-disjoint data, with the SAME greedy/exact decoder. Define
+how Laya could be restored/evaluated separately; no training, installation or
+full campaign follows automatically. Do not expand native search on these easy
+objectives or retune ER-001 into a positive result. Laya was NOT run in ER-001.
+
+The reusable research CLI in `research/experiments/entity_resolution/core.py`
+accepts complete integer scores for1..8 records and returns an exact consistent
+partition; it certifies objective/constraints, not semantic truth. Production
+source, both solver families and weights are unchanged. Pilot processes finished.
+Only the known incomplete upstream clone remains visibly untracked and untouched.
 
 ## Application discovery completed — 2026-09-27
 

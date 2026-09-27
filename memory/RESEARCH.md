@@ -25,6 +25,18 @@ artifact durable, but does not ratify its original scientific interpretation.
 | Is RC027 provenance intact? | [RC027 result](../results/rc027/RESULT.md) raw/stderr SHA-256 values match the local files. Its printed instrument commit is a typo; actual `fdec0dfdf245c32925d71ffd745a34b7357cbaa4` produces the recorded source SHA-256. | Keep the result immutable; cite the corrected hash prospectively. The finding remains below the 1% materiality floor. |
 | Which changes are authoritative architecture decisions? | [ADR index](DECISIONS.md) distinguishes accepted from proposed decisions. | Read the ADR and current code together; a synthesis drawing or roadmap is not proof of implementation. |
 
+### ER-001 real-data entity reconciliation — 2026-09-27
+
+[Result](../research/experiments/entity_resolution/RESULT.md), source96b0c23,
+raw a91481c, independent auditPASS:120 cells and1,344 incumbents. **REPRODUCED**
+capability: label-blind blocks, exact partitioning, cubic objective and native
+kernel energy agreement. H1PASS(9/12 conflicted blocks), H3PASS(120/120 native
+optima). **H2FAIL**: exact and greedy both F1=0.705314 and identical optimal
+partitions; no added-search benefit established. This is a 72-record development
+subset, not an official WDC score. Native tie-based F1 variation and five
+fallback-selected endpoints are disclosed. Next: fresh scorer/blocking design;
+no training, Laya inference or automatic new campaign.
+
 ### Application triage and prospective CD003 correction — 2026-09-27
 
 [Hypodive application triage](../research/HYPODIVE_TRIAGE.md) ranks entity

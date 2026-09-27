@@ -91,3 +91,107 @@ Rows hash c41968e84e64beee0c91c7910fa003affc93eb0b30e3ca7c4579ccec1f5a37ae.
 Claim IDs C1–C3; reproduction uses --check or a separate copy of the frozen
 witness because --run refuses existing output. Builder verdict **READY: independently reviewed and Git-frozen**.
 Scientific decision on rank-only H11 is NO-GO; no production/publication GO.
+
+---
+
+# ER-001 Builder handoff — 2026-09-27
+
+## 1. Objective
+
+Mode C: build a verified small real-data entity-reconciliation pipeline after
+APP-01 triage. [Result](experiments/entity_resolution/RESULT.md) separates
+implemented behavior, development annotation quality and native search fidelity.
+
+## 2. Strongest Claims
+
+ER-C1 REPRODUCED engineering: one complete-score partitioner, exact up to eight
+records, with independently verified cubic encoding and truth-free input boundary.
+ER-C2 REPRODUCED in this development sample: nine of twelve groups require
+consistency repair; exact/greedy F1=0.705314 versus pairwise0.677083.
+ER-C3 NOT SUPPORTED: additional search benefit. Greedy equals exact on all twelve
+blocks; registered H2 fails. Native reaches an optimal witness in120/120 cells,
+which establishes H3 fidelity only. No semantic guarantee or novel method.
+
+## 3. Canonical Implementation
+
+[core.py](experiments/entity_resolution/core.py) owns score/partition/objective
+semantics and the small JSON CLI. [prepare.py](experiments/entity_resolution/prepare.py)
+owns pinned WDC intake. [pilot.py](experiments/entity_resolution/pilot.py) owns
+run/analysis, invoking unchanged Q002 supervision and native `hubo_compare.rs`.
+The older synthetic LAYA-001 and its bridge are preserved, not silently repurposed.
+
+## 4. Architecture Decisions
+
+Research-only standard-library Python; reuse native MSC through its existing
+example boundary. No Rust production/API/dependency migration; both solver families
+intact. Exhaustive set partitions are the strong optimum control at this size.
+Routine scoped choices need no new ADR. Laya runtime/training deferred explicitly.
+
+## 5. Invariants
+
+Label-free blocking/scoring/search; complete within-block edge semantics; canonical
+partition ties; triangle penalty excludes inconsistent global minima; exact integer
+binary/spin energy equality with factor8; every event verified; late witnesses
+never credited; fallback never counted as native success; frozen inputs/sources,
+command/seed identity, sequential clocks, exact raw inventories and failure retention.
+
+## 6. Test Evidence
+
+Fourteen Python tests PASS, unchanged Rust example2/2 PASS, release build and
+targeted Clippy PASS. Input regeneration matches SHA exactly. Independent final
+preflight PASS after seed/inventory/environment/F1-boundary issues were repaired
+before any empirical outcome. No full production cargo rerun: no production change.
+
+## 7. Empirical Evidence
+
+[Main archive](experiments/entity_resolution/run/main/summary.json):120 cells,
+1,344 checked incumbents; [smoke](experiments/entity_resolution/run/smoke/summary.json):
+one separate cell/five incumbents. H1PASS, H2FAIL, H3PASS. Five selected fallback
+endpoints have separate on-time native optimal witnesses. Equal-energy ties cause
+native-wrapper F1 variation; they do not overturn H2. No statistics of new worlds
+are inferred from repeated seeds.
+
+## 8. Assumptions
+
+WDC identifier-derived reference labels; no model trained; fixed lexical scores.
+Only72/2,841 offers and87/8,471 source-positive pairs enter selected blocks.
+Cross-block pairs unresolved. Test/validation archive members remain unread.
+CPU kernel and Python scorer, one worker; no GPU/hardware-energy claim.
+
+## 9. Known Weaknesses
+
+Development selection, small blocks, no source-disjoint holdout and no calibrated
+probabilities. Greedy already solves these objectives. No demonstrated Laya value,
+presolve benefit, industrial scaling, end-to-end latency gain or field-wide novelty.
+Independent auditor checks the recorded runtime binary; this is not a clean-machine
+rebuild demonstration. Dataset archive remains external; source URL and hashes
+support reconstruction rather than redistributing raw text.
+
+## 10. Simplest Plausible Alternative
+
+Deterministic greedy merging suffices here and chooses the same twelve partitions
+as exact enumeration. Better semantic quality than naive threshold/closure may
+come entirely from this simple consistency treatment, without expensive search.
+
+## 11. Suggested Kill-Tests
+
+Run the preserved [independent auditor](experiments/entity_resolution/independent_audit.py)
+for `main` and `smoke`; it recomputes without importing the pilot. Mutate energies,
+seed identity, labels, source hashes or late timestamps in a disposable copy:
+verification must refuse it. For any future gain, keep the same scorer/decoder
+controls and separate blocking coverage from within-block F1; use new data and
+new protocol. Do not retune the opened ER-001 sample into a success.
+
+## 12. Freeze Point
+
+Branch `feat/solver-research-upgrades`; evaluated code/protocol `96b0c23`, results
+`a91481c`. Config/seeds/claims: [protocol](experiments/entity_resolution/protocol.md);
+source/input/environment hashes: [environment](experiments/entity_resolution/run/main/environment.json);
+raw manifest: [manifest](experiments/entity_resolution/run/main/raw_manifest.json).
+Independent reviewer/source/report: [audit](experiments/entity_resolution/independent_audit.json),
+**PASS**, all147 main raw hashes,203 source/Git hashes and the binary, all120 cells
+and1,344 incumbents. Source script and reproduction commands are retained.
+Builder verdict **READY FOR FALSIFICATION; independent artifact audit PASS**.
+Scientific decision: capability retained, added-search-value claim not supported.
+Next design: fresh entity-disjoint scorer/blocking qualification with identical
+simple/exact decoders. No automatic new campaign or training.

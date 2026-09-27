@@ -1,0 +1,162 @@
+{
+  "schema": 1,
+  "reviewer": "independent laya_review agent",
+  "evaluated_commit": "96b0c23090d0b82251e8d99c1a8e8a6bf6684a09",
+  "raw_preservation_commit": "a91481c",
+  "audit_source_sha256": "4a3ae06e3a7f129b771a09d39bce5ddd55cd600800307019e7bd83abc9c0d736",
+  "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+  "commands": [
+    [
+      "/usr/bin/python3",
+      "/home/eldos/ising_engine/research/experiments/entity_resolution/independent_audit.py",
+      "smoke"
+    ],
+    [
+      "/usr/bin/python3",
+      "/home/eldos/ising_engine/research/experiments/entity_resolution/independent_audit.py",
+      "main"
+    ]
+  ],
+  "runs": {
+    "smoke": {
+      "status": "PASS independent audit",
+      "mode": "smoke",
+      "hashed_raw": 6,
+      "hashed_sources": 203,
+      "checks": {
+        "cells": 1,
+        "all_incumbents_checked": 5,
+        "native_optimum_hits": 1,
+        "wrapper_optimum_hits": 1,
+        "native_fallback_endpoints": 0,
+        "conflicted_blocks": 1,
+        "exact_changed_blocks": 1,
+        "informative_gate": false,
+        "semantic_signal_gate": false,
+        "native_fidelity_gate": true
+      },
+      "baseline_counts": {
+        "pairwise": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "tn": 1
+        },
+        "closure": {
+          "tp": 1,
+          "fp": 2,
+          "fn": 0,
+          "tn": 0
+        },
+        "greedy": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "tn": 2
+        },
+        "exact": {
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "tn": 1
+        }
+      },
+      "f1": {
+        "pairwise": 0.6666666666666666,
+        "closure": 0.5,
+        "greedy": 1.0,
+        "exact": 0.0
+      },
+      "native_f1": {
+        "991001": 1.0
+      },
+      "gap": {
+        "max": 0,
+        "mean": 0,
+        "median": 0,
+        "min": 0,
+        "q25": 0,
+        "q75": 0,
+        "std": 0.0
+      }
+    },
+    "main": {
+      "status": "PASS independent audit",
+      "mode": "main",
+      "hashed_raw": 147,
+      "hashed_sources": 203,
+      "checks": {
+        "cells": 120,
+        "all_incumbents_checked": 1344,
+        "native_optimum_hits": 120,
+        "wrapper_optimum_hits": 120,
+        "native_fallback_endpoints": 5,
+        "conflicted_blocks": 9,
+        "exact_changed_blocks": 9,
+        "informative_gate": true,
+        "semantic_signal_gate": false,
+        "native_fidelity_gate": true
+      },
+      "baseline_counts": {
+        "pairwise": {
+          "tp": 65,
+          "fp": 40,
+          "fn": 22,
+          "tn": 53
+        },
+        "closure": {
+          "tp": 75,
+          "fp": 59,
+          "fn": 12,
+          "tn": 34
+        },
+        "greedy": {
+          "tp": 73,
+          "fp": 47,
+          "fn": 14,
+          "tn": 46
+        },
+        "exact": {
+          "tp": 73,
+          "fp": 47,
+          "fn": 14,
+          "tn": 46
+        }
+      },
+      "f1": {
+        "pairwise": 0.6770833333333334,
+        "closure": 0.6787330316742082,
+        "greedy": 0.7053140096618358,
+        "exact": 0.7053140096618358
+      },
+      "native_f1": {
+        "990001": 0.7047619047619048,
+        "990002": 0.7047619047619048,
+        "990003": 0.7115384615384616,
+        "990004": 0.7047619047619048,
+        "990005": 0.7053140096618358,
+        "990006": 0.7115384615384616,
+        "990007": 0.7053140096618358,
+        "990008": 0.7177033492822966,
+        "990009": 0.7115384615384616,
+        "990010": 0.7177033492822966
+      },
+      "gap": {
+        "max": 0,
+        "mean": 0,
+        "median": 0.0,
+        "min": 0,
+        "q25": 0.0,
+        "q75": 0.0,
+        "std": 0.0
+      }
+    }
+  },
+  "status": "PASS",
+  "scope": "Independent read-only recomputation of existing smoke/main evidence; no solver execution or inference.",
+  "limits": [
+    "Matches recorded source and current binary; not a rebuild reproducibility demonstration.",
+    "Development data only; no holdout, speed or superiority claim.",
+    "Native F1 differences among equal-energy optima do not overturn failed H2."
+  ]
+}
