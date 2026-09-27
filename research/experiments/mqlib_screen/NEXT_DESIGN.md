@@ -92,8 +92,14 @@ v2 default result supplies no evidence about learned KB or dynamic scheduling.
 **Primary application contract:** delivered-result wall time starts before
 conversion/serialization/launch, exactly as MQ-SCREEN-001. Preserve complete
 receipt timestamps and strict cutoff, all-zero fallback, failures and late
-output. One pinned CPU, one worker per arm; rotate/randomize block order using a
-frozen schedule and record load. Never subtract a measured startup median from
+output. For the prospective native calibration and its dependent benchmark,
+**parent CPU0 + child CPU0**, one worker per arm, is the chosen contract. All
+parent-side serialization, validation and delivery contention stays in the
+application budget; no dedicated uncharged controller core is supplied. Verify
+and record actual affinity of both processes (requested taskset is insufficient).
+Freeze this same contract in both instruments; an affinity change requires a new
+prospective calibration before timing claims. Rotate/randomize block order using
+a frozen schedule and record load. Never subtract a measured startup median from
 individual times or claim it was free.
 
 **Optional separate kernel experiment:** a persistent initialized worker may
@@ -195,3 +201,26 @@ that receipt/deadline path, not native solver performance. Its
 [result](../mqlib_timing_calibration/RESULT.md) is overall FAIL: only100ms passes
 both echo shapes. The next scoped task is a native no-search readiness design;
 corpus targets and untouched split clearance remain separate qualification items.
+
+## Prospective affinity clarification — 2026-09-27
+
+Source inspection confirms MQ-SCREEN-001 pins its child toCPU0 but does not
+explicitly set or record the parent's affinity mask. MQ-CAL-001 explicitly pins
+both. Thus MQ-CAL-001 is not a retrospective calibration of the old screen's
+scheduling contract. Do not infer the old parent's actual placement from absence
+of an explicit pin; inherited affinity was not established by those records.
+The completed screen and calibration records remain immutable and unchanged.
+
+For the next native experiment and its eventual comparison, choose the shared
+CPU0 contract above. Record parent/child observed masks, worker thread settings,
+input conversion, model readiness, emission and parent receipt; reject a contract
+mismatch. Controller work is part of the single-core application cost. This
+choice supplies no claim that it is the fastest or least noisy arrangement.
+
+The echo's roughly tens-of-milliseconds receipt latency is a measurement of
+process startup plus parsing/construction/output/delivery, not an estimate of
+clock error. No phase-isolation experiment established Python startup alone as
+the entire cause. Neither that latency nor a passing100ms gate is transferable
+to native startup or an unmeasured speed ratio. Native qualification must use the
+actual per-arm initialization/output path; do not replace it with a generic echo
+and assume equivalent overhead. No new execution is authorized by this design.

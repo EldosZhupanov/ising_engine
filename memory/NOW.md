@@ -25,6 +25,10 @@ real coefficients or reserved outcomes used; production APIs/families unchanged.
 
 **Next task:** design a separately preregistered native no-search readiness probe
 using actual Rust/C++ conversion/model-load/output paths on artificial fixtures.
+Fix parent CPU0 + child CPU0 for both the native calibration and its dependent
+benchmark; record observed masks and reject mismatches. The old screen did not
+explicitly pin/record its parent, so MQ-CAL-001 does not retroactively calibrate
+that scheduling contract. Echo latency is not clock error.
 The Python echo's startup cost cannot be transferred to native solvers. Preserve
 cold-start versus warm-worker distinctions; qualify the new instrument before
 any execution. No automatic real solver-comparison wave follows this calibration.
