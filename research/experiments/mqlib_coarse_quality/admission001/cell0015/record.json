@@ -1,0 +1,972 @@
+{
+  "cell": {
+    "instance": "q23",
+    "arm": "mqlib_mst2",
+    "seed": 0,
+    "mode": "null_a",
+    "budget": 2.0,
+    "block": "probe"
+  },
+  "events": [
+    {
+      "raw_base64": "eyJraW5kIjoicmVhZHkiLCJhZmZpbml0eSI6IjAifQ==",
+      "received_seconds": 0.20106185600161552,
+      "message": {
+        "kind": "ready",
+        "affinity": "0"
+      },
+      "validated_seconds": 0.2011564960121177
+    },
+    {
+      "raw_base64": "eyJraW5kIjoiaW5jIiwib2JqZWN0aXZlIjowLCJzdGF0ZSI6WzAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMF0sInNsZWVwX25zIjoxMTB9",
+      "received_seconds": 0.201351527008228,
+      "message": {
+        "kind": "inc",
+        "objective": 0,
+        "state": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "sleep_ns": 110
+      },
+      "verified_energy": 425,
+      "validated_seconds": 0.20592922801733948
+    }
+  ],
+  "errors": [],
+  "fallback_energy": 425,
+  "ready": 1,
+  "configs": 0,
+  "observations": [
+    {
+      "seconds": 0.1809769520186819,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.2561669400020037,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.30704741799854673,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.3577005450206343,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.40834329099743627,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.45920072600711137,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.5097347760165576,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.5604206139978487,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.6111688170058187,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.6620468970213551,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.7128208680078387,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.7634059700067155,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.8139976800011937,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.8646822360169608,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.9153980720147956,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.9661387850064784,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.0168684170057531,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.0673725999949966,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.1180182020179927,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.168623589008348,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.219410654011881,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.270216311007971,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.3210042080027051,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.371743198018521,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.4224820280214772,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.4732371580030303,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.5239929950039368,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.5748902510094922,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.6255497700185515,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.676116903021466,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.7268151250027586,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.7774461189983413,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.8280969360203017,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.8789077980036382,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.9295500440057367,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.9801209040160757,
+      "tasks": [
+        {
+          "tid": 2564759,
+          "name": "worker",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        }
+      ]
+    }
+  ],
+  "parent_affinity": [
+    0
+  ],
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/.cache/mqlib-difficulty/worker",
+    "mqlib_mst2",
+    "/tmp/mq-difficulty-y7x4uitf/model",
+    "0",
+    "null_a"
+  ],
+  "setup_seconds": 0.17218072302057408,
+  "pid": 2564759,
+  "launch_seconds": 0.18093413999304175,
+  "cutoff_seconds": 2.001052483014064,
+  "kill_seconds": 2.0010536260087974,
+  "reap_seconds": 2.0025719230179675,
+  "exit_code": -9,
+  "partial_base64": "",
+  "total_seconds": 2.0031996570178308,
+  "stdout_bytes": 1110,
+  "status": "VALID"
+}

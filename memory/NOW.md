@@ -12,24 +12,26 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-QUALITY-002 instrument reviewed; admission next, 2026-09-28
+## Current — MQ-QUALITY-002 admission reviewed PASS; main next, 2026-09-28
 
 [Prospective continuation](../research/experiments/mqlib_coarse_quality/protocol.md)
 retains the same untested2s H1/H2,24qualification inputs, four configurations and
 explicitly transfers unused main seeds61101..61110. Admission is revised after
 MQ-DIFFICULTY-001 failed; it is not an uninformed new primary experiment.
 No short-budget ranking, holdout, learned-selector, S3/X3 or superiority claim.
-Independent preregistration review PASS; no observations under this version.
+Independent preregistration and instrument reviews PASS.
 
 New isolated Python coordinator/auditor implemented; unchanged native workers and
 production sources.12new and25inherited Python tests PASS; syntax, documentation,
-diff and independent instrument review PASS. No observations yet.
+diff and independent instrument review PASS. Admission20/20VALID,20eligible witnesses,0late; raw audit PASS. Maximum
+kill overshoot2.102ms. Main has not run.
 
-**Next task:** bind committed source/binary provenance, run one20-cell admission
-at2s (16readiness+4tinyactualsmokes), independently audit/review. Only PASS licenses
-one960-cell main at2s; cumulative cap3000s. Eligibility requires receipt AND
-validation strictly<2s; kill request<=2.1s. Preserve all outcomes, no retries.
-No production/Cargo changes or optimizer-performance claims.
+Independent admission artifact review PASS.
+
+**Next task:** one960-cell main at2s
+using committed instrument `6d0f5a5`. Admission elapsed42.710s; cumulative cap3000s.
+Eligibility requires receipt AND validation strictly<2s; kill request<=2.1s.
+Preserve all outcomes, no retries. No production/Cargo changes or speed claims.
 
 ## Previous — MQ-DIFFICULTY-001 closed; main not admitted, 2026-09-28
 
