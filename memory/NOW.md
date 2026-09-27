@@ -19,6 +19,14 @@ local project. Its previous fetched tip was March commit `7df051b`; local c8391a
 contained 253 additional commits. Publication uses ordinary fast-forward, never
 force-push. Audit the exact Git commit, not an assumed date or cached remote copy.
 
+Publication verified: remote `master` reached `501905960f97cb1f42f5bbc839c77c370476b16d`
+(258 commits after the old remote). [GitHub Actions run](https://github.com/EldosZhupanov/ising_engine/actions/runs/36313660314)
+failed before any job steps: GitHub reports failed account payments or a spending
+limit requiring attention in Billing & plans. This is an external CI blocker;
+local PASS results above/below are not a claim that hosted CI passed. Account
+billing must be resolved before hosted checks can run. This status correction
+is a subsequent documentation commit; use current remote HEAD for new audits.
+
 [Publication corrections](../research/HYPODIVE_TRIAGE.md#github-publication-correction--2026-09-27):
 synthetic Max-Cut output no longer claims G1/Gurobi results; both endpoints receive
 the correct linear coefficient. RandomSearchOrchestrator accurately names its

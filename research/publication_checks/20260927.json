@@ -117,5 +117,13 @@
       "exit_code": 0,
       "output": "   Compiling ising_engine v0.1.0 (/home/eldos/ising_engine)\n    Finished `release` profile [optimized] target(s) in 35.22s\n     Running unittests src/bin/gset_official_benchmark.rs (target/release/deps/gset_official_benchmark-990a43631d221b87)\n\nrunning 2 tests\ntest tests::complete_triangle_energy_equals_negative_cut_exhaustively ... ok\ntest tests::seeded_sparse_graph_is_repeatable_and_energy_consistent ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
     }
-  ]
+  ],
+  "publication": {
+    "verified_remote_master": "501905960f97cb1f42f5bbc839c77c370476b16d",
+    "commits_after_previous_remote": 258,
+    "actions_run": "https://github.com/EldosZhupanov/ising_engine/actions/runs/36313660314",
+    "hosted_ci": "BLOCKED_BEFORE_JOB_STEPS",
+    "annotation": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the Billing & plans section in your settings",
+    "annotation_source": "https://api.github.com/repos/EldosZhupanov/ising_engine/check-runs/108604203361/annotations"
+  }
 }
