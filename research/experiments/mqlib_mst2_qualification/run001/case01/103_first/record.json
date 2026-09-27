@@ -1,0 +1,80 @@
+{
+  "case": "case01",
+  "seed": 103,
+  "mode": "first",
+  "start_ns": 220088130524807,
+  "watchdog_seconds": 2.0,
+  "parent_affinity": [
+    0
+  ],
+  "status": "VALID",
+  "errors": [],
+  "input_sha256": "ef5455778c3c9429072875f1c9de7eb798b90683955b41c5c41141c388397a29",
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/.cache/mqlib-mst2/stream",
+    "/home/eldos/ising_engine/research/experiments/mqlib_mst2_qualification/run001/case01/103_first/input.qubo",
+    "103",
+    "first"
+  ],
+  "child_affinity": [
+    0
+  ],
+  "timed_out": false,
+  "kill_sent_ns": null,
+  "reaped_ns": 220088138953923,
+  "returncode": 0,
+  "verified": {
+    "callbacks": [
+      {
+        "kind": "callback",
+        "index": 1,
+        "objective": 3,
+        "state": [
+          0,
+          1,
+          1
+        ],
+        "continue": false,
+        "elapsed_ns": 3276,
+        "upstream_runtime": 2e-06,
+        "affinity": "0",
+        "energy_exact": "-5"
+      },
+      {
+        "kind": "callback",
+        "index": 2,
+        "objective": 3,
+        "state": [
+          0,
+          1,
+          1
+        ],
+        "continue": false,
+        "elapsed_ns": 50155,
+        "upstream_runtime": 4.9999999999999996e-05,
+        "affinity": "0",
+        "energy_exact": "-5"
+      }
+    ],
+    "final": {
+      "kind": "final",
+      "objective": 3,
+      "state": [
+        0,
+        1,
+        1
+      ],
+      "callbacks": 2,
+      "stop_seen": true,
+      "energy_exact": "-5"
+    },
+    "partial_hex": "",
+    "best_energy_exact": "-5"
+  },
+  "stdout_hex": "7b226b696e64223a2263616c6c6261636b222c22696e646578223a312c226f626a656374697665223a332c227374617465223a5b302c312c315d2c22636f6e74696e7565223a66616c73652c22656c61707365645f6e73223a333237362c22757073747265616d5f72756e74696d65223a312e39393939393939393939393939393939652d30362c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a322c226f626a656374697665223a332c227374617465223a5b302c312c315d2c22636f6e74696e7565223a66616c73652c22656c61707365645f6e73223a35303135352c22757073747265616d5f72756e74696d65223a342e39393939393939393939393939393936652d30352c22616666696e697479223a2230227d0a7b226b696e64223a2266696e616c222c226f626a656374697665223a332c227374617465223a5b302c312c315d2c2263616c6c6261636b73223a322c2273746f705f7365656e223a747275657d0a",
+  "stderr_hex": "",
+  "elapsed_seconds": 0.008628024
+}

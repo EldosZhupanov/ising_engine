@@ -1,0 +1,195 @@
+{
+  "case": "case03",
+  "seed": 101,
+  "mode": "deadline",
+  "start_ns": 220088856340701,
+  "watchdog_seconds": 2.0,
+  "parent_affinity": [
+    0
+  ],
+  "status": "VALID",
+  "errors": [],
+  "input_sha256": "2b70655d2c5672565a518234ff4e2a46d0469f8fa4951bf9c0cb0c824c648636",
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/.cache/mqlib-mst2/stream",
+    "/home/eldos/ising_engine/research/experiments/mqlib_mst2_qualification/run001/case03/101_deadline/input.qubo",
+    "101",
+    "deadline"
+  ],
+  "child_affinity": [
+    0
+  ],
+  "timed_out": false,
+  "kill_sent_ns": null,
+  "reaped_ns": 220088888333545,
+  "returncode": 0,
+  "verified": {
+    "callbacks": [
+      {
+        "kind": "callback",
+        "index": 1,
+        "objective": 1.25,
+        "state": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 2188352,
+        "upstream_runtime": 0.0021839999999999997,
+        "affinity": "0",
+        "energy_exact": "2"
+      },
+      {
+        "kind": "callback",
+        "index": 2,
+        "objective": 1.25,
+        "state": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 4553019,
+        "upstream_runtime": 0.00455,
+        "affinity": "0",
+        "energy_exact": "2"
+      },
+      {
+        "kind": "callback",
+        "index": 3,
+        "objective": 1.25,
+        "state": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 6862852,
+        "upstream_runtime": 0.006859,
+        "affinity": "0",
+        "energy_exact": "2"
+      },
+      {
+        "kind": "callback",
+        "index": 4,
+        "objective": 1.25,
+        "state": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 9379057,
+        "upstream_runtime": 0.009375,
+        "affinity": "0",
+        "energy_exact": "2"
+      },
+      {
+        "kind": "callback",
+        "index": 5,
+        "objective": 1.25,
+        "state": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 11719789,
+        "upstream_runtime": 0.011717,
+        "affinity": "0",
+        "energy_exact": "2"
+      },
+      {
+        "kind": "callback",
+        "index": 6,
+        "objective": 1.25,
+        "state": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 14029973,
+        "upstream_runtime": 0.014027,
+        "affinity": "0",
+        "energy_exact": "2"
+      },
+      {
+        "kind": "callback",
+        "index": 7,
+        "objective": 1.25,
+        "state": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 16404448,
+        "upstream_runtime": 0.016402,
+        "affinity": "0",
+        "energy_exact": "2"
+      },
+      {
+        "kind": "callback",
+        "index": 8,
+        "objective": 1.25,
+        "state": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 18789494,
+        "upstream_runtime": 0.018786,
+        "affinity": "0",
+        "energy_exact": "2"
+      },
+      {
+        "kind": "callback",
+        "index": 9,
+        "objective": 1.25,
+        "state": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "continue": false,
+        "elapsed_ns": 21275472,
+        "upstream_runtime": 0.021270999999999998,
+        "affinity": "0",
+        "energy_exact": "2"
+      }
+    ],
+    "final": {
+      "kind": "final",
+      "objective": 1.25,
+      "state": [
+        0,
+        1,
+        0,
+        1
+      ],
+      "callbacks": 9,
+      "stop_seen": true,
+      "energy_exact": "2"
+    },
+    "partial_hex": "",
+    "best_energy_exact": "2"
+  },
+  "stdout_hex": "7b226b696e64223a2263616c6c6261636b222c22696e646578223a312c226f626a656374697665223a312e32352c227374617465223a5b302c312c302c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a323138383335322c22757073747265616d5f72756e74696d65223a302e303032313833393939393939393939393939372c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a322c226f626a656374697665223a312e32352c227374617465223a5b302c312c302c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a343535333031392c22757073747265616d5f72756e74696d65223a302e303034353530303030303030303030303030322c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a332c226f626a656374697665223a312e32352c227374617465223a5b302c312c302c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a363836323835322c22757073747265616d5f72756e74696d65223a302e303036383538393939393939393939393939362c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a342c226f626a656374697665223a312e32352c227374617465223a5b302c312c302c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a393337393035372c22757073747265616d5f72756e74696d65223a302e303039333734393939393939393939393939372c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a352c226f626a656374697665223a312e32352c227374617465223a5b302c312c302c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a31313731393738392c22757073747265616d5f72756e74696d65223a302e3031313731372c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a362c226f626a656374697665223a312e32352c227374617465223a5b302c312c302c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a31343032393937332c22757073747265616d5f72756e74696d65223a302e3031343032372c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a372c226f626a656374697665223a312e32352c227374617465223a5b302c312c302c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a31363430343434382c22757073747265616d5f72756e74696d65223a302e3031363430322c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a382c226f626a656374697665223a312e32352c227374617465223a5b302c312c302c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a31383738393439342c22757073747265616d5f72756e74696d65223a302e3031383738363030303030303030303030312c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a392c226f626a656374697665223a312e32352c227374617465223a5b302c312c302c315d2c22636f6e74696e7565223a66616c73652c22656c61707365645f6e73223a32313237353437322c22757073747265616d5f72756e74696d65223a302e3032313237303939393939393939393939382c22616666696e697479223a2230227d0a7b226b696e64223a2266696e616c222c226f626a656374697665223a312e32352c227374617465223a5b302c312c302c315d2c2263616c6c6261636b73223a392c2273746f705f7365656e223a747275657d0a",
+  "stderr_hex": "",
+  "elapsed_seconds": 0.032693807
+}

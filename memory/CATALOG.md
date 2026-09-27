@@ -1,7 +1,7 @@
 # Document catalogue
 
 This sidecar catalogue classifies every Markdown document without modifying frozen evidence. Paths are the stable identifiers. Dates come from Git history; they describe chronology but do not establish authority.
-Its enforced scope is Git-tracked plus nonignored untracked Markdown (376 files
+Its enforced scope is Git-tracked plus nonignored untracked Markdown (377 files
 at this update). The 55 Git-ignored Markdown reports and download READMEs are
 classified separately as historical evidence in [FILE_MAP.tsv](FILE_MAP.tsv);
 the catalogue gate intentionally excludes ignored paths.
@@ -20,7 +20,7 @@ the catalogue gate intentionally excludes ignored paths.
 - `closed`: 46
 - `historical`: 2
 - `proposed`: 43
-- `reference`: 208
+- `reference`: 209
 - `superseded`: 4
 
 ## Registry
@@ -427,3 +427,4 @@ Their listing records existence, not scientific acceptance.
 | `research/experiments/mqlib_native_calibration/run001/README.md` | run-artifact | A1 | reference | 2026-09-27 | 2026-09-27 | false | MQ-NATIVE-001 |
 | `research/experiments/mqlib_native_calibration/RESULT.md` | research-result | A1 | closed | 2026-09-27 | 2026-09-27 | true | MQ-NATIVE-001 |
 | `research/experiments/mqlib_mst2_qualification/protocol.md` | preregistration | A0 | binding | 2026-09-28 | 2026-09-28 | true | MQ-MST2-001 |
+| `research/experiments/mqlib_mst2_qualification/run001/README.md` | run-artifact | A1 | reference | 2026-09-28 | 2026-09-28 | false | MQ-MST2-001 |

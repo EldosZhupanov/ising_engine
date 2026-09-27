@@ -1,0 +1,120 @@
+{
+  "case": "case08",
+  "seed": 103,
+  "mode": "third",
+  "start_ns": 220091725315179,
+  "watchdog_seconds": 2.0,
+  "parent_affinity": [
+    0
+  ],
+  "status": "VALID",
+  "errors": [],
+  "input_sha256": "f60c24befad260a8dc8763e5ca4b8f0b646cf74f1faf7a24523e7cd8a1861a83",
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/.cache/mqlib-mst2/stream",
+    "/home/eldos/ising_engine/research/experiments/mqlib_mst2_qualification/run001/case08/103_third/input.qubo",
+    "103",
+    "third"
+  ],
+  "child_affinity": [
+    0
+  ],
+  "timed_out": false,
+  "kill_sent_ns": null,
+  "reaped_ns": 220091731944687,
+  "returncode": 0,
+  "verified": {
+    "callbacks": [
+      {
+        "kind": "callback",
+        "index": 1,
+        "objective": 2.25,
+        "state": [
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        "continue": true,
+        "elapsed_ns": 4228,
+        "upstream_runtime": 3e-06,
+        "affinity": "0",
+        "energy_exact": "-2"
+      },
+      {
+        "kind": "callback",
+        "index": 2,
+        "objective": 3.5,
+        "state": [
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 45807,
+        "upstream_runtime": 4.4999999999999996e-05,
+        "affinity": "0",
+        "energy_exact": "-13/4"
+      },
+      {
+        "kind": "callback",
+        "index": 3,
+        "objective": 4.25,
+        "state": [
+          1,
+          0,
+          0,
+          1,
+          1
+        ],
+        "continue": false,
+        "elapsed_ns": 48803,
+        "upstream_runtime": 4.8e-05,
+        "affinity": "0",
+        "energy_exact": "-4"
+      },
+      {
+        "kind": "callback",
+        "index": 4,
+        "objective": 4.25,
+        "state": [
+          1,
+          0,
+          0,
+          1,
+          1
+        ],
+        "continue": false,
+        "elapsed_ns": 51057,
+        "upstream_runtime": 5.1e-05,
+        "affinity": "0",
+        "energy_exact": "-4"
+      }
+    ],
+    "final": {
+      "kind": "final",
+      "objective": 4.25,
+      "state": [
+        1,
+        0,
+        0,
+        1,
+        1
+      ],
+      "callbacks": 4,
+      "stop_seen": true,
+      "energy_exact": "-4"
+    },
+    "partial_hex": "",
+    "best_energy_exact": "-4"
+  },
+  "stdout_hex": "7b226b696e64223a2263616c6c6261636b222c22696e646578223a312c226f626a656374697665223a322e32352c227374617465223a5b302c312c312c312c305d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a343232382c22757073747265616d5f72756e74696d65223a332e30303030303030303030303030303031652d30362c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a322c226f626a656374697665223a332e352c227374617465223a5b302c302c312c312c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a34353830372c22757073747265616d5f72756e74696d65223a342e34393939393939393939393939393936652d30352c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a332c226f626a656374697665223a342e32352c227374617465223a5b312c302c302c312c315d2c22636f6e74696e7565223a66616c73652c22656c61707365645f6e73223a34383830332c22757073747265616d5f72756e74696d65223a342e38303030303030303030303030303031652d30352c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a342c226f626a656374697665223a342e32352c227374617465223a5b312c302c302c312c315d2c22636f6e74696e7565223a66616c73652c22656c61707365645f6e73223a35313035372c22757073747265616d5f72756e74696d65223a352e31652d30352c22616666696e697479223a2230227d0a7b226b696e64223a2266696e616c222c226f626a656374697665223a342e32352c227374617465223a5b312c302c302c312c315d2c2263616c6c6261636b73223a342c2273746f705f7365656e223a747275657d0a",
+  "stderr_hex": "",
+  "elapsed_seconds": 0.007183942
+}

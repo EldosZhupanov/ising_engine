@@ -1,0 +1,179 @@
+{
+  "case": "case03",
+  "seed": 102,
+  "mode": "deadline",
+  "start_ns": 220089026071909,
+  "watchdog_seconds": 2.0,
+  "parent_affinity": [
+    0
+  ],
+  "status": "VALID",
+  "errors": [],
+  "input_sha256": "2b70655d2c5672565a518234ff4e2a46d0469f8fa4951bf9c0cb0c824c648636",
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/.cache/mqlib-mst2/stream",
+    "/home/eldos/ising_engine/research/experiments/mqlib_mst2_qualification/run001/case03/102_deadline/input.qubo",
+    "102",
+    "deadline"
+  ],
+  "child_affinity": [
+    0
+  ],
+  "timed_out": false,
+  "kill_sent_ns": null,
+  "reaped_ns": 220089058241038,
+  "returncode": 0,
+  "verified": {
+    "callbacks": [
+      {
+        "kind": "callback",
+        "index": 1,
+        "objective": 2,
+        "state": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "continue": true,
+        "elapsed_ns": 5170,
+        "upstream_runtime": 4e-06,
+        "affinity": "0",
+        "energy_exact": "5/4"
+      },
+      {
+        "kind": "callback",
+        "index": 2,
+        "objective": 2,
+        "state": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "continue": true,
+        "elapsed_ns": 3129482,
+        "upstream_runtime": 0.003127,
+        "affinity": "0",
+        "energy_exact": "5/4"
+      },
+      {
+        "kind": "callback",
+        "index": 3,
+        "objective": 2,
+        "state": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "continue": true,
+        "elapsed_ns": 5969263,
+        "upstream_runtime": 0.005966,
+        "affinity": "0",
+        "energy_exact": "5/4"
+      },
+      {
+        "kind": "callback",
+        "index": 4,
+        "objective": 2,
+        "state": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "continue": true,
+        "elapsed_ns": 8792432,
+        "upstream_runtime": 0.008787999999999999,
+        "affinity": "0",
+        "energy_exact": "5/4"
+      },
+      {
+        "kind": "callback",
+        "index": 5,
+        "objective": 2,
+        "state": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "continue": true,
+        "elapsed_ns": 11609600,
+        "upstream_runtime": 0.011607,
+        "affinity": "0",
+        "energy_exact": "5/4"
+      },
+      {
+        "kind": "callback",
+        "index": 6,
+        "objective": 2,
+        "state": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "continue": true,
+        "elapsed_ns": 14393564,
+        "upstream_runtime": 0.014391,
+        "affinity": "0",
+        "energy_exact": "5/4"
+      },
+      {
+        "kind": "callback",
+        "index": 7,
+        "objective": 2,
+        "state": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "continue": true,
+        "elapsed_ns": 17237593,
+        "upstream_runtime": 0.017234,
+        "affinity": "0",
+        "energy_exact": "5/4"
+      },
+      {
+        "kind": "callback",
+        "index": 8,
+        "objective": 2,
+        "state": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "continue": false,
+        "elapsed_ns": 20202983,
+        "upstream_runtime": 0.0202,
+        "affinity": "0",
+        "energy_exact": "5/4"
+      }
+    ],
+    "final": {
+      "kind": "final",
+      "objective": 2,
+      "state": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "callbacks": 8,
+      "stop_seen": true,
+      "energy_exact": "5/4"
+    },
+    "partial_hex": "",
+    "best_energy_exact": "5/4"
+  },
+  "stdout_hex": "7b226b696e64223a2263616c6c6261636b222c22696e646578223a312c226f626a656374697665223a322c227374617465223a5b302c312c312c305d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a353137302c22757073747265616d5f72756e74696d65223a332e39393939393939393939393939393938652d30362c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a322c226f626a656374697665223a322c227374617465223a5b302c312c312c305d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a333132393438322c22757073747265616d5f72756e74696d65223a302e3030333132372c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a332c226f626a656374697665223a322c227374617465223a5b302c312c312c305d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a353936393236332c22757073747265616d5f72756e74696d65223a302e303035393635393939393939393939393939392c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a342c226f626a656374697665223a322c227374617465223a5b302c312c312c305d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a383739323433322c22757073747265616d5f72756e74696d65223a302e303038373837393939393939393939393938392c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a352c226f626a656374697665223a322c227374617465223a5b302c312c312c305d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a31313630393630302c22757073747265616d5f72756e74696d65223a302e3031313630363939393939393939393939392c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a362c226f626a656374697665223a322c227374617465223a5b302c312c312c305d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a31343339333536342c22757073747265616d5f72756e74696d65223a302e3031343339303939393939393939393939392c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a372c226f626a656374697665223a322c227374617465223a5b302c312c312c305d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a31373233373539332c22757073747265616d5f72756e74696d65223a302e3031373233333939393939393939393939392c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a382c226f626a656374697665223a322c227374617465223a5b302c312c312c305d2c22636f6e74696e7565223a66616c73652c22656c61707365645f6e73223a32303230323938332c22757073747265616d5f72756e74696d65223a302e3032303139393939393939393939393939392c22616666696e697479223a2230227d0a7b226b696e64223a2266696e616c222c226f626a656374697665223a322c227374617465223a5b302c312c312c305d2c2263616c6c6261636b73223a382c2273746f705f7365656e223a747275657d0a",
+  "stderr_hex": "",
+  "elapsed_seconds": 0.03291075
+}

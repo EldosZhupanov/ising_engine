@@ -1,0 +1,107 @@
+{
+  "case": "case09",
+  "seed": 102,
+  "mode": "third",
+  "start_ns": 220092057919932,
+  "watchdog_seconds": 2.0,
+  "parent_affinity": [
+    0
+  ],
+  "status": "VALID",
+  "errors": [],
+  "input_sha256": "2b9777ef5ec282860353f67c5f3babc781ef388cbef69d7fe0a003b311af3166",
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/.cache/mqlib-mst2/stream",
+    "/home/eldos/ising_engine/research/experiments/mqlib_mst2_qualification/run001/case09/102_third/input.qubo",
+    "102",
+    "third"
+  ],
+  "child_affinity": [
+    0
+  ],
+  "timed_out": false,
+  "kill_sent_ns": null,
+  "reaped_ns": 220092074115784,
+  "returncode": 0,
+  "verified": {
+    "callbacks": [
+      {
+        "kind": "callback",
+        "index": 1,
+        "objective": 5.5,
+        "state": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 3036,
+        "upstream_runtime": 2e-06,
+        "affinity": "0",
+        "energy_exact": "-5"
+      },
+      {
+        "kind": "callback",
+        "index": 2,
+        "objective": 5.5,
+        "state": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 2831475,
+        "upstream_runtime": 0.002828,
+        "affinity": "0",
+        "energy_exact": "-5"
+      },
+      {
+        "kind": "callback",
+        "index": 3,
+        "objective": 5.5,
+        "state": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        "continue": false,
+        "elapsed_ns": 5570925,
+        "upstream_runtime": 0.005569,
+        "affinity": "0",
+        "energy_exact": "-5"
+      }
+    ],
+    "final": {
+      "kind": "final",
+      "objective": 5.5,
+      "state": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        1
+      ],
+      "callbacks": 3,
+      "stop_seen": true,
+      "energy_exact": "-5"
+    },
+    "partial_hex": "",
+    "best_energy_exact": "-5"
+  },
+  "stdout_hex": "7b226b696e64223a2263616c6c6261636b222c22696e646578223a312c226f626a656374697665223a352e352c227374617465223a5b312c302c302c312c302c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a333033362c22757073747265616d5f72756e74696d65223a312e39393939393939393939393939393939652d30362c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a322c226f626a656374697665223a352e352c227374617465223a5b312c302c302c312c302c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a323833313437352c22757073747265616d5f72756e74696d65223a302e303032383237393939393939393939393939382c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a332c226f626a656374697665223a352e352c227374617465223a5b312c302c302c312c302c315d2c22636f6e74696e7565223a66616c73652c22656c61707365645f6e73223a353537303932352c22757073747265616d5f72756e74696d65223a302e303035353639303030303030303030303030322c22616666696e697479223a2230227d0a7b226b696e64223a2266696e616c222c226f626a656374697665223a352e352c227374617465223a5b312c302c302c312c302c315d2c2263616c6c6261636b73223a332c2273746f705f7365656e223a747275657d0a",
+  "stderr_hex": "",
+  "elapsed_seconds": 0.016971697
+}

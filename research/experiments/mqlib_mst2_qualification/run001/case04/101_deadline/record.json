@@ -1,0 +1,126 @@
+{
+  "case": "case04",
+  "seed": 101,
+  "mode": "deadline",
+  "start_ns": 220089368865008,
+  "watchdog_seconds": 2.0,
+  "parent_affinity": [
+    0
+  ],
+  "status": "VALID",
+  "errors": [],
+  "input_sha256": "964f4b2aadb377ee5add3c8c22311ec2b5f72ac113a0cb862e19b24b488db0cc",
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/.cache/mqlib-mst2/stream",
+    "/home/eldos/ising_engine/research/experiments/mqlib_mst2_qualification/run001/case04/101_deadline/input.qubo",
+    "101",
+    "deadline"
+  ],
+  "child_affinity": [
+    0
+  ],
+  "timed_out": false,
+  "kill_sent_ns": null,
+  "reaped_ns": 220089400478781,
+  "returncode": 0,
+  "verified": {
+    "callbacks": [
+      {
+        "kind": "callback",
+        "index": 1,
+        "objective": 1.25,
+        "state": [
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 3737,
+        "upstream_runtime": 3e-06,
+        "affinity": "0",
+        "energy_exact": "-2"
+      },
+      {
+        "kind": "callback",
+        "index": 2,
+        "objective": 1.25,
+        "state": [
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 3714264,
+        "upstream_runtime": 0.003711,
+        "affinity": "0",
+        "energy_exact": "-2"
+      },
+      {
+        "kind": "callback",
+        "index": 3,
+        "objective": 1.25,
+        "state": [
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 7541863,
+        "upstream_runtime": 0.007539,
+        "affinity": "0",
+        "energy_exact": "-2"
+      },
+      {
+        "kind": "callback",
+        "index": 4,
+        "objective": 1.25,
+        "state": [
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 11347741,
+        "upstream_runtime": 0.01134500000000005,
+        "affinity": "0",
+        "energy_exact": "-2"
+      },
+      {
+        "kind": "callback",
+        "index": 5,
+        "objective": 1.25,
+        "state": [
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 16100700,
+        "upstream_runtime": 0.016097000000000028,
+        "affinity": "0",
+        "energy_exact": "-2"
+      },
+      {
+        "kind": "callback",
+        "index": 6,
+        "objective": 1.25,
+        "state": [
+          1
+        ],
+        "continue": false,
+        "elapsed_ns": 20062315,
+        "upstream_runtime": 0.020055000000000045,
+        "affinity": "0",
+        "energy_exact": "-2"
+      }
+    ],
+    "final": {
+      "kind": "final",
+      "objective": 1.25,
+      "state": [
+        1
+      ],
+      "callbacks": 6,
+      "stop_seen": true,
+      "energy_exact": "-2"
+    },
+    "partial_hex": "",
+    "best_energy_exact": "-2"
+  },
+  "stdout_hex": "7b226b696e64223a2263616c6c6261636b222c22696e646578223a312c226f626a656374697665223a312e32352c227374617465223a5b315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a333733372c22757073747265616d5f72756e74696d65223a332e30303030303030303030303030303031652d30362c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a322c226f626a656374697665223a312e32352c227374617465223a5b315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a333731343236342c22757073747265616d5f72756e74696d65223a302e303033373130393939393939393939393939392c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a332c226f626a656374697665223a312e32352c227374617465223a5b315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a373534313836332c22757073747265616d5f72756e74696d65223a302e303037353338393939393939393939393939372c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a342c226f626a656374697665223a312e32352c227374617465223a5b315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a31313334373734312c22757073747265616d5f72756e74696d65223a302e3031313334353030303030303030303034392c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a352c226f626a656374697665223a312e32352c227374617465223a5b315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a31363130303730302c22757073747265616d5f72756e74696d65223a302e3031363039373030303030303030303032382c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a362c226f626a656374697665223a312e32352c227374617465223a5b315d2c22636f6e74696e7565223a66616c73652c22656c61707365645f6e73223a32303036323331352c22757073747265616d5f72756e74696d65223a302e3032303035353030303030303030303034352c22616666696e697479223a2230227d0a7b226b696e64223a2266696e616c222c226f626a656374697665223a312e32352c227374617465223a5b315d2c2263616c6c6261636b73223a362c2273746f705f7365656e223a747275657d0a",
+  "stderr_hex": "",
+  "elapsed_seconds": 0.032357523
+}

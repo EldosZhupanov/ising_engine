@@ -12,21 +12,18 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-MST2-001 instrument preparation, 2026-09-28
+## Current — MQ-MST2-001 evidence retained, 2026-09-28
 
-[Prospective protocol](../research/experiments/mqlib_mst2_qualification/protocol.md):
-qualify PALUBECKIS2004bMST2 on12 exposed tiny artificial models,544 exact state
-identities and144 callback/process cells. No comparative performance claim,
-real corpus or held-out data. Explorer confirms callback replaces runtime check,
-false from STS can be followed by another callback, and tiny variable selection
-clamps its dimension. Protocol `f6fa9e9` committed after independent design PASS.
-Isolated C++ bridge builds with strict warnings;13 fabricated/mock tests PASS.
-Initial review found two failure-reporting issues, corrected before execution.
-Independent final instrument review PASS (`mqlib_explorer` after the first
-reviewer hit a service usage limit). Next: commit, nondevelopment rebuild, one
-retained run and independent raw audit. No optimizer runs have occurred yet.
-Original MERZ adapter, production kernels/APIs/Cargo and old evidence stay unchanged.
-Parent S3/X3 and holdout gates remain in force.
+[Protocol](../research/experiments/mqlib_mst2_qualification/protocol.md) `f6fa9e9`;
+instrument `f738f4d`. One registered run PASS:544 exact state identities,144VALID
+cells,1,606 callback witnesses,108 cooperative finals and36 expected watchdog
+kills. [Offline audit](../research/experiments/mqlib_mst2_qualification/run001/audit.json)
+and independent read-only evidence review PASS (325raw hashes,11source hashes).
+135 tiny-optimum hits are descriptive only; optimality was not an acceptance gate.
+13 fabricated tests and strict C++ build PASS. Original MERZ/production/Cargo
+unchanged. Next: commit raw evidence and close bounded qualification record.
+No larger-input, delivery-latency, stronger-baseline or comparative claim follows.
+No comparison wave, real corpus or held-out outcomes opened.
 
 ## Previous — MQ-NATIVE-001 complete, 2026-09-27
 

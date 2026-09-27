@@ -1,0 +1,95 @@
+{
+  "case": "case02",
+  "seed": 101,
+  "mode": "third",
+  "start_ns": 220088313408529,
+  "watchdog_seconds": 2.0,
+  "parent_affinity": [
+    0
+  ],
+  "status": "VALID",
+  "errors": [],
+  "input_sha256": "54fbbef1e58d5f85bb4c8a650104c64e4ccc8ec450e882e46e4a15ebd58d1a4d",
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/.cache/mqlib-mst2/stream",
+    "/home/eldos/ising_engine/research/experiments/mqlib_mst2_qualification/run001/case02/101_third/input.qubo",
+    "101",
+    "third"
+  ],
+  "child_affinity": [
+    0
+  ],
+  "timed_out": false,
+  "kill_sent_ns": null,
+  "reaped_ns": 220088331943484,
+  "returncode": 0,
+  "verified": {
+    "callbacks": [
+      {
+        "kind": "callback",
+        "index": 1,
+        "objective": 2,
+        "state": [
+          0,
+          0,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 2771291,
+        "upstream_runtime": 0.0027689999999999998,
+        "affinity": "0",
+        "energy_exact": "-2"
+      },
+      {
+        "kind": "callback",
+        "index": 2,
+        "objective": 2,
+        "state": [
+          0,
+          0,
+          1
+        ],
+        "continue": true,
+        "elapsed_ns": 6019242,
+        "upstream_runtime": 0.006016,
+        "affinity": "0",
+        "energy_exact": "-2"
+      },
+      {
+        "kind": "callback",
+        "index": 3,
+        "objective": 2,
+        "state": [
+          0,
+          0,
+          1
+        ],
+        "continue": false,
+        "elapsed_ns": 9095022,
+        "upstream_runtime": 0.009087999999999999,
+        "affinity": "0",
+        "energy_exact": "-2"
+      }
+    ],
+    "final": {
+      "kind": "final",
+      "objective": 2,
+      "state": [
+        0,
+        0,
+        1
+      ],
+      "callbacks": 3,
+      "stop_seen": true,
+      "energy_exact": "-2"
+    },
+    "partial_hex": "",
+    "best_energy_exact": "-2"
+  },
+  "stdout_hex": "7b226b696e64223a2263616c6c6261636b222c22696e646578223a312c226f626a656374697665223a322c227374617465223a5b302c302c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a323737313239312c22757073747265616d5f72756e74696d65223a302e303032373638393939393939393939393939382c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a322c226f626a656374697665223a322c227374617465223a5b302c302c315d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a363031393234322c22757073747265616d5f72756e74696d65223a302e303036303135393939393939393939393939362c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a332c226f626a656374697665223a322c227374617465223a5b302c302c315d2c22636f6e74696e7565223a66616c73652c22656c61707365645f6e73223a393039353032322c22757073747265616d5f72756e74696d65223a302e303039303837393939393939393939393938392c22616666696e697479223a2230227d0a7b226b696e64223a2266696e616c222c226f626a656374697665223a322c227374617465223a5b302c302c315d2c2263616c6c6261636b73223a332c2273746f705f7365656e223a747275657d0a",
+  "stderr_hex": "",
+  "elapsed_seconds": 0.019193968
+}

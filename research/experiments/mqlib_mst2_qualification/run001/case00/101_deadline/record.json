@@ -1,0 +1,113 @@
+{
+  "case": "case00",
+  "seed": 101,
+  "mode": "deadline",
+  "start_ns": 220087288538078,
+  "watchdog_seconds": 2.0,
+  "parent_affinity": [
+    0
+  ],
+  "status": "VALID",
+  "errors": [],
+  "input_sha256": "cd62f438e1d7b8314a02e4d6bf99bbc59d7259443ef2b96369c7113d7c04a055",
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/.cache/mqlib-mst2/stream",
+    "/home/eldos/ising_engine/research/experiments/mqlib_mst2_qualification/run001/case00/101_deadline/input.qubo",
+    "101",
+    "deadline"
+  ],
+  "child_affinity": [
+    0
+  ],
+  "timed_out": false,
+  "kill_sent_ns": null,
+  "reaped_ns": 220087320783092,
+  "returncode": 0,
+  "verified": {
+    "callbacks": [
+      {
+        "kind": "callback",
+        "index": 1,
+        "objective": 0,
+        "state": [
+          0
+        ],
+        "continue": true,
+        "elapsed_ns": 4044922,
+        "upstream_runtime": 0.004043,
+        "affinity": "0",
+        "energy_exact": "7"
+      },
+      {
+        "kind": "callback",
+        "index": 2,
+        "objective": 0,
+        "state": [
+          0
+        ],
+        "continue": true,
+        "elapsed_ns": 8728355,
+        "upstream_runtime": 0.008726,
+        "affinity": "0",
+        "energy_exact": "7"
+      },
+      {
+        "kind": "callback",
+        "index": 3,
+        "objective": 0,
+        "state": [
+          0
+        ],
+        "continue": true,
+        "elapsed_ns": 12526458,
+        "upstream_runtime": 0.012523999999999999,
+        "affinity": "0",
+        "energy_exact": "7"
+      },
+      {
+        "kind": "callback",
+        "index": 4,
+        "objective": 0,
+        "state": [
+          0
+        ],
+        "continue": true,
+        "elapsed_ns": 16288272,
+        "upstream_runtime": 0.016285,
+        "affinity": "0",
+        "energy_exact": "7"
+      },
+      {
+        "kind": "callback",
+        "index": 5,
+        "objective": 0,
+        "state": [
+          0
+        ],
+        "continue": false,
+        "elapsed_ns": 20339988,
+        "upstream_runtime": 0.020336999999999997,
+        "affinity": "0",
+        "energy_exact": "7"
+      }
+    ],
+    "final": {
+      "kind": "final",
+      "objective": 0,
+      "state": [
+        0
+      ],
+      "callbacks": 5,
+      "stop_seen": true,
+      "energy_exact": "7"
+    },
+    "partial_hex": "",
+    "best_energy_exact": "7"
+  },
+  "stdout_hex": "7b226b696e64223a2263616c6c6261636b222c22696e646578223a312c226f626a656374697665223a302c227374617465223a5b305d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a343034343932322c22757073747265616d5f72756e74696d65223a302e303034303432393939393939393939393939372c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a322c226f626a656374697665223a302c227374617465223a5b305d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a383732383335352c22757073747265616d5f72756e74696d65223a302e303038373235393939393939393939393939342c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a332c226f626a656374697665223a302c227374617465223a5b305d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a31323532363435382c22757073747265616d5f72756e74696d65223a302e3031323532333939393939393939393939392c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a342c226f626a656374697665223a302c227374617465223a5b305d2c22636f6e74696e7565223a747275652c22656c61707365645f6e73223a31363238383237322c22757073747265616d5f72756e74696d65223a302e3031363238353030303030303030303030312c22616666696e697479223a2230227d0a7b226b696e64223a2263616c6c6261636b222c22696e646578223a352c226f626a656374697665223a302c227374617465223a5b305d2c22636f6e74696e7565223a66616c73652c22656c61707365645f6e73223a32303333393938382c22757073747265616d5f72756e74696d65223a302e3032303333363939393939393939393939372c22616666696e697479223a2230227d0a7b226b696e64223a2266696e616c222c226f626a656374697665223a302c227374617465223a5b305d2c2263616c6c6261636b73223a352c2273746f705f7365656e223a747275657d0a",
+  "stderr_hex": "",
+  "elapsed_seconds": 0.032696302
+}

@@ -1,0 +1,21 @@
+{
+  "independent_review": {
+    "agent": "/root/mqlib_explorer",
+    "status": "PASS",
+    "method": "read-only review and offline independent auditor rerun; no optimizer executed",
+    "checks": {
+      "raw_hashes": 325,
+      "frozen_source_hashes": 11,
+      "upstream_artifacts": 6,
+      "oracle_states": 544,
+      "callback_witnesses": 1606,
+      "valid_cells": 144,
+      "cooperative_finals": 108,
+      "expected_watchdog_kills": 36,
+      "cells_with_additional_callback_after_false": 30
+    },
+    "scope": "twelve exposed tiny fixtures and specific bridge contract; no superiority/stream-latency/general-size claim"
+  },
+  "audit": "audit.json",
+  "instrument_commit": "f738f4dab97b0f0924c7bfea3a0f49e3a41af96f"
+}
