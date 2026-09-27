@@ -1,8 +1,8 @@
 # MQ-DESIGN-002 — difficulty qualification and cost curves
 
 Status: **PROPOSED DESIGN, NOT AN EXECUTABLE PREREGISTRATION**. 2026-09-27.
-Canonical successor design to [MQ-SCREEN-001](RESULT.md). No new solver runs,
-benchmark downloads, holdout inspection or model training have been performed.
+Canonical successor design to [MQ-SCREEN-001](RESULT.md). No new solver runs, instance downloads, holdout coefficient/outcome inspection
+or model training have been performed; the metadata inventory below is complete.
 
 ## What the completed screen establishes
 
@@ -162,3 +162,35 @@ compiler setting, total cost cap, kill rule and analysis command. Independent
 review must confirm governance authorization, calibration and adapter gates
 before execution. No further solver operators, record hunts or training are
 justified by the current screen.
+
+## Metadata inventory completed — 2026-09-27
+
+[Local census](corpus_inventory.json), [source/baseline record](source_inventory.json)
+and [reproducer](inventory_corpus.py) retain the scoped inventory. No instance
+coefficients or reserved results were opened. The actual ignored cache is
+`benchmark_suite/data/biqmac/`, not the parent's `benchmark_suite/biqmac/`.
+303 data files occupy18,453,803bytes:80`be*.sparse`,45`gka*.sparse`,130other
+Rudy names and48Ising names. Header inspection of125sparse files and several
+named prior uses are recorded; **no file is currently established unseen**.
+The minimum seed-exclusion list is retained, not clearance for new arbitrary seeds.
+
+[Official BiqMac metadata](https://biqmac.aau.at/biqmaclib.html) identifies the
+`be` family as Billionnet–Elloumi, distinct from Beasley's `bqp` family. The local
+Beasley label is not authoritative. The BQP contract is minimization of symmetric
+x'Qx; corresponding OR-Library maximization data require sign provenance.
+Its target documentation includes optima and bounds, so a linked table is not a
+blanket optimality certificate. Target tables/witnesses have not been ingested.
+An explicit redistribution license was not verified; do not republish raw data
+under the engine's code license. Metadata/source URL and hashes can be retained.
+
+The pinned MQLib factory verifies additional candidates `PALUBECKIS2004bMST2`
+(iterated tabu) and `KATAYAMA2000` (genetic/k-opt), with native default parameters
+and callback constructors. Both still need adapter correctness/deadline gates;
+neither is claimed stronger from code reading. Existing `MERZ2002ONEOPT`
+remains the qualified continuity control. No new dependencies installed.
+
+The [MQ-CAL-001 protocol](../mqlib_timing_calibration/protocol.md) now freezes a
+no-search Python echo timing control with artificial inputs. It qualifies only
+that receipt/deadline path, not native solver performance. **Not run.** Next is
+implementing/reviewing its instrument; corpus target validation and untouched
+split clearance remain separate blocked qualification items.

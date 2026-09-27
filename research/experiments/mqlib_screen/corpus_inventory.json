@@ -1,0 +1,3176 @@
+{
+  "schema": "metadata_only_corpus_inventory_v1",
+  "date": "2026-09-27",
+  "scope": "filenames, file stat, existing metadata and protocol/instrument declarations only; no coefficient/outcome reads or new downloads",
+  "reproduction": "python3 research/experiments/mqlib_screen/inventory_corpus.py --output NEW.json",
+  "notes": [
+    "Filename namespaces are not independently verified scientific families.",
+    "Local registry description mislabels be sparse as Beasley; official-source identification is handled separately by parent.",
+    "Existing metadata hashes were not recomputed against coefficient files in this pass.",
+    "No file is cleared as an untouched evaluation instance by this inventory.",
+    "Prior use filenames are conservative exposure-risk markers; instrument inclusion alone is not proof of completed execution.",
+    "125 sparse headers historically inspected per PREREG_RC014_AMENDMENT_2.md:90; metadata inspection is not outcome exposure."
+  ],
+  "parent_named_path_exists": false,
+  "actual_path": "benchmark_suite/data/biqmac",
+  "data_file_count": 303,
+  "data_bytes": 18453803,
+  "namespace_counts": {
+    "be_sparse": 80,
+    "rudy_other": 130,
+    "gka_sparse": 45,
+    "ising": 48
+  },
+  "existing_provenance": {
+    "dataset": "biqmac",
+    "official_url": "https://biqmac.aau.at/biqmaclib.html",
+    "downloaded_at": "2026-07-07T00:45:41Z",
+    "status": "ok"
+  },
+  "metadata_record_count": 303,
+  "provenance_refs": [
+    "benchmark_suite/data/biqmac/metadata.json",
+    "benchmark_suite/data/biqmac/README.md",
+    "benchmark_suite/configs/benchmark_registry.yaml",
+    "benchmark_suite/scripts/download_all_benchmarks.py",
+    "benchmark_suite/ising_bench/download.py",
+    "memory/FILE_MAP.tsv:82",
+    "research/EXTERNAL_COMPARISON_PROTOCOL.md:79"
+  ],
+  "archive_names": [
+    "rudy_all.tar.gz",
+    "ising_all.tar.gz",
+    "gka_sparse_all.tar.gz",
+    "be_sparse_all.tar.gz"
+  ],
+  "seed_constraints": {
+    "refs": [
+      "research/PREREG_RC021_HOST_INSTRUMENT.md:69",
+      "research/PREREG_RC021_HOST_INSTRUMENT.md:97",
+      "research/PREREG_RC021_HOST_INSTRUMENT.md:133",
+      "research/experiments/mqlib_screen/protocol.md",
+      "research/mqlib_qualification/README.md"
+    ],
+    "burned_ranges": [
+      [
+        5001,
+        5008
+      ],
+      [
+        7001,
+        7008
+      ],
+      [
+        10001,
+        10008
+      ]
+    ],
+    "reserved_unopened_ranges": [
+      [
+        6001,
+        6008
+      ],
+      [
+        8001,
+        8008
+      ],
+      [
+        9001,
+        9008
+      ],
+      [
+        11001,
+        11008
+      ],
+      [
+        12001,
+        12008
+      ]
+    ],
+    "rc021_reserved_range": [
+      31001,
+      31099
+    ],
+    "earlier_science_ranges": [
+      [
+        1001,
+        1008
+      ],
+      [
+        2001,
+        2008
+      ],
+      [
+        3001,
+        3008
+      ],
+      [
+        4001,
+        4008
+      ]
+    ],
+    "mq_screen_generator_range": [
+      41001,
+      41008
+    ],
+    "mq_screen_search_range": [
+      51001,
+      51010
+    ],
+    "mq_screen_bootstrap_seed": 52001,
+    "mq_smoke_seeds": [
+      501,
+      502
+    ],
+    "mq_qualification_seeds": [
+      101,
+      102,
+      103
+    ],
+    "warning": "Minimum exclusion inventory only; derived/control/permutation seeds additionally occupied. No new seed authorized."
+  },
+  "files": [
+    {
+      "path": "benchmark_suite/data/biqmac/be100.1.sparse",
+      "name": "be100.1.sparse",
+      "bytes": 45861,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "NAMED_IN_PRIOR_PROTOCOL_OR_INSTRUMENT",
+      "refs": [
+        "research/PREREG_RC014.md:99"
+      ],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be100.10.sparse",
+      "name": "be100.10.sparse",
+      "bytes": 45822,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be100.2.sparse",
+      "name": "be100.2.sparse",
+      "bytes": 45848,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be100.3.sparse",
+      "name": "be100.3.sparse",
+      "bytes": 45802,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be100.4.sparse",
+      "name": "be100.4.sparse",
+      "bytes": 45857,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be100.5.sparse",
+      "name": "be100.5.sparse",
+      "bytes": 45853,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be100.6.sparse",
+      "name": "be100.6.sparse",
+      "bytes": 45772,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be100.7.sparse",
+      "name": "be100.7.sparse",
+      "bytes": 46046,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be100.8.sparse",
+      "name": "be100.8.sparse",
+      "bytes": 45901,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be100.9.sparse",
+      "name": "be100.9.sparse",
+      "bytes": 45719,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.3.1.sparse",
+      "name": "be120.3.1.sparse",
+      "bytes": 21406,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.3.10.sparse",
+      "name": "be120.3.10.sparse",
+      "bytes": 21415,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.3.2.sparse",
+      "name": "be120.3.2.sparse",
+      "bytes": 21487,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.3.3.sparse",
+      "name": "be120.3.3.sparse",
+      "bytes": 20711,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.3.4.sparse",
+      "name": "be120.3.4.sparse",
+      "bytes": 21220,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.3.5.sparse",
+      "name": "be120.3.5.sparse",
+      "bytes": 21387,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.3.6.sparse",
+      "name": "be120.3.6.sparse",
+      "bytes": 21370,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.3.7.sparse",
+      "name": "be120.3.7.sparse",
+      "bytes": 20915,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.3.8.sparse",
+      "name": "be120.3.8.sparse",
+      "bytes": 21413,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.3.9.sparse",
+      "name": "be120.3.9.sparse",
+      "bytes": 20751,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.8.1.sparse",
+      "name": "be120.8.1.sparse",
+      "bytes": 54886,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.8.10.sparse",
+      "name": "be120.8.10.sparse",
+      "bytes": 54872,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.8.2.sparse",
+      "name": "be120.8.2.sparse",
+      "bytes": 54737,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.8.3.sparse",
+      "name": "be120.8.3.sparse",
+      "bytes": 55119,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.8.4.sparse",
+      "name": "be120.8.4.sparse",
+      "bytes": 54841,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.8.5.sparse",
+      "name": "be120.8.5.sparse",
+      "bytes": 54775,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.8.6.sparse",
+      "name": "be120.8.6.sparse",
+      "bytes": 54540,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.8.7.sparse",
+      "name": "be120.8.7.sparse",
+      "bytes": 55309,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.8.8.sparse",
+      "name": "be120.8.8.sparse",
+      "bytes": 54653,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be120.8.9.sparse",
+      "name": "be120.8.9.sparse",
+      "bytes": 54538,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.3.1.sparse",
+      "name": "be150.3.1.sparse",
+      "bytes": 34685,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.3.10.sparse",
+      "name": "be150.3.10.sparse",
+      "bytes": 34167,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.3.2.sparse",
+      "name": "be150.3.2.sparse",
+      "bytes": 34958,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.3.3.sparse",
+      "name": "be150.3.3.sparse",
+      "bytes": 33568,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.3.4.sparse",
+      "name": "be150.3.4.sparse",
+      "bytes": 34057,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.3.5.sparse",
+      "name": "be150.3.5.sparse",
+      "bytes": 34433,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.3.6.sparse",
+      "name": "be150.3.6.sparse",
+      "bytes": 34799,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.3.7.sparse",
+      "name": "be150.3.7.sparse",
+      "bytes": 34318,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.3.8.sparse",
+      "name": "be150.3.8.sparse",
+      "bytes": 34187,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.3.9.sparse",
+      "name": "be150.3.9.sparse",
+      "bytes": 33308,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.8.1.sparse",
+      "name": "be150.8.1.sparse",
+      "bytes": 88763,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.8.10.sparse",
+      "name": "be150.8.10.sparse",
+      "bytes": 88790,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.8.2.sparse",
+      "name": "be150.8.2.sparse",
+      "bytes": 89214,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.8.3.sparse",
+      "name": "be150.8.3.sparse",
+      "bytes": 88853,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.8.4.sparse",
+      "name": "be150.8.4.sparse",
+      "bytes": 88672,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.8.5.sparse",
+      "name": "be150.8.5.sparse",
+      "bytes": 88266,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.8.6.sparse",
+      "name": "be150.8.6.sparse",
+      "bytes": 88364,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.8.7.sparse",
+      "name": "be150.8.7.sparse",
+      "bytes": 89187,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.8.8.sparse",
+      "name": "be150.8.8.sparse",
+      "bytes": 88536,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be150.8.9.sparse",
+      "name": "be150.8.9.sparse",
+      "bytes": 88272,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.3.1.sparse",
+      "name": "be200.3.1.sparse",
+      "bytes": 62752,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.3.10.sparse",
+      "name": "be200.3.10.sparse",
+      "bytes": 62903,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.3.2.sparse",
+      "name": "be200.3.2.sparse",
+      "bytes": 63233,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.3.3.sparse",
+      "name": "be200.3.3.sparse",
+      "bytes": 61356,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.3.4.sparse",
+      "name": "be200.3.4.sparse",
+      "bytes": 62256,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.3.5.sparse",
+      "name": "be200.3.5.sparse",
+      "bytes": 62273,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.3.6.sparse",
+      "name": "be200.3.6.sparse",
+      "bytes": 62633,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.3.7.sparse",
+      "name": "be200.3.7.sparse",
+      "bytes": 62712,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.3.8.sparse",
+      "name": "be200.3.8.sparse",
+      "bytes": 62770,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.3.9.sparse",
+      "name": "be200.3.9.sparse",
+      "bytes": 62360,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.8.1.sparse",
+      "name": "be200.8.1.sparse",
+      "bytes": 163735,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.8.10.sparse",
+      "name": "be200.8.10.sparse",
+      "bytes": 163478,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.8.2.sparse",
+      "name": "be200.8.2.sparse",
+      "bytes": 163435,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.8.3.sparse",
+      "name": "be200.8.3.sparse",
+      "bytes": 163243,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.8.4.sparse",
+      "name": "be200.8.4.sparse",
+      "bytes": 163510,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.8.5.sparse",
+      "name": "be200.8.5.sparse",
+      "bytes": 162380,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.8.6.sparse",
+      "name": "be200.8.6.sparse",
+      "bytes": 162790,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.8.7.sparse",
+      "name": "be200.8.7.sparse",
+      "bytes": 163765,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.8.8.sparse",
+      "name": "be200.8.8.sparse",
+      "bytes": 163057,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be200.8.9.sparse",
+      "name": "be200.8.9.sparse",
+      "bytes": 162941,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be250.1.sparse",
+      "name": "be250.1.sparse",
+      "bytes": 34231,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be250.10.sparse",
+      "name": "be250.10.sparse",
+      "bytes": 35096,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be250.2.sparse",
+      "name": "be250.2.sparse",
+      "bytes": 34987,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be250.3.sparse",
+      "name": "be250.3.sparse",
+      "bytes": 34274,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be250.4.sparse",
+      "name": "be250.4.sparse",
+      "bytes": 34784,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be250.5.sparse",
+      "name": "be250.5.sparse",
+      "bytes": 34991,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be250.6.sparse",
+      "name": "be250.6.sparse",
+      "bytes": 34624,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be250.7.sparse",
+      "name": "be250.7.sparse",
+      "bytes": 35550,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be250.8.sparse",
+      "name": "be250.8.sparse",
+      "bytes": 34318,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/be250.9.sparse",
+      "name": "be250.9.sparse",
+      "bytes": 34287,
+      "filename_namespace": "be_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_100.0",
+      "name": "g05_100.0",
+      "bytes": 19435,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "NAMED_IN_PRIOR_PROTOCOL_OR_INSTRUMENT",
+      "refs": [
+        "benchmark_suite/scripts/compare_openjij.py:58"
+      ],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_100.1",
+      "name": "g05_100.1",
+      "bytes": 19422,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_100.2",
+      "name": "g05_100.2",
+      "bytes": 19420,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_100.3",
+      "name": "g05_100.3",
+      "bytes": 19398,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_100.4",
+      "name": "g05_100.4",
+      "bytes": 19438,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_100.5",
+      "name": "g05_100.5",
+      "bytes": 19459,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_100.6",
+      "name": "g05_100.6",
+      "bytes": 19427,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_100.7",
+      "name": "g05_100.7",
+      "bytes": 19415,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_100.8",
+      "name": "g05_100.8",
+      "bytes": 19427,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_100.9",
+      "name": "g05_100.9",
+      "bytes": 19412,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_60.0",
+      "name": "g05_60.0",
+      "bytes": 6814,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_60.1",
+      "name": "g05_60.1",
+      "bytes": 6806,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_60.2",
+      "name": "g05_60.2",
+      "bytes": 6831,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_60.3",
+      "name": "g05_60.3",
+      "bytes": 6819,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_60.4",
+      "name": "g05_60.4",
+      "bytes": 6818,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_60.5",
+      "name": "g05_60.5",
+      "bytes": 6823,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_60.6",
+      "name": "g05_60.6",
+      "bytes": 6831,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_60.7",
+      "name": "g05_60.7",
+      "bytes": 6830,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_60.8",
+      "name": "g05_60.8",
+      "bytes": 6829,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_60.9",
+      "name": "g05_60.9",
+      "bytes": 6813,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_80.0",
+      "name": "g05_80.0",
+      "bytes": 12292,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_80.1",
+      "name": "g05_80.1",
+      "bytes": 12307,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_80.2",
+      "name": "g05_80.2",
+      "bytes": 12318,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_80.3",
+      "name": "g05_80.3",
+      "bytes": 12294,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_80.4",
+      "name": "g05_80.4",
+      "bytes": 12303,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_80.5",
+      "name": "g05_80.5",
+      "bytes": 12273,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_80.6",
+      "name": "g05_80.6",
+      "bytes": 12299,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_80.7",
+      "name": "g05_80.7",
+      "bytes": 12300,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_80.8",
+      "name": "g05_80.8",
+      "bytes": 12292,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/g05_80.9",
+      "name": "g05_80.9",
+      "bytes": 12281,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka10b.sparse",
+      "name": "gka10b.sparse",
+      "bytes": 71716,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka10d.sparse",
+      "name": "gka10d.sparse",
+      "bytes": 45811,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka1a.sparse",
+      "name": "gka1a.sparse",
+      "bytes": 1413,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "NAMED_IN_PRIOR_PROTOCOL_OR_INSTRUMENT",
+      "refs": [
+        "research/PREREG_RC014.md:286"
+      ],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka1b.sparse",
+      "name": "gka1b.sparse",
+      "bytes": 1680,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka1c.sparse",
+      "name": "gka1c.sparse",
+      "bytes": 5924,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka1d.sparse",
+      "name": "gka1d.sparse",
+      "bytes": 5475,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka1e.sparse",
+      "name": "gka1e.sparse",
+      "bytes": 21787,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka1f.sparse",
+      "name": "gka1f.sparse",
+      "bytes": 140593,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka2a.sparse",
+      "name": "gka2a.sparse",
+      "bytes": 2037,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka2b.sparse",
+      "name": "gka2b.sparse",
+      "bytes": 3848,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka2c.sparse",
+      "name": "gka2c.sparse",
+      "bytes": 7323,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka2d.sparse",
+      "name": "gka2d.sparse",
+      "bytes": 10221,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka2e.sparse",
+      "name": "gka2e.sparse",
+      "bytes": 42285,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka2f.sparse",
+      "name": "gka2f.sparse",
+      "bytes": 343241,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka3a.sparse",
+      "name": "gka3a.sparse",
+      "bytes": 2690,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka3b.sparse",
+      "name": "gka3b.sparse",
+      "bytes": 6908,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka3c.sparse",
+      "name": "gka3c.sparse",
+      "bytes": 6906,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka3d.sparse",
+      "name": "gka3d.sparse",
+      "bytes": 13970,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka3e.sparse",
+      "name": "gka3e.sparse",
+      "bytes": 61850,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka3f.sparse",
+      "name": "gka3f.sparse",
+      "bytes": 679607,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka4a.sparse",
+      "name": "gka4a.sparse",
+      "bytes": 3545,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka4b.sparse",
+      "name": "gka4b.sparse",
+      "bytes": 10823,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka4c.sparse",
+      "name": "gka4c.sparse",
+      "bytes": 7172,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka4d.sparse",
+      "name": "gka4d.sparse",
+      "bytes": 19228,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka4e.sparse",
+      "name": "gka4e.sparse",
+      "bytes": 83128,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka4f.sparse",
+      "name": "gka4f.sparse",
+      "bytes": 1015566,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka5a.sparse",
+      "name": "gka5a.sparse",
+      "bytes": 2544,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka5b.sparse",
+      "name": "gka5b.sparse",
+      "bytes": 15672,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka5c.sparse",
+      "name": "gka5c.sparse",
+      "bytes": 6587,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "NAMED_IN_PRIOR_PROTOCOL_OR_INSTRUMENT",
+      "refs": [
+        "benchmark_suite/scripts/ab_engine_compare.py:32"
+      ],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka5d.sparse",
+      "name": "gka5d.sparse",
+      "bytes": 23072,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka5e.sparse",
+      "name": "gka5e.sparse",
+      "bytes": 103082,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka5f.sparse",
+      "name": "gka5f.sparse",
+      "bytes": 1350495,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka6a.sparse",
+      "name": "gka6a.sparse",
+      "bytes": 1806,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka6b.sparse",
+      "name": "gka6b.sparse",
+      "bytes": 21366,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka6c.sparse",
+      "name": "gka6c.sparse",
+      "bytes": 4495,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka6d.sparse",
+      "name": "gka6d.sparse",
+      "bytes": 27888,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka7a.sparse",
+      "name": "gka7a.sparse",
+      "bytes": 2131,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka7b.sparse",
+      "name": "gka7b.sparse",
+      "bytes": 27934,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka7c.sparse",
+      "name": "gka7c.sparse",
+      "bytes": 5466,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka7d.sparse",
+      "name": "gka7d.sparse",
+      "bytes": 32418,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka8a.sparse",
+      "name": "gka8a.sparse",
+      "bytes": 3748,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "NAMED_IN_PRIOR_PROTOCOL_OR_INSTRUMENT",
+      "refs": [
+        "research/PREREG_RC014_AMENDMENT_2.md:101"
+      ],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka8b.sparse",
+      "name": "gka8b.sparse",
+      "bytes": 35421,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka8d.sparse",
+      "name": "gka8d.sparse",
+      "bytes": 36711,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka9b.sparse",
+      "name": "gka9b.sparse",
+      "bytes": 43922,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/gka9d.sparse",
+      "name": "gka9d.sparse",
+      "bytes": 40709,
+      "filename_namespace": "gka_sparse",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": true
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-100_5555",
+      "name": "ising2.5-100_5555",
+      "bytes": 46529,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-100_6666",
+      "name": "ising2.5-100_6666",
+      "bytes": 46584,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-100_7777",
+      "name": "ising2.5-100_7777",
+      "bytes": 46581,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-150_5555",
+      "name": "ising2.5-150_5555",
+      "bytes": 108550,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-150_6666",
+      "name": "ising2.5-150_6666",
+      "bytes": 108596,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-150_7777",
+      "name": "ising2.5-150_7777",
+      "bytes": 108522,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-200_5555",
+      "name": "ising2.5-200_5555",
+      "bytes": 196122,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-200_6666",
+      "name": "ising2.5-200_6666",
+      "bytes": 196187,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-200_7777",
+      "name": "ising2.5-200_7777",
+      "bytes": 196109,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-250_5555",
+      "name": "ising2.5-250_5555",
+      "bytes": 309401,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-250_6666",
+      "name": "ising2.5-250_6666",
+      "bytes": 309415,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-250_7777",
+      "name": "ising2.5-250_7777",
+      "bytes": 309250,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-300_5555",
+      "name": "ising2.5-300_5555",
+      "bytes": 447464,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-300_6666",
+      "name": "ising2.5-300_6666",
+      "bytes": 447694,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising2.5-300_7777",
+      "name": "ising2.5-300_7777",
+      "bytes": 447307,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-100_5555",
+      "name": "ising3.0-100_5555",
+      "bytes": 43955,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-100_6666",
+      "name": "ising3.0-100_6666",
+      "bytes": 44005,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-100_7777",
+      "name": "ising3.0-100_7777",
+      "bytes": 44001,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-150_5555",
+      "name": "ising3.0-150_5555",
+      "bytes": 104128,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-150_6666",
+      "name": "ising3.0-150_6666",
+      "bytes": 104056,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-150_7777",
+      "name": "ising3.0-150_7777",
+      "bytes": 104110,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-200_5555",
+      "name": "ising3.0-200_5555",
+      "bytes": 188328,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-200_6666",
+      "name": "ising3.0-200_6666",
+      "bytes": 188374,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-200_7777",
+      "name": "ising3.0-200_7777",
+      "bytes": 188323,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-250_5555",
+      "name": "ising3.0-250_5555",
+      "bytes": 297279,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-250_6666",
+      "name": "ising3.0-250_6666",
+      "bytes": 297401,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-250_7777",
+      "name": "ising3.0-250_7777",
+      "bytes": 297383,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-300_5555",
+      "name": "ising3.0-300_5555",
+      "bytes": 431603,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-300_6666",
+      "name": "ising3.0-300_6666",
+      "bytes": 431576,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/ising3.0-300_7777",
+      "name": "ising3.0-300_7777",
+      "bytes": 431505,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_100.0",
+      "name": "pm1d_100.0",
+      "bytes": 40895,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_100.1",
+      "name": "pm1d_100.1",
+      "bytes": 40912,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_100.2",
+      "name": "pm1d_100.2",
+      "bytes": 40846,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_100.3",
+      "name": "pm1d_100.3",
+      "bytes": 40841,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_100.4",
+      "name": "pm1d_100.4",
+      "bytes": 40881,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_100.5",
+      "name": "pm1d_100.5",
+      "bytes": 40822,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_100.6",
+      "name": "pm1d_100.6",
+      "bytes": 40893,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_100.7",
+      "name": "pm1d_100.7",
+      "bytes": 40906,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_100.8",
+      "name": "pm1d_100.8",
+      "bytes": 40872,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_100.9",
+      "name": "pm1d_100.9",
+      "bytes": 40845,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_80.0",
+      "name": "pm1d_80.0",
+      "bytes": 25935,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_80.1",
+      "name": "pm1d_80.1",
+      "bytes": 25899,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_80.2",
+      "name": "pm1d_80.2",
+      "bytes": 25858,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_80.3",
+      "name": "pm1d_80.3",
+      "bytes": 25863,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_80.4",
+      "name": "pm1d_80.4",
+      "bytes": 25901,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_80.5",
+      "name": "pm1d_80.5",
+      "bytes": 25897,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_80.6",
+      "name": "pm1d_80.6",
+      "bytes": 25945,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_80.7",
+      "name": "pm1d_80.7",
+      "bytes": 25897,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_80.8",
+      "name": "pm1d_80.8",
+      "bytes": 25855,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1d_80.9",
+      "name": "pm1d_80.9",
+      "bytes": 25888,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_100.0",
+      "name": "pm1s_100.0",
+      "bytes": 4122,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_100.1",
+      "name": "pm1s_100.1",
+      "bytes": 4118,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_100.2",
+      "name": "pm1s_100.2",
+      "bytes": 4132,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_100.3",
+      "name": "pm1s_100.3",
+      "bytes": 4154,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "NAMED_IN_PRIOR_PROTOCOL_OR_INSTRUMENT",
+      "refs": [
+        "benchmark_suite/scripts/compare_openjij.py:59"
+      ],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_100.4",
+      "name": "pm1s_100.4",
+      "bytes": 4095,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_100.5",
+      "name": "pm1s_100.5",
+      "bytes": 4132,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_100.6",
+      "name": "pm1s_100.6",
+      "bytes": 4133,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_100.7",
+      "name": "pm1s_100.7",
+      "bytes": 4152,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_100.8",
+      "name": "pm1s_100.8",
+      "bytes": 4133,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_100.9",
+      "name": "pm1s_100.9",
+      "bytes": 4123,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_80.0",
+      "name": "pm1s_80.0",
+      "bytes": 2616,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_80.1",
+      "name": "pm1s_80.1",
+      "bytes": 2621,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_80.2",
+      "name": "pm1s_80.2",
+      "bytes": 2611,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_80.3",
+      "name": "pm1s_80.3",
+      "bytes": 2624,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_80.4",
+      "name": "pm1s_80.4",
+      "bytes": 2618,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_80.5",
+      "name": "pm1s_80.5",
+      "bytes": 2620,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_80.6",
+      "name": "pm1s_80.6",
+      "bytes": 2619,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_80.7",
+      "name": "pm1s_80.7",
+      "bytes": 2613,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_80.8",
+      "name": "pm1s_80.8",
+      "bytes": 2626,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pm1s_80.9",
+      "name": "pm1s_80.9",
+      "bytes": 2634,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw01_100.0",
+      "name": "pw01_100.0",
+      "bytes": 3931,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw01_100.1",
+      "name": "pw01_100.1",
+      "bytes": 3937,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw01_100.2",
+      "name": "pw01_100.2",
+      "bytes": 3954,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw01_100.3",
+      "name": "pw01_100.3",
+      "bytes": 3969,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw01_100.4",
+      "name": "pw01_100.4",
+      "bytes": 3915,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw01_100.5",
+      "name": "pw01_100.5",
+      "bytes": 3958,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw01_100.6",
+      "name": "pw01_100.6",
+      "bytes": 3945,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw01_100.7",
+      "name": "pw01_100.7",
+      "bytes": 3957,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw01_100.8",
+      "name": "pw01_100.8",
+      "bytes": 3945,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw01_100.9",
+      "name": "pw01_100.9",
+      "bytes": 3936,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw05_100.0",
+      "name": "pw05_100.0",
+      "bytes": 19709,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw05_100.1",
+      "name": "pw05_100.1",
+      "bytes": 19660,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw05_100.2",
+      "name": "pw05_100.2",
+      "bytes": 19672,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw05_100.3",
+      "name": "pw05_100.3",
+      "bytes": 19703,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw05_100.4",
+      "name": "pw05_100.4",
+      "bytes": 19653,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw05_100.5",
+      "name": "pw05_100.5",
+      "bytes": 19680,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw05_100.6",
+      "name": "pw05_100.6",
+      "bytes": 19671,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw05_100.7",
+      "name": "pw05_100.7",
+      "bytes": 19660,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw05_100.8",
+      "name": "pw05_100.8",
+      "bytes": 19676,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw05_100.9",
+      "name": "pw05_100.9",
+      "bytes": 19645,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw09_100.0",
+      "name": "pw09_100.0",
+      "bytes": 35382,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw09_100.1",
+      "name": "pw09_100.1",
+      "bytes": 35392,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw09_100.2",
+      "name": "pw09_100.2",
+      "bytes": 35388,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw09_100.3",
+      "name": "pw09_100.3",
+      "bytes": 35399,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw09_100.4",
+      "name": "pw09_100.4",
+      "bytes": 35395,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw09_100.5",
+      "name": "pw09_100.5",
+      "bytes": 35356,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw09_100.6",
+      "name": "pw09_100.6",
+      "bytes": 35396,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw09_100.7",
+      "name": "pw09_100.7",
+      "bytes": 35371,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw09_100.8",
+      "name": "pw09_100.8",
+      "bytes": 35396,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/pw09_100.9",
+      "name": "pw09_100.9",
+      "bytes": 35367,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t2g10_5555",
+      "name": "t2g10_5555",
+      "bytes": 2515,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t2g10_6666",
+      "name": "t2g10_6666",
+      "bytes": 2524,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t2g10_7777",
+      "name": "t2g10_7777",
+      "bytes": 2520,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t2g15_5555",
+      "name": "t2g15_5555",
+      "bytes": 6187,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t2g15_6666",
+      "name": "t2g15_6666",
+      "bytes": 6201,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t2g15_7777",
+      "name": "t2g15_7777",
+      "bytes": 6197,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t2g20_5555",
+      "name": "t2g20_5555",
+      "bytes": 11353,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t2g20_6666",
+      "name": "t2g20_6666",
+      "bytes": 11339,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t2g20_7777",
+      "name": "t2g20_7777",
+      "bytes": 11345,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t3g5_5555",
+      "name": "t3g5_5555",
+      "bytes": 4864,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t3g5_6666",
+      "name": "t3g5_6666",
+      "bytes": 4884,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t3g5_7777",
+      "name": "t3g5_7777",
+      "bytes": 4873,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t3g6_5555",
+      "name": "t3g6_5555",
+      "bytes": 8905,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t3g6_6666",
+      "name": "t3g6_6666",
+      "bytes": 8885,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t3g6_7777",
+      "name": "t3g6_7777",
+      "bytes": 8890,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t3g7_5555",
+      "name": "t3g7_5555",
+      "bytes": 14505,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t3g7_6666",
+      "name": "t3g7_6666",
+      "bytes": 14502,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/t3g7_7777",
+      "name": "t3g7_7777",
+      "bytes": 14492,
+      "filename_namespace": "ising",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w01_100.0",
+      "name": "w01_100.0",
+      "bytes": 4172,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w01_100.1",
+      "name": "w01_100.1",
+      "bytes": 4155,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w01_100.2",
+      "name": "w01_100.2",
+      "bytes": 4169,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w01_100.3",
+      "name": "w01_100.3",
+      "bytes": 4159,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w01_100.4",
+      "name": "w01_100.4",
+      "bytes": 4145,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w01_100.5",
+      "name": "w01_100.5",
+      "bytes": 4168,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w01_100.6",
+      "name": "w01_100.6",
+      "bytes": 4206,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w01_100.7",
+      "name": "w01_100.7",
+      "bytes": 4182,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w01_100.8",
+      "name": "w01_100.8",
+      "bytes": 4171,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w01_100.9",
+      "name": "w01_100.9",
+      "bytes": 4155,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w05_100.0",
+      "name": "w05_100.0",
+      "bytes": 20826,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w05_100.1",
+      "name": "w05_100.1",
+      "bytes": 20823,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w05_100.2",
+      "name": "w05_100.2",
+      "bytes": 20827,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w05_100.3",
+      "name": "w05_100.3",
+      "bytes": 20829,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w05_100.4",
+      "name": "w05_100.4",
+      "bytes": 20815,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w05_100.5",
+      "name": "w05_100.5",
+      "bytes": 20826,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w05_100.6",
+      "name": "w05_100.6",
+      "bytes": 20878,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w05_100.7",
+      "name": "w05_100.7",
+      "bytes": 20767,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w05_100.8",
+      "name": "w05_100.8",
+      "bytes": 20859,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w05_100.9",
+      "name": "w05_100.9",
+      "bytes": 20784,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w09_100.0",
+      "name": "w09_100.0",
+      "bytes": 37479,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w09_100.1",
+      "name": "w09_100.1",
+      "bytes": 37485,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w09_100.2",
+      "name": "w09_100.2",
+      "bytes": 37441,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w09_100.3",
+      "name": "w09_100.3",
+      "bytes": 37490,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w09_100.4",
+      "name": "w09_100.4",
+      "bytes": 37507,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w09_100.5",
+      "name": "w09_100.5",
+      "bytes": 37448,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w09_100.6",
+      "name": "w09_100.6",
+      "bytes": 37514,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w09_100.7",
+      "name": "w09_100.7",
+      "bytes": 37444,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w09_100.8",
+      "name": "w09_100.8",
+      "bytes": 37549,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    },
+    {
+      "path": "benchmark_suite/data/biqmac/w09_100.9",
+      "name": "w09_100.9",
+      "bytes": 37459,
+      "filename_namespace": "rudy_other",
+      "eligible_as_unseen": "NOT_ESTABLISHED",
+      "exposure_status": "UNKNOWN_OUTCOME_EXPOSURE",
+      "refs": [],
+      "prior_header_inspection": false
+    }
+  ]
+}

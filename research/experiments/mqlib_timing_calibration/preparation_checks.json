@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "metadata_reproduction": "exact match;303files",
+  "manifest_cells": 480,
+  "nominal_seconds": 22.2,
+  "fixture_hashes_and_shapes": "PASS",
+  "real_instance_coefficients_read": false,
+  "optimizer_runs": 0,
+  "calibration_runs": 0,
+  "independent_agent_review": {
+    "reviewer": "/root/calibration_reviewer",
+    "status": "PASS",
+    "scope": "artifact review, byte-identical metadata reproduction, official-source metadata, pinned source hashes, fixture/manifest arithmetic, timing rules; no optimizer or calibration execution"
+  },
+  "documentation_gate": "PASS:368Markdown97immutable",
+  "python_syntax": "PASS",
+  "diff_check": "PASS"
+}

@@ -26,16 +26,25 @@ Final independent read-only review PASS (comparison_explorer); the prior
 reviewer service-limit interruption is retained in verification.json.
 Production solvers/APIs unchanged.
 
-**Successor design:** [MQ-DESIGN-002](../research/experiments/mqlib_screen/NEXT_DESIGN.md)
-is proposed, not executable preregistration. It separates corpus qualification,
-configuration development and untouched evaluation; cold-start delivery and
-optional warm-worker timing; quality and target-time claims. No new solver runs.
+**Successor preparation completed:** [MQ-DESIGN-002](../research/experiments/mqlib_screen/NEXT_DESIGN.md#metadata-inventory-completed--2026-09-27)
+now links the reproducible metadata inventory:303 data files in the ignored
+`benchmark_suite/data/biqmac/` cache; no instance is established unseen. Known
+prior uses and a minimum seed-exclusion list are recorded. No raw coefficients
+or reserved outcomes opened. Official source resolves the be/Billionnet–Elloumi
+mislabel and sign convention; target witnesses and redistribution license remain
+unverified. Candidate native MQLib MST2 and Katayama2000 are identified, not qualified.
 
-**Next task:** read-only corpus provenance/family/target and baseline inventory,
-then a prospectively frozen no-search timing calibration. Resolve parent S3/X3
-or a narrowly scoped prospective qualification amendment before execution.
-Freeze exact hashes/configurations/seeds and obtain independent review before
-any new campaign. The eight completed cases are exposed, not an unseen test set.
+[MQ-CAL-001](../research/experiments/mqlib_timing_calibration/protocol.md) freezes
+480 no-search Python echo cells (22.2s nominal total budget) with identical-arm
+and known-delay controls. **NOT RUN; instrument not implemented.** Fixtures,
+hashes, timing thresholds and source inventory are retained. No new solver runs.
+Its scope is only echo delivery/deadline qualification, not native solver speed.
+
+**Next task:** implement/review MQ-CAL-001 instrument, test synthetic deadline/
+censoring cases, then run its separate smoke and registered calibration under
+that protocol. Solver comparison remains closed until target/format validation,
+untouched split clearance and parent S3/X3 or an explicit scoped amendment.
+Do not reuse exposed screen cases or silently treat old BiqMac files as holdout.
 
 ## Previous — MQ-QUAL-001 complete, 2026-09-27
 

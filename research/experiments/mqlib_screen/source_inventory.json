@@ -1,0 +1,61 @@
+{
+  "scope": "metadata-only inventory; no new solver runs or holdout coefficient reads",
+  "official_source": {
+    "url": "https://biqmac.aau.at/biqmaclib.html",
+    "final_url": "https://biqmac.aau.at/biqmaclib.html",
+    "retrieved_utc": "2026-09-27T15:41:02.786232+00:00",
+    "sha256": "7e5dae6e302095a510ee274b651421538fb8285195e157aefd81a2b826a80d12",
+    "bytes": 13373,
+    "headers": {
+      "Accept-Ranges": "bytes",
+      "Content-Length": "13373",
+      "Content-Type": "text/html",
+      "Date": "Sun, 27 Sep 2026 15:41:02 GMT",
+      "Etag": "\"343d-5c4f1db725f13\"",
+      "Last-Modified": "Thu, 17 Jun 2021 08:18:51 GMT",
+      "Server": "Apache/2.4.10 (Debian) PHP/5.4.45",
+      "Vary": "Accept-Encoding",
+      "Connection": "close"
+    },
+    "scope": "metadata landing page only; no instance or target table downloads",
+    "family_names": [
+      "BQP/Beasley",
+      "BQP/Glover-Kochenberger-Alidaee",
+      "BQP/Billionnet-Elloumi",
+      "MaxCut/rudy",
+      "MaxCut/statistical-physics"
+    ],
+    "license_status": "UNKNOWN: no explicit redistribution license verified on landing page; local research-use label is not sufficient evidence",
+    "target_status": "Documentation links optimum/bound tables; not ingested. No target values or certificates qualified.",
+    "format_contract": "Biq min symmetric x^T Q x: linear Qii and unordered pair 2Qij. OR-Library maximization counterparts require explicit sign provenance."
+  },
+  "upstream_commit": "585496274af5abb0849d0d47e135496b4688680b",
+  "source_hashes": {
+    "src/heuristics/heuristic_factory.cpp": "7f6f8408d9c950cfe59a45dfc758d7e7a73b253eaccfeb2ae091fd7324d54433",
+    "include/heuristics/qubo/palubeckis2004b.h": "387e39dd5d371012758e30c6be182ecb72bcf68d419f341f90100a8653cc99f7",
+    "src/heuristics/qubo/palubeckis2004b.cpp": "3f8782f47862776c4455ca166c3e2c0d31c654dead92b31685f5b3c52981ee5d",
+    "include/heuristics/qubo/katayama2000.h": "5830c51c90ae41b6f49b167f51bce2c8c536e128787299ea1fe538284386880b",
+    "src/heuristics/qubo/katayama2000.cpp": "03b26ccebb14e6f0fba7ad125d1bd45ac59b3108a81d59063d62e256edd39ad4"
+  },
+  "baseline_candidates": [
+    {
+      "id": "MERZ2002ONEOPT",
+      "method": "1-opt local search with random restarts",
+      "status": "qualified existing adapter; continuity control"
+    },
+    {
+      "id": "PALUBECKIS2004bMST2",
+      "method": "iterated tabu search",
+      "status": "candidate only; callback/sign/deadline qualification not run",
+      "configuration": "upstream constructor defaults; external deadline needed; do not tune Z1/Z2/alpha yet"
+    },
+    {
+      "id": "KATAYAMA2000",
+      "method": "genetic algorithm with k-opt local search",
+      "status": "candidate only; callback/sign/deadline qualification not run",
+      "configuration": "upstream constructor defaults (PS=20); external deadline needed"
+    }
+  ],
+  "baseline_selection": "structural diversity only; no measured superiority claimed",
+  "local_inventory_file": "corpus_inventory.json"
+}
