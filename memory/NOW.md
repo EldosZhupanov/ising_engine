@@ -12,9 +12,10 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-DIFFICULTY-001 preflight FAIL, 2026-09-28
+## Current — MQ-DIFFICULTY-001 closed; main not admitted, 2026-09-28
 
-One registered preflight completed on committed instrument `f76991d` after
+[Closure](../research/experiments/mqlib_difficulty_qualification/closure/RESULT.md):
+one registered preflight completed on committed instrument `f76991d` after
 preregistration `253d94a`. [Raw analysis](../research/experiments/mqlib_difficulty_qualification/preflight001/analysis.json)
 **FAIL; [independent artifact review](../research/experiments/mqlib_difficulty_qualification/preflight001/review.json) PASS**.
 512VALIDcells (480no-search controls,32tiny smoke cells),509verified witnesses,
@@ -27,8 +28,8 @@ These are delivery-path failures, not a ranking of optimizer strength or proof
 that the24qualification inputs are hard. All inputs remain qualification-only.
 No holdout/learned-selector/record or S3/X3 claim.
 
-**Next task:** commit the complete raw/audit record, close this protocol with its
-negative admission result, and design a separate coarse2s final-quality protocol.
+**Next task:** design and preregister a separate coarse2s final-quality protocol,
+using the entire frozen qualification set and the same four configurations.
 Do not silently relax the250ms gate or retry this preflight. Prospective design
 must distinguish application-budget quality from subsecond speed resolution;
 reuse frozen algorithms and retain this exposure/history. No new operators needed.

@@ -264,3 +264,18 @@ complete before a checkpoint, prospectively tightening the receipt-only design
 above. The manifest freezes a250ms-to2s prefix grid, current source configurations,
 operational difficulty/complementarity rules and a3000s cumulative cap. The
 larger-corpus full-search timing and discrimination outcomes remain unknown.
+
+## Delivery qualification failed — 2026-09-28
+
+[MQ-DIFFICULTY-001 closure](../mqlib_difficulty_qualification/closure/RESULT.md)
+records512valid preflight cells and13/16passing controls, overallFAIL;
+independent audit/review PASS. Main did not run. Its frozen250ms control gate
+cannot be waived; nothing is established about the24inputs' optimization hardness.
+
+Next proposed scope: one coarse2s delivered-and-validated final-quality endpoint,
+same four fixed configurations and entire24-input qualification family. Preserve
+the current exposure; no holdout claim. Separate quality-at-budget admission from
+short-time speed-resolution claims. Do not merely relax a failed threshold to
+rescue this version. Freeze a new protocol and review before observations; report
+conversion/validation cost, fallback rates and scheduling uncertainty explicitly.
+No automatic search, controller training or comparative wave follows this design.
