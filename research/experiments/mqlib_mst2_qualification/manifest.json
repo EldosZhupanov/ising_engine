@@ -1,0 +1,102 @@
+{
+  "id": "MQ-MST2-001",
+  "upstream_commit": "585496274af5abb0849d0d47e135496b4688680b",
+  "source_base": "761d1ca3d9819273008491dc7c1d176d077fce03",
+  "fixture_file": "fixtures.json",
+  "fixture_sha256": "f4e360fbd1a6c3a8177ba3a2c59aec92fe6f6284b4b50657548154f7448e3820",
+  "cases": [
+    {
+      "id": "case00",
+      "n": 1,
+      "model_sha256": "ed555da7d2bbc3f3afe5d9cc461add54cf62470dcd97e72f59be17193c65b8ac"
+    },
+    {
+      "id": "case01",
+      "n": 3,
+      "model_sha256": "1d44f54604e4453e1061036785ac302f9e4a954daeadeeebfe16da2c1361c45f"
+    },
+    {
+      "id": "case02",
+      "n": 3,
+      "model_sha256": "fa66701dfbf85b80ab58c1dcef45d4825febc5b7a78cf55362e63bf7cdff31a9"
+    },
+    {
+      "id": "case03",
+      "n": 4,
+      "model_sha256": "02da87b4c9d49431b598c18a5a8ef2de3d23a71ef54518462926bc702d21489c"
+    },
+    {
+      "id": "case04",
+      "n": 1,
+      "model_sha256": "b2a9f508b761f3f60c36c41d1066743d741f2bbf54ac9ac6ee70c52184e08a9e"
+    },
+    {
+      "id": "case05",
+      "n": 2,
+      "model_sha256": "0deb30fccb8d421386e6416eb0f28231cba48553ba274c8eec57f093c59009a3"
+    },
+    {
+      "id": "case06",
+      "n": 3,
+      "model_sha256": "62000ede46588efa085ae23cc2703759230a6070687ff597dfeb06784919b614"
+    },
+    {
+      "id": "case07",
+      "n": 4,
+      "model_sha256": "8ec44b8724ec2c08d87f2d3d052a8d4718975bf71d16ec11317f62e6f86d7ac5"
+    },
+    {
+      "id": "case08",
+      "n": 5,
+      "model_sha256": "dd94dd5f00e81d8167d40efe2bb7589db783d799af25a6512cdfadaf458518cb"
+    },
+    {
+      "id": "case09",
+      "n": 6,
+      "model_sha256": "a68c0029f26822033cffa388aed1503974d33aa18f71c1972a11923642649c19"
+    },
+    {
+      "id": "case10",
+      "n": 7,
+      "model_sha256": "94a663c9099850847146edfec836513f48b88f8a62bc4292fec2246b1f378b47"
+    },
+    {
+      "id": "case11",
+      "n": 8,
+      "model_sha256": "fa2d8a91d65f3cdbcf850a96894e36e3883304c5ad498876bf4635bb86bdb069"
+    }
+  ],
+  "seeds": [
+    101,
+    102,
+    103
+  ],
+  "modes": [
+    "first",
+    "third",
+    "deadline",
+    "watchdog"
+  ],
+  "callback_seconds": 0.02,
+  "cooperative_watchdog_seconds": 2.0,
+  "forced_watchdog_seconds": 0.1,
+  "expected_cells": 144,
+  "expected_state_identities": 544,
+  "hard_campaign_cap_seconds": 300,
+  "cpu": 0,
+  "threads": 1,
+  "inherited_sources": {
+    "benchmarks/adapters/run_mqlib.py": "cdbaa6847e4561d79f3543c16a89d2b73c88607d9ec12968d2839ea62affb631",
+    "research/mqlib_qualification/fixtures.py": "dcd0d8dfd3bf91c3e0c018d5ce3bbb123d4312bc2441d46ea27fa43f1f17d907",
+    "research/mqlib_qualification/oracle.cpp": "8b69a6a531bb26f7131d075fd7a491fc4703bb9a5927973ec8727bc043c44552",
+    "scripts/setup_mqlib.sh": "48f8e23c349a38f1dfb329a28dad2e835dedcaf632281099f9da5899658e2b0a"
+  },
+  "environment": {
+    "platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+    "cpu_model": "AMD Ryzen 7 170 with Radeon Graphics",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "compiler": "g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "rustflags": null
+  }
+}

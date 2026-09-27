@@ -3,7 +3,7 @@ id: memory-now
 kind: live-state
 status: active
 authority_scope: current-task
-updated: 2026-09-27
+updated: 2026-09-28
 immutable: false
 ---
 
@@ -12,7 +12,19 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-NATIVE-001 complete, 2026-09-27
+## Current — MQ-MST2-001 preparation, 2026-09-28
+
+[Prospective protocol](../research/experiments/mqlib_mst2_qualification/protocol.md):
+qualify PALUBECKIS2004bMST2 on12 exposed tiny artificial models,544 exact state
+identities and144 callback/process cells. No comparative performance claim,
+real corpus or held-out data. Explorer confirms callback replaces runtime check,
+false from STS can be followed by another callback, and tiny variable selection
+clamps its dimension. Next: protocol review/freeze, isolated bridge and rejection
+tests, independent instrument review/freeze, one retained run and independent audit.
+Original MERZ adapter, production kernels/APIs/Cargo and old evidence stay unchanged.
+Parent S3/X3 and holdout gates remain in force.
+
+## Previous — MQ-NATIVE-001 complete, 2026-09-27
 
 [Native model-preparation calibration](../research/experiments/mqlib_native_calibration/RESULT.md):
 **registered overall FAIL; independent evidence audit PASS**. 960 valid cells,
