@@ -12,7 +12,7 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-DIFFICULTY-001 preregistration, 2026-09-28
+## Current — MQ-DIFFICULTY-001 instrument ready for preflight, 2026-09-28
 
 [Difficulty qualification protocol](../research/experiments/mqlib_difficulty_qualification/protocol.md)
 freezes24 qualification-only synthetic Ising-to-QUBO inputs (n256/512,
@@ -29,14 +29,20 @@ benchmark files remain exposure-uncleared. No published target => no TTS claim.
 A broad seed grep incidentally displayed a closed CD005 raw row; exposure is
 recorded in the protocol and did not involve reserved holdouts.
 
-**Next task:** implement the protocol's `build.py`, native probe/stream workers,
-`run.py` and independent raw audit under `mqlib_difficulty_qualification/`.
-Reuse frozen production algorithms/configurations; change only research wrappers.
-Parent and child observedCPU0; receipt AND independent validation completion
-must precede each cutoff. Freeze and independently review the instrument before
-preflight. Preflight failure stops this version; no automatic retry. Successful
-reviewed preflight admits one960-cell diagnostic run under the3000s cumulative
-cap. Document every outcome before considering any later confirmatory study.
+**Instrument:** [review](../research/experiments/mqlib_difficulty_qualification/instrument_review.json)
+PASS after schema, cap, abnormal-output and auditor-provenance corrections.
+25Python tests (including mocked subprocesses),2Rust tests, workspace/all-target
+check, targeted Clippy with warnings denied, all-workspace format and strict C++
+development build PASS. Model preparation and search loop match the old frozen
+wrapper; actual algorithms remain unchanged. Protocol commit `253d94a`.
+
+**Next task:** nondevelopment rebuild from the committed instrument, then one
+`run.py --phase preflight` under `mqlib_difficulty_qualification/`. Independently
+audit/review retained evidence before admission. Failure stops this version;
+no automatic retry. Successful reviewed preflight admits one960-cell diagnostic
+main run under the3000s cumulative cap. Parent/child observedCPU0; receipt AND
+independent validation completion precede every eligible cutoff. Record results
+and limitations before any later confirmatory design. No new optimizer methods.
 
 Production solvers/APIs, Cargo and prior frozen results remain unchanged. The
 known untracked upstream clone remains excluded. Hosted CI billing is the last

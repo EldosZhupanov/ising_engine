@@ -1,0 +1,34 @@
+{
+  "scope": "instrument before preflight",
+  "reviewer": "/root/mqlib_explorer",
+  "status": "PASS",
+  "conditions": [
+    "Commit exact instrument then nondevelopment rebuild; successful independently reviewed preflight before main."
+  ],
+  "findings_resolved": [
+    "Strict message schemas and progression",
+    "Phase setup and post-analysis cumulative cap accounting",
+    "Raw/partial/kill/reap retention on abnormal paths",
+    "Mock lifecycle and corruption regression tests",
+    "Auditor frozen registration/source coverage/absolute tolerance validation"
+  ],
+  "checks": {
+    "python_tests": "25/25 PASS independently rerun",
+    "rust_example_tests": "2/2 PASS",
+    "cargo_check_workspace_all_targets": "PASS",
+    "cargo_clippy_research_example_deny_warnings": "PASS",
+    "cargo_fmt_all_check": "PASS",
+    "development_cpp_build": "PASS with -Werror",
+    "diff_check": "PASS"
+  },
+  "source_hashes": {
+    "build.py": "205d9847211bda8f14babb2c4e034f1016d396c420b6574c8d2f75a43ef7b229",
+    "run.py": "24fed584ec51f986c170fea1e15ad5a380efb577237c2e97499a49005b384ad3",
+    "analysis.py": "daee6ee81acdbeb3b7e80a1d2a358cb516c1916e2bfaff865b75a445dea56fee",
+    "independent_audit.py": "12ebd45c90dba31e137b741aa629ee4955acb62cd8ed37a75a6499d6c7275303",
+    "test_instrument.py": "8e4de47cabbd0b3e83bb274e90d824c0676aeec7103dffd10efe69028611f869",
+    "worker.cpp": "1207dcddf63c4ba35bdcc9d07234e2b10fe9f1a8a113625b3e3a6f55d7155252"
+  },
+  "rust_worker_sha256": "54d42ba4bb4e1c26aeed85b03ec4c6c248b29d01bf6dbc1633fcec3e99d7bf6f",
+  "optimizer_preflight_observations": 0
+}
