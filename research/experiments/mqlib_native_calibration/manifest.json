@@ -1,0 +1,67 @@
+{
+  "id": "MQ-NATIVE-001",
+  "fixtures": [
+    {
+      "file": "echo_n8.json",
+      "sha256": "22a2c3be59e223a37025d3d20a7f71a613728b6c2401e9246ce6899711458dc7",
+      "n": 8,
+      "pairs": 7
+    },
+    {
+      "file": "echo_n128.json",
+      "sha256": "b5cba4fddcc6785649e3917e9b2a11301031edb73bb288992e3db85e6175e70f",
+      "n": 128,
+      "pairs": 8128
+    }
+  ],
+  "budgets_seconds": [
+    0.01,
+    0.025,
+    0.05,
+    0.1
+  ],
+  "repeats": 20,
+  "arms": [
+    "null_a",
+    "null_b",
+    "delay"
+  ],
+  "delay_fraction": 0.25,
+  "order": "worker index then fixture index then budget index then repeat; rotate null_a/null_b/delay by (worker_index+fixture_index+budget_index+repeat)%3",
+  "cpu": 0,
+  "worker_threads": 1,
+  "randomness": "none; repeat labels0..19; no research seeds consumed",
+  "expected_cells": 960,
+  "nominal_total_cell_budget_seconds": 44.4,
+  "hard_campaign_cap_seconds": 240,
+  "source_base": "abe53501e2f9ad42d4cdb95e19bbb8790e987785",
+  "environment": {
+    "platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+    "machine": "x86_64",
+    "cpu_model": "AMD Ryzen 7 170 with Radeon Graphics",
+    "allowed_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "monotonic_clock": {
+      "implementation": "clock_gettime(CLOCK_MONOTONIC)",
+      "monotonic": true,
+      "adjustable": false,
+      "resolution": 1e-09
+    }
+  },
+  "workers": [
+    "rust_model",
+    "mqlib_model"
+  ],
+  "inherited_sources": {
+    "research/examples/mqlib_compare.rs": "437a9327429eff7a44ac7d03cede72e77252b243ebb5e1c7036b3e685c4fb66e",
+    "research/experiments/mqlib_screen/stream.cpp": "34c8a3dfa68e60dcda1ac1a8ddfe2c990d5e5b12925e9a62a2a52cc047a163a0",
+    "research/experiments/mqlib_timing_calibration/calibrate.py": "d1aad277fadcc95ae5f16fb0b8078b6f6da4b59cc2ecebbe991771a2ef2748b2",
+    "benchmarks/adapters/run_mqlib.py": "cdbaa6847e4561d79f3543c16a89d2b73c88607d9ec12968d2839ea62affb631",
+    "research/experiments/mqlib_screen/build.py": "7fdac81045c635b04834cfbe139f94f31c6675d30596e2381a9e8be2eaaf91ba"
+  }
+}
