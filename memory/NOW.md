@@ -12,15 +12,25 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-SCREEN-001 fixed-wrapper screen, 2026-09-27
+## Current — MQ-SCREEN-001 complete, 2026-09-27
 
-User explicitly authorized immediate comparison. [New protocol](../research/experiments/mqlib_screen/protocol.md)
-is a narrow prospective amendment for a descriptive screen, not a claim that
-S3/X3 passed. Eight frozen new synthetic weighted QUBOs, ten seeds, three arms
-(Ultimate restarted, v2 default restarted, native MQLib), two-second delivered
-witness cap, one CPU. Independent design review PASS; instrument review/tests
-and disjoint tiny smokes must pass before any screen cell. No results yet.
-No production solver or API change, no learned selector or real holdout.
+[Fixed-wrapper comparison](../research/experiments/mqlib_screen/RESULT.md):
+**240 valid cells, no demonstrated final-quality advantage**. Eight fresh
+synthetic QUBOs, ten seeds, Ultimate/v2 default/MQLib MERZ2002ONEOPT, 2 seconds
+per cell on one CPU. All three pairwise contrasts: 0 wins / 80 ties / 0 losses.
+H1 INCONCLUSIVE, normalized difference 0, sign-flip p = 1, empirical bootstrap [0,0].
+No optimum/equivalence/learned-selection claim; this is a nondiscriminating screen.
+459 raw witnesses independently rescored; no fallback-only or late complete
+witnesses. Executable audit PASS. Protocol `2d6d08d`, instrument `b0cf802`, raw `2fe2cb1`.
+Final independent read-only review PASS (comparison_explorer); the prior
+reviewer service-limit interruption is retained in verification.json.
+Production solvers/APIs unchanged.
+
+**Next task:** design a prospective difficulty-corpus qualification with strong
+fixed baselines, separate qualification/holdout and predeclared cost curves.
+Current eight cases are now exposed and cannot become an unseen validation set.
+Do not train a selector or start a new execution campaign before its gates pass.
+Parent S3/X3 requirements remain for subsequent advantage/selector research.
 
 ## Previous — MQ-QUAL-001 complete, 2026-09-27
 
@@ -42,7 +52,7 @@ failures. `scripts/setup_mqlib.sh` builds pinned MIT MQLib
 MERZ2002ONEOPT is qualified; no legacy-harness, MaxCut/CSR or hyperheuristic
 integration is implied. Both production solver families are unchanged.
 
-**Next task (design, not execution):** define a matched-budget complementarity
+**Historical handoff (superseded by the current block):** define a matched-budget complementarity
 study and reconcile it with S3/X3 in the binding external-comparison protocol.
 [Amendment 1](../research/EXTERNAL_COMPARISON_AMENDMENT_1.md) changes the handoff
 to NOW and permits this small correctness qualification; it does not waive

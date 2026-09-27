@@ -27,7 +27,7 @@
     "instrument": "PASS before execution after fixing three blockers",
     "smoke": "PASS by independent reviewer",
     "main_executable_audit": "PASS; auditor authored by independent reviewer, executed by root",
-    "main_agent_review": "pending; first reviewer stopped by service usage limit"
+    "main_agent_review": "PASS by /root/comparison_explorer: read-only rerun of independent_audit.py, protocol/result/current-state review; no solver rerun. Prior /root/mqlib_reviewer turn stopped by service usage limit, retained as history."
   },
   "scope": "No production src/Cargo changes. Research example tests and strict clippy only; not a claim of rerunning full workspace suite."
 }
