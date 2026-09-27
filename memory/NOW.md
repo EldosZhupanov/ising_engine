@@ -12,7 +12,17 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-QUAL-001 complete; comparative design next, 2026-09-27
+## Current — MQ-SCREEN-001 fixed-wrapper screen, 2026-09-27
+
+User explicitly authorized immediate comparison. [New protocol](../research/experiments/mqlib_screen/protocol.md)
+is a narrow prospective amendment for a descriptive screen, not a claim that
+S3/X3 passed. Eight frozen new synthetic weighted QUBOs, ten seeds, three arms
+(Ultimate restarted, v2 default restarted, native MQLib), two-second delivered
+witness cap, one CPU. Independent design review PASS; instrument review/tests
+and disjoint tiny smokes must pass before any screen cell. No results yet.
+No production solver or API change, no learned selector or real holdout.
+
+## Previous — MQ-QUAL-001 complete, 2026-09-27
 
 [MQLib qualification](../research/mqlib_qualification/README.md) **PASS**.
 Protocol `f67cbdf`, reviewed instrument `2b61068`, one retained run in

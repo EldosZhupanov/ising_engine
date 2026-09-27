@@ -1,0 +1,87 @@
+{
+  "instances": [
+    {
+      "name": "q00_n64_p10.json",
+      "sha256": "c71f7a9aacb85dc72ce77b70df49641870531995bc09e591cad9b22a71c7633f",
+      "n": 64,
+      "density_parameter": 0.1,
+      "generator_seed": 41001,
+      "normalizer": 650
+    },
+    {
+      "name": "q01_n64_p10.json",
+      "sha256": "4c1cf3ced3c0900dc6ef7dad44aa8a7065b76ed664a5a67b879f27151f1576af",
+      "n": 64,
+      "density_parameter": 0.1,
+      "generator_seed": 41002,
+      "normalizer": 715
+    },
+    {
+      "name": "q02_n64_p70.json",
+      "sha256": "cc64f5381ecab2342968c38f9ccae1c155eda7f79a4e6e19888ad6af180c7798",
+      "n": 64,
+      "density_parameter": 0.7,
+      "generator_seed": 41003,
+      "normalizer": 4243
+    },
+    {
+      "name": "q03_n64_p70.json",
+      "sha256": "5756a20bc06117f0ce9b18891a6d87f5499b6fa80a661efaccf725db168c6418",
+      "n": 64,
+      "density_parameter": 0.7,
+      "generator_seed": 41004,
+      "normalizer": 4368
+    },
+    {
+      "name": "q04_n128_p10.json",
+      "sha256": "71248f9e67366d2436cf67419b84d4716fc2562d80a45ad760c7ea248a0a280d",
+      "n": 128,
+      "density_parameter": 0.1,
+      "generator_seed": 41005,
+      "normalizer": 2686
+    },
+    {
+      "name": "q05_n128_p10.json",
+      "sha256": "b1c36839c04dfdb6ff6a79eda650c45ce425fa74a867c740ab1c7f74107bfe90",
+      "n": 128,
+      "density_parameter": 0.1,
+      "generator_seed": 41006,
+      "normalizer": 2682
+    },
+    {
+      "name": "q06_n128_p70.json",
+      "sha256": "fad6ad3f65f7ba50a87a96f78cce16a16f94fbcba8e772d10ce0451546a2dd1e",
+      "n": 128,
+      "density_parameter": 0.7,
+      "generator_seed": 41007,
+      "normalizer": 17496
+    },
+    {
+      "name": "q07_n128_p70.json",
+      "sha256": "9e67456744c0d74128e2dac55b76ecb4190a26195b549d697720e6e92a81b2b0",
+      "n": 128,
+      "density_parameter": 0.7,
+      "generator_seed": 41008,
+      "normalizer": 17183
+    }
+  ],
+  "search_seeds": [
+    51001,
+    51002,
+    51003,
+    51004,
+    51005,
+    51006,
+    51007,
+    51008,
+    51009,
+    51010
+  ],
+  "arms": [
+    "ultimate",
+    "v2_default",
+    "mqlib"
+  ],
+  "budget_seconds": 2.0,
+  "cpu": 0
+}
