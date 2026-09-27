@@ -191,6 +191,7 @@ remains the qualified continuity control. No new dependencies installed.
 
 The [MQ-CAL-001 protocol](../mqlib_timing_calibration/protocol.md) now freezes a
 no-search Python echo timing control with artificial inputs. It qualifies only
-that receipt/deadline path, not native solver performance. **Not run.** Next is
-implementing/reviewing its instrument; corpus target validation and untouched
-split clearance remain separate blocked qualification items.
+that receipt/deadline path, not native solver performance. Its
+[result](../mqlib_timing_calibration/RESULT.md) is overall FAIL: only100ms passes
+both echo shapes. The next scoped task is a native no-search readiness design;
+corpus targets and untouched split clearance remain separate qualification items.

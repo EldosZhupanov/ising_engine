@@ -12,7 +12,29 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-SCREEN-001 complete, 2026-09-27
+## Current — MQ-CAL-001 complete, 2026-09-27
+
+[No-search timing result](../research/experiments/mqlib_timing_calibration/RESULT.md):
+**registered overall FAIL; independent evidence audit PASS**. One frozen main run,
+480 valid measurement records,236 complete messages (234on-time,2late),244without
+complete output. Only100ms passes both echo shapes;50ms passes n8 only. No native
+solver budget admission, speedup, interpolation or universal clock-limit claim.
+Protocol `2d9cb9c`, instrument `3aaac7c`, raw/audit `689fbe2`. Twelve fabricated
+unit tests, Python syntax, diff and independent pre/post reviews PASS. No solvers,
+real coefficients or reserved outcomes used; production APIs/families unchanged.
+
+**Next task:** design a separately preregistered native no-search readiness probe
+using actual Rust/C++ conversion/model-load/output paths on artificial fixtures.
+The Python echo's startup cost cannot be transferred to native solvers. Preserve
+cold-start versus warm-worker distinctions; qualify the new instrument before
+any execution. No automatic real solver-comparison wave follows this calibration.
+
+[Corpus inventory](../research/experiments/mqlib_screen/NEXT_DESIGN.md#metadata-inventory-completed--2026-09-27)
+remains303files, none established unseen; targets/redistribution license and
+candidate MST2/Katayama adapters remain unqualified. Parent S3/X3 and holdout gates
+remain. Do not relabel old BiqMac data or the eight exposed screen cases as unseen.
+
+## Previous — MQ-SCREEN-001 complete, 2026-09-27
 
 [Fixed-wrapper comparison](../research/experiments/mqlib_screen/RESULT.md):
 **240 valid cells, no demonstrated final-quality advantage**. Eight fresh
@@ -25,27 +47,6 @@ witnesses. Executable audit PASS. Protocol `2d6d08d`, instrument `b0cf802`, raw 
 Final independent read-only review PASS (comparison_explorer); the prior
 reviewer service-limit interruption is retained in verification.json.
 Production solvers/APIs unchanged.
-
-**Successor preparation completed:** [MQ-DESIGN-002](../research/experiments/mqlib_screen/NEXT_DESIGN.md#metadata-inventory-completed--2026-09-27)
-now links the reproducible metadata inventory:303 data files in the ignored
-`benchmark_suite/data/biqmac/` cache; no instance is established unseen. Known
-prior uses and a minimum seed-exclusion list are recorded. No raw coefficients
-or reserved outcomes opened. Official source resolves the be/Billionnet–Elloumi
-mislabel and sign convention; target witnesses and redistribution license remain
-unverified. Candidate native MQLib MST2 and Katayama2000 are identified, not qualified.
-
-[MQ-CAL-001](../research/experiments/mqlib_timing_calibration/protocol.md) freezes
-480 no-search Python echo cells (22.2s nominal total budget) with identical-arm
-and known-delay controls. **NOT RUN; instrument implemented and independently reviewed.** Twelve fabricated
-record tests, Python syntax and diff checks PASS. Fixtures,
-hashes, timing thresholds and source inventory are retained. No new solver runs.
-Its scope is only echo delivery/deadline qualification, not native solver speed.
-
-**Next task:** commit the reviewed MQ-CAL-001 instrument, then run its separate
-schema smoke and registered calibration under
-that protocol. Solver comparison remains closed until target/format validation,
-untouched split clearance and parent S3/X3 or an explicit scoped amendment.
-Do not reuse exposed screen cases or silently treat old BiqMac files as holdout.
 
 ## Previous — MQ-QUAL-001 complete, 2026-09-27
 
