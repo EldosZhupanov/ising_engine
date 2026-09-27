@@ -1,0 +1,100 @@
+{
+  "budget_s": 2.0,
+  "clocks": {
+    "boot_ns": 167697370337262,
+    "boot_unix_ns": 1790486095339636866,
+    "finish_ns": 167699487137855,
+    "finish_unix_ns": 1790486097456437257,
+    "go_ns": 167697477424998,
+    "go_unix_ns": 1790486095446724080,
+    "stop_ns": 167699477901619,
+    "term_ns": 167699477936295
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/home/eldos/ising_engine/research/experiments/entity_resolution/pilot.py",
+    "worker",
+    "--engine",
+    "/home/eldos/ising_engine/target/release/examples/hubo_compare",
+    "--seed",
+    "990001"
+  ],
+  "errors": [],
+  "events": [
+    {
+      "event": {
+        "bits": "000000000000000",
+        "energy": 0,
+        "kind": "inc",
+        "origin": "fallback",
+        "steps": 0
+      },
+      "received_s": 0.000616332
+    },
+    {
+      "event": {
+        "hot": 172430.91128704892,
+        "kind": "meta",
+        "model_n": 15,
+        "model_terms": 94,
+        "penalty": 0,
+        "transform_s": 0.00019291701028123498
+      },
+      "received_s": 0.000674012
+    },
+    {
+      "event": {
+        "bits": "001000011110000",
+        "energy": 21784,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.003157079
+    },
+    {
+      "event": {
+        "bits": "101000010001100",
+        "energy": 21664,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.003157079
+    },
+    {
+      "event": {
+        "bits": "000001110100000",
+        "energy": 9656,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.003157079
+    },
+    {
+      "event": {
+        "bits": "011110000111111",
+        "energy": -3248,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.003157079
+    },
+    {
+      "event": {
+        "bits": "111111111111111",
+        "energy": -5928,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.003157079
+    }
+  ],
+  "load1": 0.86669921875,
+  "pid": 1854717,
+  "returncode": -15,
+  "startup_s": 0.107087736,
+  "stderr": "",
+  "stdout": "READY\n{\"kind\":\"inc\",\"bits\":\"000000000000000\",\"energy\":0,\"steps\":0,\"origin\":\"fallback\"}\n{\"kind\":\"meta\",\"model_n\":15,\"model_terms\":94,\"penalty\":0,\"hot\":172430.91128704892,\"transform_s\":0.00019291701028123498}\n{\"bits\":\"001000011110000\",\"energy\":21784,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"101000010001100\",\"energy\":21664,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"000001110100000\",\"energy\":9656,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"011110000111111\",\"energy\":-3248,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"111111111111111\",\"energy\":-5928,\"kind\":\"inc\",\"steps\":1}\n",
+  "stop_s": 2.000476621,
+  "survivors": [],
+  "termination_s": 2.009712857
+}

@@ -1,0 +1,145 @@
+{
+  "budget_s": 2.0,
+  "clocks": {
+    "boot_ns": 167782085895412,
+    "boot_unix_ns": 1790486180055195677,
+    "finish_ns": 167784193448837,
+    "finish_unix_ns": 1790486182162748270,
+    "go_ns": 167782184150090,
+    "go_unix_ns": 1790486180153450285,
+    "stop_ns": 167784184443721,
+    "term_ns": 167784184482775
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/home/eldos/ising_engine/research/experiments/entity_resolution/pilot.py",
+    "worker",
+    "--engine",
+    "/home/eldos/ising_engine/target/release/examples/hubo_compare",
+    "--seed",
+    "990001"
+  ],
+  "errors": [],
+  "events": [
+    {
+      "event": {
+        "bits": "000000000000000",
+        "energy": 0,
+        "kind": "inc",
+        "origin": "fallback",
+        "steps": 0
+      },
+      "received_s": 0.000982163
+    },
+    {
+      "event": {
+        "hot": 75481.80453931057,
+        "kind": "meta",
+        "model_n": 15,
+        "model_terms": 92,
+        "penalty": 0,
+        "transform_s": 0.00020193398813717067
+      },
+      "received_s": 0.000982163
+    },
+    {
+      "event": {
+        "bits": "001000011110000",
+        "energy": 10464,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004299206
+    },
+    {
+      "event": {
+        "bits": "101000010001100",
+        "energy": 9008,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004299206
+    },
+    {
+      "event": {
+        "bits": "111100110110100",
+        "energy": 6336,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004299206
+    },
+    {
+      "event": {
+        "bits": "000001010001000",
+        "energy": 4888,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004299206
+    },
+    {
+      "event": {
+        "bits": "001100000000101",
+        "energy": 3920,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004299206
+    },
+    {
+      "event": {
+        "bits": "011010010101010",
+        "energy": -440,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004299206
+    },
+    {
+      "event": {
+        "bits": "000000000000100",
+        "energy": -800,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004436738
+    },
+    {
+      "event": {
+        "bits": "000001111111111",
+        "energy": -1088,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004436738
+    },
+    {
+      "event": {
+        "bits": "011110000111111",
+        "energy": -1424,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004436738
+    },
+    {
+      "event": {
+        "bits": "111111111111111",
+        "energy": -1976,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004436738
+    }
+  ],
+  "load1": 1.4423828125,
+  "pid": 1855861,
+  "returncode": -15,
+  "startup_s": 0.098254678,
+  "stderr": "",
+  "stdout": "READY\n{\"kind\":\"inc\",\"bits\":\"000000000000000\",\"energy\":0,\"steps\":0,\"origin\":\"fallback\"}\n{\"kind\":\"meta\",\"model_n\":15,\"model_terms\":92,\"penalty\":0,\"hot\":75481.80453931057,\"transform_s\":0.00020193398813717067}\n{\"bits\":\"001000011110000\",\"energy\":10464,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"101000010001100\",\"energy\":9008,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"111100110110100\",\"energy\":6336,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"000001010001000\",\"energy\":4888,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"001100000000101\",\"energy\":3920,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"011010010101010\",\"energy\":-440,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"000000000000100\",\"energy\":-800,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"000001111111111\",\"energy\":-1088,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"011110000111111\",\"energy\":-1424,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"111111111111111\",\"energy\":-1976,\"kind\":\"inc\",\"steps\":1}\n",
+  "stop_s": 2.000293631,
+  "survivors": [],
+  "termination_s": 2.009298747
+}

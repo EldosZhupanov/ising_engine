@@ -1,0 +1,84 @@
+{
+  "all_incumbents_checked": 5,
+  "baseline_pair_metrics": {
+    "closure": {
+      "f1": 0.5,
+      "fn": 0,
+      "fp": 2,
+      "precision": 0.3333333333333333,
+      "recall": 1.0,
+      "tn": 0,
+      "tp": 1
+    },
+    "exact": {
+      "f1": 0.0,
+      "fn": 1,
+      "fp": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "tn": 1,
+      "tp": 0
+    },
+    "greedy": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tn": 2,
+      "tp": 1
+    },
+    "pairwise": {
+      "f1": 0.6666666666666666,
+      "fn": 0,
+      "fp": 1,
+      "precision": 0.5,
+      "recall": 1.0,
+      "tn": 1,
+      "tp": 1
+    }
+  },
+  "cells": 1,
+  "conflicted_blocks": 1,
+  "exact_changed_blocks": 1,
+  "exact_minus_best_simple_f1": -1.0,
+  "exact_minus_closure_f1": -0.5,
+  "informative_gate": false,
+  "native_f1_by_seed": {
+    "991001": 1.0
+  },
+  "native_f1_mean": 1.0,
+  "native_fallback_endpoints": 0,
+  "native_fidelity_gate": true,
+  "native_optimum_hits": 1,
+  "native_success_fraction": 1.0,
+  "objective_gap": {
+    "max": 0,
+    "mean": 0,
+    "median": 0,
+    "min": 0,
+    "q25": 0,
+    "q75": 0,
+    "std": 0.0
+  },
+  "per_case": [
+    {
+      "id": "smoke",
+      "native": [
+        {
+          "bits": "100",
+          "energy": -2,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004422366,
+          "score": 2,
+          "seed": 991001,
+          "violations": 0
+        }
+      ]
+    }
+  ],
+  "scope": "development capability gate; no superiority/holdout claim",
+  "semantic_signal_gate": false,
+  "wrapper_optimum_hits": 1
+}

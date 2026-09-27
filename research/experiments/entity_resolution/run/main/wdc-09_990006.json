@@ -1,0 +1,145 @@
+{
+  "budget_s": 2.0,
+  "clocks": {
+    "boot_ns": 167771377671668,
+    "boot_unix_ns": 1790486169346971201,
+    "finish_ns": 167773513953981,
+    "finish_unix_ns": 1790486171483253895,
+    "go_ns": 167771504256191,
+    "go_unix_ns": 1790486169473555504,
+    "stop_ns": 167773504780424,
+    "term_ns": 167773504817224
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/home/eldos/ising_engine/research/experiments/entity_resolution/pilot.py",
+    "worker",
+    "--engine",
+    "/home/eldos/ising_engine/target/release/examples/hubo_compare",
+    "--seed",
+    "990006"
+  ],
+  "errors": [],
+  "events": [
+    {
+      "event": {
+        "bits": "000000000000000",
+        "energy": 0,
+        "kind": "inc",
+        "origin": "fallback",
+        "steps": 0
+      },
+      "received_s": 0.000839897
+    },
+    {
+      "event": {
+        "hot": 104716.57684788453,
+        "kind": "meta",
+        "model_n": 15,
+        "model_terms": 93,
+        "penalty": 0,
+        "transform_s": 0.0003267610154580325
+      },
+      "received_s": 0.000936511
+    },
+    {
+      "event": {
+        "bits": "100111111011000",
+        "energy": 38208,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004406896
+    },
+    {
+      "event": {
+        "bits": "010011000100110",
+        "energy": 29640,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004406896
+    },
+    {
+      "event": {
+        "bits": "100010100100000",
+        "energy": 11256,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004406896
+    },
+    {
+      "event": {
+        "bits": "001000101000000",
+        "energy": 7896,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004406896
+    },
+    {
+      "event": {
+        "bits": "110011001000000",
+        "energy": 7776,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004406896
+    },
+    {
+      "event": {
+        "bits": "100100000001000",
+        "energy": 4296,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004551421
+    },
+    {
+      "event": {
+        "bits": "000000010101010",
+        "energy": 1144,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004551421
+    },
+    {
+      "event": {
+        "bits": "000011010010000",
+        "energy": 880,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004551421
+    },
+    {
+      "event": {
+        "bits": "000000000000000",
+        "energy": 0,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004551421
+    },
+    {
+      "event": {
+        "bits": "000000000100000",
+        "energy": -136,
+        "kind": "inc",
+        "steps": 1
+      },
+      "received_s": 0.004551421
+    }
+  ],
+  "load1": 1.52294921875,
+  "pid": 1855760,
+  "returncode": -15,
+  "startup_s": 0.126584523,
+  "stderr": "",
+  "stdout": "READY\n{\"kind\":\"inc\",\"bits\":\"000000000000000\",\"energy\":0,\"steps\":0,\"origin\":\"fallback\"}\n{\"kind\":\"meta\",\"model_n\":15,\"model_terms\":93,\"penalty\":0,\"hot\":104716.57684788453,\"transform_s\":0.0003267610154580325}\n{\"bits\":\"100111111011000\",\"energy\":38208,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"010011000100110\",\"energy\":29640,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"100010100100000\",\"energy\":11256,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"001000101000000\",\"energy\":7896,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"110011001000000\",\"energy\":7776,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"100100000001000\",\"energy\":4296,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"000000010101010\",\"energy\":1144,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"000011010010000\",\"energy\":880,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"000000000000000\",\"energy\":0,\"kind\":\"inc\",\"steps\":1}\n{\"bits\":\"000000000100000\",\"energy\":-136,\"kind\":\"inc\",\"steps\":1}\n",
+  "stop_s": 2.000524233,
+  "survivors": [],
+  "termination_s": 2.00969779
+}

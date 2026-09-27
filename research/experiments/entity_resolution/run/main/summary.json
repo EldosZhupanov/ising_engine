@@ -1,0 +1,1338 @@
+{
+  "all_incumbents_checked": 1344,
+  "baseline_pair_metrics": {
+    "closure": {
+      "f1": 0.6787330316742082,
+      "fn": 12,
+      "fp": 59,
+      "precision": 0.5597014925373134,
+      "recall": 0.8620689655172413,
+      "tn": 34,
+      "tp": 75
+    },
+    "exact": {
+      "f1": 0.7053140096618358,
+      "fn": 14,
+      "fp": 47,
+      "precision": 0.6083333333333333,
+      "recall": 0.8390804597701149,
+      "tn": 46,
+      "tp": 73
+    },
+    "greedy": {
+      "f1": 0.7053140096618358,
+      "fn": 14,
+      "fp": 47,
+      "precision": 0.6083333333333333,
+      "recall": 0.8390804597701149,
+      "tn": 46,
+      "tp": 73
+    },
+    "pairwise": {
+      "f1": 0.6770833333333334,
+      "fn": 22,
+      "fp": 40,
+      "precision": 0.6190476190476191,
+      "recall": 0.7471264367816092,
+      "tn": 53,
+      "tp": 65
+    }
+  },
+  "cells": 120,
+  "conflicted_blocks": 9,
+  "exact_changed_blocks": 9,
+  "exact_minus_best_simple_f1": 0.0,
+  "exact_minus_closure_f1": 0.026580977987627596,
+  "informative_gate": true,
+  "native_f1_by_seed": {
+    "990001": 0.7047619047619048,
+    "990002": 0.7047619047619048,
+    "990003": 0.7115384615384616,
+    "990004": 0.7047619047619048,
+    "990005": 0.7053140096618358,
+    "990006": 0.7115384615384616,
+    "990007": 0.7053140096618358,
+    "990008": 0.7177033492822966,
+    "990009": 0.7115384615384616,
+    "990010": 0.7177033492822966
+  },
+  "native_f1_mean": 0.7094935816789364,
+  "native_fallback_endpoints": 5,
+  "native_fidelity_gate": true,
+  "native_optimum_hits": 120,
+  "native_success_fraction": 1.0,
+  "objective_gap": {
+    "max": 0,
+    "mean": 0,
+    "median": 0.0,
+    "min": 0,
+    "q25": 0.0,
+    "q75": 0.0,
+    "std": 0.0
+  },
+  "per_case": [
+    {
+      "id": "wdc-00",
+      "native": [
+        {
+          "bits": "111111111111111",
+          "energy": -461,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.005644227,
+          "score": 461,
+          "seed": 990001,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -461,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003180565,
+          "score": 461,
+          "seed": 990002,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -461,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004368633,
+          "score": 461,
+          "seed": 990003,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -461,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003838931,
+          "score": 461,
+          "seed": 990004,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -461,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.002820981,
+          "score": 461,
+          "seed": 990005,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -461,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003189312,
+          "score": 461,
+          "seed": 990006,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -461,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003951788,
+          "score": 461,
+          "seed": 990007,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -461,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004150038,
+          "score": 461,
+          "seed": 990008,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -461,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003030289,
+          "score": 461,
+          "seed": 990009,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -461,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.006333116,
+          "score": 461,
+          "seed": 990010,
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "id": "wdc-01",
+      "native": [
+        {
+          "bits": "110001000000111",
+          "energy": -90,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003361047,
+          "score": 90,
+          "seed": 990001,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000111",
+          "energy": -90,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.002978951,
+          "score": 90,
+          "seed": 990002,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000001",
+          "energy": -90,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003995091,
+          "score": 90,
+          "seed": 990003,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000111",
+          "energy": -90,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004029368,
+          "score": 90,
+          "seed": 990004,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000001",
+          "energy": -90,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003266934,
+          "score": 90,
+          "seed": 990005,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000001",
+          "energy": -90,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003354652,
+          "score": 90,
+          "seed": 990006,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000001",
+          "energy": -90,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003734996,
+          "score": 90,
+          "seed": 990007,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000001",
+          "energy": -90,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003466115,
+          "score": 90,
+          "seed": 990008,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000001",
+          "energy": -90,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004350379,
+          "score": 90,
+          "seed": 990009,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000001",
+          "energy": -90,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004539143,
+          "score": 90,
+          "seed": 990010,
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "id": "wdc-02",
+      "native": [
+        {
+          "bits": "111111111111111",
+          "energy": -500,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004022701,
+          "score": 500,
+          "seed": 990001,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -500,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003582463,
+          "score": 500,
+          "seed": 990002,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -500,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003078786,
+          "score": 500,
+          "seed": 990003,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -500,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003645598,
+          "score": 500,
+          "seed": 990004,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -500,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.00302118,
+          "score": 500,
+          "seed": 990005,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -500,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004034943,
+          "score": 500,
+          "seed": 990006,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -500,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.00388913,
+          "score": 500,
+          "seed": 990007,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -500,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004160823,
+          "score": 500,
+          "seed": 990008,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -500,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003936141,
+          "score": 500,
+          "seed": 990009,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -500,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004269494,
+          "score": 500,
+          "seed": 990010,
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "id": "wdc-03",
+      "native": [
+        {
+          "bits": "111111111111111",
+          "energy": -653,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004281456,
+          "score": 653,
+          "seed": 990001,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -653,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003835379,
+          "score": 653,
+          "seed": 990002,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -653,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.002995166,
+          "score": 653,
+          "seed": 990003,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -653,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003577174,
+          "score": 653,
+          "seed": 990004,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -653,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003901089,
+          "score": 653,
+          "seed": 990005,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -653,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004048043,
+          "score": 653,
+          "seed": 990006,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -653,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003339958,
+          "score": 653,
+          "seed": 990007,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -653,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003845648,
+          "score": 653,
+          "seed": 990008,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -653,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004518317,
+          "score": 653,
+          "seed": 990009,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -653,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003985428,
+          "score": 653,
+          "seed": 990010,
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "id": "wdc-04",
+      "native": [
+        {
+          "bits": "111001100100001",
+          "energy": -326,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003448562,
+          "score": 326,
+          "seed": 990001,
+          "violations": 0
+        },
+        {
+          "bits": "111001100100001",
+          "energy": -326,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.00465939,
+          "score": 326,
+          "seed": 990002,
+          "violations": 0
+        },
+        {
+          "bits": "111001100100001",
+          "energy": -326,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003423066,
+          "score": 326,
+          "seed": 990003,
+          "violations": 0
+        },
+        {
+          "bits": "111001100100001",
+          "energy": -326,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.0035386,
+          "score": 326,
+          "seed": 990004,
+          "violations": 0
+        },
+        {
+          "bits": "111001100100001",
+          "energy": -326,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003341039,
+          "score": 326,
+          "seed": 990005,
+          "violations": 0
+        },
+        {
+          "bits": "111001100100001",
+          "energy": -326,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003285763,
+          "score": 326,
+          "seed": 990006,
+          "violations": 0
+        },
+        {
+          "bits": "111001100100001",
+          "energy": -326,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004169441,
+          "score": 326,
+          "seed": 990007,
+          "violations": 0
+        },
+        {
+          "bits": "111001100100001",
+          "energy": -326,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003548815,
+          "score": 326,
+          "seed": 990008,
+          "violations": 0
+        },
+        {
+          "bits": "111001100100001",
+          "energy": -326,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.00378996,
+          "score": 326,
+          "seed": 990009,
+          "violations": 0
+        },
+        {
+          "bits": "111001100100001",
+          "energy": -326,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003083429,
+          "score": 326,
+          "seed": 990010,
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "id": "wdc-05",
+      "native": [
+        {
+          "bits": "110001000000000",
+          "energy": -101,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004454406,
+          "score": 101,
+          "seed": 990001,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000010",
+          "energy": -101,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003668316,
+          "score": 101,
+          "seed": 990002,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000010",
+          "energy": -101,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003803138,
+          "score": 101,
+          "seed": 990003,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000100",
+          "energy": -101,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003517911,
+          "score": 101,
+          "seed": 990004,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000000",
+          "energy": -101,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004228847,
+          "score": 101,
+          "seed": 990005,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000100",
+          "energy": -101,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003947913,
+          "score": 101,
+          "seed": 990006,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000000",
+          "energy": -101,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003661935,
+          "score": 101,
+          "seed": 990007,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000010",
+          "energy": -101,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003078871,
+          "score": 101,
+          "seed": 990008,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000010",
+          "energy": -101,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003091524,
+          "score": 101,
+          "seed": 990009,
+          "violations": 0
+        },
+        {
+          "bits": "110001000000100",
+          "energy": -101,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004008849,
+          "score": 101,
+          "seed": 990010,
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "id": "wdc-06",
+      "native": [
+        {
+          "bits": "111111111111111",
+          "energy": -741,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003157079,
+          "score": 741,
+          "seed": 990001,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -741,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003300099,
+          "score": 741,
+          "seed": 990002,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -741,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004938144,
+          "score": 741,
+          "seed": 990003,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -741,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003133012,
+          "score": 741,
+          "seed": 990004,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -741,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003603794,
+          "score": 741,
+          "seed": 990005,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -741,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003713007,
+          "score": 741,
+          "seed": 990006,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -741,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.002984231,
+          "score": 741,
+          "seed": 990007,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -741,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004153945,
+          "score": 741,
+          "seed": 990008,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -741,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003971213,
+          "score": 741,
+          "seed": 990009,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -741,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003890364,
+          "score": 741,
+          "seed": 990010,
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "id": "wdc-07",
+      "native": [
+        {
+          "bits": "000000000000000",
+          "energy": 0,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.000768361,
+          "score": 0,
+          "seed": 990001,
+          "violations": 0
+        },
+        {
+          "bits": "000000000000000",
+          "energy": 0,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.000868828,
+          "score": 0,
+          "seed": 990002,
+          "violations": 0
+        },
+        {
+          "bits": "000000000000000",
+          "energy": 0,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.000655947,
+          "score": 0,
+          "seed": 990003,
+          "violations": 0
+        },
+        {
+          "bits": "000000000000000",
+          "energy": 0,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.000942608,
+          "score": 0,
+          "seed": 990004,
+          "violations": 0
+        },
+        {
+          "bits": "000000000000000",
+          "energy": 0,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.000918647,
+          "score": 0,
+          "seed": 990005,
+          "violations": 0
+        },
+        {
+          "bits": "000000000000000",
+          "energy": 0,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.000816473,
+          "score": 0,
+          "seed": 990006,
+          "violations": 0
+        },
+        {
+          "bits": "000000000000000",
+          "energy": 0,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.00077302,
+          "score": 0,
+          "seed": 990007,
+          "violations": 0
+        },
+        {
+          "bits": "000000000000000",
+          "energy": 0,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.000645057,
+          "score": 0,
+          "seed": 990008,
+          "violations": 0
+        },
+        {
+          "bits": "000000000000000",
+          "energy": 0,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.000642883,
+          "score": 0,
+          "seed": 990009,
+          "violations": 0
+        },
+        {
+          "bits": "000000000000000",
+          "energy": 0,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.000977228,
+          "score": 0,
+          "seed": 990010,
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "id": "wdc-08",
+      "native": [
+        {
+          "bits": "111111111111111",
+          "energy": -414,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003240362,
+          "score": 414,
+          "seed": 990001,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -414,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004363464,
+          "score": 414,
+          "seed": 990002,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -414,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003381737,
+          "score": 414,
+          "seed": 990003,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -414,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003537498,
+          "score": 414,
+          "seed": 990004,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -414,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003747712,
+          "score": 414,
+          "seed": 990005,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -414,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004150975,
+          "score": 414,
+          "seed": 990006,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -414,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004053154,
+          "score": 414,
+          "seed": 990007,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -414,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003948024,
+          "score": 414,
+          "seed": 990008,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -414,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003501865,
+          "score": 414,
+          "seed": 990009,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -414,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003677158,
+          "score": 414,
+          "seed": 990010,
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "id": "wdc-09",
+      "native": [
+        {
+          "bits": "100000000100000",
+          "energy": -17,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004562652,
+          "score": 17,
+          "seed": 990001,
+          "violations": 0
+        },
+        {
+          "bits": "000000000100000",
+          "energy": -17,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003473205,
+          "score": 17,
+          "seed": 990002,
+          "violations": 0
+        },
+        {
+          "bits": "000000000100000",
+          "energy": -17,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003769554,
+          "score": 17,
+          "seed": 990003,
+          "violations": 0
+        },
+        {
+          "bits": "000000000100000",
+          "energy": -17,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004226759,
+          "score": 17,
+          "seed": 990004,
+          "violations": 0
+        },
+        {
+          "bits": "000000000100000",
+          "energy": -17,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004307351,
+          "score": 17,
+          "seed": 990005,
+          "violations": 0
+        },
+        {
+          "bits": "000000000100000",
+          "energy": -17,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004551421,
+          "score": 17,
+          "seed": 990006,
+          "violations": 0
+        },
+        {
+          "bits": "000000000100000",
+          "energy": -17,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004770759,
+          "score": 17,
+          "seed": 990007,
+          "violations": 0
+        },
+        {
+          "bits": "100000000100000",
+          "energy": -17,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004000844,
+          "score": 17,
+          "seed": 990008,
+          "violations": 0
+        },
+        {
+          "bits": "000000000100000",
+          "energy": -17,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003991807,
+          "score": 17,
+          "seed": 990009,
+          "violations": 0
+        },
+        {
+          "bits": "100000000100000",
+          "energy": -17,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.005085712,
+          "score": 17,
+          "seed": 990010,
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "id": "wdc-10",
+      "native": [
+        {
+          "bits": "111111111111111",
+          "energy": -247,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004436738,
+          "score": 247,
+          "seed": 990001,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -247,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004352874,
+          "score": 247,
+          "seed": 990002,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -247,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003868593,
+          "score": 247,
+          "seed": 990003,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -247,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004552679,
+          "score": 247,
+          "seed": 990004,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -247,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003478281,
+          "score": 247,
+          "seed": 990005,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -247,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004433071,
+          "score": 247,
+          "seed": 990006,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -247,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003824793,
+          "score": 247,
+          "seed": 990007,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -247,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004544573,
+          "score": 247,
+          "seed": 990008,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -247,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003171476,
+          "score": 247,
+          "seed": 990009,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -247,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.005157012,
+          "score": 247,
+          "seed": 990010,
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "id": "wdc-11",
+      "native": [
+        {
+          "bits": "111111111111111",
+          "energy": -473,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004206565,
+          "score": 473,
+          "seed": 990001,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -473,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003621808,
+          "score": 473,
+          "seed": 990002,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -473,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.00462974,
+          "score": 473,
+          "seed": 990003,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -473,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003459369,
+          "score": 473,
+          "seed": 990004,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -473,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003953348,
+          "score": 473,
+          "seed": 990005,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -473,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.00462756,
+          "score": 473,
+          "seed": 990006,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -473,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004556265,
+          "score": 473,
+          "seed": 990007,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -473,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004396231,
+          "score": 473,
+          "seed": 990008,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -473,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.003472681,
+          "score": 473,
+          "seed": 990009,
+          "violations": 0
+        },
+        {
+          "bits": "111111111111111",
+          "energy": -473,
+          "gap": 0,
+          "optimal": true,
+          "received_s": 0.004578383,
+          "score": 473,
+          "seed": 990010,
+          "violations": 0
+        }
+      ]
+    }
+  ],
+  "scope": "development capability gate; no superiority/holdout claim",
+  "semantic_signal_gate": false,
+  "wrapper_optimum_hits": 120
+}
