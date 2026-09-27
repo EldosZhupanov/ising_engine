@@ -224,3 +224,15 @@ the entire cause. Neither that latency nor a passing100ms gate is transferable
 to native startup or an unmeasured speed ratio. Native qualification must use the
 actual per-arm initialization/output path; do not replace it with a generic echo
 and assume equivalent overhead. No new execution is authorized by this design.
+
+## Native preparation calibration completed — 2026-09-27
+
+[MQ-NATIVE-001](../mqlib_native_calibration/RESULT.md) ran once after protocol
+`fb568c8` and instrument `a25c595`:960valid cells, overallFAIL, independent audit
+PASS. All four Rust/C++ × artificial-shape groups pass50/100ms; all10/25ms groups
+fail. This is diagnostic model preparation, including two-line delivery and timed
+parent validation; it excludes initialization inside solve/run and any search.
+Do not transfer admission to full optimizer startup, larger inputs or old screen.
+Next qualify PALUBECKIS2004bMST2's exact conversion/witness/callback path, then
+freeze the difficult-corpus comparison and actual-wrapper budget grid. Corpus
+qualification and untouched holdout remain separate; no extra easy-screen rerun.

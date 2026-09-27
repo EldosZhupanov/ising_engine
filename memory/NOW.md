@@ -12,21 +12,29 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-NATIVE-001 raw results retained, 2026-09-27
+## Current — MQ-NATIVE-001 complete, 2026-09-27
 
-[Native calibration protocol](../research/experiments/mqlib_native_calibration/protocol.md)
-`fb568c8`; reviewed instrument `a25c595`. Two-worker smoke PASS; main completed
-once: 960 valid cells, 1,666 complete messages, 807 on-time two-line completions,
-3 complete-but-late cells and 150 without both lines. Registered overall FAIL;
-50/100ms pass all four worker/shape groups, every 10/25ms group fails.
-[Offline evidence audit](../research/experiments/mqlib_native_calibration/run001/audit.json)
-PASS: all raw messages and 234 provenance hashes; independent read-only evidence
-review also PASS with separate gate arithmetic.
-14 Python and 2 Rust tests, strict targeted build/Clippy/format checks pass.
-Next: commit reviewed evidence, then record bounded result.
-Only native diagnostic model preparation is measured; full optimizer setup inside
-solve/run, solver search, real corpus and reserved outcomes remain outside scope.
-Production APIs, kernels and Cargo remain unchanged.
+[Native model-preparation calibration](../research/experiments/mqlib_native_calibration/RESULT.md):
+**registered overall FAIL; independent evidence audit PASS**. 960 valid cells,
+1,666 messages,807 on-time two-line completions,3late and150without both lines.
+All four worker/shape combinations pass50/100ms; every10/25ms group fails.
+Protocol `fb568c8`, instrument `a25c595`, raw/audit `a435e7a`. Independent read-only
+review recomputed raw energies, schedule, all six gates and234provenance hashes.
+14 Python/2 Rust tests, strict targeted builds/Clippy/format PASS. Production
+kernels, APIs and Cargo unchanged. This is diagnostic model preparation only:
+full solver initialization and search timing/competitive advantage remain untested.
+
+**Next task:** scope and preregister small correctness/callback qualification of
+MQLib `PALUBECKIS2004bMST2` as the proposed stronger baseline. Preserve original
+MERZ adapter and frozen runs; verify exact sign/offset/state semantics and streaming
+termination before any comparison. Then finish difficulty-qualified corpus design,
+predeclared targets and actual-wrapper cost curves with separate qualification and
+untouched holdout. Do not repeat the spent easy screen or relabel the303existing
+files unseen. Shared observed parentCPU0+childCPU0 remains the prospective contract.
+50/100ms model-path admission does not transfer to full solver setup or larger inputs.
+Parent S3/X3, corpus licensing and holdout gates remain; no automatic comparison
+wave is authorized by the completed calibration. Hosted CI billing remains the
+last verified external blocker; local PASS is not hosted CI success.
 
 ## Previous — MQ-CAL-001 complete, 2026-09-27
 
