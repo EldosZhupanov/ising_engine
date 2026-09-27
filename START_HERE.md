@@ -52,3 +52,22 @@ cost on an independently replicated domain.
 - Git history proves chronology; dates are descriptive only.
 - If two documents claim authority over the same question and disagree, stop
   and repair the authority map before continuing implementation or research.
+
+## Optional code navigation
+
+Use the pinned local [Graft adapter](scripts/graft.sh) for symbol and relationship
+navigation after the mandatory startup. Install/rebuild with
+`bash scripts/graft.sh setup` (Node/npm, Python, Git, curl and flock required).
+
+```bash
+bash scripts/graft.sh ask "UltimateSolver" --in src/solver/ultimate.rs --source
+bash scripts/graft.sh skeleton src/core/csr_matrix.rs
+bash scripts/graft.sh callers "roof_duality_persistencies" --in src
+```
+
+The adapter indexes visible supported source files, including dirty/untracked
+code, under `.cache/graft-index`; it excludes solver `.sol` artifacts. Scope
+ambiguous symbols with `--in`: legacy prototypes can outrank production code.
+Use the catalogue and explicit-path `rg` for Markdown/evidence. The generated
+graph is navigation, not authority or proof of a call edge. See the
+[qualification record](research/HYPODIVE_TRIAGE.md#graft-local-integration--2026-09-27).

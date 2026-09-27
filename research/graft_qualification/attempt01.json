@@ -1,0 +1,2140 @@
+{
+  "upstream_revision": "80692e5ad0bc8e8f7e1edea648247d90b9f76820",
+  "version": "0.20.0",
+  "node": "v24.18.0",
+  "base_commit": "c8391a6b25ab07a19e7338e34d3ce2b141df1ee0",
+  "cases_sha256": "5235d2182a8c4c4cfd427441fa5f1d47b60db46ae4b99d80737f1754e84b4b91",
+  "runner_sha256": "e152a9651de3508776e719fbc1d1a476267dc5eec4418d6b2a048ec0efd27500",
+  "manifest_sha256": "65ba4947181d559489bca356c8e0e0f7800ab12665b43ddd9dd0ef4ba958616f",
+  "scope": "16 symbol lookups and 4 document probes; development diagnostic, not agent QA or speed benchmark",
+  "extensions": [
+    ".rs",
+    ".py",
+    ".ts",
+    ".tsx",
+    ".js",
+    ".jsx"
+  ],
+  "cases": [
+    {
+      "query": "UltimateSolver",
+      "path": "src/solver/ultimate.rs",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "UltimateSolver",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "UltimateSolver \u00b7 struct",
+            "pointer": "src/solver/ultimate_patch.rs:L6-L15",
+            "snippet": "pub struct UltimateSolver",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "UltimateSolver \u00b7 struct",
+            "pointer": "research/src/bin/max_cut_benchmark.rs:L142-L149",
+            "snippet": "pub struct UltimateSolver",
+            "score": 0.9403533847158667,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "UltimateSolver \u00b7 struct",
+            "pointer": "research/src/bin/maxcut_simd.rs:L142-L149",
+            "snippet": "pub struct UltimateSolver",
+            "score": 0.9403533847158667,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "UltimateSolver \u00b7 struct",
+            "pointer": "src/solver/ultimate.rs:L18-L57",
+            "snippet": "pub struct UltimateSolver",
+            "score": 0.8970639716316461,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "Solver \u00b7 function",
+            "pointer": "website/src/components/os/control/Solver.tsx:L45-L191",
+            "snippet": "function Solver()",
+            "score": 0.799991962737398,
+            "scope": "website"
+          },
+          {
+            "kind": "symbol",
+            "title": "ultimate \u00b7 function",
+            "pointer": "research/breakthrough/exp001/probe.rs:L400-L404",
+            "snippet": "fn ultimate(m: &QuboModel, seed: u64, exchanges: usize) -> Vec<i8>",
+            "score": 0.7293201674480847,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "ultimate \u00b7 function",
+            "pointer": "research/breakthrough/probe.rs:L400-L404",
+            "snippet": "fn ultimate(m: &QuboModel, seed: u64, exchanges: usize) -> Vec<i8>",
+            "score": 0.7293201674480847,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "patch_ultimate.py \u00b7 file",
+            "pointer": "patch_ultimate.py",
+            "snippet": "",
+            "score": 0.6836787407859798,
+            "scope": ""
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research",
+            "website"
+          ],
+          "alsoMatched": []
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "research/src/bin/max_cut_benchmark.rs",
+        "research/src/bin/maxcut_simd.rs",
+        "src/solver/ultimate.rs",
+        "src/solver/ultimate_patch.rs"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "QuantumField",
+      "path": "src/solver/types.rs",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "QuantumField",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "QuantumField \u00b7 struct",
+            "pointer": "src/solver/types.rs:L23-L35",
+            "snippet": "pub struct QuantumField",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "Field \u00b7 function",
+            "pointer": "website/src/components/os/design/Designer.tsx:L244-L252",
+            "snippet": "function Field({ label, hint, children, danger }: { label: string; hint?: string; children: React.ReactNode; danger?: boolean })",
+            "score": 0.7818502066666528,
+            "scope": "website"
+          },
+          {
+            "kind": "symbol",
+            "title": "main \u00b7 function",
+            "pointer": "research/src/bin/classic_vs_quantum_ww.rs:L355-L433",
+            "snippet": "fn main()",
+            "score": 0.7678414970894294,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "with_quantum_dims \u00b7 function",
+            "pointer": "src/solver/ultimate.rs:L126-L131",
+            "snippet": "pub fn with_quantum_dims(mut self, slices: usize, temps: usize, pops: usize) -> Self",
+            "score": 0.7408452251019548,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "for_field \u00b7 function",
+            "pointer": "src/solver/engine.rs:L488-L501",
+            "snippet": "pub fn for_field(field: &QuantumField) -> Self",
+            "score": 0.7395045397325295,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "dwave_quantum_challenge.rs \u00b7 file",
+            "pointer": "src/bin/dwave_quantum_challenge.rs",
+            "snippet": "",
+            "score": 0.6481080769725884,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "HistoryFieldSweep \u00b7 struct",
+            "pointer": "src/engine_v2/operators/history_field.rs:L25-L31",
+            "snippet": "pub struct HistoryFieldSweep",
+            "score": 0.6369116585336267,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "field_generation_and_binary_conversion_are_exact \u00b7 function",
+            "pointer": "research/breakthrough/exp001/probe.rs:L740-L748",
+            "snippet": "fn field_generation_and_binary_conversion_are_exact()",
+            "score": 0.599574325574338,
+            "scope": "research"
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "website",
+            "research"
+          ],
+          "alsoMatched": []
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "src/solver/types.rs"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "CsrMatrix",
+      "path": "src/core/csr_matrix.rs",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "CsrMatrix",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "src/core/csr_matrix.rs:L6-L10",
+            "snippet": "pub struct CsrMatrix",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/bayesian_scaling_lab_v2.rs:L10-L14",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.9175288017590735,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/bayesian_scaling_lab_v3.rs:L10-L14",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.9175288017590735,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/bayesian_scaling_lab.rs:L10-L14",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.9175288017590735,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/benchmark_1000.rs:L11-L15",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.9175288017590735,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/bpt_hard_phase.rs:L11-L15",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.9175288017590735,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/classic_vs_quantum_ww.rs:L61-L65",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.9175288017590735,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/csplib_wagner_whitin.rs:L11-L15",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.9175288017590735,
+            "scope": "research"
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research"
+          ],
+          "alsoMatched": [
+            {
+              "scope": "website",
+              "bestId": "website/src/app/(app)/docs/page.tsx"
+            }
+          ]
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "research/src/bin/bayesian_scaling_lab.rs",
+        "research/src/bin/bayesian_scaling_lab_v2.rs",
+        "research/src/bin/bayesian_scaling_lab_v3.rs",
+        "research/src/bin/benchmark_1000.rs",
+        "research/src/bin/bpt_hard_phase.rs",
+        "research/src/bin/classic_vs_quantum_ww.rs",
+        "research/src/bin/csplib_wagner_whitin.rs",
+        "research/src/bin/math_breakthrough.rs",
+        "research/src/bin/max_cut_benchmark.rs",
+        "research/src/bin/maxcut_simd.rs",
+        "research/src/bin/ml_hybrid_benchmark.rs",
+        "research/src/bin/multi_echelon_inventory.rs",
+        "research/src/bin/portfolio_benchmark.rs",
+        "research/src/bin/sat_phase_transition.rs",
+        "research/src/bin/scaling_memory_lab.rs",
+        "research/src/bin/upwork_prototype.rs",
+        "research/src/bin/web_demo.rs",
+        "src/bin/gset_benchmark.rs",
+        "src/bin/gurobi_wall_benchmark.rs",
+        "src/bin/investor_proofs.rs",
+        "src/bin/investor_proofs_v2.rs",
+        "src/bin/investor_proofs_v3.rs",
+        "src/bin/investor_proofs_v4.rs",
+        "src/bin/investor_proofs_v5.rs",
+        "src/bin/investor_proofs_v6.rs",
+        "src/bin/investor_proofs_v7.rs",
+        "src/bin/investor_proofs_v8.rs",
+        "src/bin/investor_proofs_v9_logistics.rs",
+        "src/core/csr_matrix.rs"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": false
+    },
+    {
+      "query": "HuboModel",
+      "path": "src/core/hubo.rs",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "HuboModel",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "HuboModel \u00b7 struct",
+            "pointer": "src/core/hubo.rs:L38-L44",
+            "snippet": "pub struct HuboModel",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "prepare \u00b7 function",
+            "pointer": "research/examples/hubo_compare.rs:L30-L85",
+            "snippet": "fn prepare(req: &Request) -> Result<State, &'static str>",
+            "score": 0.7741939319492901,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "build_hubo \u00b7 function",
+            "pointer": "src/compiler/logic_builder.rs:L193-L248",
+            "snippet": "pub fn build_hubo(self) -> crate::core::hubo::HuboModel",
+            "score": 0.6957107312297124,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "hubo \u00b7 module",
+            "pointer": "src/core/mod.rs:L2-L2",
+            "snippet": "pub mod hubo;",
+            "score": 0.5410596954791993,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "collect \u00b7 function",
+            "pointer": "src/bin/exp_rc025_corpus_ladder.rs:L235-L261",
+            "snippet": "fn collect(dir: &Path) -> Vec<(&'static Family, PathBuf)>",
+            "score": 0.45943470755039817,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "u \u00b7 method",
+            "pointer": "website/src/lib/llm/ollama.ts:L109-L109",
+            "snippet": "private u(p: string)",
+            "score": 0.45943470755039817,
+            "scope": "website"
+          },
+          {
+            "kind": "symbol",
+            "title": "ContractiveModel \u00b7 struct",
+            "pointer": "research/fundamental_ai/benchmarks/test_contractive_model.rs:L19-L25",
+            "snippet": "struct ContractiveModel",
+            "score": 0.45405067781623126,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "push \u00b7 function",
+            "pointer": "src/engine_v2/ai_scientist/monitor.rs:L83-L89",
+            "snippet": "fn push(&mut self, name: &str, status: HealthStatus, detail: String)",
+            "score": 0.4493040688530462,
+            "scope": ""
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research",
+            "website"
+          ],
+          "alsoMatched": []
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "src/core/hubo.rs"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "FlatHuboModel",
+      "path": "src/core/hubo.rs",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "FlatHuboModel",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "FlatHuboModel \u00b7 struct",
+            "pointer": "src/core/hubo.rs:L68-L89",
+            "snippet": "pub struct FlatHuboModel",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "prepare \u00b7 function",
+            "pointer": "research/examples/hubo_compare.rs:L30-L85",
+            "snippet": "fn prepare(req: &Request) -> Result<State, &'static str>",
+            "score": 0.7015732510024489,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "build_hubo \u00b7 function",
+            "pointer": "src/compiler/logic_builder.rs:L193-L248",
+            "snippet": "pub fn build_hubo(self) -> crate::core::hubo::HuboModel",
+            "score": 0.5011373898694282,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "push \u00b7 function",
+            "pointer": "src/engine_v2/ai_scientist/monitor.rs:L83-L89",
+            "snippet": "fn push(&mut self, name: &str, status: HealthStatus, detail: String)",
+            "score": 0.448417523646832,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "u \u00b7 method",
+            "pointer": "website/src/lib/llm/ollama.ts:L109-L109",
+            "snippet": "private u(p: string)",
+            "score": 0.448417523646832,
+            "scope": "website"
+          },
+          {
+            "kind": "symbol",
+            "title": "collect \u00b7 function",
+            "pointer": "src/bin/exp_rc025_corpus_ladder.rs:L235-L261",
+            "snippet": "fn collect(dir: &Path) -> Vec<(&'static Family, PathBuf)>",
+            "score": 0.44763126445207796,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "model \u00b7 function",
+            "pointer": "research/examples/laya_bridge.rs:L20-L56",
+            "snippet": "fn model(req: &Request) -> Result<QuboModel, String>",
+            "score": 0.4215972588064815,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "hubo \u00b7 module",
+            "pointer": "src/core/mod.rs:L2-L2",
+            "snippet": "pub mod hubo;",
+            "score": 0.38244034427612794,
+            "scope": ""
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research",
+            "website"
+          ],
+          "alsoMatched": []
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "src/core/hubo.rs"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "QuboModel",
+      "path": "src/core/hubo.rs",
+      "kind": "code",
+      "graft_hit": false,
+      "graft": {
+        "query": "QuboModel",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "QuboModel \u00b7 struct",
+            "pointer": "src/core/qubo_model.rs:L7-L11",
+            "snippet": "pub struct QuboModel",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "QuboModel \u00b7 struct",
+            "pointer": "research/src/bin/bayesian_scaling_lab_v2.rs:L25-L29",
+            "snippet": "pub struct QuboModel",
+            "score": 0.9601009704420065,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "QuboModel \u00b7 struct",
+            "pointer": "research/src/bin/bayesian_scaling_lab_v3.rs:L25-L29",
+            "snippet": "pub struct QuboModel",
+            "score": 0.9601009704420065,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "QuboModel \u00b7 struct",
+            "pointer": "research/src/bin/bayesian_scaling_lab.rs:L25-L29",
+            "snippet": "pub struct QuboModel",
+            "score": 0.9601009704420065,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "QuboModel \u00b7 struct",
+            "pointer": "research/src/bin/benchmark_1000.rs:L26-L30",
+            "snippet": "pub struct QuboModel",
+            "score": 0.9601009704420065,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "QuboModel \u00b7 struct",
+            "pointer": "research/src/bin/max_cut_benchmark.rs:L26-L30",
+            "snippet": "pub struct QuboModel",
+            "score": 0.9601009704420065,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "QuboModel \u00b7 struct",
+            "pointer": "research/src/bin/maxcut_simd.rs:L29-L33",
+            "snippet": "pub struct QuboModel",
+            "score": 0.9601009704420065,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "QuboModel \u00b7 struct",
+            "pointer": "research/src/bin/ml_hybrid_benchmark.rs:L26-L30",
+            "snippet": "pub struct QuboModel",
+            "score": 0.9601009704420065,
+            "scope": "research"
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research",
+            "website"
+          ],
+          "alsoMatched": []
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "research/src/bin/bayesian_scaling_lab.rs",
+        "research/src/bin/bayesian_scaling_lab_v2.rs",
+        "research/src/bin/bayesian_scaling_lab_v3.rs",
+        "research/src/bin/benchmark_1000.rs",
+        "research/src/bin/bpt_hard_phase.rs",
+        "research/src/bin/classic_vs_quantum_ww.rs",
+        "research/src/bin/csplib_wagner_whitin.rs",
+        "research/src/bin/math_breakthrough.rs",
+        "research/src/bin/max_cut_benchmark.rs",
+        "research/src/bin/maxcut_simd.rs",
+        "research/src/bin/ml_hybrid_benchmark.rs",
+        "research/src/bin/multi_echelon_inventory.rs",
+        "research/src/bin/portfolio_benchmark.rs",
+        "research/src/bin/sat_phase_transition.rs",
+        "research/src/bin/scaling_memory_lab.rs",
+        "research/src/bin/upwork_prototype.rs",
+        "research/src/bin/web_demo.rs",
+        "src/bin/gset_benchmark.rs",
+        "src/bin/gurobi_wall_benchmark.rs",
+        "src/bin/investor_proofs.rs",
+        "src/bin/investor_proofs_v2.rs",
+        "src/bin/investor_proofs_v3.rs",
+        "src/bin/investor_proofs_v4.rs",
+        "src/bin/investor_proofs_v5.rs",
+        "src/bin/investor_proofs_v6.rs",
+        "src/bin/investor_proofs_v7.rs",
+        "src/bin/investor_proofs_v8.rs",
+        "src/bin/investor_proofs_v9_logistics.rs",
+        "src/core/hubo.rs",
+        "src/core/qubo_model.rs"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": false
+    },
+    {
+      "query": "LatticeBasis",
+      "path": "src/core/lattice.rs",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "LatticeBasis",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "LatticeBasis \u00b7 struct",
+            "pointer": "src/core/lattice.rs:L24-L31",
+            "snippet": "pub struct LatticeBasis",
+            "score": 1.237746746405913,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "lattice_guard_tests \u00b7 module",
+            "pointer": "src/bin/qoblib_lattice_ultimate_hybrid.rs:L858-L875",
+            "snippet": "mod lattice_guard_tests",
+            "score": 0.7868069486910643,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "lattice_guard_tests \u00b7 module",
+            "pointer": "src/bin/qoblib_lambda_lattice_solver.rs:L604-L624",
+            "snippet": "mod lattice_guard_tests",
+            "score": 0.7854435192781252,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "lattice \u00b7 module",
+            "pointer": "src/core/mod.rs:L7-L7",
+            "snippet": "pub mod lattice;",
+            "score": 0.5048722487302728,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "collect \u00b7 function",
+            "pointer": "src/bin/exp_rc025_corpus_ladder.rs:L235-L261",
+            "snippet": "fn collect(dir: &Path) -> Vec<(&'static Family, PathBuf)>",
+            "score": 0.3182303041588965,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "push \u00b7 function",
+            "pointer": "src/engine_v2/ai_scientist/monitor.rs:L83-L89",
+            "snippet": "fn push(&mut self, name: &str, status: HealthStatus, detail: String)",
+            "score": 0.20612170562824908,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "main \u00b7 function",
+            "pointer": "src/bin/qoblib_lll_screening.rs:L160-L289",
+            "snippet": "fn main() -> Result<(), Box<dyn std::error::Error>>",
+            "score": 0.1851090306671409,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "lifecycle_for \u00b7 function",
+            "pointer": "scripts/build_file_map.py:L86-L118",
+            "snippet": "def lifecycle_for(path: str, tracking: str, catalog: dict[str, tuple[str, str]]) -> str",
+            "score": 0.15816449491999174,
+            "scope": ""
+          }
+        ],
+        "scopes": {
+          "federated": [
+            ""
+          ],
+          "alsoMatched": [
+            {
+              "scope": "research",
+              "bestId": "research/fundamental_ai/src/models.rs#new~6"
+            },
+            {
+              "scope": "website",
+              "bestId": "website/src/data/applications.ts"
+            }
+          ]
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "src/core/lattice.rs"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "build_kernel_qubo",
+      "path": "src/core/lattice.rs",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "build_kernel_qubo",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "build_kernel_qubo \u00b7 function",
+            "pointer": "src/core/lattice.rs:L428-L537",
+            "snippet": "pub fn build_kernel_qubo(",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "build_reference.py \u00b7 file",
+            "pointer": "research/labs_qualification/build_reference.py",
+            "snippet": "",
+            "score": 0.9033445190451872,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "build_qubo \u00b7 function",
+            "pointer": "research/src/bin/sat_phase_transition.rs:L74-L152",
+            "snippet": "pub fn build_qubo(&self) -> QuboModel",
+            "score": 0.7357418036498893,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "build_qubo \u00b7 function",
+            "pointer": "research/src/bin/portfolio_benchmark.rs:L82-L137",
+            "snippet": "pub fn build_qubo(&self, alpha: f64, beta: f64, gamma: f64) -> QuboModel",
+            "score": 0.7345800974475747,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "build_qubo \u00b7 function",
+            "pointer": "research/src/bin/bpt_hard_phase.rs:L78-L142",
+            "snippet": "pub fn build_qubo(&self) -> QuboModel",
+            "score": 0.7296357994653211,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "build_qubo \u00b7 function",
+            "pointer": "research/src/bin/scaling_memory_lab.rs:L74-L151",
+            "snippet": "pub fn build_qubo(&self) -> QuboModel",
+            "score": 0.717855543834379,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "build_qubo \u00b7 function",
+            "pointer": "research/src/bin/bayesian_scaling_lab.rs:L74-L151",
+            "snippet": "pub fn build_qubo(&self) -> QuboModel",
+            "score": 0.717459360210863,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "build_qubo \u00b7 function",
+            "pointer": "research/src/bin/bayesian_scaling_lab_v3.rs:L74-L151",
+            "snippet": "pub fn build_qubo(&self) -> QuboModel",
+            "score": 0.717265755856818,
+            "scope": "research"
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research"
+          ],
+          "alsoMatched": [
+            {
+              "scope": "website",
+              "bestId": "website/src/components/os/control/Solver.tsx"
+            }
+          ]
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "src/core/lattice.rs"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "aardal_diophantine_reduction",
+      "path": "src/core/lattice.rs",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "aardal_diophantine_reduction",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "aardal_diophantine_reduction \u00b7 function",
+            "pointer": "src/core/lattice.rs:L253-L376",
+            "snippet": "pub fn aardal_diophantine_reduction(",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "no_reduction_and_null_identity \u00b7 function",
+            "pointer": "research/breakthrough/exp001/probe.rs:L718-L738",
+            "snippet": "fn no_reduction_and_null_identity()",
+            "score": 0.5741011884484224,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "no_reduction_and_null_identity \u00b7 function",
+            "pointer": "research/breakthrough/probe.rs:L718-L738",
+            "snippet": "fn no_reduction_and_null_identity()",
+            "score": 0.5741011884484224,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "run_benchmark_grid \u00b7 function",
+            "pointer": "research/breakthrough/cd004/witness.py:L257-L301",
+            "snippet": "def run_benchmark_grid()",
+            "score": 0.2333538530886941,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "family_screen \u00b7 function",
+            "pointer": "research/breakthrough/analyze_exp001.py:L23-L52",
+            "snippet": "def family_screen(rows, family, candidate)",
+            "score": 0.18481441199806603,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "family_screen \u00b7 function",
+            "pointer": "research/breakthrough/exp001/analyze_exp001.py:L23-L52",
+            "snippet": "def family_screen(rows, family, candidate)",
+            "score": 0.18481441199806603,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "main \u00b7 function",
+            "pointer": "src/bin/qoblib_lll_screening.rs:L160-L289",
+            "snippet": "fn main() -> Result<(), Box<dyn std::error::Error>>",
+            "score": 0.18017290233560276,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "main \u00b7 function",
+            "pointer": "src/bin/qoblib_lattice_ultimate_hybrid.rs:L733-L855",
+            "snippet": "fn main() -> Result<(), Box<dyn std::error::Error>>",
+            "score": 0.14589167724713326,
+            "scope": ""
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research"
+          ],
+          "alsoMatched": [
+            {
+              "scope": "website",
+              "bestId": "website/src/data/applications.ts#Application"
+            }
+          ]
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "src/core/lattice.rs"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "roof_duality_persistencies",
+      "path": "src/presolve/qpbo.rs",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "roof_duality_persistencies",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "roof_duality_persistencies \u00b7 function",
+            "pointer": "src/presolve/qpbo.rs:L160-L266",
+            "snippet": "pub fn roof_duality_persistencies(model: &QuboModel) -> Vec<Option<i8>>",
+            "score": 1.5,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "full_presolve \u00b7 function",
+            "pointer": "src/presolve/mod.rs:L283-L321",
+            "snippet": "pub fn full_presolve(model: &QuboModel, clamped: &[(usize, i8)]) -> Vec<(usize, i8)>",
+            "score": 0.34520693971612115,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "solve \u00b7 function",
+            "pointer": "src/solver/ultimate.rs:L138-L387",
+            "snippet": "pub fn solve(&self, model: &crate::core::QuboModel, clamped: &[(usize, i8)]) -> Vec<i8>",
+            "score": 0.1216132117234131,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "collect \u00b7 function",
+            "pointer": "src/bin/exp_rc025_corpus_ladder.rs:L235-L261",
+            "snippet": "fn collect(dir: &Path) -> Vec<(&'static Family, PathBuf)>",
+            "score": 0.10918864518500554,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "push \u00b7 function",
+            "pointer": "src/engine_v2/ai_scientist/monitor.rs:L83-L89",
+            "snippet": "fn push(&mut self, name: &str, status: HealthStatus, detail: String)",
+            "score": 0.07873938297606586,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "qpbo_fuzz_extremes_and_edge_cases \u00b7 function",
+            "pointer": "tests/test_qpbo.rs:L228-L273",
+            "snippet": "fn qpbo_fuzz_extremes_and_edge_cases()",
+            "score": 0.07336397111723039,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "qpbo_is_deterministic \u00b7 function",
+            "pointer": "tests/test_qpbo.rs:L218-L225",
+            "snippet": "fn qpbo_is_deterministic()",
+            "score": 0.07190234852578734,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "qpbo_solves_submodular_exactly \u00b7 function",
+            "pointer": "tests/test_qpbo.rs:L149-L173",
+            "snippet": "fn qpbo_solves_submodular_exactly()",
+            "score": 0.061142779911152155,
+            "scope": ""
+          }
+        ],
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "src/presolve/qpbo.rs"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "calculate_delta_e_local",
+      "path": "src/solver/engine.rs",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "calculate_delta_e_local",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "calculate_delta_e_local \u00b7 function",
+            "pointer": "src/solver/engine.rs:L218-L306",
+            "snippet": "pub fn calculate_delta_e_local(",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "calculate_delta_e \u00b7 function",
+            "pointer": "research/src/bin/sat_phase_transition.rs:L173-L180",
+            "snippet": "fn calculate_delta_e(model: &QuboModel, state: &[i8], var_idx: usize) -> f64",
+            "score": 0.8910878647213044,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "calculate_delta_e \u00b7 function",
+            "pointer": "research/src/bin/portfolio_benchmark.rs:L167-L174",
+            "snippet": "fn calculate_delta_e(model: &QuboModel, state: &[i8], var_idx: usize) -> f64",
+            "score": 0.8713121548658224,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "calculate_delta_e \u00b7 function",
+            "pointer": "research/src/bin/bpt_hard_phase.rs:L165-L172",
+            "snippet": "fn calculate_delta_e(model: &QuboModel, state: &[i8], var_idx: usize) -> f64",
+            "score": 0.8702719899315404,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "calculate_delta_e \u00b7 function",
+            "pointer": "research/src/bin/math_breakthrough.rs:L173-L180",
+            "snippet": "fn calculate_delta_e(model: &QuboModel, state: &[i8], var_idx: usize) -> f64",
+            "score": 0.8628630692844459,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "calculate_delta_e \u00b7 function",
+            "pointer": "research/src/bin/ml_hybrid_benchmark.rs:L146-L153",
+            "snippet": "fn calculate_delta_e(model: &QuboModel, state: &[i8], var_idx: usize) -> f64",
+            "score": 0.8610666721488589,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "calculate_delta_e \u00b7 function",
+            "pointer": "research/src/bin/benchmark_1000.rs:L134-L141",
+            "snippet": "fn calculate_delta_e(model: &QuboModel, state: &[i8], var_idx: usize) -> f64",
+            "score": 0.8603635472571648,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "calculate_delta_e \u00b7 function",
+            "pointer": "research/src/bin/max_cut_benchmark.rs:L152-L159",
+            "snippet": "fn calculate_delta_e(model: &QuboModel, state: &[i8], var_idx: usize) -> f64",
+            "score": 0.8581003483022827,
+            "scope": "research"
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research"
+          ],
+          "alsoMatched": [
+            {
+              "scope": "website",
+              "bestId": "website/src/lib/llm/providers.ts"
+            }
+          ]
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "src/solver/engine.rs"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "Xoshiro256PlusPlusX8",
+      "path": "src/solver/engine.rs",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "Xoshiro256PlusPlusX8",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "Xoshiro256PlusPlusX8 \u00b7 struct",
+            "pointer": "src/solver/engine.rs:L81-L84",
+            "snippet": "pub struct Xoshiro256PlusPlusX8",
+            "score": 1.5,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "default_candidates_covers_pool_plus_a_curious_pair \u00b7 function",
+            "pointer": "src/engine_v2/ai_scientist/planner.rs:L355-L363",
+            "snippet": "fn default_candidates_covers_pool_plus_a_curious_pair()",
+            "score": 0.3284951211654613,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "export_writes_one_row_per_experiment_plus_header \u00b7 function",
+            "pointer": "src/engine_v2/ai_scientist/dataset.rs:L226-L242",
+            "snippet": "fn export_writes_one_row_per_experiment_plus_header()",
+            "score": 0.30643727659902137,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "complete_bytes_plus_a_syscall_error_report_four_now_and_verify_zero_later \u00b7 function",
+            "pointer": "src/bin/exp_rc021_host_qualify/decision.rs:L4418-L4447",
+            "snippet": "fn complete_bytes_plus_a_syscall_error_report_four_now_and_verify_zero_later()",
+            "score": 0.2915691540667558,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "collect \u00b7 function",
+            "pointer": "src/bin/exp_rc025_corpus_ladder.rs:L235-L261",
+            "snippet": "fn collect(dir: &Path) -> Vec<(&'static Family, PathBuf)>",
+            "score": 0.15977442377881107,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "a6_replication_rule \u00b7 function",
+            "pointer": "src/bin/exp_sensor_sufficiency.rs:L3596-L3626",
+            "snippet": "fn a6_replication_rule()",
+            "score": 0.13354007255461303,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "wilcoxon_two_sided \u00b7 function",
+            "pointer": "benchmark_suite/scripts/analyze_openjij.py:L36-L64",
+            "snippet": "def wilcoxon_two_sided(a, b)",
+            "score": 0.11977450968715903,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "quench \u00b7 function",
+            "pointer": "src/bin/qoblib_lattice_ultimate_hybrid.rs:L306-L336",
+            "snippet": "pub fn quench(&mut self, ham: &GramHamiltonian, kernel: &[Vec<i64>], max_steps: usize)",
+            "score": 0.11707431206238195,
+            "scope": ""
+          }
+        ],
+        "scopes": {
+          "federated": [
+            ""
+          ],
+          "alsoMatched": [
+            {
+              "scope": "research",
+              "bestId": "research/fundamental_ai/src/datasets.rs#generate_biased_suite"
+            },
+            {
+              "scope": "website",
+              "bestId": "website/src/app/(app)/docs/page.tsx"
+            }
+          ]
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "src/solver/engine.rs"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "catalogued_markdown",
+      "path": "scripts/build_file_map.py",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "catalogued_markdown",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "catalogued_markdown \u00b7 function",
+            "pointer": "scripts/build_file_map.py:L32-L39",
+            "snippet": "def catalogued_markdown() -> dict[str, tuple[str, str]]",
+            "score": 1.2875556597369189,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "the_closure_and_its_markdown_share_one_finalized_utc \u00b7 function",
+            "pointer": "src/bin/exp_rc021_host_qualify/session.rs:L2612-L2636",
+            "snippet": "fn the_closure_and_its_markdown_share_one_finalized_utc()",
+            "score": 0.5219444986138507,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "markdown \u00b7 function",
+            "pointer": "src/benchmark/report.rs:L337-L401",
+            "snippet": "fn markdown(summaries: &[Summary], significance: &[Significance], skipped: &[&Solver]) -> String",
+            "score": 0.47165551583869747,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "as_str \u00b7 function",
+            "pointer": "src/bin/exp_rc021_host_qualify/decision.rs:L76-L84",
+            "snippet": "pub fn as_str(self) -> &'static str",
+            "score": 0.18110867711845866,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "main \u00b7 function",
+            "pointer": "scripts/build_file_map.py:L167-L200",
+            "snippet": "def main() -> None",
+            "score": 0.6583283406205814,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "write_all \u00b7 function",
+            "pointer": "src/benchmark/report.rs:L10-L30",
+            "snippet": "pub fn write_all(",
+            "score": 0.2578839211876944,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "is_tabular \u00b7 function",
+            "pointer": "src/bin/exp_rc021_host_qualify/decision.rs:L85-L87",
+            "snippet": "fn is_tabular(self) -> bool",
+            "score": 0.1728674501784977,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "stdout_summary \u00b7 function",
+            "pointer": "src/benchmark/report.rs:L404-L422",
+            "snippet": "pub fn stdout_summary(",
+            "score": 0.12730148422634516,
+            "scope": ""
+          }
+        ],
+        "scopes": {
+          "federated": [
+            ""
+          ],
+          "alsoMatched": [
+            {
+              "scope": "research",
+              "bestId": "research/graft_qualification/check.py#main"
+            },
+            {
+              "scope": "website",
+              "bestId": "website/scripts/ingest.mjs#parseEvaluation"
+            }
+          ]
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "scripts/build_file_map.py"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "evidence_for",
+      "path": "scripts/build_file_map.py",
+      "kind": "code",
+      "graft_hit": true,
+      "graft": {
+        "query": "evidence_for",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "gather_terminal_evidence \u00b7 function",
+            "pointer": "src/bin/exp_rc021_host_qualify/decision.rs:L2537-L2562",
+            "snippet": "fn gather_terminal_evidence(",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "TERMINAL_EVIDENCE \u00b7 constant",
+            "pointer": "src/bin/exp_rc021_host_qualify/controls.rs:L1370-L1375",
+            "snippet": "pub const TERMINAL_EVIDENCE: [&str; 4] = [",
+            "score": 0.8922007385555336,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "the_optimisation_guard_is_decided_from_evidence \u00b7 function",
+            "pointer": "src/bin/exp_rc021_host_qualify/main.rs:L2370-L2378",
+            "snippet": "fn the_optimisation_guard_is_decided_from_evidence()",
+            "score": 0.8527738106915093,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "a_canonical_record_of_another_run_is_not_this_runs_evidence \u00b7 function",
+            "pointer": "src/bin/exp_rc021_host_qualify/session.rs:L1940-L2000",
+            "snippet": "fn a_canonical_record_of_another_run_is_not_this_runs_evidence()",
+            "score": 0.742497798651233,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "evidence_for \u00b7 function",
+            "pointer": "scripts/build_file_map.py:L121-L154",
+            "snippet": "def evidence_for(path: str) -> str",
+            "score": 0.7403579091939583,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "bridge_attempt \u00b7 function",
+            "pointer": "research/laya_semantic/run_pilot.py:L31-L54",
+            "snippet": "def bridge_attempt(binary, request, directory, gid)",
+            "score": 0.6802721730868811,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "as_str \u00b7 function",
+            "pointer": "src/bin/exp_rc024_path_relink.rs:L48-L54",
+            "snippet": "fn as_str(self) -> &'static str",
+            "score": 0.3078950135946907,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "label \u00b7 function",
+            "pointer": "src/engine_v2/ai_scientist/executive.rs:L135-L151",
+            "snippet": "fn label(a: &Action) -> String",
+            "score": 0.2944913884565839,
+            "scope": ""
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research"
+          ],
+          "alsoMatched": [
+            {
+              "scope": "website",
+              "bestId": "website/src/lib/workflow/gaps.ts#GapKind"
+            }
+          ]
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "scripts/build_file_map.py"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "partition_bits",
+      "path": "research/experiments/entity_resolution/core.py",
+      "kind": "code",
+      "graft_hit": false,
+      "graft": {
+        "query": "partition_bits",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "number_partition_qubo \u00b7 function",
+            "pointer": "src/engine_v2/families.rs:L314-L326",
+            "snippet": "pub fn number_partition_qubo(a: &[f64]) -> ProblemIR",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "bits \u00b7 function",
+            "pointer": "research/breakthrough/h11/witness.py:L17-L18",
+            "snippet": "def bits(mask, n)",
+            "score": 0.724596616853543,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "bits \u00b7 function",
+            "pointer": "research/breakthrough/exp001/probe.rs:L539-L541",
+            "snippet": "fn bits(x: &[i8]) -> String",
+            "score": 0.6902202884976619,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "bits \u00b7 function",
+            "pointer": "research/breakthrough/probe.rs:L539-L541",
+            "snippet": "fn bits(x: &[i8]) -> String",
+            "score": 0.6902202884976619,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "energy_bits \u00b7 function",
+            "pointer": "src/bin/exp_cost_identification.rs:L521-L525",
+            "snippet": "fn energy_bits(st: &SparseBitSlice<'_>) -> Vec<u64>",
+            "score": 0.5760387905261473,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "energy_bits \u00b7 function",
+            "pointer": "src/bin/exp_marginal_cost.rs:L532-L536",
+            "snippet": "fn energy_bits(st: &SparseBitSlice<'_>) -> Vec<u64>",
+            "score": 0.5754781135566528,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "round_trip_preserves_bits_near_the_bound \u00b7 function",
+            "pointer": "src/bin/exp_rc021_host_qualify/journal.rs:L1631-L1652",
+            "snippet": "fn round_trip_preserves_bits_near_the_bound()",
+            "score": 0.5715408568143852,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "transitivity \u00b7 function",
+            "pointer": "research/application_triage/checks.py:L21-L32",
+            "snippet": "def transitivity()",
+            "score": 0.5170595004543903,
+            "scope": "research"
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research"
+          ],
+          "alsoMatched": [
+            {
+              "scope": "website",
+              "bestId": "website/src/data/applications.ts"
+            }
+          ]
+        },
+        "coverage": 0.6277548911279518,
+        "coverageStrong": 0.6277548911279518
+      },
+      "rg_matches": [],
+      "rg_hit": false,
+      "rg_top_k_hit": false
+    },
+    {
+      "query": "weights_for",
+      "path": "research/experiments/entity_resolution/core.py",
+      "kind": "code",
+      "graft_hit": false,
+      "graft": {
+        "query": "weights_for",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "weights_text_round_trips_exactly \u00b7 function",
+            "pointer": "src/engine_v2/ai_scientist/policy.rs:L718-L737",
+            "snippet": "fn weights_text_round_trips_exactly()",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "weights_text_round_trips_exactly \u00b7 function",
+            "pointer": "src/engine_v2/ai_scientist/predictor.rs:L459-L484",
+            "snippet": "fn weights_text_round_trips_exactly()",
+            "score": 0.975944894032226,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "weights_text_round_trips_exactly \u00b7 function",
+            "pointer": "src/engine_v2/ai_scientist/dynamics.rs:L481-L519",
+            "snippet": "fn weights_text_round_trips_exactly()",
+            "score": 0.9711631195385714,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "weights_text_round_trips_exactly \u00b7 function",
+            "pointer": "src/engine_v2/ai_scientist/world.rs:L503-L534",
+            "snippet": "fn weights_text_round_trips_exactly()",
+            "score": 0.9255971713594812,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "FitnessWeights \u00b7 struct",
+            "pointer": "src/engine_v2/ai_scientist/lab.rs:L40-L45",
+            "snippet": "pub struct FitnessWeights",
+            "score": 0.8768814064024973,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "normalized_weights \u00b7 function",
+            "pointer": "src/solver/population_annealing.rs:L50-L55",
+            "snippet": "pub fn normalized_weights(log_w: &[f64]) -> Vec<f64>",
+            "score": 0.8658834200175897,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "MetaWeights \u00b7 struct",
+            "pointer": "src/engine_v2/ai_scientist/meta_layer.rs:L176-L185",
+            "snippet": "pub struct MetaWeights",
+            "score": 0.8481880242012865,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "UtilityWeights \u00b7 struct",
+            "pointer": "src/engine_v2/evolution.rs:L60-L69",
+            "snippet": "pub struct UtilityWeights",
+            "score": 0.8423652864021648,
+            "scope": ""
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research"
+          ],
+          "alsoMatched": [
+            {
+              "scope": "website",
+              "bestId": "website/src/lib/workflow/chain.ts"
+            }
+          ]
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [],
+      "rg_hit": false,
+      "rg_top_k_hit": false
+    },
+    {
+      "query": "H2 semantic development signal",
+      "path": "research/experiments/entity_resolution/RESULT.md",
+      "kind": "document",
+      "graft_hit": false,
+      "graft": {
+        "query": "H2 semantic development signal",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "p2_requires_a_signal_and_rejects_a_clean_exit \u00b7 function",
+            "pointer": "src/bin/exp_rc021_host_qualify/controls.rs:L3740-L3758",
+            "snippet": "fn p2_requires_a_signal_and_rejects_a_clean_exit()",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "coverage_signal_favors_rarely_tried_operators \u00b7 function",
+            "pointer": "src/engine_v2/ai_scientist/curiosity.rs:L352-L367",
+            "snippet": "fn coverage_signal_favors_rarely_tried_operators()",
+            "score": 0.9389326441844966,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "main \u00b7 function",
+            "pointer": "research/laya_semantic/run_pilot.py:L57-L148",
+            "snippet": "def main()",
+            "score": 0.6617716642282986,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "verify_and_score \u00b7 function",
+            "pointer": "research/laya_semantic/pipeline.py:L89-L121",
+            "snippet": "def verify_and_score(group, values, bridge)",
+            "score": 0.6450466795548576,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "run_qubo_and_alert \u00b7 function",
+            "pointer": "autopilot.py:L50-L79",
+            "snippet": "def run_qubo_and_alert()",
+            "score": 0.4784197767372265,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "analyze \u00b7 function",
+            "pointer": "research/laya_semantic/analyze.py:L10-L59",
+            "snippet": "def analyze(directory)",
+            "score": 0.459214113230511,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "project_for \u00b7 function",
+            "pointer": "scripts/build_file_map.py:L42-L69",
+            "snippet": "def project_for(path: str) -> str",
+            "score": 0.3318226775263134,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "as_str \u00b7 function",
+            "pointer": "src/bin/exp_rc024_path_relink.rs:L48-L54",
+            "snippet": "fn as_str(self) -> &'static str",
+            "score": 0.33090193106063964,
+            "scope": ""
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research"
+          ],
+          "alsoMatched": [
+            {
+              "scope": "website",
+              "bestId": "website/src/lib/llm/ollama.ts#Ollama.pull"
+            }
+          ]
+        },
+        "coverage": 0.19975167588031856,
+        "coverageStrong": 0.19975167588031856
+      },
+      "rg_matches": [],
+      "rg_hit": false,
+      "rg_top_k_hit": false
+    },
+    {
+      "query": "Authority matrix",
+      "path": "memory/AUTHORITY.md",
+      "kind": "document",
+      "graft_hit": false,
+      "graft": {
+        "query": "Authority matrix",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "invert_matrix \u00b7 function",
+            "pointer": "research/fundamental_ai/src/baselines.rs:L285-L345",
+            "snippet": "fn invert_matrix(a: &[f64], p: usize) -> Result<Vec<f64>, String>",
+            "score": 1,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "src/core/csr_matrix.rs:L6-L10",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.9788533138279325,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/bayesian_scaling_lab_v2.rs:L10-L14",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.7519810688760742,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/bayesian_scaling_lab_v3.rs:L10-L14",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.7519810688760742,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/bayesian_scaling_lab.rs:L10-L14",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.7519810688760742,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/benchmark_1000.rs:L11-L15",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.7519810688760742,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/bpt_hard_phase.rs:L11-L15",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.7519810688760742,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "CsrMatrix \u00b7 struct",
+            "pointer": "research/src/bin/classic_vs_quantum_ww.rs:L61-L65",
+            "snippet": "pub struct CsrMatrix",
+            "score": 0.7519810688760742,
+            "scope": "research"
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "research",
+            ""
+          ],
+          "alsoMatched": [
+            {
+              "scope": "website",
+              "bestId": "website/src/components/ui/badge.tsx"
+            }
+          ]
+        },
+        "coverage": 0.32891997049589067,
+        "coverageStrong": 0.32891997049589067
+      },
+      "rg_matches": [
+        "memory/AUTHORITY.md"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "Solver families stay independent",
+      "path": "AGENTS.md",
+      "kind": "document",
+      "graft_hit": false,
+      "graft": {
+        "query": "Solver families stay independent",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "max_independent_set_ground_state_is_independent \u00b7 function",
+            "pointer": "src/engine_v2/families.rs:L498-L515",
+            "snippet": "fn max_independent_set_ground_state_is_independent()",
+            "score": 1,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "test_three_independent_energies_and_nontrivial_ties \u00b7 method",
+            "pointer": "research/breakthrough/h11/witness.py:L109-L113",
+            "snippet": "def test_three_independent_energies_and_nontrivial_ties(self)",
+            "score": 0.7954348457752632,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "Solver \u00b7 function",
+            "pointer": "website/src/components/os/control/Solver.tsx:L45-L191",
+            "snippet": "function Solver()",
+            "score": 0.768982760499724,
+            "scope": "website"
+          },
+          {
+            "kind": "symbol",
+            "title": "symmetric_csr_matches_independent_polynomial \u00b7 function",
+            "pointer": "research/examples/laya_bridge.rs:L136-L151",
+            "snippet": "fn symmetric_csr_matches_independent_polynomial()",
+            "score": 0.6599485491843448,
+            "scope": "research"
+          },
+          {
+            "kind": "symbol",
+            "title": "accumulated_flip_deltas_stay_exact \u00b7 function",
+            "pointer": "src/bin/qoblib_labs_challenge.rs:L599-L611",
+            "snippet": "fn accumulated_flip_deltas_stay_exact()",
+            "score": 0.5567563258021211,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "mis_energy_matches_independent_count \u00b7 function",
+            "pointer": "src/bin/exp_cd005_mis_qualification.rs:L346-L357",
+            "snippet": "fn mis_energy_matches_independent_count()",
+            "score": 0.49944172736126197,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "families \u00b7 module",
+            "pointer": "src/engine_v2/mod.rs:L24-L24",
+            "snippet": "pub mod families;",
+            "score": 0.44476144397489586,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "collect \u00b7 function",
+            "pointer": "src/bin/exp_rc025_corpus_ladder.rs:L235-L261",
+            "snippet": "fn collect(dir: &Path) -> Vec<(&'static Family, PathBuf)>",
+            "score": 0.44290899008775403,
+            "scope": ""
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "",
+            "research",
+            "website"
+          ],
+          "alsoMatched": []
+        },
+        "coverage": 0.5130779394073237,
+        "coverageStrong": 0.2667037220497863
+      },
+      "rg_matches": [
+        "AGENTS.md"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": true
+    },
+    {
+      "query": "claim",
+      "path": "research/HYPODIVE_TRIAGE.md",
+      "kind": "document",
+      "graft_hit": false,
+      "graft": {
+        "query": "claim",
+        "mode": "lexical",
+        "hits": [
+          {
+            "kind": "symbol",
+            "title": "Claim \u00b7 type",
+            "pointer": "website/src/components/os/publish/Composer.tsx:L21-L27",
+            "snippet": "type Claim = { id: string; statement: string; status: \"confirmed\" | \"refuted\" | \"open\"; detail: string; source: string; };",
+            "score": 1,
+            "scope": "website"
+          },
+          {
+            "kind": "symbol",
+            "title": "rc016_exposes_no_cost_arm_mode \u00b7 function",
+            "pointer": "src/bin/exp_sensor_sufficiency.rs:L3895-L3903",
+            "snippet": "fn rc016_exposes_no_cost_arm_mode()",
+            "score": 0.5448162850064621,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "MechanismHypothesis \u00b7 struct",
+            "pointer": "src/engine_v2/ai_scientist/theory.rs:L52-L60",
+            "snippet": "pub struct MechanismHypothesis",
+            "score": 0.47044196811405553,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "LedgerItem \u00b7 type",
+            "pointer": "website/src/data/curated.ts:L18-L18",
+            "snippet": "type LedgerItem = { status: \"confirmed\" | \"refuted\"; claim: string; detail: string; source: string };",
+            "score": 0.36569193588386395,
+            "scope": "website"
+          },
+          {
+            "kind": "symbol",
+            "title": "evidence_for \u00b7 function",
+            "pointer": "scripts/build_file_map.py:L121-L154",
+            "snippet": "def evidence_for(path: str) -> str",
+            "score": 0.294760475253758,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "a_torn_final_line_is_not_counted_as_parsed \u00b7 function",
+            "pointer": "src/bin/exp_rc021_host_qualify/decision.rs:L5933-L5954",
+            "snippet": "fn a_torn_final_line_is_not_counted_as_parsed()",
+            "score": 0.2938205714177988,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "collect \u00b7 function",
+            "pointer": "src/bin/exp_rc025_corpus_ladder.rs:L235-L261",
+            "snippet": "fn collect(dir: &Path) -> Vec<(&'static Family, PathBuf)>",
+            "score": 0.27671132830769757,
+            "scope": ""
+          },
+          {
+            "kind": "symbol",
+            "title": "chain.ts \u00b7 file",
+            "pointer": "website/src/lib/workflow/chain.ts",
+            "snippet": "",
+            "score": 0.24624102021460595,
+            "scope": "website"
+          }
+        ],
+        "scopes": {
+          "federated": [
+            "website",
+            ""
+          ],
+          "alsoMatched": [
+            {
+              "scope": "research",
+              "bestId": "research/breakthrough/h11/witness.py"
+            }
+          ]
+        },
+        "coverage": 1,
+        "coverageStrong": 1
+      },
+      "rg_matches": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "INDEX.md",
+        "MEMORY.md",
+        "PERF.md",
+        "PRODUCT_SPEC.md",
+        "PROJECTS.md",
+        "PROJECT_PLAN.md",
+        "ROADMAP.md",
+        "SOUL.md",
+        "START_HERE.md",
+        "YC_APPLICATION_FALL_2026.md",
+        "memory/BENCHMARKS.md",
+        "memory/CATALOG.md",
+        "memory/CLAUDE_PRODUCT_COMPARISON_TASK.md",
+        "memory/DECISIONS.md",
+        "memory/NEXT_TASK_RC027.md",
+        "memory/NOW.md",
+        "memory/OPEN_PROBLEMS.md",
+        "memory/PERFORMANCE.md",
+        "memory/RESEARCH.md",
+        "memory/ROADMAP.md",
+        "memory/TIMELINE.md",
+        "research/AUTONOMOUS_SCIENTIST_ARCHITECTURE.md",
+        "research/AXIOMS_OF_OPTIMIZATION.md",
+        "research/BENCHMARK_DEGENERACY_AUDIT.md",
+        "research/CANDIDATE_IDEAS_LEDGER.md",
+        "research/CHANNEL_EXHAUSTION.md",
+        "research/CHIEF_SCIENTIST_ASSESSMENT.md",
+        "research/COMPETITIVE_ANALYSIS.md",
+        "research/CONCEPT_EVOLUTION_CONSTITUTION.md",
+        "research/EXP005_MARKETSPLIT_TRIAGE.md",
+        "research/EXP006A_RAW_RECHECK.md",
+        "research/EXTERNAL_COMPARISON_PROTOCOL.md",
+        "research/EXTERNAL_PROJECTS_BACKLOG.md",
+        "research/HYPODIVE_BUILDER_HANDOFF.md",
+        "research/HYPODIVE_BUILDER_INTAKE.md",
+        "research/HYPODIVE_TRIAGE.md",
+        "research/ISING_ENGINE_CONSTITUTION.md",
+        "research/ISING_ENGINE_RESEARCH_AUDIT.md",
+        "research/NEXT_10_EXPERIMENTS.md",
+        "research/OPTIMIZATION_ENGINE_BLUEPRINT.md",
+        "research/PERF_INCREMENTAL_RELINK.md",
+        "research/PLATFORM_BLUEPRINT.md",
+        "research/PREREG_RC014.md",
+        "research/PREREG_RC014_AMENDMENT_1.md",
+        "research/PREREG_RC014_AMENDMENT_2.md",
+        "research/PREREG_RC015.md",
+        "research/PREREG_RC015_AMENDMENT_1.md",
+        "research/PREREG_RC016.md",
+        "research/PREREG_RC016_AMENDMENT_1.md",
+        "research/PREREG_RC016_AMENDMENT_2.md",
+        "research/PREREG_RC016_AMENDMENT_3.md",
+        "research/PREREG_RC016_AMENDMENT_4.md",
+        "research/PREREG_RC016_DESCENDANT.md",
+        "research/PREREG_RC017.md",
+        "research/PREREG_RC018_COST_IDENTIFICATION.md",
+        "research/PREREG_RC020_AMENDMENT_1.md",
+        "research/PREREG_RC020_MARGINAL_WALL_COST.md",
+        "research/PREREG_RC021_AMENDMENT_1.md",
+        "research/PREREG_RC021_AMENDMENT_2.md",
+        "research/PREREG_RC021_HOST_INSTRUMENT.md",
+        "research/PREREG_RC023_MEMORY_FORM.md",
+        "research/PREREG_RC024_PATH_RELINKING.md",
+        "research/PREREG_RC025_CORPUS_OR_MECHANISM.md",
+        "research/PREREG_RC026_EMBEDDING_LADDER.md",
+        "research/PREREG_RC027_BUDGET_AXIS.md",
+        "research/PRIOR_ART_MATRIX.md",
+        "research/PROJECT_STATE.md",
+        "research/RC001_ENSEMBLE_THERMOSTAT.md",
+        "research/RC002_INITIALIZATION_ERASURE.md",
+        "research/RC003_ARCHITECTURE_AUDIT.md",
+        "research/RC006_GRADIENT_LEDGER.md",
+        "research/RC007_OPERATOR_COMMUTATIVITY.md",
+        "research/RC008_MIXING_AND_ENSEMBLE_COLLAPSE.md",
+        "research/RC009_BACKEND_PASSPORT.md",
+        "research/RC010_WORLD_MODEL_AUDIT.md",
+        "research/RC011_PREDICTOR_METRIC_INVARIANCE.md",
+        "research/RC014_COUNTERFACTUAL_SUBSTITUTION.md",
+        "research/RC014_PHASE0_AUDIT.md",
+        "research/RC015_TIE_HANDLING.md",
+        "research/RC016_CYCLE_RECORD.md",
+        "research/RC016_NOVELTY_REVIEW.md",
+        "research/RC017_ABORT_RECORD.md",
+        "research/RC018_PILOT_ABORT_RECORD.md",
+        "research/RC019_INSTRUMENT_CONFORMANCE_AUDIT.md",
+        "research/RC020_PILOT_ABORT_RECORD.md",
+        "research/RC021_C10_DIAGNOSIS.md",
+        "research/RC021_INSTRUMENT_INVALID_RECORD.md",
+        "research/RC022_ARCHITECTURE_CENSUS.md",
+        "research/RELATIONAL_PRIMITIVE.md",
+        "research/RESEARCH_GAPS.md",
+        "research/RESEARCH_HISTORY.md",
+        "research/RESEARCH_INVENTORY.md",
+        "research/ROADMAP_AUTONOMOUS_SCIENTIST.md",
+        "research/STAGE_7_RESEARCH_PLATFORM.md",
+        "research/STAGE_8_KNOWLEDGE_OS.md",
+        "research/SYNTHESIS_CD_SOLVER_ARCHITECTURE.md",
+        "research/architecture/ADR/ADR-0004-reproducibility-mandatory.md",
+        "research/architecture/ADR/ADR-0005-deterministic-certified-lowering.md",
+        "research/architecture/ADR/ADR-0006-amendment-presumed-fixed.md",
+        "research/architecture/ADR/ADR-0007-four-track-program.md",
+        "research/architecture/ADR/ADR-0008-experiment-infrastructure.md",
+        "research/architecture/ADR/ADR-0009-addressable-randomness-for-counterfactuals.md",
+        "research/architecture/ADR/ADR-0010-canonical-energy-entropy-v1.md",
+        "research/architecture/ADR/ADR-0011-durable-project-memory.md",
+        "research/breakthrough/AUDIT.md",
+        "research/breakthrough/EXP001_PROTOCOL.md",
+        "research/breakthrough/EXP001_RESULT.md",
+        "research/breakthrough/EXP002_PROTOCOL.md",
+        "research/breakthrough/GAUGE_SCOPE.md",
+        "research/breakthrough/HANDOFF.md",
+        "research/breakthrough/HYPOTHESES.md",
+        "research/breakthrough/RESEARCH_STATE.md",
+        "research/breakthrough/cd002/HYPOTHESIS.md",
+        "research/breakthrough/cd002/MATH.md",
+        "research/breakthrough/cd003/APPLICABILITY_TRIAGE.md",
+        "research/breakthrough/cd003/PRIOR_ART.md",
+        "research/breakthrough/cd004_recheck/AMENDMENT_1.md",
+        "research/breakthrough/cd004_recheck/HYPODIVE_BUILDER_HANDOFF.md",
+        "research/breakthrough/cd004_recheck/HYPODIVE_BUILDER_INTAKE.md",
+        "research/breakthrough/cd004_recheck/PROTOCOL.md",
+        "research/breakthrough/cd004_recheck/RESULT.md",
+        "research/breakthrough/h04/HYPOTHESIS.md",
+        "research/breakthrough/h05/HYPOTHESIS.md",
+        "research/breakthrough/h05/MATH.md",
+        "research/breakthrough/h05/NEXT.md",
+        "research/breakthrough/h08/HYPOTHESIS.md",
+        "research/breakthrough/h10/HYPOTHESIS.md",
+        "research/breakthrough/h11/IMPLEMENTATION.md",
+        "research/breakthrough/h11/MATH.md",
+        "research/breakthrough/h11/NEXT.md",
+        "research/breakthrough/h11/RESULTS.md",
+        "research/cd005_equal_time/AMENDMENT_1.md",
+        "research/cd005_equal_time/HYPODIVE_BUILDER_HANDOFF.md",
+        "research/cd005_equal_time/HYPODIVE_BUILDER_INTAKE.md",
+        "research/cd005_equal_time/PROTOCOL.md",
+        "research/cd005_equal_time/RESULT.md",
+        "research/fundamental_ai/EXP_TEN_006B_PROTOCOL.md",
+        "research/fundamental_ai/EXP_TEN_006B_RESULT.md",
+        "research/fundamental_ai/EXP_TEN_006_NOVELTY_REVIEW.md",
+        "research/fundamental_ai/EXP_TEN_006_PRIOR_ART_RESET.md",
+        "research/fundamental_ai/NEXT.md",
+        "research/fundamental_ai/NOVELTY_LEDGER.md",
+        "research/fundamental_ai/PRIOR_ART.md",
+        "research/labs_qualification/HYPODIVE_BUILDER_INTAKE.md",
+        "research/labs_qualification/PROTOCOL.md",
+        "research/labs_qualification/README.md",
+        "research/laya_semantic/HYPODIVE_BUILDER_HANDOFF.md",
+        "research/laya_semantic/HYPODIVE_BUILDER_INTAKE.md",
+        "research/laya_semantic/PROTOCOL.md",
+        "research/laya_semantic/README.md",
+        "research/optimization_plan_rank135.md",
+        "results/rc023/RESULT.md",
+        "results/rc024/RESULT.md",
+        "results/rc025/RESULT.md",
+        "results/rc026/RESULT.md",
+        "results/rc027/RESULT.md",
+        "website/ARCHITECTURE_REVIEW.md",
+        "website/ARCHITECTURE_V2.md",
+        "website/ARCHITECTURE_V3_ADDENDUM.md",
+        "website/PRODUCT_SPEC.md"
+      ],
+      "rg_hit": true,
+      "rg_top_k_hit": false
+    }
+  ],
+  "checks": {
+    "solution_files_excluded": false,
+    "returned_spans_exist": false,
+    "same_size_mtime_edit_refreshed": true,
+    "staged_edit_refreshed": true,
+    "untracked_code_found": true,
+    "ignored_code_excluded": true,
+    "deleted_code_removed": true,
+    "snapshot_sources_unchanged": true,
+    "no_unexpected_visible_files": true,
+    "working_sources_unchanged": true
+  },
+  "index": {
+    "nodes": 5979,
+    "edges": 9342,
+    "files": 447
+  },
+  "unexpected_visible_files": [],
+  "counts": {
+    "code": {
+      "graft_hit": 13,
+      "rg_hit": 14,
+      "rg_top_k_hit": 12
+    },
+    "document": {
+      "graft_hit": 0,
+      "rg_hit": 3,
+      "rg_top_k_hit": 2
+    }
+  },
+  "instrument_source": "#!/usr/bin/env python3\n\"\"\"Local Graft compatibility diagnostic; no model/API or performance claims.\n\nRun after `bash scripts/graft.sh setup`. Each run creates a new disposable Git\nsnapshot under .cache and writes its raw results there. It never edits source\nfiles, agent configuration, or an earlier result.\n\"\"\"\nimport hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport re\nimport shutil\nimport subprocess\nimport tempfile\n\nROOT = Path(__file__).resolve().parents[2]\nREVISION = \"80692e5ad0bc8e8f7e1edea648247d90b9f76820\"\nCLI = ROOT / \".cache/graft-toolchain\" / REVISION / \"dist/cli.js\"\nEXTENSIONS = [\".rs\", \".py\", \".ts\", \".tsx\", \".js\", \".jsx\"]\nENV = dict(os.environ, DO_NOT_TRACK=\"1\", CI=\"1\", GRAFT_NO_GITIGNORE=\"1\",\n           GRAFT_NO_IGNORE=\"1\", GRAFT_REFRESH=\"hash\")\n\n\ndef digest(path):\n    return hashlib.sha256(path.read_bytes()).hexdigest()\n\n\ndef main():\n    if not CLI.is_file():\n        raise SystemExit(\"Run bash scripts/graft.sh setup first\")\n    case_path = Path(__file__).with_name(\"cases.json\")\n    cases = json.loads(case_path.read_text())\n    work = ROOT / \".cache/graft-qualification\"\n    work.mkdir(parents=True, exist_ok=True)\n    run_dir = Path(tempfile.mkdtemp(prefix=\"run-\", dir=work))\n    snapshot = run_dir / \"snapshot\"\n    snapshot.mkdir()\n    manifest = {}\n    names = subprocess.check_output(\n        [\"git\", \"ls-files\", \"-z\", \"--cached\", \"--others\", \"--exclude-standard\"],\n        cwd=ROOT).decode().split(\"\\0\")\n    for name in sorted(set(names)):\n        src = ROOT / name\n        if (not name or name.startswith(\"benchmarks/qoblib/upstream/\")\n                or src.is_symlink() or not src.is_file()):\n            continue\n        dest = snapshot / name\n        dest.parent.mkdir(parents=True, exist_ok=True)\n        shutil.copy2(src, dest)\n        manifest[name] = digest(src)\n    (run_dir / \"source_manifest.json\").write_text(json.dumps(manifest, indent=2) + \"\\n\")\n    probe = snapshot / \"qualification_probe.rs\"\n    probe.write_text(\"pub fn graft_probe_original() {}\\n\")\n\n    def git(*args):\n        return subprocess.check_output([\"git\", *args], cwd=snapshot, text=True)\n\n    git(\"init\", \"-q\")\n    git(\"add\", \"--all\")\n    git(\"-c\", \"user.name=Graft fixture\", \"-c\", \"user.email=fixture@localhost\",\n        \"commit\", \"-qm\", \"Local compatibility fixture\")\n\n    def graft(*args):\n        p = subprocess.run([\"node\", str(CLI), \"--dir\", \".cache/graft-index\", *args],\n                           cwd=snapshot, env=ENV, capture_output=True, text=True,\n                           timeout=120)\n        if p.returncode:\n            raise RuntimeError(f\"Graft {args}: {p.returncode}: {p.stderr[-2000:]}\")\n        return p.stdout\n\n    def ask(query):\n        return json.loads(graft(\"ask\", query, \"--json\", \"-n\", str(cases[\"top_k\"])))\n\n    def graph():\n        return json.loads((snapshot / \".cache/graft-index/.graph/wiring.json\").read_text())\n\n    def symbols():\n        return {n[\"name\"] for n in graph()[\"nodes\"] if n[\"kind\"] != \"file\"}\n\n    report = {\n        \"upstream_revision\": REVISION, \"version\": graft(\"--version\").strip(),\n        \"node\": subprocess.check_output([\"node\", \"--version\"], text=True).strip(),\n        \"base_commit\": subprocess.check_output([\"git\", \"rev-parse\", \"HEAD\"], cwd=ROOT, text=True).strip(),\n        \"cases_sha256\": digest(case_path), \"runner_sha256\": digest(Path(__file__)),\n        \"manifest_sha256\": digest(run_dir / \"source_manifest.json\"),\n        \"scope\": \"16 symbol lookups and 4 document probes; development diagnostic, not agent QA or speed benchmark\",\n        \"extensions\": EXTENSIONS, \"cases\": [], \"checks\": {},\n    }\n    built = graft(\"build\", \"--extensions\", *EXTENSIONS)\n    (run_dir / \"build.log\").write_text(built)\n    original_graph = graph()\n    report[\"index\"] = {\"nodes\": len(original_graph[\"nodes\"]),\n                       \"edges\": len(original_graph[\"edges\"]),\n                       \"files\": sum(n[\"kind\"] == \"file\" for n in original_graph[\"nodes\"])}\n    report[\"checks\"][\"solution_files_excluded\"] = not any(\n        n[\"path\"].endswith(\".sol\") for n in original_graph[\"nodes\"])\n    valid_pointers = True\n    for case in cases[\"cases\"]:\n        result = ask(case[\"query\"])\n        paths = []\n        for hit in result[\"hits\"]:\n            match = re.fullmatch(r\"(.+):L(\\d+)-L(\\d+)\", hit[\"pointer\"])\n            if not match:\n                valid_pointers = False\n                continue\n            name, start, end = match.groups()\n            p = snapshot / name\n            valid_pointers &= p.is_file() and 1 <= int(start) <= int(end) <= len(p.read_text().splitlines())\n            paths.append(name)\n        # Strong cheap symbol baseline: declaration search. Documents use literal\n        # search over Markdown. Retain all matches, and report top-k separately.\n        if case[\"kind\"] == \"code\":\n            pattern = r\"^\\s*(?:pub(?:\\([^)]*\\))?\\s+)?(?:async\\s+)?(?:struct|enum|trait|type|fn|def|class)\\s+\" + re.escape(case[\"query\"]) + r\"\\b\"\n            cmd = [\"rg\", \"--files-with-matches\", \"--glob\", \"*.rs\", \"--glob\", \"*.py\", pattern, \".\"]\n        else:\n            cmd = [\"rg\", \"--files-with-matches\", \"--glob\", \"*.md\", \"--fixed-strings\", case[\"query\"], \".\"]\n        baseline = subprocess.run(cmd, cwd=snapshot, capture_output=True, text=True, timeout=15)\n        if baseline.returncode not in (0, 1):\n            raise RuntimeError(baseline.stderr)\n        matches = sorted(x.removeprefix(\"./\") for x in baseline.stdout.splitlines())\n        report[\"cases\"].append({**case, \"graft_hit\": case[\"path\"] in paths,\n                                \"graft\": result, \"rg_matches\": matches,\n                                \"rg_hit\": case[\"path\"] in matches,\n                                \"rg_top_k_hit\": case[\"path\"] in matches[:cases[\"top_k\"]]})\n    report[\"checks\"][\"returned_spans_exist\"] = bool(valid_pointers)\n    before = probe.stat()\n    probe.write_text(\"pub fn graft_probe_modified() {}\\n\")\n    os.utime(probe, ns=(before.st_atime_ns, before.st_mtime_ns))\n    ask(\"graft_probe_modified\")\n    report[\"checks\"][\"same_size_mtime_edit_refreshed\"] = (\n        \"graft_probe_modified\" in symbols() and \"graft_probe_original\" not in symbols())\n    probe.write_text(\"pub fn graft_probe_staged() {}\\n\")\n    git(\"add\", \"qualification_probe.rs\")\n    ask(\"graft_probe_staged\")\n    report[\"checks\"][\"staged_edit_refreshed\"] = \"graft_probe_staged\" in symbols()\n    untracked = snapshot / \"qualification_untracked.rs\"\n    untracked.write_text(\"pub fn graft_probe_untracked() {}\\n\")\n    ask(\"graft_probe_untracked\")\n    report[\"checks\"][\"untracked_code_found\"] = \"graft_probe_untracked\" in symbols()\n    ignored = snapshot / \".cache/qualification_ignored.rs\"\n    ignored.write_text(\"pub fn graft_probe_ignored() {}\\n\")\n    ask(\"graft_probe_ignored\")\n    report[\"checks\"][\"ignored_code_excluded\"] = \"graft_probe_ignored\" not in symbols()\n    untracked.unlink()\n    ask(\"graft_probe_untracked\")\n    report[\"checks\"][\"deleted_code_removed\"] = \"graft_probe_untracked\" not in symbols()\n    report[\"checks\"][\"snapshot_sources_unchanged\"] = all(\n        (snapshot / p).is_file() and digest(snapshot / p) == h for p, h in manifest.items())\n    unexpected = set(git(\"ls-files\", \"--others\", \"--exclude-standard\").splitlines())\n    report[\"checks\"][\"no_unexpected_visible_files\"] = not unexpected\n    report[\"unexpected_visible_files\"] = sorted(unexpected)\n    # Confirm that the production checkout was not changed by fixture operations.\n    report[\"checks\"][\"working_sources_unchanged\"] = all(\n        (ROOT / p).is_file() and digest(ROOT / p) == h for p, h in manifest.items())\n    report[\"counts\"] = {kind: {key: sum(bool(c[key]) for c in report[\"cases\"] if c[\"kind\"] == kind)\n                               for key in (\"graft_hit\", \"rg_hit\", \"rg_top_k_hit\")}\n                        for kind in (\"code\", \"document\")}\n    (run_dir / \"results.json\").write_text(json.dumps(report, indent=2) + \"\\n\")\n    print(json.dumps({\"run_dir\": str(run_dir), \"index\": report[\"index\"],\n                      \"counts\": report[\"counts\"], \"checks\": report[\"checks\"]}, indent=2))\n    if not all(report[\"checks\"].values()):\n        raise SystemExit(1)\n\n\nif __name__ == \"__main__\":\n    main()\n",
+  "retention_note": "Initial attempt retained verbatim apart from this provenance envelope. Snapshot git add omitted tracked-but-ignored experiment files; file-only references were incorrectly rejected; upstream structural build ignores --extensions. Fixes are prospective."
+}

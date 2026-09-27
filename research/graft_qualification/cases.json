@@ -1,0 +1,26 @@
+{
+  "purpose": "Development-only navigation diagnostic frozen before Graft queries; not an agent token-saving or product benchmark.",
+  "top_k": 8,
+  "cases": [
+    {"query": "UltimateSolver", "path": "src/solver/ultimate.rs", "kind": "code"},
+    {"query": "QuantumField", "path": "src/solver/types.rs", "kind": "code"},
+    {"query": "CsrMatrix", "path": "src/core/csr_matrix.rs", "kind": "code"},
+    {"query": "HuboModel", "path": "src/core/hubo.rs", "kind": "code"},
+    {"query": "FlatHuboModel", "path": "src/core/hubo.rs", "kind": "code"},
+    {"query": "QuboModel", "path": "src/core/hubo.rs", "kind": "code"},
+    {"query": "LatticeBasis", "path": "src/core/lattice.rs", "kind": "code"},
+    {"query": "build_kernel_qubo", "path": "src/core/lattice.rs", "kind": "code"},
+    {"query": "aardal_diophantine_reduction", "path": "src/core/lattice.rs", "kind": "code"},
+    {"query": "roof_duality_persistencies", "path": "src/presolve/qpbo.rs", "kind": "code"},
+    {"query": "calculate_delta_e_local", "path": "src/solver/engine.rs", "kind": "code"},
+    {"query": "Xoshiro256PlusPlusX8", "path": "src/solver/engine.rs", "kind": "code"},
+    {"query": "catalogued_markdown", "path": "scripts/build_file_map.py", "kind": "code"},
+    {"query": "evidence_for", "path": "scripts/build_file_map.py", "kind": "code"},
+    {"query": "partition_bits", "path": "research/experiments/entity_resolution/core.py", "kind": "code"},
+    {"query": "weights_for", "path": "research/experiments/entity_resolution/core.py", "kind": "code"},
+    {"query": "H2 semantic development signal", "path": "research/experiments/entity_resolution/RESULT.md", "kind": "document"},
+    {"query": "Authority matrix", "path": "memory/AUTHORITY.md", "kind": "document"},
+    {"query": "Solver families stay independent", "path": "AGENTS.md", "kind": "document"},
+    {"query": "claim", "path": "research/HYPODIVE_TRIAGE.md", "kind": "document"}
+  ]
+}

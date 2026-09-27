@@ -1,0 +1,76 @@
+{
+  "date": "2026-09-27",
+  "base_commit": "c8391a6b25ab07a19e7338e34d3ce2b141df1ee0",
+  "scope": "Bounded local audit and primary-repository opportunity triage; not full external code audit, activity census or comparative performance experiment",
+  "source_sha256": {
+    "src/solver/ultimate.rs": "f2df2b171e1b89090bcfde533c638bd0bd8980c87b480bd0ba86c3f8f06d7347",
+    "src/solver/engine.rs": "6468df33aca72154faeaaac85ea61061ad6dd07130ff0df87cc74a02f0a525bb",
+    "src/solver/mod.rs": "6656b7c93d3bb760231bcd255478afa705c40b57ca35a2443fa4ed82921426e9",
+    "src/solver/autopilot.rs": "466aa5168284fbc5c7dd23ee3a3f4bfcab287ba837ebbb4d2a5053f059edd9f7",
+    "src/bin/gset_official_benchmark.rs": "e88143bf47355d9efa178fd719e9d1733c0a6948b1a2cd0a7e6fc9b782c0bbc9",
+    "src/engine_v2/decision.rs": "fac64209ef4a9f2c9bee3fb0841670ac9e8382835302e2cb4c66714889040232",
+    "src/engine_v2/registry.rs": "86f45da96916152a3883ef432ad0a8af35bc540b5685f28fdb1d96dd68e5ee62",
+    "src/engine_v2/ir.rs": "26b73cf4025c6b2c84529883669279ca7de3370f31f8b0ed81b7f1230088bbb9",
+    "tests/test_basis_correctness.rs": "e62588ed93596b1b651b824fbe9ec78bc5ba36b724345da1c27ef00d4a5539db",
+    "tests/test_trotter_correctness.rs": "5c2785af00811f0657107e97cfadeb76364d12e9ec42ce6d65374a690aea0095",
+    "tests/test_schedule_and_incumbent.rs": "bd5e8ce1b7a108ac724e6ce551549de6504ad8c8efdf5ebca41e2a57a459b407"
+  },
+  "reproduction_command": "cargo test --release --test test_basis_correctness --test test_trotter_correctness --test test_schedule_and_incumbent",
+  "exit_code": 0,
+  "test_output": "    Finished `release` profile [optimized] target(s) in 3.94s\n     Running tests/test_basis_correctness.rs (target/release/deps/test_basis_correctness-8e155398b5fa021c)\n\nrunning 4 tests\ntest engine_energy_matches_qubo_energy_and_gate_exhaustive ... ok\ntest engine_hubo_energy_matches_product_semantics ... ok\ntest engine_energy_matches_qubo_energy_random_instances ... ok\ntest engine_delta_matches_full_recompute ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n     Running tests/test_schedule_and_incumbent.rs (target/release/deps/test_schedule_and_incumbent-6b328658870dc65e)\n\nrunning 4 tests\ntest temp_range_handles_degenerate_model ... ok\ntest temp_range_scales_with_coefficients ... ok\ntest solver_output_is_locally_optimal ... ok\ntest solver_deterministic_with_all_features ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s\n\n     Running tests/test_trotter_correctness.rs (target/release/deps/test_trotter_correctness-87e62fb7ead86e4f)\n\nrunning 5 tests\ntest single_slice_energy_has_no_trotter_constant ... ok\ntest single_slice_ground_state_stable_at_low_temperature ... ok\ntest tracked_energy_matches_recomputation_single_slice ... ok\ntest tracked_energy_matches_recomputation_multi_slice ... ok\ntest tracked_energy_matches_recomputation_multi_population ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n",
+  "sources": {
+    "MQLib": "https://github.com/MQLib/MQLib",
+    "MQLib_paper": "https://doi.org/10.1287/ijoc.2017.0798",
+    "PyQUBO": "https://github.com/recruit-communications/pyqubo",
+    "qubovert": "https://github.com/jtiosue/qubovert",
+    "SB": "https://github.com/bqth29/simulated-bifurcation-algorithm",
+    "QUBO++": "https://qubo-plus.github.io/",
+    "QUBO++_license": "https://qubo-plus.github.io/en/LICENSE_MANAGEMENT.html",
+    "QUBO++_activation": "https://qubo-plus.github.io/en/INSTALL",
+    "dwave-samplers": "https://github.com/dwavesystems/dwave-samplers",
+    "dwave-hybrid": "https://github.com/dwavesystems/dwave-hybrid",
+    "qbsolv": "https://github.com/dwavesystems/qbsolv",
+    "JAX-FEM": "https://github.com/deepmodeling/jax-fem",
+    "SciLean": "https://github.com/lecopivo/SciLean",
+    "DQC": "https://github.com/diffqc/dqc",
+    "IHeartLA": "https://github.com/iheartla/iheartla",
+    "ProbNum": "https://github.com/probabilistic-numerics/probnum",
+    "PyMesh": "https://github.com/PyMesh/PyMesh",
+    "Jet": "https://github.com/doyubkim/fluid-engine-dev",
+    "DiffCloth": "https://github.com/omegaiota/DiffCloth",
+    "FEMcy": "https://github.com/mo-hanxuan/FEMcy",
+    "clifford": "https://github.com/pygae/clifford",
+    "SICMUtils": "https://github.com/sicmutils/sicmutils",
+    "Emmy": "https://github.com/mentat-collective/emmy",
+    "skopt_original": "https://github.com/scikit-optimize/scikit-optimize",
+    "skopt_continuation": "https://github.com/holgern/scikit-optimize",
+    "BoTorch": "https://github.com/meta-pytorch/botorch",
+    "TDS": "https://github.com/erwincoumans/tiny-differentiable-simulator",
+    "PlasticineLab": "https://github.com/hzaskywalker/PlasticineLab",
+    "RIVET": "https://github.com/rivetTDA/rivet",
+    "SQAOD": "https://github.com/shinmorino/sqaod"
+  },
+  "bibliography": [
+    {
+      "title": "What Works Best When? A Systematic Evaluation of Heuristics for Max-Cut and QUBO",
+      "authors": [
+        "Iain Dunning",
+        "Swati Gupta",
+        "John Silberholz"
+      ],
+      "doi": "10.1287/ijoc.2017.0798",
+      "year": 2018,
+      "journal": "INFORMS Journal on Computing",
+      "volume": "30",
+      "issue": "3",
+      "pages": "608-624",
+      "verification": "CrossRef metadata and official author repository; no paper performance numbers used"
+    }
+  ],
+  "limits": [
+    "No independent final review due reviewer service usage limit",
+    "No external simulator or solver installed beyond Graft",
+    "Last commit dates/stars from user prose not adopted as verified facts",
+    "Targeted tests do not certify SQA physics or global solver correctness"
+  ]
+}
