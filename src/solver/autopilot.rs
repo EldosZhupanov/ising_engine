@@ -11,15 +11,20 @@ pub struct SolverConfig {
     pub sweeps: usize,
 }
 
-/// The autonomous orchestrator that uses a lightweight Bayesian/Surrogate heuristic
-/// to find the optimal hyperparameters for a specific QUBO instance before full execution.
-pub struct BayesianOrchestrator {
+/// Random parameter search followed by local random perturbations.
+///
+/// This tuner has no Bayesian surrogate, posterior or acquisition function.
+/// Its selected configuration is the best sampled one, not a certified optimum.
+pub struct RandomSearchOrchestrator {
     pub micro_exchanges: usize, // How deep to go during exploration (e.g., 10)
     pub exploration_samples: usize, // How many random points to sample (e.g., 20)
-    pub exploitation_steps: usize, // How many gradient steps to take toward the best zone
+    pub exploitation_steps: usize, // How many local random proposals to evaluate
 }
 
-impl Default for BayesianOrchestrator {
+/// Compatibility name for existing callers; this algorithm is not Bayesian.
+pub type BayesianOrchestrator = RandomSearchOrchestrator;
+
+impl Default for RandomSearchOrchestrator {
     fn default() -> Self {
         Self {
             micro_exchanges: 20,
@@ -29,8 +34,8 @@ impl Default for BayesianOrchestrator {
     }
 }
 
-impl BayesianOrchestrator {
-    /// Autonomously tune parameters and return the best state found during the final deep run
+impl RandomSearchOrchestrator {
+    /// Tune parameters and return the final solve's energy, state and selected configuration.
     pub fn solve_auto(&self, model: &QuboModel) -> (f64, Vec<i8>, SolverConfig) {
         println!(
             "🤖 [Autopilot] Initiating Phase 1: Parameter Exploration ({} samples)...",
@@ -46,7 +51,6 @@ impl BayesianOrchestrator {
         let mut best_energy = f64::INFINITY;
 
         // 1. EXPLORATION (Random Uniform Sampling across the space)
-        let mut history = Vec::new();
 
         for _ in 0..self.exploration_samples {
             let config = SolverConfig {
@@ -65,9 +69,7 @@ impl BayesianOrchestrator {
             );
 
             let state = solver.solve(model, &[]);
-            let energy = Self::calculate_energy(model, &state);
-
-            history.push((config, energy));
+            let energy = model.calculate_total_energy(&state);
 
             if energy < best_energy {
                 best_energy = energy;
@@ -75,8 +77,7 @@ impl BayesianOrchestrator {
             }
         }
 
-        // 2. EXPLOITATION (Surrogate Hill-Climbing / Expected Improvement proxy)
-        // We take the best config found and "wiggle" the parameters to find the exact peak.
+        // 2. Local random search around the best sampled configuration.
         println!(
             "🤖 [Autopilot] Initiating Phase 2: Exploitation (Refining T_max={:.1}, Sweeps={})...",
             best_config.temp_max, best_config.sweeps
@@ -97,7 +98,7 @@ impl BayesianOrchestrator {
                 None,
             );
             let state = solver.solve(model, &[]);
-            let energy = Self::calculate_energy(model, &state);
+            let energy = model.calculate_total_energy(&state);
 
             if energy < best_energy {
                 best_energy = energy;
@@ -105,12 +106,14 @@ impl BayesianOrchestrator {
             }
         }
 
-        println!("✅ [Autopilot] Tuning Complete. Optimal Config Found: T_max={:.1}, T_min={:.4}, Sweeps={}", 
-                 best_config.temp_max, best_config.temp_min, best_config.sweeps);
+        println!(
+            "[Autopilot] Best sampled config: T_max={:.1}, T_min={:.4}, Sweeps={}",
+            best_config.temp_max, best_config.temp_min, best_config.sweeps
+        );
 
         // 3. FULL DEEP EXECUTION
-        // Now that we know the exact physical properties of this matrix, we unleash the full power.
-        println!("🚀 [Autopilot] Launching Deep Annealing with Optimal Config...");
+        // Evaluate the selected configuration with a larger exchange budget.
+        println!("🚀 [Autopilot] Launching Deep Annealing with Selected Config...");
         let final_exchanges = 300; // Deep run
         let solver = UltimateSolver::new(
             best_config.temp_max,
@@ -122,25 +125,35 @@ impl BayesianOrchestrator {
 
         let start = Instant::now();
         let state = solver.solve(model, &[]);
-        let final_energy = Self::calculate_energy(model, &state);
+        let final_energy = model.calculate_total_energy(&state);
 
         println!("⏱️ Deep Run Execution Time: {:?}", start.elapsed());
 
         (final_energy, state, best_config)
     }
+}
 
-    fn calculate_energy(model: &QuboModel, state: &[i8]) -> f64 {
-        let mut e = 0.0;
-        for i in 0..model.num_vars {
-            if state[i] == 1 {
-                e += model.linear[i];
-                for (j, w) in model.quadratic.get_row(i) {
-                    if state[j] == 1 {
-                        e += w * 0.5;
-                    }
-                }
-            }
-        }
-        e
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::core::CsrMatrix;
+
+    #[test]
+    fn reported_energy_includes_model_offset_and_legacy_name_compiles() {
+        let model = QuboModel {
+            num_vars: 1,
+            energy_offset: 7.0,
+            linear: vec![-2.0],
+            quadratic: CsrMatrix::empty(1),
+        };
+        let tuner: RandomSearchOrchestrator = BayesianOrchestrator {
+            micro_exchanges: 1,
+            exploration_samples: 0,
+            exploitation_steps: 0,
+        };
+        let (energy, state, _) = tuner.solve_auto(&model);
+        assert_eq!(state, vec![1]);
+        assert_eq!(energy, 5.0);
+        assert_eq!(energy, model.calculate_total_energy(&state));
     }
 }
