@@ -1,0 +1,23 @@
+{
+  "scope": "preregistration and input generator only; not instrument or execution",
+  "reviewer": "/root/comparison_explorer",
+  "status": "PASS",
+  "findings_resolved": [
+    "Bootstrap byte order and starting counter explicitly specified before freeze."
+  ],
+  "checks": {
+    "unit_tests": "6/6 PASS",
+    "full_input_regeneration": "24/24 byte-identical",
+    "independent_algebra_and_source_hashes": "PASS",
+    "memory_docs": "379 Markdown / 103 immutable PASS",
+    "diff_check": "PASS"
+  },
+  "files": {
+    "protocol.md": "7a7748f0c88a915f2f4110d6015ba6aa2d240b8f6724aa24666ceae57cf6824e",
+    "manifest.json": "0adfd1b47472877c99d332d66f27b90839fe8ad371695ed8778b35de8c64e3a3",
+    "instances.json": "b05a61ed16788321358209cd084bba81bf43050ac10bbf5724cad01fdfb2392a",
+    "generate.py": "da5256b1f1c8df72bc4042021a25f9b552fa4c4c2266d1fcdc6e210682f9ce41",
+    "test_generate.py": "fd56c3f9f6672c51896c1ba4a387e27bc0faed83ba06f637bdd88b6295e16f0a"
+  },
+  "optimizer_runs": 0
+}

@@ -12,7 +12,37 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-MST2-001 complete, 2026-09-28
+## Current — MQ-DIFFICULTY-001 preregistration, 2026-09-28
+
+[Difficulty qualification protocol](../research/experiments/mqlib_difficulty_qualification/protocol.md)
+freezes24 qualification-only synthetic Ising-to-QUBO inputs (n256/512,
+p1/16 or1/2), four fixed wrappers, ten seeds and a2s delivered-validated budget.
+Input index and manifest include exact hashes; generator tests regenerate all
+24files byte-for-byte and exhaustively check the tiny binary/spin identity.
+**No optimizer, preflight or main comparison has run. No hardness, advantage,
+S3/X3, holdout or selector-performance claim is established.**
+
+This is a scoped prospective exception for diagnostic corpus qualification only;
+BiqMac/selector campaign gates remain unchanged. One synthetic family is wholly
+qualification data, not a new unseen evaluation set. Three hundred three existing
+benchmark files remain exposure-uncleared. No published target => no TTS claim.
+A broad seed grep incidentally displayed a closed CD005 raw row; exposure is
+recorded in the protocol and did not involve reserved holdouts.
+
+**Next task:** implement the protocol's `build.py`, native probe/stream workers,
+`run.py` and independent raw audit under `mqlib_difficulty_qualification/`.
+Reuse frozen production algorithms/configurations; change only research wrappers.
+Parent and child observedCPU0; receipt AND independent validation completion
+must precede each cutoff. Freeze and independently review the instrument before
+preflight. Preflight failure stops this version; no automatic retry. Successful
+reviewed preflight admits one960-cell diagnostic run under the3000s cumulative
+cap. Document every outcome before considering any later confirmatory study.
+
+Production solvers/APIs, Cargo and prior frozen results remain unchanged. The
+known untracked upstream clone remains excluded. Hosted CI billing is the last
+verified external blocker, not a local test failure.
+
+## Previous — MQ-MST2-001 complete, 2026-09-28
 
 [Standalone MST2 qualification](../research/experiments/mqlib_mst2_qualification/RESULT.md)
 **PASS; independent raw evidence audit PASS**. Protocol `f6fa9e9`, instrument

@@ -248,3 +248,19 @@ receipt. The comparison instrument needs common delivered-result semantics.
 Next freeze difficulty qualification separately from untouched holdout, targets,
 baseline configurations and actual-wrapper budgets after S3/X3/provenance gates.
 No new corpus is automatically unseen and no comparison wave ran here.
+
+## Concrete synthetic qualification branch — 2026-09-28
+
+[MQ-DIFFICULTY-001](../mqlib_difficulty_qualification/protocol.md) freezes a
+separate24-input synthetic qualification, four fixed wrappers including the
+now tiny-input-qualified MST2, and ten seeds. All one-generator-family inputs
+are qualification-only; no future held-out population is claimed here. Its narrow
+prospective parent-protocol exception does not satisfy S3/X3 or replace BiqMac
+Wave2. No targets => no TTS endpoint. Main remains gated by committed/reviewed
+instrument and successful preflight, with no optimizer execution at registration.
+
+Eligibility there requires both parent receipt and independent validation to
+complete before a checkpoint, prospectively tightening the receipt-only design
+above. The manifest freezes a250ms-to2s prefix grid, current source configurations,
+operational difficulty/complementarity rules and a3000s cumulative cap. The
+larger-corpus full-search timing and discrimination outcomes remain unknown.
