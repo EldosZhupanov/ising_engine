@@ -1,0 +1,33 @@
+{
+  "instrument_commit": "b0cf802",
+  "checks": [
+    {
+      "log": "screen-rust-tests.log",
+      "text": "   Compiling research v0.1.0 (/home/eldos/ising_engine/research)\nerror[E0277]: the trait bound `Plan: serde::Serialize` is not satisfied\n   --> research/examples/mqlib_compare.rs:88:41\n    |\n 88 |                     writeln!(out, \"{}\", json!({\"kind\":\"config\", \"plan\":plan}))?;\n    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    |                                         |\n    |                                         the trait `Serialize` is not implemented for `Plan`\n    |                                         required by a bound introduced by this call\n    |\n    = note: for local types consider adding `#[derive(serde::Serialize)]` to your `Plan` type\n    = note: for types from other crates check whether the crate offers a `serde` feature flag\n    = help: the following other types implement trait `Serialize`:\n              &'a T\n              &'a mut T\n              ()\n              (T,)\n              (T0, T1)\n              (T0, T1, T2)\n              (T0, T1, T2, T3)\n              (T0, T1, T2, T3, T4)\n            and 130 others\n    = note: required for `&Plan` to implement `Serialize`\nnote: required by a bound in `to_value`\n   --> /home/eldos/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde_json-1.0.149/src/value/mod.rs:997:8\n    |\n995 | pub fn to_value<T>(value: T) -> Result<Value, Error>\n    |        -------- required by a bound in this function\n996 | where\n997 |     T: Serialize,\n    |        ^^^^^^^^^ required by this bound in `to_value`\n    = note: this error originates in the macro `$crate::json_internal` which comes from the expansion of the macro `json` (in Nightly builds, run with -Z macro-backtrace for more info)\n\nFor more information about this error, try `rustc --explain E0277`.\nerror: could not compile `research` (example \"mqlib_compare\" test) due to 1 previous error\n"
+    },
+    {
+      "log": "screen-rust-tests-final.log",
+      "text": "   Compiling research v0.1.0 (/home/eldos/ising_engine/research)\n    Finished `release` profile [optimized] target(s) in 3.10s\n     Running unittests examples/mqlib_compare.rs (target/release/examples/mqlib_compare-9e896f2a73896cb7)\n\nrunning 2 tests\ntest tests::both_representations_preserve_raw_polynomial_exhaustively ... ok\ntest tests::rejects_duplicate_pair_and_nonfinite_offset ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "log": "screen-python-tests.log",
+      "text": "test_cutoff_is_strict_and_late_is_retained (test_campaign.ScreenTests.test_cutoff_is_strict_and_late_is_retained) ... ok\ntest_failed_process_stops_validity (test_campaign.ScreenTests.test_failed_process_stops_validity) ... ok\ntest_malformed_output_is_failure_not_loss (test_campaign.ScreenTests.test_malformed_output_is_failure_not_loss) ... ok\ntest_missing_duplicate_invalid_cells_no_verdict (test_campaign.ScreenTests.test_missing_duplicate_invalid_cells_no_verdict) ... ok\ntest_mqlib_sign_offset_and_corruption (test_campaign.ScreenTests.test_mqlib_sign_offset_and_corruption) ... ok\ntest_null_has_no_success (test_campaign.ScreenTests.test_null_has_no_success) ... ok\ntest_real_process_deadline_and_partial_retention (test_campaign.ScreenTests.test_real_process_deadline_and_partial_retention) ... ok\ntest_statistics_use_instances_and_known_sign_flip (test_campaign.ScreenTests.test_statistics_use_instances_and_known_sign_flip) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.470s\n\nOK\n"
+    },
+    {
+      "log": "screen-python-tests-final.log",
+      "text": "test_bad_v2_config_rejected (test_campaign.ScreenTests.test_bad_v2_config_rejected) ... ok\ntest_cutoff_is_strict_and_late_is_retained (test_campaign.ScreenTests.test_cutoff_is_strict_and_late_is_retained) ... ok\ntest_failed_process_stops_validity (test_campaign.ScreenTests.test_failed_process_stops_validity) ... ok\ntest_malformed_output_is_failure_not_loss (test_campaign.ScreenTests.test_malformed_output_is_failure_not_loss) ... ok\ntest_missing_duplicate_invalid_cells_no_verdict (test_campaign.ScreenTests.test_missing_duplicate_invalid_cells_no_verdict) ... ok\ntest_mqlib_sign_offset_and_corruption (test_campaign.ScreenTests.test_mqlib_sign_offset_and_corruption) ... ok\ntest_null_has_no_success (test_campaign.ScreenTests.test_null_has_no_success) ... ok\ntest_premature_eof_is_not_deadline (test_campaign.ScreenTests.test_premature_eof_is_not_deadline) ... ok\ntest_real_process_deadline_and_partial_retention (test_campaign.ScreenTests.test_real_process_deadline_and_partial_retention) ... ok\ntest_statistics_use_instances_and_known_sign_flip (test_campaign.ScreenTests.test_statistics_use_instances_and_known_sign_flip) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 0.517s\n\nOK\n"
+    },
+    {
+      "log": "screen-clippy.log",
+      "text": "    Checking ising_engine v0.1.0 (/home/eldos/ising_engine)\n    Checking research v0.1.0 (/home/eldos/ising_engine/research)\n    Finished `release` profile [optimized] target(s) in 11.28s\n"
+    }
+  ],
+  "independent_review": {
+    "design": "PASS before execution",
+    "instrument": "PASS before execution after fixing three blockers",
+    "smoke": "PASS by independent reviewer",
+    "main_executable_audit": "PASS; auditor authored by independent reviewer, executed by root",
+    "main_agent_review": "pending; first reviewer stopped by service usage limit"
+  },
+  "scope": "No production src/Cargo changes. Research example tests and strict clippy only; not a claim of rerunning full workspace suite."
+}

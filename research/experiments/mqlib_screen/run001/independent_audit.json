@@ -1,0 +1,62 @@
+{
+  "audit": "PASS",
+  "raw_sha256": "513d9b54c57e69117a0c38346c8e9e100e6f9901906dd45f60430c52be03c135",
+  "cells": 240,
+  "witnesses": 459,
+  "late_witnesses": 0,
+  "v2_configs": 80,
+  "source_hashes": 223,
+  "extra_hashes": 10,
+  "fallbacks": {
+    "ultimate": 0,
+    "v2_default": 0,
+    "mqlib": 0
+  },
+  "primary": {
+    "instance_contrasts": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "mean": 0.0,
+    "sign_flip_p": 1.0,
+    "bootstrap_95": [
+      0.0,
+      0.0
+    ],
+    "distribution": {
+      "n": 8,
+      "mean": 0.0,
+      "median": 0.0,
+      "std": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "q25": 0.0,
+      "q75": 0.0
+    },
+    "H1": "INCONCLUSIVE"
+  },
+  "pairwise": {
+    "ultimate_vs_v2_default": {
+      "wins": 0,
+      "ties": 80,
+      "losses": 0
+    },
+    "ultimate_vs_mqlib": {
+      "wins": 0,
+      "ties": 80,
+      "losses": 0
+    },
+    "v2_default_vs_mqlib": {
+      "wins": 0,
+      "ties": 80,
+      "losses": 0
+    }
+  },
+  "descriptive_instances_checked": 8
+}
