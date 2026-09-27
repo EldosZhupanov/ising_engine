@@ -12,13 +12,17 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-NATIVE-001 preregistered, 2026-09-27
+## Current — MQ-NATIVE-001 instrument preparation, 2026-09-27
 
 [Native calibration protocol](../research/experiments/mqlib_native_calibration/protocol.md)
 and manifest freeze 960 artificial no-search cells, Rust/C++ model preparation,
 10/25/50/100ms, shared observed CPU0. Prospective independent design review PASS.
-Next: isolated probes, source-reuse guards, fabricated tests and independent
-instrument review; then commit, two schema smokes and one retained main run.
+Protocol committed `fb568c8`. Isolated Rust/C++ probes, exact source-reuse guards,
+14 Python and 2 Rust tests, strict targeted Clippy/build/format checks pass.
+Independent preflight review found and corrected two issues before any timing:
+parent validation remains in budget; build flags are recorded and checked.
+Independent instrument review PASS. Next: commit and rebuild frozen instrument,
+then two schema smokes and one retained main run.
 Full optimizer initialization inside solve/run is outside this measured boundary.
 No production code, real corpus, reserved outcomes or solver comparisons admitted.
 

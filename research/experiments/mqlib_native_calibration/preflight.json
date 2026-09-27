@@ -1,0 +1,37 @@
+{
+  "protocol_commit": "fb568c8",
+  "timing_executed": false,
+  "checks": [
+    {
+      "command": "python3 -m unittest discover -s research/experiments/mqlib_native_calibration -p test_*.py -v",
+      "result": "14 passed; 0 failures; includes C++ exhaustive 16-state sign/offset and mocked timed-validation regression"
+    },
+    {
+      "command": "cargo test --release -p research --example mqlib_native_ready",
+      "result": "2 passed; 0 failed; 0 ignored"
+    },
+    {
+      "command": "cargo clippy -p research --example mqlib_native_ready -- -D warnings",
+      "result": "exit 0"
+    },
+    {
+      "command": "cargo fmt --all --check",
+      "result": "exit 0"
+    },
+    {
+      "command": "python3 research/experiments/mqlib_native_calibration/build.py --development",
+      "result": "Rust release/C++ -Wall -Wextra -Werror builds exit0; final committed rebuild still required"
+    }
+  ],
+  "review_corrections": [
+    "Moved parent validation into timed receive loop; mocked regression prevents post-kill deferral.",
+    "Record and verify explicit Rust/C++ build environment flags."
+  ],
+  "scope": "research example/probes only; no src or Cargo edits; no full workspace re-test required by changed scope",
+  "independent_review": {
+    "agent": "/root/calibration_reviewer",
+    "status": "PASS",
+    "scope": "read-only instrument review; 13 fabricated/mock tests passed; native spectrum deliberately not repeated",
+    "resolved_blockers": 2
+  }
+}
