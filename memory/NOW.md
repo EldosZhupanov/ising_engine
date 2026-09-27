@@ -12,19 +12,21 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-NATIVE-001 instrument preparation, 2026-09-27
+## Current — MQ-NATIVE-001 raw results retained, 2026-09-27
 
 [Native calibration protocol](../research/experiments/mqlib_native_calibration/protocol.md)
-and manifest freeze 960 artificial no-search cells, Rust/C++ model preparation,
-10/25/50/100ms, shared observed CPU0. Prospective independent design review PASS.
-Protocol committed `fb568c8`. Isolated Rust/C++ probes, exact source-reuse guards,
-14 Python and 2 Rust tests, strict targeted Clippy/build/format checks pass.
-Independent preflight review found and corrected two issues before any timing:
-parent validation remains in budget; build flags are recorded and checked.
-Independent instrument review PASS. Next: commit and rebuild frozen instrument,
-then two schema smokes and one retained main run.
-Full optimizer initialization inside solve/run is outside this measured boundary.
-No production code, real corpus, reserved outcomes or solver comparisons admitted.
+`fb568c8`; reviewed instrument `a25c595`. Two-worker smoke PASS; main completed
+once: 960 valid cells, 1,666 complete messages, 807 on-time two-line completions,
+3 complete-but-late cells and 150 without both lines. Registered overall FAIL;
+50/100ms pass all four worker/shape groups, every 10/25ms group fails.
+[Offline evidence audit](../research/experiments/mqlib_native_calibration/run001/audit.json)
+PASS: all raw messages and 234 provenance hashes; independent read-only evidence
+review also PASS with separate gate arithmetic.
+14 Python and 2 Rust tests, strict targeted build/Clippy/format checks pass.
+Next: commit reviewed evidence, then record bounded result.
+Only native diagnostic model preparation is measured; full optimizer setup inside
+solve/run, solver search, real corpus and reserved outcomes remain outside scope.
+Production APIs, kernels and Cargo remain unchanged.
 
 ## Previous — MQ-CAL-001 complete, 2026-09-27
 

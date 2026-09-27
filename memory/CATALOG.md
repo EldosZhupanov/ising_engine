@@ -1,7 +1,7 @@
 # Document catalogue
 
 This sidecar catalogue classifies every Markdown document without modifying frozen evidence. Paths are the stable identifiers. Dates come from Git history; they describe chronology but do not establish authority.
-Its enforced scope is Git-tracked plus nonignored untracked Markdown (372 files
+Its enforced scope is Git-tracked plus nonignored untracked Markdown (374 files
 at this update). The 55 Git-ignored Markdown reports and download READMEs are
 classified separately as historical evidence in [FILE_MAP.tsv](FILE_MAP.tsv);
 the catalogue gate intentionally excludes ignored paths.
@@ -20,7 +20,7 @@ the catalogue gate intentionally excludes ignored paths.
 - `closed`: 45
 - `historical`: 2
 - `proposed`: 43
-- `reference`: 206
+- `reference`: 208
 - `superseded`: 4
 
 ## Registry
@@ -423,3 +423,5 @@ Their listing records existence, not scientific acceptance.
 
 | `research/experiments/mqlib_timing_calibration/RESULT.md` | research-result | A1 | closed | 2026-09-27 | 2026-09-27 | true | MQ-CAL-001 |
 | `research/experiments/mqlib_native_calibration/protocol.md` | preregistration | A0 | binding | 2026-09-27 | 2026-09-27 | true | MQ-NATIVE-001 |
+| `research/experiments/mqlib_native_calibration/smoke001/README.md` | run-artifact | A1 | reference | 2026-09-27 | 2026-09-27 | false | MQ-NATIVE-001 |
+| `research/experiments/mqlib_native_calibration/run001/README.md` | run-artifact | A1 | reference | 2026-09-27 | 2026-09-27 | false | MQ-NATIVE-001 |

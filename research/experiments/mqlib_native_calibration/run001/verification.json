@@ -1,0 +1,26 @@
+{
+  "independent_agent_review": {
+    "agent": "/root/calibration_reviewer",
+    "status": "PASS",
+    "method": "read-only, separate arithmetic without analyzer imports; raw conservation, exact Fraction reference energies, schedule, two-line eligibility, masks/kill ordering, 16 groups x6 gates and234 hashes",
+    "counts": {
+      "valid_cells": 960,
+      "lines": 1666,
+      "on_time_completions": 807,
+      "late_completions": 3,
+      "one_line_cells": 46,
+      "zero_line_cells": 104,
+      "late_lines": 6,
+      "partial_cells": 0,
+      "stderr_cells": 0
+    },
+    "no_timing_rerun": true
+  },
+  "executable_audit": "audit.json",
+  "registered_status": "FAIL",
+  "qualified_model_budgets_ms": [
+    50,
+    100
+  ],
+  "scope": "diagnostic native model preparation only; not full optimizer initialization or search"
+}
