@@ -12,7 +12,31 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Active — application discovery, 2026-09-27
+## Active — ER-001 real-data reconciliation pilot, 2026-09-27
+
+User selected APP-01. [Protocol](../research/experiments/entity_resolution/protocol.md)
+and [Builder intake](../research/HYPODIVE_BUILDER_INTAKE.md) scope a development
+pilot on twelve label-blind six-record WDC training blocks. Fixed title-token
+utilities, independent partition oracle, threshold/closure/greedy controls and
+unchanged native MSC kernel; no Laya inference/training or production changes.
+Validation/test archive members remain unopened; these development labels are
+reference annotations, not proof of semantic truth. Cross-block pairs unresolved.
+
+Instrument and fourteen synthetic checks implemented; Rust example tests 2/2 and
+release build pass. Independent preflight found identity/inventory gaps, repaired
+with seed/clock checks, exact raw/source manifests, binary/environment checks and
+retained invalid markers. Exact rational F1 gates and native-only success counting
+exclude rounding artifacts and fallback-only successes. Independent final
+preflight **PASS**: 14 tests, input hash/design and diff check; code ready to freeze.
+No real solver outcomes have been accessed. Planned main budget120x2seconds,
+seeds990001..990010; H1/H2/H3 thresholds frozen in protocol. All failed outcomes
+must remain; no tuning or new campaign follows automatically.
+
+**Next:** freeze reviewed instrument/protocol, synthetic smoke,
+then main unchanged pilot, independent audit and result/handoff. The incomplete
+untracked upstream clone remains untouched. No other solver-family task is active.
+
+## Application discovery completed — 2026-09-27
 
 User redirected work to finding useful applications with Hypodive before further
 solver development. [Application triage](../research/HYPODIVE_TRIAGE.md) and

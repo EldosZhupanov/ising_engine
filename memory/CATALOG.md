@@ -1,7 +1,7 @@
 # Document catalogue
 
 This sidecar catalogue classifies every Markdown document without modifying frozen evidence. Paths are the stable identifiers. Dates come from Git history; they describe chronology but do not establish authority.
-Its enforced scope is Git-tracked plus nonignored untracked Markdown (357 files
+Its enforced scope is Git-tracked plus nonignored untracked Markdown (358 files
 at this update). The 55 Git-ignored Markdown reports and download READMEs are
 classified separately as historical evidence in [FILE_MAP.tsv](FILE_MAP.tsv);
 the catalogue gate intentionally excludes ignored paths.
@@ -16,7 +16,7 @@ the catalogue gate intentionally excludes ignored paths.
 ## Summary
 
 - `active`: 18
-- `binding`: 49
+- `binding`: 50
 - `closed`: 42
 - `historical`: 2
 - `proposed`: 42
@@ -27,6 +27,7 @@ the catalogue gate intentionally excludes ignored paths.
 
 | Path | Kind | Authority | Lifecycle | Created | Last changed | Immutable | Canonical scope |
 |---|---|---:|---|---|---|---|---|
+| `research/experiments/entity_resolution/protocol.md` | research-protocol | A1 | binding | 2026-09-27 | 2026-09-27 | true | ER-001 |
 | `research/experiments/labs_q002/RESULT.md` | research-result | A1 | closed | 2026-09-26 | 2026-09-26 | true | LABS-Q002 |
 | `research/experiments/hubo_corpus_qualification/RESULT_PHASE_B.md` | research-result | A1 | closed | 2026-09-27 | 2026-09-27 | true | HUBO-Q002-Phase-B |
 | `research/experiments/hubo_corpus_qualification/RESULT_PHASE_A.md` | research-result | A1 | closed | 2026-09-27 | 2026-09-27 | true | HUBO-Q002-Phase-A |
@@ -265,7 +266,7 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/h10/NEXT.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
 | `research/breakthrough/h10/RESULTS.md` | research-protocol | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough |
 | `research/breakthrough/HANDOFF.md` | research-handoff | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough-resume |
-| `research/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
+| `research/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; ER-001 |
 | `research/HYPODIVE_BUILDER_HANDOFF.md` | research-handoff | A2 | reference | 2026-09-17 | 2026-09-17 | false | breakthrough-CD001 |
 | `research/HYPODIVE_TRIAGE.md` | research-triage | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; application-discovery; prospective-CD003-correction |
 | `research/EXP005_MARKETSPLIT_TRIAGE.md` | research-triage | A2 | reference | 2026-09-25 | 2026-09-25 | false | EXP-005 |
