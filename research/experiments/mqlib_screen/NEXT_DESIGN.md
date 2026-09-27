@@ -236,3 +236,15 @@ Do not transfer admission to full optimizer startup, larger inputs or old screen
 Next qualify PALUBECKIS2004bMST2's exact conversion/witness/callback path, then
 freeze the difficult-corpus comparison and actual-wrapper budget grid. Corpus
 qualification and untouched holdout remain separate; no extra easy-screen rerun.
+
+## MST2 bridge qualification completed — 2026-09-28
+
+[MQ-MST2-001](../mqlib_mst2_qualification/RESULT.md) PASS:544exact identities,
+144valid callback/process cells; independent raw audit PASS. Protocol `f6fa9e9`,
+instrument `f738f4d`, raw `d47c40c`. This admits the tiny-input state/objective and
+latched-stop contract only; relative baseline strength and larger-input behavior
+remain unmeasured. Its parent captures output at termination, not per-message
+receipt. The comparison instrument needs common delivered-result semantics.
+Next freeze difficulty qualification separately from untouched holdout, targets,
+baseline configurations and actual-wrapper budgets after S3/X3/provenance gates.
+No new corpus is automatically unseen and no comparison wave ran here.

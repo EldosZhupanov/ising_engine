@@ -12,18 +12,27 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-MST2-001 evidence retained, 2026-09-28
+## Current — MQ-MST2-001 complete, 2026-09-28
 
-[Protocol](../research/experiments/mqlib_mst2_qualification/protocol.md) `f6fa9e9`;
-instrument `f738f4d`. One registered run PASS:544 exact state identities,144VALID
-cells,1,606 callback witnesses,108 cooperative finals and36 expected watchdog
-kills. [Offline audit](../research/experiments/mqlib_mst2_qualification/run001/audit.json)
-and independent read-only evidence review PASS (325raw hashes,11source hashes).
-135 tiny-optimum hits are descriptive only; optimality was not an acceptance gate.
-13 fabricated tests and strict C++ build PASS. Original MERZ/production/Cargo
-unchanged. Next: commit raw evidence and close bounded qualification record.
-No larger-input, delivery-latency, stronger-baseline or comparative claim follows.
-No comparison wave, real corpus or held-out outcomes opened.
+[Standalone MST2 qualification](../research/experiments/mqlib_mst2_qualification/RESULT.md)
+**PASS; independent raw evidence audit PASS**. Protocol `f6fa9e9`, instrument
+`f738f4d`, raw/audit `d47c40c`. All544 exact oracle identities,144VALIDcells,
+1,606callback witnesses,108cooperative finals and36expected forced kills verified.
+135tiny-optimum hits are descriptive; no stronger-baseline or speed claim.
+13fabricated/mock tests, strict C++ build, syntax checks and independent pre/post
+reviews PASS. First reviewer service interruption retained; fallback reviewer
+completed review without optimizer rerun. Original MERZ, production and Cargo
+unchanged. Only the tiny-input objective/witness/callback contract is qualified.
+
+**Next task:** finish and preregister difficulty qualification and the actual
+comparison instrument. Separate qualification data from untouched holdout; freeze
+baseline configurations and targets before outcome inspection. Audit S3/X3 and
+corpus provenance/licensing first. Existing303files are not established unseen.
+MST2 callback capture here is at process termination; actual benchmark delivery
+must use common parent receipt/deadline semantics. Previous50/100ms diagnostic
+model-preparation admission does not establish full-search or larger-input timing.
+Do not repeat the spent easy screen or automatically start a comparison wave.
+Hosted CI billing remains the last verified external blocker, not local-test failure.
 
 ## Previous — MQ-NATIVE-001 complete, 2026-09-27
 
