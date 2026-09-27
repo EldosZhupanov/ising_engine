@@ -12,7 +12,17 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — verified publication bundle; external baseline next, 2026-09-27
+## Current — MQ-QUAL-001 adapter qualification, 2026-09-27
+
+User authorized the next MQLib step. [Prospective amendment](../research/EXTERNAL_COMPARISON_AMENDMENT_1.md)
+permits only tiny synthetic conversion/process qualification; independent design
+review PASS. MQLib pinned at `585496274af5abb0849d0d47e135496b4688680b` is compiled
+in ignored cache. Next: commit reviewed standalone adapter/tests, enumerate
+objectives via upstream loader, validate 36 short calls and retain all evidence.
+No comparative campaign, real corpus, reserved seeds or production kernel edits.
+Parent S3 and X3 prerequisites remain binding; qualification does not open them.
+
+## Previous — verified publication bundle, 2026-09-27
 
 The user authorized synchronizing GitHub's default `master` with the current
 local project. Its previous fetched tip was March commit `7df051b`; local c8391a6

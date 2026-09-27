@@ -1,7 +1,7 @@
 # Document catalogue
 
 This sidecar catalogue classifies every Markdown document without modifying frozen evidence. Paths are the stable identifiers. Dates come from Git history; they describe chronology but do not establish authority.
-Its enforced scope is Git-tracked plus nonignored untracked Markdown (359 files
+Its enforced scope is Git-tracked plus nonignored untracked Markdown (360 files
 at this update). The 55 Git-ignored Markdown reports and download READMEs are
 classified separately as historical evidence in [FILE_MAP.tsv](FILE_MAP.tsv);
 the catalogue gate intentionally excludes ignored paths.
@@ -16,7 +16,7 @@ the catalogue gate intentionally excludes ignored paths.
 ## Summary
 
 - `active`: 18
-- `binding`: 50
+- `binding`: 51
 - `closed`: 43
 - `historical`: 2
 - `proposed`: 42
@@ -398,3 +398,5 @@ Their listing records existence, not scientific acceptance.
 | `research/fundamental_ai/RESEARCH_GRAPH.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
 | `research/fundamental_ai/THEORY_SIGNAL_CROSSTALK.md` | research-local | A2 | proposed | — | — | false | fundamental-ai |
 | `results/rc027/RESULT.md` | research-result-local | A2 | proposed | — | — | false | RC027 |
+
+| `research/EXTERNAL_COMPARISON_AMENDMENT_1.md` | research-protocol | A0 | binding | 2026-09-27 | 2026-09-27 | true | MQ-QUAL-001; external-comparison-handoff |
