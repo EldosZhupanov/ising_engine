@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "scope": "independent artifact review, not optimizer replication",
+  "reviewer": "/root/mqlib_explorer",
+  "instrument_commit": "f76991dde036f77fe7bb29cbf17efb1e20ec769c",
+  "registered_preflight_status": "FAIL",
+  "checks": {
+    "source_hashes": 208,
+    "executables": 2,
+    "artifact_hashes": 1540,
+    "valid_cells": 512,
+    "controls": 480,
+    "smokes": 32,
+    "witnesses": 509,
+    "late_witnesses": 1,
+    "control_groups_passed": 13,
+    "control_groups_total": 16,
+    "cutoff_gate": "PASS",
+    "smoke_gate": "PASS"
+  },
+  "main_executed": false,
+  "no_optimizer_rerun": true,
+  "limitations": "No-search failures cannot rank optimization quality or establish corpus hardness. Stop this version; H1/H2 untested."
+}

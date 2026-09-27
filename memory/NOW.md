@@ -12,41 +12,31 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-DIFFICULTY-001 instrument ready for preflight, 2026-09-28
+## Current — MQ-DIFFICULTY-001 preflight FAIL, 2026-09-28
 
-[Difficulty qualification protocol](../research/experiments/mqlib_difficulty_qualification/protocol.md)
-freezes24 qualification-only synthetic Ising-to-QUBO inputs (n256/512,
-p1/16 or1/2), four fixed wrappers, ten seeds and a2s delivered-validated budget.
-Input index and manifest include exact hashes; generator tests regenerate all
-24files byte-for-byte and exhaustively check the tiny binary/spin identity.
-**No optimizer, preflight or main comparison has run. No hardness, advantage,
-S3/X3, holdout or selector-performance claim is established.**
+One registered preflight completed on committed instrument `f76991d` after
+preregistration `253d94a`. [Raw analysis](../research/experiments/mqlib_difficulty_qualification/preflight001/analysis.json)
+**FAIL; [independent artifact review](../research/experiments/mqlib_difficulty_qualification/preflight001/review.json) PASS**.
+512VALIDcells (480no-search controls,32tiny smoke cells),509verified witnesses,
+one late witness.13/16control groups pass; cutoff/smoke gates pass. Main did not
+run and must not start under this version. H1/H2 are untested, not falsified.
 
-This is a scoped prospective exception for diagnostic corpus qualification only;
-BiqMac/selector campaign gates remain unchanged. One synthetic family is wholly
-qualification data, not a new unseen evaluation set. Three hundred three existing
-benchmark files remain exposure-uncleared. No published target => no TTS claim.
-A broad seed grep incidentally displayed a closed CD005 raw row; exposure is
-recorded in the protocol and did not involve reserved holdouts.
+q11/MST2-labelled no-search null difference10.961ms exceeds10ms. q23/MERZ delay
+has2absent witnesses; q23/MST2 delay has1absent/1late (validation after250ms).
+These are delivery-path failures, not a ranking of optimizer strength or proof
+that the24qualification inputs are hard. All inputs remain qualification-only.
+No holdout/learned-selector/record or S3/X3 claim.
 
-**Instrument:** [review](../research/experiments/mqlib_difficulty_qualification/instrument_review.json)
-PASS after schema, cap, abnormal-output and auditor-provenance corrections.
-25Python tests (including mocked subprocesses),2Rust tests, workspace/all-target
-check, targeted Clippy with warnings denied, all-workspace format and strict C++
-development build PASS. Model preparation and search loop match the old frozen
-wrapper; actual algorithms remain unchanged. Protocol commit `253d94a`.
+**Next task:** commit the complete raw/audit record, close this protocol with its
+negative admission result, and design a separate coarse2s final-quality protocol.
+Do not silently relax the250ms gate or retry this preflight. Prospective design
+must distinguish application-budget quality from subsecond speed resolution;
+reuse frozen algorithms and retain this exposure/history. No new operators needed.
 
-**Next task:** nondevelopment rebuild from the committed instrument, then one
-`run.py --phase preflight` under `mqlib_difficulty_qualification/`. Independently
-audit/review retained evidence before admission. Failure stops this version;
-no automatic retry. Successful reviewed preflight admits one960-cell diagnostic
-main run under the3000s cumulative cap. Parent/child observedCPU0; receipt AND
-independent validation completion precede every eligible cutoff. Record results
-and limitations before any later confirmatory design. No new optimizer methods.
-
-Production solvers/APIs, Cargo and prior frozen results remain unchanged. The
-known untracked upstream clone remains excluded. Hosted CI billing is the last
-verified external blocker, not a local test failure.
+25Python tests,2Rust tests, workspace/all-target check, targeted Clippy, workspace
+format and strict native builds PASS; independent pre/post reviews PASS. Production
+solvers/APIs/Cargo and prior frozen evidence unchanged. Known untracked upstream
+clone remains excluded. Hosted CI billing is the last verified external blocker.
 
 ## Previous — MQ-MST2-001 complete, 2026-09-28
 

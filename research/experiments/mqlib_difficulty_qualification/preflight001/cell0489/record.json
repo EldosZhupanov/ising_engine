@@ -1,0 +1,122 @@
+{
+  "cell": {
+    "instance": "smoke1",
+    "arm": "mqlib_merz",
+    "seed": 501,
+    "mode": "search",
+    "budget": 0.25,
+    "block": "smoke"
+  },
+  "events": [
+    {
+      "raw_base64": "eyJraW5kIjoicmVhZHkiLCJhZmZpbml0eSI6IjAifQ==",
+      "received_seconds": 0.007389087986666709,
+      "message": {
+        "kind": "ready",
+        "affinity": "0"
+      },
+      "validated_seconds": 0.007470832992112264
+    },
+    {
+      "raw_base64": "eyJraW5kIjoiaW5jIiwib2JqZWN0aXZlIjozLCJzdGF0ZSI6WzAsMSwxXX0=",
+      "received_seconds": 0.0075682789902202785,
+      "message": {
+        "kind": "inc",
+        "objective": 3,
+        "state": [
+          0,
+          1,
+          1
+        ]
+      },
+      "verified_energy": -5,
+      "validated_seconds": 0.007634163979673758
+    }
+  ],
+  "errors": [],
+  "fallback_energy": -2,
+  "ready": 1,
+  "configs": 0,
+  "observations": [
+    {
+      "seconds": 0.005859392986167222,
+      "tasks": [
+        {
+          "tid": 2531526,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.05775764997815713,
+      "tasks": [
+        {
+          "tid": 2531526,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.10832416798803024,
+      "tasks": [
+        {
+          "tid": 2531526,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.1588637649838347,
+      "tasks": [
+        {
+          "tid": 2531526,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.20942718198057264,
+      "tasks": [
+        {
+          "tid": 2531526,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    }
+  ],
+  "parent_affinity": [
+    0
+  ],
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/.cache/mqlib-difficulty/worker",
+    "mqlib_merz",
+    "/tmp/mq-difficulty-mqede3t2/model",
+    "501",
+    "search"
+  ],
+  "setup_seconds": 0.0014240779855754226,
+  "pid": 2531526,
+  "launch_seconds": 0.005801663995953277,
+  "previous_energy": -5,
+  "cutoff_seconds": 0.2536805190029554,
+  "kill_seconds": 0.2536819819943048,
+  "reap_seconds": 0.2549477689899504,
+  "exit_code": -9,
+  "partial_base64": "",
+  "total_seconds": 0.25531520799268037,
+  "stdout_bytes": 77,
+  "status": "VALID"
+}

@@ -1,0 +1,154 @@
+{
+  "cell": {
+    "instance": "smoke2",
+    "arm": "ultimate",
+    "seed": 501,
+    "mode": "search",
+    "budget": 0.25,
+    "block": "smoke"
+  },
+  "events": [
+    {
+      "raw_base64": "eyJhZmZpbml0eSI6IjAiLCJraW5kIjoicmVhZHkifQ==",
+      "received_seconds": 0.016704980022041127,
+      "message": {
+        "affinity": "0",
+        "kind": "ready"
+      },
+      "validated_seconds": 0.016764132014941424
+    },
+    {
+      "raw_base64": "eyJjaHVuayI6MCwiZW5lcmd5IjotMi4wLCJraW5kIjoiaW5jIiwic3RhdGUiOlsxLDAsMF19",
+      "received_seconds": 0.016704980022041127,
+      "message": {
+        "chunk": 0,
+        "energy": -2.0,
+        "kind": "inc",
+        "state": [
+          1,
+          0,
+          0
+        ]
+      },
+      "verified_energy": -2,
+      "validated_seconds": 0.016805441002361476
+    }
+  ],
+  "errors": [],
+  "fallback_energy": 0,
+  "ready": 1,
+  "configs": 0,
+  "observations": [
+    {
+      "seconds": 0.005956969020189717,
+      "tasks": [
+        {
+          "tid": 2531545,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        },
+        {
+          "tid": 2531546,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.06801985600031912,
+      "tasks": [
+        {
+          "tid": 2531545,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        },
+        {
+          "tid": 2531546,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.12009596001007594,
+      "tasks": [
+        {
+          "tid": 2531545,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        },
+        {
+          "tid": 2531546,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.17199838501983322,
+      "tasks": [
+        {
+          "tid": 2531545,
+          "name": "mqlib_difficult",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        },
+        {
+          "tid": 2531546,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.22357532402384095,
+      "tasks": [
+        {
+          "tid": 2531545,
+          "name": "mqlib_difficult",
+          "state": "S (sleeping)",
+          "affinity": "0"
+        },
+        {
+          "tid": 2531546,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    }
+  ],
+  "parent_affinity": [
+    0
+  ],
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/target/release/examples/mqlib_difficulty",
+    "ultimate",
+    "/tmp/mq-difficulty-l0bfplqm/model",
+    "501",
+    "search"
+  ],
+  "setup_seconds": 0.0013309410132933408,
+  "pid": 2531545,
+  "launch_seconds": 0.005902756005525589,
+  "last_chunk": 0,
+  "previous_energy": -2,
+  "cutoff_seconds": 0.25197029102128,
+  "kill_seconds": 0.25197233402286656,
+  "reap_seconds": 0.25425948901101947,
+  "exit_code": -9,
+  "partial_base64": "",
+  "total_seconds": 0.25461513601476327,
+  "stdout_bytes": 87,
+  "status": "VALID"
+}

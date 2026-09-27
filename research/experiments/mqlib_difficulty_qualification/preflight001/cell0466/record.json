@@ -1,0 +1,63 @@
+{
+  "cell": {
+    "instance": "q23",
+    "arm": "mqlib_merz",
+    "seed": 0,
+    "mode": "delay",
+    "budget": 0.25,
+    "block": "control",
+    "repetition": 8
+  },
+  "events": [
+    {
+      "raw_base64": "eyJraW5kIjoicmVhZHkiLCJhZmZpbml0eSI6IjAifQ==",
+      "received_seconds": 0.20515660700039007,
+      "message": {
+        "kind": "ready",
+        "affinity": "0"
+      },
+      "validated_seconds": 0.20526793799945153
+    }
+  ],
+  "errors": [],
+  "fallback_energy": 425,
+  "ready": 1,
+  "configs": 0,
+  "observations": [
+    {
+      "seconds": 0.17368261399678886,
+      "tasks": [
+        {
+          "tid": 2531422,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    }
+  ],
+  "parent_affinity": [
+    0
+  ],
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/.cache/mqlib-difficulty/worker",
+    "mqlib_merz",
+    "/tmp/mq-difficulty-na_7w59l/model",
+    "0",
+    "delay"
+  ],
+  "setup_seconds": 0.16805721499258652,
+  "pid": 2531422,
+  "launch_seconds": 0.1736192530079279,
+  "cutoff_seconds": 0.2509016400144901,
+  "kill_seconds": 0.2509045960032381,
+  "reap_seconds": 0.25219492000178434,
+  "exit_code": -9,
+  "partial_base64": "",
+  "total_seconds": 0.25264329300262034,
+  "stdout_bytes": 32,
+  "status": "VALID"
+}

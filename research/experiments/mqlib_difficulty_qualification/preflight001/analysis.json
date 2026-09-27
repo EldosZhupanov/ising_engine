@@ -1,0 +1,133 @@
+{
+  "status": "FAIL",
+  "groups": [
+    {
+      "instance": "q05",
+      "arm": "ultimate",
+      "pass_gate": true,
+      "null_median_difference": 0.0024166509974747896,
+      "paired_delay_median": 0.051208909979322925,
+      "sleep_median": 0.05072949
+    },
+    {
+      "instance": "q05",
+      "arm": "v2_default",
+      "pass_gate": true,
+      "null_median_difference": 0.0028512025164673105,
+      "paired_delay_median": 0.051757979512331076,
+      "sleep_median": 0.0504024895
+    },
+    {
+      "instance": "q05",
+      "arm": "mqlib_merz",
+      "pass_gate": true,
+      "null_median_difference": 0.001217505501699634,
+      "paired_delay_median": 0.05123465499491431,
+      "sleep_median": 0.050609677000000006
+    },
+    {
+      "instance": "q05",
+      "arm": "mqlib_mst2",
+      "pass_gate": true,
+      "null_median_difference": 0.0036003374989377335,
+      "paired_delay_median": 0.04985137750918511,
+      "sleep_median": 0.0506310905
+    },
+    {
+      "instance": "q11",
+      "arm": "ultimate",
+      "pass_gate": true,
+      "null_median_difference": 0.000287675007712096,
+      "paired_delay_median": 0.047852296018390916,
+      "sleep_median": 0.050692187
+    },
+    {
+      "instance": "q11",
+      "arm": "v2_default",
+      "pass_gate": true,
+      "null_median_difference": 0.0038994055066723377,
+      "paired_delay_median": 0.05452741403132677,
+      "sleep_median": 0.0507036185
+    },
+    {
+      "instance": "q11",
+      "arm": "mqlib_merz",
+      "pass_gate": true,
+      "null_median_difference": 0.004001294495537877,
+      "paired_delay_median": 0.05226939151179977,
+      "sleep_median": 0.0507199995
+    },
+    {
+      "instance": "q11",
+      "arm": "mqlib_mst2",
+      "pass_gate": false,
+      "null_median_difference": 0.010961273990687914,
+      "paired_delay_median": 0.05356280600244645,
+      "sleep_median": 0.050759394
+    },
+    {
+      "instance": "q17",
+      "arm": "ultimate",
+      "pass_gate": true,
+      "null_median_difference": 0.00013984799443278462,
+      "paired_delay_median": 0.05448265801533125,
+      "sleep_median": 0.050764657000000005
+    },
+    {
+      "instance": "q17",
+      "arm": "v2_default",
+      "pass_gate": true,
+      "null_median_difference": 0.0019328264897922054,
+      "paired_delay_median": 0.05038281848828774,
+      "sleep_median": 0.050715952
+    },
+    {
+      "instance": "q17",
+      "arm": "mqlib_merz",
+      "pass_gate": true,
+      "null_median_difference": 0.0009826814930420369,
+      "paired_delay_median": 0.05652627249946818,
+      "sleep_median": 0.0506581745
+    },
+    {
+      "instance": "q17",
+      "arm": "mqlib_mst2",
+      "pass_gate": true,
+      "null_median_difference": 0.0038211895007407293,
+      "paired_delay_median": 0.0499114285048563,
+      "sleep_median": 0.0507178955
+    },
+    {
+      "instance": "q23",
+      "arm": "ultimate",
+      "pass_gate": true,
+      "null_median_difference": 0.0013172114850021899,
+      "paired_delay_median": 0.045638300507562235,
+      "sleep_median": 0.0507544625
+    },
+    {
+      "instance": "q23",
+      "arm": "v2_default",
+      "pass_gate": true,
+      "null_median_difference": 0.0026636639959178865,
+      "paired_delay_median": 0.050604976480826735,
+      "sleep_median": 0.0506440625
+    },
+    {
+      "instance": "q23",
+      "arm": "mqlib_merz",
+      "pass_gate": false,
+      "reason": "missing probe witness"
+    },
+    {
+      "instance": "q23",
+      "arm": "mqlib_mst2",
+      "pass_gate": false,
+      "reason": "missing probe witness"
+    }
+  ],
+  "cutoff_gate": true,
+  "smoke_gate": true,
+  "p95_overshoot": 0.0020356559834908694,
+  "max_overshoot": 0.007719838002230972
+}
