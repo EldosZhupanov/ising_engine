@@ -1,0 +1,50 @@
+{
+  "status": "VALID",
+  "model": {
+    "offset": -2,
+    "linear": [
+      2,
+      -3,
+      0
+    ],
+    "pairs": []
+  },
+  "seed": 103,
+  "requested_seconds": 0.02,
+  "hard_timeout_seconds": 5,
+  "heuristic": "MERZ2002ONEOPT",
+  "binary": "/home/eldos/ising_engine/.cache/mqlib-qualification/upstream/bin/MQLib",
+  "binary_sha256": "8bc624a421e8d55d7a1bea2dde92f277c11a2bde790af383ab7ef4af00e7ff8b",
+  "input_qubo": "3 3\n1 1 -2\n2 2 3\n3 3 -0\n",
+  "input_sha256": "ef5455778c3c9429072875f1c9de7eb798b90683955b41c5c41141c388397a29",
+  "command": [
+    "/home/eldos/ising_engine/.cache/mqlib-qualification/upstream/bin/MQLib",
+    "-h",
+    "MERZ2002ONEOPT",
+    "-fQ",
+    "/tmp/ising-mqlib-xdc3s7ie/input.qubo",
+    "-s",
+    "103",
+    "-r",
+    "0.02",
+    "-ps"
+  ],
+  "conversion_setup_seconds": 0.0010671390045899898,
+  "stdout": "0.02,MERZ2002ONEOPT,\"/tmp/ising-mqlib-xdc3s7ie/input.qubo\",3,0.020009,[0:2e-06;3:1.3e-05]\n\nSolution:\n0 1 1\n",
+  "stderr": "",
+  "exit_code": 0,
+  "process_wall_seconds": 0.02497644000686705,
+  "state": [
+    0,
+    1,
+    1
+  ],
+  "energy": -5.0,
+  "energy_exact": "-5",
+  "reported_max_objective": 3.0,
+  "reported_runtime_seconds": 0.020009,
+  "history_raw": "[0:2e-06;3:1.3e-05]",
+  "total_wall_seconds": 0.0262427780253347,
+  "exact_optimum": "-5",
+  "exact_gap": "0"
+}

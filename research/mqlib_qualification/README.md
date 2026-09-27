@@ -67,3 +67,25 @@ in memory/NOW.md and the retained run summary after qualification.
 
 Next research work needs a separately frozen design and reconciliation with the
 parent protocol's S3/X3 prerequisites. MQ-QUAL-001 cannot authorize a campaign.
+
+## Retained result — 2026-09-27
+
+**MQ-QUAL-001 PASS**, one retained execution, instrument `2b61068`, protocol
+`f67cbdf`. [Raw summary](run001/summary.json), [environment/build provenance](run001/metadata.json),
+[reproduction](run001/README.md), [verification record](verification.json).
+
+- 12 frozen synthetic models; all 544 upstream-recomputed energies equal the
+  independent exact polynomial, including sign, pair factor and offset.
+- 36/36 final candidates valid across seeds 101, 102, 103. All happen to attain
+  the exhaustive optimum on these tiny fixtures; this is not competitive evidence.
+- 12 Python tests PASS, including corruption rejection and timeout preservation;
+  strict C++ oracle build, shell syntax, Python compilation and diff checks PASS.
+- Independent postrun audit PASS: 73 artifact hashes, seven committed source
+  hashes, six build hashes, every fixture/state/candidate/objective and command.
+  No optimizer rerun by the auditor. Last verified hosted-CI status: blocked by account billing.
+
+Production Rust source, both solver families and the existing benchmark harness
+are unchanged. This qualifies a standalone JSON-polynomial bridge for one native
+MQLib heuristic, not an engine_v2 benchmark integration or MQLib hyperheuristic.
+Before a comparative campaign, register a new design and resolve the parent's
+still-binding internal qualification prerequisites. No performance campaign ran.

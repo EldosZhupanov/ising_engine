@@ -12,15 +12,37 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-QUAL-001 adapter qualification, 2026-09-27
+## Current — MQ-QUAL-001 complete; comparative design next, 2026-09-27
 
-User authorized the next MQLib step. [Prospective amendment](../research/EXTERNAL_COMPARISON_AMENDMENT_1.md)
-permits only tiny synthetic conversion/process qualification; independent design
-review PASS. MQLib pinned at `585496274af5abb0849d0d47e135496b4688680b` is compiled
-in ignored cache. Next: commit reviewed standalone adapter/tests, enumerate
-objectives via upstream loader, validate 36 short calls and retain all evidence.
-No comparative campaign, real corpus, reserved seeds or production kernel edits.
-Parent S3 and X3 prerequisites remain binding; qualification does not open them.
+[MQLib qualification](../research/mqlib_qualification/README.md) **PASS**.
+Protocol `f67cbdf`, reviewed instrument `2b61068`, one retained run in
+`research/mqlib_qualification/run001/`. Twelve artificial models, 544 exact
+state-energy identities and 36/36 independently verified final candidates.
+All candidates reach tiny-fixture optima; no competitive inference follows.
+Independent read-only audit PASS: 73 raw hashes, seven Git source hashes, six
+build hashes and every state/candidate/objective. Twelve Python tests PASS;
+strict C++ oracle build, shell/Python syntax and memory/diff checks PASS.
+Cargo was not rerun: no production Rust/Cargo changes. Upstream build warnings
+are preserved in metadata; the oracle itself compiles with warnings denied.
+
+The standalone `benchmarks/adapters/run_mqlib.py` accepts an explicit JSON
+binary polynomial with offset, strictly verifies final solutions and keeps raw
+failures. `scripts/setup_mqlib.sh` builds pinned MIT MQLib
+`585496274af5abb0849d0d47e135496b4688680b` under ignored cache. Only native
+MERZ2002ONEOPT is qualified; no legacy-harness, MaxCut/CSR or hyperheuristic
+integration is implied. Both production solver families are unchanged.
+
+**Next task (design, not execution):** define a matched-budget complementarity
+study and reconcile it with S3/X3 in the binding external-comparison protocol.
+[Amendment 1](../research/EXTERNAL_COMPARISON_AMENDMENT_1.md) changes the handoff
+to NOW and permits this small correctness qualification; it does not waive
+comparison prerequisites. No real corpus/holdout, training, record hunt or
+comparative wave was run. Do not repeat RC-027 as a new selector result.
+
+All adapter, oracle, fixtures, tests and retained run artifacts are accounted for.
+The known incomplete `benchmarks/qoblib/upstream/` clone remains excluded.
+GitHub Actions billing was the last verified hosted-CI blocker; local results
+must not be described as hosted CI success.
 
 ## Previous — verified publication bundle, 2026-09-27
 
