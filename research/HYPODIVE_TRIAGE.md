@@ -598,3 +598,79 @@ open research/evaluation component and stop investing in generic-solver marketin
 The current engineering next step remains the budget-aware Ultimate output
 interface map in [NOW](../memory/NOW.md); this triage does not authorize a new
 solver campaign or modify any frozen experiment.
+
+---
+
+## New-product discovery after owner pause — 2026-09-28, base `da8981b`
+
+**Mode A; decision NARROW / NO BUILD YET.** The owner explicitly paused Ising
+Engine development and requested a broadly useful, measurable, potentially
+breakthrough product. This changes the live task, not the historical mission or
+the status of frozen scientific results. The strongest candidate claim is:
+"an independent verification layer for computational claims made by coding and
+research agents could reduce false success reports at acceptable cost." This is
+a **HYPOTHESIS**, not an invention, customer-validated product or established
+advantage. Assumption for the screen: one small team, software-first, no large
+training budget, and no access yet to external customer traces.
+
+### Why investigate and what already exists
+
+[Anthropic's measured agent use](https://www.anthropic.com/research/measuring-agent-autonomy)
+shows growth in the longest Claude Code turns, while typical turns were much
+more stable; it does not quantify this product's demand.
+[SWE-Cycle](https://arxiv.org/abs/2605.13139) reports a drop in code-agent solve
+rates on end-to-end tasks and builds an execution-capable judge because simpler
+evaluation misses errors. A [2026 survey of AI research agents](https://arxiv.org/abs/2608.05179)
+reports incomplete release of seeds/traces and verification methods in its coded
+sample. These are primary research signals of a verification problem, not market
+size, willingness to pay, or proof that our proposed method solves it.
+
+| Candidate | Strongest simple competitor / direct overlap | Triage |
+|---|---|---|
+| General agent memory / repository context | [Graft](https://github.com/trailhq/Graft), [Graphiti](https://github.com/getzep/graphiti), [Letta](https://github.com/letta-ai) already address code context or persistent/temporal agent memory. | **NO-GO as a generic entry point now**; no local evidence of a missing measurable capability. |
+| General agent tracing, evals and dashboards | [Langfuse](https://github.com/langfuse/langfuse), [LangSmith](https://docs.langchain.com/langsmith/evaluation-types), and [OpenTelemetry GenAI conventions](https://github.com/open-telemetry/semantic-conventions-genai) already provide substantial tracing/evaluation infrastructure. | **NO-GO for another generic observability platform**; no differentiated baseline result. |
+| Independent claim-to-evidence verification | [GitHub CI and artifact attestations](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations), Langfuse custom/code evaluators, and newer direct overlaps [Tessera](https://github.com/robert-vetter/tessera), [AgentTrial](https://github.com/tang-vu/agenttrial), [Agent Evidence Levels](https://github.com/luckyPipewrench/agent-evidence-levels), and [data-to-paper](https://github.com/Technion-Kishony-lab/data-to-paper). The latter projects' self-descriptions are existence/prior-art evidence, not independently validated performance. | **NARROW / OVERLAPPING**: candidate only for claims with an external, machine-checkable oracle and a measured gap against these tools. |
+
+The proposed narrow workflow is `claim -> pinned input/code/artifact -> fresh
+independent verifier -> PASS / FAIL / UNKNOWN with reproduction receipt`. It
+must re-evaluate the *claimed result*, not merely preserve a producer-signed
+trace. A verifier can check objective values, deadlines, test outcomes and source
+hashes; it cannot generally prove arbitrary natural-language or scientific
+novelty claims. A missing oracle must be `UNKNOWN`, never an invented PASS. The
+closest known concepts include CI, artifact provenance, execution-based
+benchmarks and evidence-gated agents. **Novelty is UNKNOWN/OVERLAPPING.** The
+only possible differentiated claim would be an empirically better coverage vs
+cost/error frontier on a specific workflow.
+
+### Kill-test before implementation or product claim
+
+First obtain a prospective corpus of at least 30 real coding/research-agent
+deliverables from more than one workflow, with final claims, artifacts and
+independently established outcomes; disclose exclusions and any overlap with
+this repository. Freeze claim classes and verifier rules before labels are
+inspected. Compare the *same* cases under ordinary CI plus available
+trace/evaluator/provenance tooling, a human checklist, and the proposed
+claim-bound verifier. Primary endpoint: materially false `DONE` reports missed
+by each approach. Also count correct-work rejections, UNKNOWNs, setup effort,
+reviewer minutes and verification cost. Equal data access, stopping and
+abstention are required. A seeded synthetic-fault set is only a control, not a
+substitute for real failures. No such experiment has been run.
+
+**Falsifiers / stop conditions:** if the ordinary stack catches the same
+material failures at similar or lower total cost, or if no external team has
+the problem and budget to pilot it, do not build a generic product. A positive
+local replay in Ising Engine would validate an internal need only. Two separate
+gates are required: a matched technical advantage and credible external buyer
+interest. The former may be tested without contacting anyone; the latter cannot
+be inferred from repository searches. No third-party contact, purchase, new
+project repository, solver run, model training or code implementation occurred
+in this screen.
+
+Top risks: (1) the apparent gap is already covered by CI/custom evaluators or
+direct evidence-layer products; (2) verification plugins remain domain-specific
+and cannot support a truly universal truth claim; (3) the team values a result
+but will not pay for another integration layer. Seed/trajectory independence,
+cost-normalized success and leakage controls are N/A until a comparison corpus
+is frozen. The current conclusion is a **testable path**, not a revolutionary
+result. Ising Engine remains preserved and paused at its recorded resume point
+in [NOW](../memory/NOW.md).

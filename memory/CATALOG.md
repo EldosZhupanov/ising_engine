@@ -87,13 +87,13 @@ the catalogue gate intentionally excludes ignored paths.
 | `memory/DECISIONS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-09-26 | false | navigation |
 | `memory/INDEX.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
 | `memory/NEXT_TASK_RC027.md` | task-bundle | A1 | active | 2026-08-30 | 2026-08-30 | false | RC027 |
-| `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-09-27 | false | current-task |
+| `memory/NOW.md` | live-state | A0 | active | 2026-08-26 | 2026-09-28 | false | current-task |
 | `memory/OBSIDIAN.md` | workspace-guide | A3 | reference | 2026-08-26 | 2026-08-26 | false | navigation |
 | `memory/OPEN_PROBLEMS.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-30 | false | navigation |
 | `memory/PERFORMANCE.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-19 | false | navigation |
 | `memory/RESEARCH.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-09-26 | false | navigation |
 | `memory/ROADMAP.md` | memory-pointer | A3 | reference | 2026-08-19 | 2026-08-26 | false | navigation |
-| `memory/TIMELINE.md` | chronology | A1 | active | 2026-08-26 | 2026-09-27 | false | project-chronology |
+| `memory/TIMELINE.md` | chronology | A1 | active | 2026-08-26 | 2026-09-28 | false | project-chronology |
 | `PERF.md` | engineering-reference | A1 | active | 2026-07-05 | 2026-07-06 | false | engineering |
 | `portfolio_design_spec.md` | design-spec | A2 | reference | 2026-03-13 | 2026-03-13 | false | design |
 | `PRODUCT_SPEC.md` | product-spec | A0 | active | 2026-08-22 | 2026-08-26 | false | finished-product |
@@ -269,7 +269,7 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/HANDOFF.md` | research-handoff | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough-resume |
 | `research/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; ER-001 |
 | `research/HYPODIVE_BUILDER_HANDOFF.md` | research-handoff | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; ER-001 |
-| `research/HYPODIVE_TRIAGE.md` | research-triage | A2 | reference | 2026-09-17 | 2026-09-28 | false | CD001; application-discovery; prospective-CD003-correction; GitHub-opportunity-triage; Graft-qualification; scientific-ecosystem-triage; GitHub-publication-correction; solver-market-triage |
+| `research/HYPODIVE_TRIAGE.md` | research-triage | A2 | reference | 2026-09-17 | 2026-09-28 | false | CD001; application-discovery; prospective-CD003-correction; GitHub-opportunity-triage; Graft-qualification; scientific-ecosystem-triage; GitHub-publication-correction; solver-market-triage; new-product-discovery |
 | `research/EXP005_MARKETSPLIT_TRIAGE.md` | research-triage | A2 | reference | 2026-09-25 | 2026-09-25 | false | EXP-005 |
 | `research/EXP006A_RAW_RECHECK.md` | prospective-audit | A2 | reference | 2026-09-26 | 2026-09-26 | false | EXP-TEN-006A-R |
 | `research/PRIOR_ART_MATRIX.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; application-discovery-primary-sources |

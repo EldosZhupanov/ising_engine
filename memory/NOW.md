@@ -12,7 +12,25 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-FIRST-CHUNK-001 closed; output design next, 2026-09-28
+## Current — Ising Engine paused by owner; product discovery, 2026-09-28
+
+The owner explicitly paused further Ising Engine development while seeking a
+measurable, broadly useful new product direction. Do not resume solver design,
+benchmark campaigns, record hunts, integrations, or automatic next-task work
+without a later explicit resume. This decision preserves the code, frozen
+protocols, results, and the technical resume point below; it does not convert
+inconclusive findings into failures or revoke historical evidence.
+
+The active non-solver task is the bounded [Hypodive new-product triage](../research/HYPODIVE_TRIAGE.md).
+It rejects generic agent memory and generic agent observability as distinct
+entry points on present evidence. Independent checking of computational claims
+made by agents is a **product hypothesis only**: direct competitors exist, no
+buyer interviews or matched product test have been performed, and no novelty or
+revenue claim is earned. The next gate is a prospective failure-case corpus and
+matched comparison to ordinary CI/eval/provenance tools, followed by external
+buyer discovery. Do not start a new implementation solely from this desk review.
+
+## Paused technical resume point — MQ-FIRST-CHUNK-001 closed; output design next
 
 [Retained result](../research/experiments/mqlib_first_chunk/RESULT.md):12/12 valid
 cells,45 independently verified witnesses,0 late, elapsed123.307 s<180 s. The
@@ -38,7 +56,8 @@ clear demand for operational optimization but no demonstrated customer demand
 or competitive edge for Ising Engine as a standalone QUBO solver. Product
 validation needs one external decision workflow, a matched domain-solver
 baseline, independently checked feasible decisions and buyer evidence. This
-does not replace the current engineering next task or elevate a product claim.
+does not elevate a product claim. Its engineering next task above is suspended
+under the owner's pause.
 
 ## Previous — MQ-DIFFICULTY-001 closed; main not admitted, 2026-09-28
 
