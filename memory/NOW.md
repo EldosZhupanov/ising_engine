@@ -27,13 +27,20 @@ on six dense 512-variable cases; other arms had none. One exposed synthetic
 family; no holdout, selector benefit, optimizer replication, TTS, superiority,
 S3/X3, or short-time speed claim. The old 250 ms admission FAIL stays closed.
 
-**Next task:** perform read-only diagnosis of the 60 Ultimate fallback traces
-and frozen worker path: distinguish readiness/model construction from chunk
-completion and output cadence. State hypotheses and evidence; do not modify
-frozen sources, rerun this version or promote a comparison claim. If new
-measurements become necessary, preregister a separate diagnostic. Production
-solver and Cargo remain unchanged. Hosted CI billing is the last verified
-external blocker; local checks do not assert hosted green.
+Read-only follow-up across all 60 dense-512 Ultimate records: all were VALID,
+ready by 0.077527 s (median 0.054363 s), then killed at deadline without an
+`inc`; setup median 0.013787 s. The frozen Rust worker emits its first `inc`
+only after `UltimateSolver::solve()` returns (`research/examples/mqlib_difficulty.rs`,
+lines 108–143). Thus input preparation/readiness is not the observed bottleneck;
+the whole-solve-before-first-output contract censors these runs. Exact internal
+chunk duration remains unmeasured; do not assert a kernel-speed root cause.
+
+**Next task:** design a separately preregistered first-chunk/output-cadence
+diagnostic on exposed qualification inputs, with a small baseline and explicit
+termination/energy checks. Do not modify frozen MQ-QUALITY-002 artifacts, rerun
+its main, or promote a selector/speed claim. Production solver and Cargo remain
+unchanged. Hosted CI billing is the last verified external blocker; local checks
+do not assert hosted green.
 
 ## Previous — MQ-DIFFICULTY-001 closed; main not admitted, 2026-09-28
 
