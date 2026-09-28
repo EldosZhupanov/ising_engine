@@ -63,12 +63,18 @@ and 3/6 have reports with nonempty advertised test-output artifacts; their
 official regrader sufficiency is unverified. A separate 3/3
 trajectory-patch versus associated-log-patch discrepancy is reproducible, but
 its cause and the actually evaluated patch are unknown. **Next non-solver
-action:** check the published submission/evaluation artifact pipeline for a
-documented transformation or provenance split; test a simple patch-hash
-linkage rule before proposing any AI-based verifier. If this explains the
-discrepancy, retire this source and return to the independent scientific-claim
-qualification track. No benchmark-error, customer-demand or product claim is
-earned. The Ising Engine pause remains in force.
+action completed:** the [post-hoc lineage addendum](../research/experiments/swebench_artifact_intake/LINEAGE_ADDENDUM.md)
+found matching S3 ETag/size for all 500 trajectory objects in the Codex and
+GPT-5.2-high entries, plus byte-identical trajectories and patch alignment on
+the three frozen tasks. A simple deterministic provenance check detects the
+sampled association. Intent, full-directory SHA identity, and leaderboard
+impact are unproven. Retire this SWE-bench source for false-final-claim
+research. **Next non-solver action:** qualify a small, preselected set of
+public computational-paper claim packages (starting with REPRO-Bench) for
+inputs, executable incumbent, independent numerical outcome and reuse terms;
+compare to ordinary clean rerun/checklist before proposing a new method.
+No benchmark-error, customer-demand or product claim is earned. The Ising
+Engine pause remains in force.
 
 ## Paused technical resume point — MQ-FIRST-CHUNK-001 closed; output design next
 

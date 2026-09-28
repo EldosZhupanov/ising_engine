@@ -873,3 +873,17 @@ are pinned in the replay, and changed code lines differ. Which patch was
 actually applied remains unproven. The cheapest next check is the submission
 pipeline's documented provenance and a direct hash-linkage baseline; no AI
 verifier, leaderboard-error claim or product build is justified yet.
+
+### Post-hoc trajectory lineage diagnosis — 2026-09-29
+
+The [separate addendum](experiments/swebench_artifact_intake/LINEAGE_ADDENDUM.md)
+identified a concrete association: all 500 trajectory object names under the
+Codex and GPT-5.2-high entries have equal S3 ETag and size; three frozen
+trajectory files are byte-identical by SHA-256. Those three submitted patches
+match the high entry's log patches, not the Codex entry's. This strongly
+supports copied/shared trajectories as the explanation for the observed
+three-case mismatch. Intent, full-directory byte identity and leaderboard
+impact remain unproven. A deterministic provenance check catches the sampled
+issue, so this is **NARROW** research-data hygiene, not an AI-verifier product
+advantage. SWE-bench remains unqualified for the original false-final-claim
+corpus. Resume scientific-claim source qualification elsewhere.
