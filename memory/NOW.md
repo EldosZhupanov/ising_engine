@@ -40,6 +40,22 @@ cost breakdown against strong existing preconditioners. Reject either direction
 early if a simple oracle rule or the non-acceleratable cost floor defeats it.
 Neither gate resumes Ising Engine development.
 
+The subsequent [problem-first cross-domain screen](../research/PROBLEM_FIRST_DISCOVERY_20260928.md)
+compared nine jobs by their desired outcome rather than their inherited tools.
+It found direct prior art for scan-to-G-code, notebook-state enforcement, test
+selection and figure reconstruction. Three **NARROW/UNKNOWN** qualification
+tracks remain: independent checking of computational claims in one domain,
+physical validity of scan-to-print, and target-specific scientific computation.
+None is a validated product or a measured 4–5x method. **Immediate non-solver
+task:** qualify a small public set of scientific claims for joinable paper,
+code/data, executable incumbent and independent outcome; stop if access or
+oracle coverage fails. Public-source intake found SocSci-Repro-Bench and
+REPRO-Bench as candidate materials, while AutoMat's dataset is gated. A fixed
+five-paper field sample of SocSci's published gold JSON found no final-agent-
+claim or trace field; individual original-data packages and actual agent runs
+remain unchecked. Do not build
+all tracks in parallel or infer demand from papers and repository activity.
+
 ## Paused technical resume point — MQ-FIRST-CHUNK-001 closed; output design next
 
 [Retained result](../research/experiments/mqlib_first_chunk/RESULT.md):12/12 valid

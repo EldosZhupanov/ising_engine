@@ -38,6 +38,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-09-27 | HUBO-Q002 Phase A completed | Protocol `9438f15`, source `2017661`, certificates `cd2fc6e`: twelve fresh inputs, 24 exact local/global reductions and eight tests PASS. Local penalties are smaller; search improvement unmeasured, Phase B NOT RUN. | [Phase A](../research/experiments/hubo_corpus_qualification/RESULT_PHASE_A.md), [`NOW.md`](NOW.md) |
 | 2026-09-28 | this decision record | Owner paused Ising Engine development and began bounded new-product discovery; solver resume point retained, no breakthrough/product claim made | [`NOW.md`](NOW.md), [`HYPODIVE_TRIAGE.md`](../research/HYPODIVE_TRIAGE.md) |
 | 2026-09-28 | dual-track desk review | Direct prior art narrowed false-success verification and numerical-recycling ideas; public artifact qualification and end-to-end cost floor are the next kill-tests, with no 4–5x claim | [`HYPODIVE_TRIAGE.md`](../research/HYPODIVE_TRIAGE.md#dual-track-discovery-update--2026-09-28), [`literature`](../research/literature/dual_track_20260928.json) |
+| 2026-09-28 | cross-domain problem-first screen | Nine jobs screened for alternative representations and direct prior art; three narrow qualification tracks remain, no novelty, demand or speedup established | [Discovery map](../research/PROBLEM_FIRST_DISCOVERY_20260928.md), [`NOW.md`](NOW.md) |
 
 2026-09-27 ER-001: protocol/instrument96b0c23, raw a91481c;120 valid cells,
 1,344 checked incumbents, independent executable auditPASS. H1/H3 pass, H2 fails:

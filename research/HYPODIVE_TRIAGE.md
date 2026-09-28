@@ -764,3 +764,20 @@ or incomplete public agent trajectories and incompatible outcome labels;
 benchmark or customer contact occurred. Verified bibliographic metadata and
 qualification limits are indexed in
 [the literature record](literature/dual_track_20260928.json).
+
+---
+
+## Problem-first cross-domain screen — 2026-09-28
+
+The owner asked for a deeper search beyond known solver/agent niches: which
+customary representation or intermediate step could be the wrong tool for the
+actual job? The [cross-domain map](PROBLEM_FIRST_DISCOVERY_20260928.md) records
+nine jobs, closest primary-source prior art, cheap falsifiers and a ranked
+qualification path. This is **Mode A / NARROW**, not a build handoff. The direct
+scan-to-G-code idea is already published; generic test selection, notebook-state
+repair and figure-to-code also have direct prior art. The three retained
+qualification tracks are domain-specific computational-claim verification,
+physical validity of direct scan-to-print, and one target-specific scientific
+computation workload. None has user demand, novelty, or speedup evidence yet.
+The next task is to qualify joinable public claim/evidence/outcome artifacts
+before writing a new verifier; Ising Engine remains paused.
