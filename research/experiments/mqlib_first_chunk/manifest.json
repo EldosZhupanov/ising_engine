@@ -1,0 +1,64 @@
+{
+  "id": "MQ-FIRST-CHUNK-001",
+  "status": "PREREGISTERED; NO OBSERVATIONS",
+  "prior_result_commit": "1f2806b362a19d3d3cb57794645f3f409fa5ddd8",
+  "frozen_worker_commit": "f76991dde036f77fe7bb29cbf17efb1e20ec769c",
+  "inherited_manifest_sha256": "284eaab2640322eb99346a99cc58575ef1ad327d6e4211f4cacdfe45ea27de84",
+  "instances": [
+    {
+      "id": "q12",
+      "n": 512,
+      "density_denominator": 16,
+      "replica": 0,
+      "generator_seed": 62013,
+      "file": "research/experiments/mqlib_difficulty_qualification/instances/q12.json",
+      "sha256": "01aba671d1918c2eacc94dc4d6eb78ae2d93475ab173f3a90543f41aa2dd2987",
+      "bytes": 105958,
+      "pairs": 8128,
+      "normalization_L": 169516,
+      "partition": "qualification",
+      "family": "ising-engine/MQ-DIFFICULTY-001/qualification/v1"
+    },
+    {
+      "id": "q18",
+      "n": 512,
+      "density_denominator": 2,
+      "replica": 0,
+      "generator_seed": 62019,
+      "file": "research/experiments/mqlib_difficulty_qualification/instances/q18.json",
+      "sha256": "b7d4c7a8e1b24589c4f28f06a965658f8a0f826116c8d52e45f53cc08a890fb6",
+      "bytes": 836807,
+      "pairs": 65105,
+      "normalization_L": 1239520,
+      "partition": "qualification",
+      "family": "ising-engine/MQ-DIFFICULTY-001/qualification/v1"
+    }
+  ],
+  "arms": [
+    "ultimate",
+    "v2_default"
+  ],
+  "seeds": [
+    61101,
+    61102,
+    61103
+  ],
+  "budget_seconds": 10.0,
+  "kill_request_deadline_seconds": 10.1,
+  "process_cap_seconds": 180.0,
+  "environment": {
+    "os": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "cpu": "AMD Ryzen 7 170 with Radeon Graphics",
+    "mem_total_kib": 9153664,
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "g++": "g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "RUSTFLAGS": "",
+    "rust_profile": "release; existing default features",
+    "cpp_flags": "-std=c++11 -O2 -Wall -Wextra -Werror"
+  },
+  "thread_env": {
+    "RAYON_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  }
+}

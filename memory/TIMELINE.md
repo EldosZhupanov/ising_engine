@@ -131,3 +131,4 @@ scientific content of the linked record.
 | 2026-09-28 | MQ-DIFFICULTY-001 closed:512VALID preflight cells,13/16control groups PASS, overallFAIL; independent artifact audit/review PASS; main not admitted, hypotheses untested | [Closure](../research/experiments/mqlib_difficulty_qualification/closure/RESULT.md) |
 | 2026-09-28 | MQ-QUALITY-002 preregisters admission revision for unchanged2s qualification; all24inputs and foursettings retained, no observations | [Protocol](../research/experiments/mqlib_coarse_quality/protocol.md) |
 | 2026-09-28 | MQ-QUALITY-002 completed one admission and one main; 960valid main cells, independent audit/review PASS, H1 21/24 and H2 zero material unique wins | [Result](../research/experiments/mqlib_coarse_quality/closure/RESULT.md) |
+| 2026-09-28 | MQ-FIRST-CHUNK-001 prospectively registers first-witness diagnostic after MQ-QUALITY-002 exposed dense512 fallback | [Protocol](../research/experiments/mqlib_first_chunk/protocol.md) |

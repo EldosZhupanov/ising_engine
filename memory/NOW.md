@@ -12,7 +12,7 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-QUALITY-002 closed; diagnostic next, 2026-09-28
+## Current — MQ-FIRST-CHUNK-001 preregistered; instrument next, 2026-09-28
 
 [Complete retained result](../research/experiments/mqlib_coarse_quality/closure/RESULT.md):
 20/20 admission and 960/960 main cells valid. Independent raw audits and read-only
@@ -35,12 +35,15 @@ lines 108–143). Thus input preparation/readiness is not the observed bottlenec
 the whole-solve-before-first-output contract censors these runs. Exact internal
 chunk duration remains unmeasured; do not assert a kernel-speed root cause.
 
-**Next task:** design a separately preregistered first-chunk/output-cadence
-diagnostic on exposed qualification inputs, with a small baseline and explicit
-termination/energy checks. Do not modify frozen MQ-QUALITY-002 artifacts, rerun
-its main, or promote a selector/speed claim. Production solver and Cargo remain
-unchanged. Hosted CI billing is the last verified external blocker; local checks
-do not assert hosted green.
+[Prospective first-output diagnostic](../research/experiments/mqlib_first_chunk/protocol.md)
+fixes exposed q12/q18, seed labels 61101–61103, Ultimate and v2 default, 10 s per
+cell, 12 cells and a 180 s total cap. It is informed by the previous result;
+no new observations, kernel-speed or superiority claim.
+
+**Next task:** implement and independently review the one-shot coordinator,
+source/binary provenance and offline raw-energy auditor. Commit before the one
+bounded run. Preserve old MQ-QUALITY-002 and worker bytes. If any of 12 cells
+is invalid, retain failure and stop without retry.
 
 ## Previous — MQ-DIFFICULTY-001 closed; main not admitted, 2026-09-28
 
