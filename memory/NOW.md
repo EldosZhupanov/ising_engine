@@ -33,6 +33,13 @@ on correctness and architecture before choosing one. Any new candidate and
 matched-cost quality-at-budget experiment require separate preregistration and
 independent data. Do not relabel these exposed inputs as holdout.
 
+The [2026-09-28 solver-market triage](../research/HYPODIVE_TRIAGE.md) found
+clear demand for operational optimization but no demonstrated customer demand
+or competitive edge for Ising Engine as a standalone QUBO solver. Product
+validation needs one external decision workflow, a matched domain-solver
+baseline, independently checked feasible decisions and buyer evidence. This
+does not replace the current engineering next task or elevate a product claim.
+
 ## Previous — MQ-DIFFICULTY-001 closed; main not admitted, 2026-09-28
 
 [Closure](../research/experiments/mqlib_difficulty_qualification/closure/RESULT.md):

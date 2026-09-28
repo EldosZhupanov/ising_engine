@@ -525,3 +525,76 @@ bare URL and two `StepEvent[0]` comment references in historical binaries; only
 Markdown markup was corrected. [Retained commands/logs](publication_checks/20260927.json)
 preserve the failures and successful rerun. Frozen scientific records were not
 edited. These checks establish the stated engineering scope, not performance.
+
+---
+
+## Solver market triage — 2026-09-28, base `255af15`
+
+**Mode A; decision NARROW.** Product hypothesis P-MKT-001: a carefully improved
+Ising Engine could be useful to customers as a standalone QUBO/Ising solver.
+There is demonstrated demand for *optimization outcomes*, but no evidence yet
+that customers need this particular solver or would pay for it. No market-size,
+revenue or product-market-fit estimate is inferred from solver availability,
+GitHub interest or vendor case studies. This is a source and repository-evidence
+triage, not customer discovery or a matched product trial.
+
+### Evidence and strongest simple competitor
+
+- Broad need is concrete: [Google OR-Tools](https://developers.google.com/optimization/introduction)
+  supports routing, scheduling, bin packing, CP and MIP, and its
+  [routing guide](https://developers.google.com/optimization/routing) identifies
+  capacity, time-window and resource constraints. The same guide distinguishes
+  its free solver from a paid route-optimization service. This supports demand
+  for integrated, reliable decisions more directly than demand for a raw QUBO API.
+- [Kaneka's production-planning case](https://www.gurobi.com/resources/case-studies/kaneka-production-planning-optimization)
+  describes a deployed optimizer embedded in a cutting-plan application.
+  [Fujitsu's Baptist Health case](https://info.archives.global.fujitsu/global/about/resources/news/press-releases/2023/0914-01.html)
+  reports a trial across 14 operating rooms and a 37% increase in available
+  prime-time minutes. These are vendor-reported cases, not independently audited
+  ROI estimates and not a QUBO-only market sample.
+- Specialized supply exists: [MQLib](https://github.com/MQLib/MQLib) includes
+  many Max-Cut/QUBO heuristics and an instance-aware selector;
+  [Toshiba SQBM+](https://news.toshiba.com/press-releases/press-release-details/2023/Toshiba-Brings-SQBM-its-Quantum-Inspired-Optimization-Solution--to-AWS-Marketplace/default.aspx)
+  was distributed as an embeddable commercial optimization module. The strongest
+  simple competitor for a proposed customer workflow is the existing domain
+  stack (for example OR-Tools/CP-SAT or a MIP solver); for a native QUBO API it
+  is an existing QUBO heuristic such as MQLib. Both must be compared at equal
+  delivered-result wall time, hardware, feasibility rules and integration cost.
+- Local evidence is narrower than a product claim: [MQ-QUALITY-002](experiments/mqlib_coarse_quality/closure/RESULT.md)
+  audited 960 synthetic qualification cells, found no registered complementary
+  winners and had 60/240 Ultimate fallback-only cells. [MQ-FIRST-CHUNK-001](experiments/mqlib_first_chunk/RESULT.md)
+  identified a delivered-output cadence issue on exposed dense inputs; it did
+  not isolate search speed. [LABS-Q002](experiments/labs_q002/RESULT.md) failed
+  its operational gate against lMAts. The premise that 41 Market Split inputs
+  lack solutions was [falsified](EXP005_MARKETSPLIT_TRIAGE.md). No held-out
+  customer dataset, paid pilot, replicated edge or record supports a product
+  superiority claim.
+
+### Cheap falsifier, risks and decision
+
+The core commercial claim would fail if a real task owner will not supply a
+repeatable problem/data/decision metric, or if a standard domain solver produces
+equally feasible decisions at equal total cost. A benchmark-only energy win
+without a feasible decoded business decision is insufficient. No such customer
+trial has been run; **P-MKT-001 remains UNSUPPORTED**, not disproved. No
+scientific novelty is claimed: algorithm selection and QUBO heuristics have
+clear prior art in MQLib. Worlds/seeds/leakage and abstention are N/A to this
+market-source screen; they become binding in any future solver comparison.
+
+Top risks are (1) confusing the large operations-research market with the much
+narrower QUBO solver niche; (2) undercounting modeling, constraints, integration
+and support while comparing only kernel time; (3) choosing easy or previously
+exposed benchmark instances and converting a local win into a general claim.
+
+Recommended bounded validation, not a new active research protocol: select one
+specific decision workflow with an external task owner; obtain historical
+instances and an independently recomputed operational objective; compare the
+existing workflow, a strong domain solver and Ising Engine with all modeling,
+feasibility, delivery and support costs counted. Separately, qualify the native
+QUBO component on untouched held-out instances against MQLib and another
+relevant implementation. A pilot or product claim needs both a verified
+practical advantage and credible buyer interest; otherwise keep the engine as an
+open research/evaluation component and stop investing in generic-solver marketing.
+The current engineering next step remains the budget-aware Ultimate output
+interface map in [NOW](../memory/NOW.md); this triage does not authorize a new
+solver campaign or modify any frozen experiment.
