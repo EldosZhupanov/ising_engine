@@ -12,7 +12,7 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-FIRST-CHUNK-001 preregistered; instrument next, 2026-09-28
+## Current — MQ-FIRST-CHUNK-001 instrument reviewed; run next, 2026-09-28
 
 [Complete retained result](../research/experiments/mqlib_coarse_quality/closure/RESULT.md):
 20/20 admission and 960/960 main cells valid. Independent raw audits and read-only
@@ -40,10 +40,13 @@ fixes exposed q12/q18, seed labels 61101–61103, Ultimate and v2 default, 10 s 
 cell, 12 cells and a 180 s total cap. It is informed by the previous result;
 no new observations, kernel-speed or superiority claim.
 
-**Next task:** implement and independently review the one-shot coordinator,
-source/binary provenance and offline raw-energy auditor. Commit before the one
-bounded run. Preserve old MQ-QUALITY-002 and worker bytes. If any of 12 cells
-is invalid, retain failure and stop without retry.
+Isolated one-shot coordinator and independent raw-energy auditor implemented.
+Eight fabricated and 25 inherited Python tests PASS; independent instrument
+review PASS. Production, Cargo and frozen MQ-QUALITY-002 unchanged.
+
+**Next task:** commit the instrument, run one bounded 12-cell diagnostic, then
+independently audit/review raw evidence. If any cell is invalid, retain failure
+and stop without retry.
 
 ## Previous — MQ-DIFFICULTY-001 closed; main not admitted, 2026-09-28
 

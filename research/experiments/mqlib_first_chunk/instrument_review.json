@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "reviewer": "/root/comparison_explorer",
+  "scope": "independent read-only pre-run review",
+  "registration_commit": "922a3a09f05c8ce28481de5bf98c43f7a73f0d95",
+  "new_fabricated_tests_passed": 8,
+  "inherited_tests_passed": 25,
+  "dimensions": {
+    "correctness": "PASS",
+    "performance_claims": "PASS",
+    "architecture": "PASS",
+    "api": "PASS",
+    "memory": "PASS",
+    "safety": "PASS",
+    "regression": "PASS",
+    "tests": "PASS"
+  },
+  "source_hashes": {
+    "campaign.py": "89e2c40cc746e258dda13d8087b2037ba69cd6d1581e4e83cb79402a5c447d05",
+    "audit.py": "6a75ef3e0b30a7f3cd0ca4c2ef569457c0513f0ca2f0d91eb913c79c8ac35e26",
+    "test_campaign.py": "d3bf69acdc6e40a6d549ebdd4e9af72433e861cfc3b924bbed4342c319845901"
+  },
+  "findings": [],
+  "next": "One12-cell run, then independent raw artifact audit/review."
+}
