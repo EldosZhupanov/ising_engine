@@ -781,3 +781,52 @@ physical validity of direct scan-to-print, and one target-specific scientific
 computation workload. None has user demand, novelty, or speedup evidence yet.
 The next task is to qualify joinable public claim/evidence/outcome artifacts
 before writing a new verifier; Ising Engine remains paused.
+
+---
+
+## SWE-bench artifact-source intake: selection freeze — 2026-09-29
+
+**Mode B, read-only artifact audit.** Question: do public SWE-bench Verified
+submissions yield real, joinable `(agent final claim, submitted patch,
+independent outcome)` cases for a future false-`DONE` study? This is an intake
+check, not a benchmark of an agent or a new verifier. Stop after six selected
+cases; do not substitute favorable cases for missing artifacts.
+
+Selection was frozen before opening the chosen submissions' metadata, results,
+trajectories or test output. Source registry:
+[`SWE-bench/experiments`](https://github.com/swe-bench/experiments) at Git commit
+`40f164d5b8f1d249bf95a6df8b74b577fd8e519d`. The GitHub contents API
+listing of `evaluation/verified` at that ref had 14 directories whose names
+begin `2026`; raw JSON SHA-256 was
+`bc68cf6441d086c5a9f741b0d96a7d836b6ef996f5685e2a609c1b52e515a157`.
+Rank those 14 names by binary SHA-256 of their UTF-8 name and take the first
+two, without replacement:
+
+1. `20260219_mini-v2.0.0_gpt-5-2-codex`
+2. `20260217_mini-v2.0.0_claude-4-5-haiku-high`
+
+For each entry, read `metadata.yaml` and follow only its pinned public asset
+repository. From its `all_preds.jsonl`, rank unique `instance_id` values by
+binary SHA-256 of UTF-8 ID; take the first three. A missing/inaccessible asset
+or fewer than three predictions is recorded as failure, with no replacement.
+The selection script may parse patches to obtain IDs but must print only IDs
+before cases are frozen; it must not use outcomes to select IDs.
+
+For each of six cases record whether the following are present and joinable by
+the same instance ID: (C) an explicit final agent success/completion claim in
+the original trajectory, not an inferred claim from a patch; (P) the actual
+submitted patch; (O) official pass/fail outcome plus test output sufficient for
+the official artifact regrader; (I) original task identity/version; (L) public
+access and stated reuse terms. Record URL, content hash, missingness and exact
+type of each field. An official result replaying its own test log is weaker
+than fresh independent execution; report this distinction. Do not label a
+case "false DONE" merely because O fails if C is absent or ambiguous.
+
+**Source-admission rule:** at least four of six must have C, P, O and I; L is
+reported separately. Otherwise this source is NOT QUALIFIED for the planned
+30-case false-`DONE` experiment. Even 6/6 would show only corpus feasibility,
+not a product gap: [the official `swebench submit verify`](https://github.com/swe-bench/experiments)
+already regrades recorded test output. The strongest simple baseline is reading
+the official verdict; any future verifier must catch an additional material
+failure at acceptable cost. This intake neither runs a new agent nor searches
+for a favorable false-success example.
