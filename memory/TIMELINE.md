@@ -39,6 +39,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-09-28 | this decision record | Owner paused Ising Engine development and began bounded new-product discovery; solver resume point retained, no breakthrough/product claim made | [`NOW.md`](NOW.md), [`HYPODIVE_TRIAGE.md`](../research/HYPODIVE_TRIAGE.md) |
 | 2026-09-28 | dual-track desk review | Direct prior art narrowed false-success verification and numerical-recycling ideas; public artifact qualification and end-to-end cost floor are the next kill-tests, with no 4–5x claim | [`HYPODIVE_TRIAGE.md`](../research/HYPODIVE_TRIAGE.md#dual-track-discovery-update--2026-09-28), [`literature`](../research/literature/dual_track_20260928.json) |
 | 2026-09-28 | cross-domain problem-first screen | Nine jobs screened for alternative representations and direct prior art; three narrow qualification tracks remain, no novelty, demand or speedup established | [Discovery map](../research/PROBLEM_FIRST_DISCOVERY_20260928.md), [`NOW.md`](NOW.md) |
+| 2026-09-29 | frozen SWE-bench public-artifact intake | Six selected cases failed the false-final-claim source gate (0/6 explicit final claims); a separate 3/3 patch-lineage discrepancy needs provenance checking, with no benchmark-error claim | [Intake result](../research/experiments/swebench_artifact_intake/RESULT.md) |
 
 2026-09-27 ER-001: protocol/instrument96b0c23, raw a91481c;120 valid cells,
 1,344 checked incumbents, independent executable auditPASS. H1/H3 pass, H2 fails:

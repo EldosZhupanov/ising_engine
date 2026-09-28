@@ -1,7 +1,7 @@
 # Document catalogue
 
 This sidecar catalogue classifies every Markdown document without modifying frozen evidence. Paths are the stable identifiers. Dates come from Git history; they describe chronology but do not establish authority.
-Its enforced scope is Git-tracked plus nonignored untracked Markdown (388 files
+Its enforced scope is Git-tracked plus nonignored untracked Markdown (390 files
 at this update). The 55 Git-ignored Markdown reports and download READMEs are
 classified separately as historical evidence in [FILE_MAP.tsv](FILE_MAP.tsv);
 the catalogue gate intentionally excludes ignored paths.
@@ -17,7 +17,7 @@ the catalogue gate intentionally excludes ignored paths.
 
 - `active`: 18
 - `binding`: 58
-- `closed`: 50
+- `closed`: 51
 - `historical`: 2
 - `proposed`: 43
 - `reference`: 214
@@ -269,8 +269,9 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/HANDOFF.md` | research-handoff | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough-resume |
 | `research/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; ER-001 |
 | `research/HYPODIVE_BUILDER_HANDOFF.md` | research-handoff | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; ER-001 |
-| `research/HYPODIVE_TRIAGE.md` | research-triage | A2 | reference | 2026-09-17 | 2026-09-28 | false | CD001; application-discovery; prospective-CD003-correction; GitHub-opportunity-triage; Graft-qualification; scientific-ecosystem-triage; GitHub-publication-correction; solver-market-triage; new-product-discovery; dual-track-discovery |
+| `research/HYPODIVE_TRIAGE.md` | research-triage | A2 | reference | 2026-09-17 | 2026-09-29 | false | CD001; application-discovery; prospective-CD003-correction; GitHub-opportunity-triage; Graft-qualification; scientific-ecosystem-triage; GitHub-publication-correction; solver-market-triage; new-product-discovery; dual-track-discovery; swebench-artifact-intake |
 | `research/PROBLEM_FIRST_DISCOVERY_20260928.md` | research-triage | A2 | reference | 2026-09-28 | 2026-09-28 | false | cross-domain-problem-first-discovery; product-qualification |
+| `research/experiments/swebench_artifact_intake/RESULT.md` | research-result | A1 | closed | 2026-09-29 | 2026-09-29 | true | swebench-artifact-source-admission; patch-lineage-observation |
 | `research/EXP005_MARKETSPLIT_TRIAGE.md` | research-triage | A2 | reference | 2026-09-25 | 2026-09-25 | false | EXP-005 |
 | `research/EXP006A_RAW_RECHECK.md` | prospective-audit | A2 | reference | 2026-09-26 | 2026-09-26 | false | EXP-TEN-006A-R |
 | `research/PRIOR_ART_MATRIX.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; application-discovery-primary-sources |

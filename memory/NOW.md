@@ -3,7 +3,7 @@ id: memory-now
 kind: live-state
 status: active
 authority_scope: current-task
-updated: 2026-09-28
+updated: 2026-09-29
 immutable: false
 ---
 
@@ -55,6 +55,20 @@ five-paper field sample of SocSci's published gold JSON found no final-agent-
 claim or trace field; individual original-data packages and actual agent runs
 remain unchecked. Do not build
 all tracks in parallel or infer demand from papers and repository activity.
+
+The [frozen SWE-bench public-artifact intake](../research/experiments/swebench_artifact_intake/RESULT.md)
+has now closed **NOT QUALIFIED** for the false-final-`DONE` corpus: 0/6 selected
+cases have an explicit final success claim, although 6/6 have submitted patches
+and 3/6 have reports with nonempty advertised test-output artifacts; their
+official regrader sufficiency is unverified. A separate 3/3
+trajectory-patch versus associated-log-patch discrepancy is reproducible, but
+its cause and the actually evaluated patch are unknown. **Next non-solver
+action:** check the published submission/evaluation artifact pipeline for a
+documented transformation or provenance split; test a simple patch-hash
+linkage rule before proposing any AI-based verifier. If this explains the
+discrepancy, retire this source and return to the independent scientific-claim
+qualification track. No benchmark-error, customer-demand or product claim is
+earned. The Ising Engine pause remains in force.
 
 ## Paused technical resume point — MQ-FIRST-CHUNK-001 closed; output design next
 

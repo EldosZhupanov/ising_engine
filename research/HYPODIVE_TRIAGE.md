@@ -856,3 +856,20 @@ each selected case, inspect C/P/O/I/L as defined above, marking the null
 only if all four C/P/O/I fields are genuinely joined; absent C means UNKNOWN,
 not a false-success case. This amendment changes the transport/ID source, not
 the original result, and is committed before S3 listing or case inspection.
+
+### S3 intake result — 2026-09-29
+
+The [frozen six-case replay](experiments/swebench_artifact_intake/RESULT.md)
+found P and I in 6/6, advertised report plus nonempty test-output artifacts in
+3/6 (official regrader sufficiency unverified),
+but an explicit **final** agent success claim in 0/6. Thus 0/6 satisfy
+C/P/O/I and this source is **NOT QUALIFIED** for the proposed false-`DONE`
+corpus under the frozen 4/6 gate. This is a failure of corpus fit, not a
+negative estimate of false-claim prevalence or product value.
+
+A separate 3/3 discrepancy in the GPT entry links the trajectory's submitted
+patch to a different patch in its associated evaluation log. Both artifacts
+are pinned in the replay, and changed code lines differ. Which patch was
+actually applied remains unproven. The cheapest next check is the submission
+pipeline's documented provenance and a direct hash-linkage baseline; no AI
+verifier, leaderboard-error claim or product build is justified yet.
