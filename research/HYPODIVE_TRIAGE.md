@@ -674,3 +674,93 @@ cost-normalized success and leakage controls are N/A until a comparison corpus
 is frozen. The current conclusion is a **testable path**, not a revolutionary
 result. Ising Engine remains preserved and paused at its recorded resume point
 in [NOW](../memory/NOW.md).
+
+---
+
+## Dual-track discovery update — 2026-09-28, base `d173c30`
+
+**Mode A; decision NARROW on verification, NO-GO for an unqualified 4–5x
+mathematical claim.** This is a literature and artifact-availability check, not
+a new solver implementation, speed measurement, buyer interview or proof of
+novelty. The owner keeps Ising Engine paused and asked to continue product
+research while seeking an independent mathematical direction.
+
+### Track V — false-success verification
+
+[Advani, 2026](https://arxiv.org/abs/2606.09863), an arXiv preprint accepted to
+the FAGEN@ICML2026 workshop, studies false completion claims against
+programmatic environment outcomes. In its own tau2-bench and AppWorld samples,
+lightweight text/action detectors outperform LLM judges; this is **author-reported
+evidence**, not our reproduction. It directly falsifies a broad novelty claim
+for detecting confident but false agent completion by inspecting a trajectory.
+Its paper also reports 50% precision at a 10% flag rate and warns that its
+AppWorld judge comparison distinguishes false from honest *failures*, without a
+true-success class. The 3% dual-control observation has one confounded domain
+and is not a causal estimate of what an independent verifier would achieve.
+
+The possible contribution is narrower: on a specified workflow with an
+independent state oracle, can a claim-bound verifier catch material false
+`DONE` statements **that ordinary CI, benchmark verdicts, provenance and a
+cheap classifier do not catch**, at acceptable false-reject/UNKNOWN rates and
+total reviewer time? [SWE-bench's public experiment registry](https://github.com/swe-bench/experiments)
+links predictions, evaluation reports, test logs and sometimes trajectories.
+That establishes a candidate source, not yet a qualified claim/outcome corpus:
+public trajectories may lack explicit final claims or complete artifacts.
+Its documented `swebench submit verify` already re-derives verdicts from
+recorded test output, so merely repeating this regrade would add no value.
+One local read-only attempt to list current submissions through the GitHub API
+failed with temporary DNS resolution; no individual trajectory was qualified
+and no missing artifact is inferred from that failure.
+The preceding 30-case prospective-corpus requirement remains; exposed cases
+from this search are for qualification only. Real deployment also requires
+independent buyer evidence. Strongest competing explanation: a simple rule
+reading the official verdict or database state already solves the problem.
+
+**Next cheap kill-test:** inspect a small, predeclared sample of public run
+artifacts for explicit final claims, pinned patch/artifact, independent verdict,
+and legal/reproducible access. Reject this corpus if those fields cannot be
+joined reliably. If joinable, freeze a new evaluation split and compare the
+oracle rule, ordinary CI/eval/provenance, a cheap detector, and any proposed
+verifier at matched access and cost. Do not train/tune on its holdout.
+
+### Track M — repeated sparse linear systems (independent of Ising Engine)
+
+Candidate question: can selective reuse of numerical information accelerate a
+*sequence* of changing sparse linear systems at the same true-residual tolerance
+and lower total time? This is a worthwhile applied-mathematics area, but the
+generic method is **NOT NOVEL**. [Soodhalter, de Sturler and Kilmer (2020)](https://doi.org/10.1002/gamm.202000016)
+survey subspace recycling; [Carr, de Sturler and Gugercin (2021)](https://doi.org/10.1137/20M1331123)
+already recycle preconditioners for parametrized sequences. An adjacent
+[Parth study (2025)](https://doi.org/10.1145/3731179) reports up to 14x faster
+*reordering* but about 2x end-to-end Cholesky solves on its studied workloads:
+accelerating a stage does not imply a 4–5x application gain.
+
+For a hypothesized fivefold speedup, if baseline mean end-to-end time per
+system is `T0`, unchanged mandatory work costs `F` per system, new shared
+setup costs `S` over `K` solves and new numerical work costs `I1` per system,
+the necessary condition is `F + S/K + I1 <= T0/5`. This is an
+accounting condition, not a speedup result. A simple competing method is
+warm-start plus a tuned standard preconditioner; strong controls include
+[PETSc KSP](https://petsc.org/main/manual/ksp/) and
+[hypre BoomerAMG](https://hypre.readthedocs.io/en/stable/solvers-boomeramg.html).
+Any numerical proposal must report setup, solve, memory, true residual,
+matrix-family shift and failures, and beat the best applicable strong control
+on untouched sequences. Plain unpreconditioned CG alone is an inadequate
+comparison. Published success on particular PDE families would not establish
+universal superiority or a new theorem.
+
+**Next cheap kill-test:** identify one real open sequence with stable provenance
+and an application owner, then measure the fraction of baseline time spent in
+mandatory work, setup and iterations using existing libraries. If mandatory
+work alone costs more than `T0/5`, retire the 5x target for
+that workload before inventing an algorithm. No such workload or measurement
+has been obtained here; competitive potential and mathematical novelty remain
+UNKNOWN. A different future contribution would need a precise theorem or a
+replicated end-to-end advantage over recycling/AMG, not a renamed warm start.
+
+Top risks across the two tracks: (1) comparison to weak baselines; (2) leaked
+or incomplete public agent trajectories and incompatible outcome labels;
+(3) stage-only speedups mistaken for end-to-end gains. No new code, dataset,
+benchmark or customer contact occurred. Verified bibliographic metadata and
+qualification limits are indexed in
+[the literature record](literature/dual_track_20260928.json).

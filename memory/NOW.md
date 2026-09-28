@@ -21,7 +21,8 @@ without a later explicit resume. This decision preserves the code, frozen
 protocols, results, and the technical resume point below; it does not convert
 inconclusive findings into failures or revoke historical evidence.
 
-The active non-solver task is the bounded [Hypodive new-product triage](../research/HYPODIVE_TRIAGE.md).
+The active non-solver task is the bounded [Hypodive new-product triage](../research/HYPODIVE_TRIAGE.md),
+now with an independent mathematical-discovery track requested by the owner.
 It rejects generic agent memory and generic agent observability as distinct
 entry points on present evidence. Independent checking of computational claims
 made by agents is a **product hypothesis only**: direct competitors exist, no
@@ -29,6 +30,15 @@ buyer interviews or matched product test have been performed, and no novelty or
 revenue claim is earned. The next gate is a prospective failure-case corpus and
 matched comparison to ordinary CI/eval/provenance tools, followed by external
 buyer discovery. Do not start a new implementation solely from this desk review.
+The [dual-track update](../research/HYPODIVE_TRIAGE.md#dual-track-discovery-update--2026-09-28)
+found direct prior art for false-success detectors and for recycling numerical
+information across sparse linear solves. No new product, mathematical method or
+4–5x speedup is established. The next product gate is qualification of public
+agent runs for joinable final claims, artifacts and independent outcomes; the
+next mathematics gate is a real sequence workload and a measured end-to-end
+cost breakdown against strong existing preconditioners. Reject either direction
+early if a simple oracle rule or the non-acceleratable cost floor defeats it.
+Neither gate resumes Ising Engine development.
 
 ## Paused technical resume point — MQ-FIRST-CHUNK-001 closed; output design next
 

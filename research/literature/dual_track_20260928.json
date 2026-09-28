@@ -1,0 +1,55 @@
+{
+  "date": "2026-09-28",
+  "scope": "Primary-source desk review for false-success verification and repeated sparse linear systems; no empirical reproduction or novelty claim",
+  "base_commit": "d173c30",
+  "entries": [
+    {
+      "title": "From Confident Closing to Silent Failure: Characterizing False Success in LLM Agents",
+      "authors": ["Laksh Advani"],
+      "year": 2026,
+      "venue": "arXiv preprint; abstract reports acceptance to FAGEN@ICML2026 workshop",
+      "identifier": "arXiv:2606.09863v1",
+      "url": "https://arxiv.org/html/2606.09863v1",
+      "supports": "False-success phenomenon and author-reported lightweight-detector results on tau2-bench and AppWorld",
+      "limits": "Not reproduced here; AppWorld judge comparison excludes true successes; dual-control observation is confounded; deployment precision is limited"
+    },
+    {
+      "title": "A survey of subspace recycling iterative methods",
+      "authors": ["Kirk M. Soodhalter", "Eric de Sturler", "Misha E. Kilmer"],
+      "year": 2020,
+      "venue": "GAMM-Mitteilungen",
+      "volume": "43",
+      "issue": "4",
+      "pages_or_article": "e202000016",
+      "doi": "10.1002/gamm.202000016",
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1002/gamm.202000016",
+      "supports": "Subspace recycling for sequences of linear systems is established prior art"
+    },
+    {
+      "title": "Preconditioning Parametrized Linear Systems",
+      "authors": ["Arielle Carr", "Eric de Sturler", "Serkan Gugercin"],
+      "year": 2021,
+      "venue": "SIAM Journal on Scientific Computing",
+      "volume": "43",
+      "issue": "3",
+      "pages_or_article": "A2242-A2267",
+      "doi": "10.1137/20M1331123",
+      "url": "https://epubs.siam.org/doi/abs/10.1137/20M1331123",
+      "supports": "Reuse and update of preconditioners for parametrized sequences is established prior art"
+    },
+    {
+      "title": "Adaptive Algebraic Reuse of Reordering in Cholesky Factorizations with Dynamic Sparsity Patterns",
+      "authors": ["Behrooz Zarebavani", "Danny M. Kaufman", "David I. W. Levin", "Maryam Mehri Dehnavi"],
+      "year": 2025,
+      "venue": "ACM Transactions on Graphics",
+      "volume": "44",
+      "issue": "4",
+      "pages_or_article": "Article 119, pages 1-17",
+      "doi": "10.1145/3731179",
+      "url": "https://dl.acm.org/doi/10.1145/3731179",
+      "supports": "Author-reported up-to-14x ordering speedup and approximately 2x end-to-end Cholesky solve speedup on studied workloads",
+      "limits": "Not reproduced here; maximum stage speedup is not general end-to-end speedup"
+    }
+  ],
+  "source_status": "Publisher/official arXiv metadata checked; no relevant erratum or retraction found in this limited search, which is not a comprehensive retraction audit"
+}

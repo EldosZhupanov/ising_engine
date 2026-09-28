@@ -269,7 +269,7 @@ Every added, moved, or lifecycle-changing Markdown file updates this catalogue i
 | `research/breakthrough/HANDOFF.md` | research-handoff | A1 | reference | 2026-09-11 | 2026-09-11 | false | breakthrough-resume |
 | `research/HYPODIVE_BUILDER_INTAKE.md` | research-intake | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; ER-001 |
 | `research/HYPODIVE_BUILDER_HANDOFF.md` | research-handoff | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; ER-001 |
-| `research/HYPODIVE_TRIAGE.md` | research-triage | A2 | reference | 2026-09-17 | 2026-09-28 | false | CD001; application-discovery; prospective-CD003-correction; GitHub-opportunity-triage; Graft-qualification; scientific-ecosystem-triage; GitHub-publication-correction; solver-market-triage; new-product-discovery |
+| `research/HYPODIVE_TRIAGE.md` | research-triage | A2 | reference | 2026-09-17 | 2026-09-28 | false | CD001; application-discovery; prospective-CD003-correction; GitHub-opportunity-triage; Graft-qualification; scientific-ecosystem-triage; GitHub-publication-correction; solver-market-triage; new-product-discovery; dual-track-discovery |
 | `research/EXP005_MARKETSPLIT_TRIAGE.md` | research-triage | A2 | reference | 2026-09-25 | 2026-09-25 | false | EXP-005 |
 | `research/EXP006A_RAW_RECHECK.md` | prospective-audit | A2 | reference | 2026-09-26 | 2026-09-26 | false | EXP-TEN-006A-R |
 | `research/PRIOR_ART_MATRIX.md` | research-reference | A2 | reference | 2026-09-17 | 2026-09-27 | false | CD001; application-discovery-primary-sources |
