@@ -1,0 +1,4838 @@
+{
+  "cell": {
+    "instance": "q18",
+    "seed": 61103,
+    "arm": "v2_default",
+    "mode": "search",
+    "budget": 10.0,
+    "block": "first_chunk"
+  },
+  "events": [
+    {
+      "raw_base64": "eyJhZmZpbml0eSI6IjAiLCJraW5kIjoicmVhZHkifQ==",
+      "received_seconds": 0.06932552898069844,
+      "message": {
+        "affinity": "0",
+        "kind": "ready"
+      },
+      "validated_seconds": 0.06941462797112763
+    },
+    {
+      "raw_base64": "eyJiYWNrZW5kIjoiRGVuc2VCeXRlIiwia2luZCI6ImNvbmZpZyIsIm9wZXJhdG9ycyI6WyJjb25zZW5zdXNfZnJlZXplIl0sInJlcGxpY2FzIjozMiwic2VlZCI6MTM0ODExNDk2MTE1OTkzNTM5NDcsInRlbXBlcmF0dXJlcyI6WzQuMCwzLjUyNTc3NDI5NjEzOTc3MjQsMy4xMDc3NzEwOTY4Mjk5NzcsMi43MzkzMjQ4NjI4NzIzMTA0LDIuNDE0NTYwMjk3NTcyOTQ5NywyLjEyODI5ODY1ODQxNTU3NjMsMS44NzU5NzUxNzYwODc2MDA0LDEuNjUzNTY2MjY0MDExNDg2MywxLjQ1NzUyNTM1NzY1Mzg5MywxLjI4NDcyNjM2MDQ5NzAwNiwxLjEzMjQxMzc5NDg1MzM4NiwwLjk5ODE1ODg2MjYyMjA0MTMsMC44Nzk4MjA3MTUzMjQyMjU5LDAuNzc1NTEyMzE1ODI1MzY1OCwwLjY4MzU3MDM0NzM2OTIyNjIsMC42MDI1Mjg2OTAwODk0MzgzLDAuNTMxMDk1MDQyMDUxMDI3MSwwLjQ2ODEzMDMxMjAxNzY5NTcsMC40MTI2MzA0NTUzMzg5NzA4LDAuMzYzNzEwNDYzMzA5NjQ4NCwwLjMyMDU5MDI1MDY5MzU2MTU2LDAuMjgyNTgyMjE2MzcyMDkxMjQsMC4yNDkwODAyNzg3NTc3MzE3OCwwLjIxOTU1MDIxMTEyOTgzNTAzLDAuMTkzNTIxMTIyNzc4NDA4MTMsMC4xNzA1Nzc5NTAxMTMwNTUxLDAuMTUwMzU0ODM3OTk5MjA1NTQsMC4xMzI1MjkzMDU3Nzk0NjQ2MiwwLjExNjgxNzEwNDk1MDYyMTEzLDAuMTAyOTY3Njg2NDk2MDkwNTIsMC4wOTA3NjAyMDU1OTUyMjM1OSwwLjA4MDAwMDAwMDAwMDAwMDEzXX0=",
+      "received_seconds": 0.4204395369742997,
+      "message": {
+        "backend": "DenseByte",
+        "kind": "config",
+        "operators": [
+          "consensus_freeze"
+        ],
+        "replicas": 32,
+        "seed": 13481149611599353947,
+        "temperatures": [
+          4.0,
+          3.5257742961397724,
+          3.107771096829977,
+          2.7393248628723104,
+          2.4145602975729497,
+          2.1282986584155763,
+          1.8759751760876004,
+          1.6535662640114863,
+          1.457525357653893,
+          1.284726360497006,
+          1.132413794853386,
+          0.9981588626220413,
+          0.8798207153242259,
+          0.7755123158253658,
+          0.6835703473692262,
+          0.6025286900894383,
+          0.5310950420510271,
+          0.4681303120176957,
+          0.4126304553389708,
+          0.3637104633096484,
+          0.32059025069356156,
+          0.28258221637209124,
+          0.24908027875773178,
+          0.21955021112983503,
+          0.19352112277840813,
+          0.1705779501130551,
+          0.15035483799920554,
+          0.13252930577946462,
+          0.11681710495062113,
+          0.10296768649609052,
+          0.09076020559522359,
+          0.08000000000000013
+        ]
+      },
+      "validated_seconds": 0.42059592402074486
+    },
+    {
+      "raw_base64": "eyJjaHVuayI6MCwiZW5lcmd5IjotMjg2MDEuMCwia2luZCI6ImluYyIsInN0YXRlIjpbMCwxLDEsMSwwLDAsMSwxLDAsMCwwLDAsMSwwLDAsMSwxLDAsMCwwLDAsMCwxLDAsMSwxLDAsMSwwLDAsMSwxLDAsMCwxLDEsMCwwLDAsMSwxLDEsMCwwLDEsMCwxLDAsMCwwLDEsMCwxLDEsMSwxLDEsMCwwLDEsMCwxLDEsMSwxLDEsMSwxLDAsMCwxLDAsMCwxLDEsMSwxLDEsMCwwLDAsMSwwLDAsMCwwLDAsMCwwLDEsMCwwLDEsMSwwLDAsMCwxLDEsMCwwLDAsMCwxLDEsMCwxLDAsMSwxLDEsMSwwLDEsMCwxLDAsMCwxLDEsMSwxLDAsMCwxLDAsMSwwLDEsMCwwLDAsMSwwLDEsMCwxLDEsMCwwLDAsMSwwLDEsMCwwLDAsMCwwLDEsMSwwLDEsMSwxLDAsMCwwLDAsMSwxLDEsMSwwLDAsMSwwLDEsMSwwLDEsMCwwLDAsMCwwLDAsMSwxLDEsMCwxLDAsMCwxLDAsMCwxLDAsMCwwLDAsMSwxLDAsMCwxLDEsMSwxLDAsMSwxLDAsMCwwLDAsMSwxLDAsMCwwLDEsMCwxLDEsMSwwLDEsMCwwLDEsMSwwLDEsMSwwLDAsMCwwLDEsMCwwLDEsMCwwLDEsMCwxLDEsMSwwLDAsMSwwLDAsMCwwLDAsMCwwLDEsMCwxLDEsMSwxLDAsMCwxLDAsMSwwLDEsMCwxLDEsMSwxLDAsMCwxLDAsMSwwLDAsMSwwLDAsMSwwLDAsMSwxLDAsMSwwLDAsMSwwLDAsMCwxLDAsMSwxLDAsMCwwLDAsMCwwLDAsMCwwLDEsMSwwLDEsMCwwLDAsMCwwLDAsMSwwLDAsMCwxLDEsMCwxLDEsMCwwLDEsMCwxLDAsMCwwLDAsMCwwLDAsMSwwLDAsMCwwLDAsMCwwLDAsMSwxLDAsMCwxLDAsMCwwLDEsMCwxLDEsMCwxLDEsMCwxLDAsMCwwLDAsMSwwLDEsMSwxLDEsMCwwLDAsMSwxLDAsMCwwLDEsMSwwLDAsMSwwLDAsMCwwLDAsMCwwLDAsMCwxLDAsMCwwLDAsMSwxLDAsMSwxLDEsMCwwLDAsMSwxLDAsMCwwLDAsMCwxLDAsMSwxLDEsMCwwLDEsMCwxLDAsMCwwLDAsMCwxLDAsMCwwLDAsMCwxLDAsMSwxLDAsMCwxLDEsMSwxLDEsMCwwLDEsMCwwLDEsMSwwLDAsMCwwLDAsMSwwLDEsMSwwLDAsMCwwLDAsMSwxLDAsMSwwLDAsMSwwLDAsMSwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMSwxLDEsMCwwLDEsMCwxLDEsMSwxLDEsMCwwLDAsMSwwLDEsMSwxXX0=",
+      "received_seconds": 0.43105148297036067,
+      "message": {
+        "chunk": 0,
+        "energy": -28601.0,
+        "kind": "inc",
+        "state": [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1
+        ]
+      },
+      "verified_energy": -28601,
+      "validated_seconds": 0.4358028040151112
+    },
+    {
+      "raw_base64": "eyJjaHVuayI6MSwiZW5lcmd5IjotMjg3NjUuMCwia2luZCI6ImluYyIsInN0YXRlIjpbMCwxLDEsMSwwLDEsMSwxLDAsMCwwLDAsMSwwLDAsMSwxLDAsMCwwLDAsMCwxLDAsMSwxLDAsMSwwLDAsMSwxLDAsMCwxLDEsMCwwLDEsMSwxLDEsMCwwLDEsMCwxLDAsMCwwLDEsMCwxLDEsMSwxLDEsMCwwLDEsMCwxLDEsMSwxLDEsMSwxLDAsMCwxLDEsMCwxLDEsMSwxLDEsMCwwLDAsMSwwLDAsMCwwLDAsMCwwLDEsMCwwLDEsMSwwLDAsMCwxLDEsMCwwLDAsMCwxLDAsMCwxLDAsMSwxLDEsMSwwLDAsMSwxLDAsMCwxLDEsMSwxLDAsMCwxLDAsMSwwLDEsMSwwLDAsMSwwLDEsMCwxLDEsMCwwLDAsMSwwLDAsMCwwLDAsMCwwLDAsMSwwLDEsMSwxLDAsMCwwLDAsMSwxLDEsMSwwLDAsMSwwLDEsMSwwLDEsMSwwLDAsMCwwLDAsMSwxLDEsMCwxLDAsMCwwLDAsMCwxLDAsMCwwLDAsMSwxLDAsMCwxLDEsMSwxLDAsMCwxLDAsMCwwLDAsMSwxLDAsMCwwLDEsMCwxLDAsMCwwLDEsMCwwLDEsMSwxLDEsMSwwLDAsMCwwLDEsMCwwLDEsMCwwLDAsMCwxLDEsMSwwLDAsMSwwLDEsMCwwLDAsMCwwLDEsMCwxLDEsMSwxLDAsMCwxLDAsMSwwLDEsMCwxLDEsMSwxLDAsMSwxLDAsMSwxLDAsMSwwLDAsMSwwLDAsMSwxLDAsMSwwLDAsMSwwLDAsMCwxLDAsMSwxLDAsMCwwLDEsMCwwLDAsMSwwLDEsMSwwLDEsMSwwLDAsMCwwLDAsMSwwLDAsMCwxLDEsMCwxLDEsMCwwLDEsMCwxLDAsMCwwLDAsMCwwLDAsMSwwLDAsMCwwLDAsMCwxLDAsMSwxLDAsMCwxLDAsMCwwLDEsMCwxLDEsMCwxLDAsMCwwLDAsMCwwLDAsMSwwLDEsMSwxLDEsMCwxLDAsMSwxLDAsMSwwLDEsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwxLDAsMSwwLDAsMSwxLDAsMSwxLDAsMCwwLDAsMSwxLDAsMSwwLDAsMCwxLDAsMSwxLDAsMCwwLDEsMCwxLDAsMCwwLDAsMCwxLDAsMCwwLDAsMCwxLDAsMSwxLDAsMCwxLDEsMSwxLDEsMCwwLDEsMCwwLDEsMSwwLDAsMCwwLDAsMCwwLDEsMSwwLDAsMCwwLDEsMSwxLDAsMSwwLDAsMSwwLDAsMSwwLDAsMCwxLDAsMCwwLDAsMCwwLDAsMCwwLDAsMSwxLDEsMCwwLDEsMCwxLDEsMSwwLDEsMCwwLDAsMSwwLDEsMCwxXX0=",
+      "received_seconds": 0.7978727479930967,
+      "message": {
+        "chunk": 1,
+        "energy": -28765.0,
+        "kind": "inc",
+        "state": [
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1
+        ]
+      },
+      "verified_energy": -28765,
+      "validated_seconds": 0.8050938359810971
+    },
+    {
+      "raw_base64": "eyJjaHVuayI6MywiZW5lcmd5IjotMjg4ODEuMCwia2luZCI6ImluYyIsInN0YXRlIjpbMCwxLDEsMSwwLDAsMSwxLDAsMCwwLDEsMSwwLDAsMSwxLDAsMCwxLDAsMCwxLDAsMSwxLDEsMSwwLDAsMSwxLDAsMCwxLDEsMCwwLDEsMSwxLDEsMCwwLDEsMCwxLDAsMCwwLDEsMCwxLDEsMSwxLDEsMCwwLDEsMCwxLDEsMSwxLDEsMSwxLDAsMCwxLDAsMCwxLDEsMSwxLDEsMCwwLDAsMSwwLDAsMCwwLDAsMCwwLDEsMCwwLDEsMSwwLDAsMCwxLDEsMCwwLDEsMCwxLDEsMSwxLDAsMSwxLDEsMSwwLDEsMCwxLDAsMCwxLDEsMSwxLDAsMCwxLDAsMSwwLDEsMSwwLDAsMSwwLDAsMCwwLDEsMCwwLDAsMSwwLDAsMCwwLDAsMCwwLDAsMSwwLDEsMSwxLDAsMCwwLDAsMSwxLDEsMSwwLDAsMCwwLDEsMSwwLDEsMSwwLDAsMCwwLDAsMCwxLDEsMCwxLDAsMCwwLDAsMCwxLDAsMCwxLDAsMSwwLDAsMCwxLDAsMSwxLDAsMCwxLDAsMCwwLDAsMSwxLDAsMCwwLDEsMCwxLDAsMSwwLDEsMCwwLDEsMSwxLDEsMSwwLDAsMCwwLDEsMCwwLDEsMCwwLDAsMSwxLDEsMSwwLDAsMSwwLDEsMCwwLDAsMCwwLDEsMCwxLDEsMSwxLDAsMCwxLDAsMSwwLDEsMCwxLDEsMSwxLDAsMSwxLDAsMSwxLDAsMSwwLDAsMCwwLDAsMSwxLDAsMSwwLDAsMSwwLDAsMCwxLDAsMSwwLDAsMCwxLDAsMCwwLDAsMCwwLDEsMSwwLDEsMSwwLDAsMCwwLDAsMSwwLDAsMCwxLDEsMCwxLDAsMCwwLDEsMCwxLDAsMCwwLDAsMCwwLDAsMSwwLDAsMCwwLDAsMCwxLDAsMSwxLDAsMCwxLDAsMCwwLDEsMCwxLDEsMCwxLDAsMCwxLDAsMCwwLDAsMSwwLDEsMSwxLDEsMCwxLDAsMSwxLDAsMSwwLDEsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwxLDAsMCwwLDAsMSwxLDAsMSwxLDEsMCwwLDAsMSwxLDAsMSwwLDAsMCwxLDAsMSwxLDEsMSwwLDEsMCwxLDAsMCwwLDEsMCwxLDAsMCwwLDAsMCwwLDAsMSwxLDAsMCwxLDEsMSwxLDEsMCwwLDEsMCwxLDEsMSwwLDAsMCwxLDAsMCwwLDEsMSwwLDAsMCwwLDEsMSwxLDAsMSwwLDAsMSwwLDAsMSwwLDAsMCwxLDAsMCwwLDEsMCwxLDAsMCwwLDAsMSwxLDAsMCwwLDEsMCwxLDEsMSwxLDEsMCwwLDAsMSwxLDEsMSwxXX0=",
+      "received_seconds": 1.5290966390166432,
+      "message": {
+        "chunk": 3,
+        "energy": -28881.0,
+        "kind": "inc",
+        "state": [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "verified_energy": -28881,
+      "validated_seconds": 1.5375153589993715
+    },
+    {
+      "raw_base64": "eyJjaHVuayI6NCwiZW5lcmd5IjotMjg5OTUuMCwia2luZCI6ImluYyIsInN0YXRlIjpbMCwxLDEsMSwwLDEsMSwxLDAsMCwwLDEsMSwwLDAsMSwxLDAsMSwwLDAsMCwxLDAsMSwxLDAsMSwwLDAsMSwxLDAsMCwxLDEsMCwwLDEsMSwxLDEsMCwwLDEsMCwxLDAsMCwwLDEsMCwxLDAsMSwxLDEsMCwwLDEsMCwxLDEsMSwxLDEsMSwxLDAsMCwxLDEsMCwxLDEsMSwxLDEsMCwwLDAsMSwwLDAsMCwwLDAsMCwwLDEsMCwwLDEsMSwwLDAsMCwxLDEsMCwwLDEsMCwxLDAsMCwxLDAsMSwxLDEsMSwwLDAsMSwxLDAsMCwxLDEsMSwxLDAsMCwxLDAsMSwwLDEsMCwwLDAsMSwwLDEsMCwxLDEsMCwwLDAsMSwwLDAsMCwwLDAsMCwwLDAsMSwwLDEsMSwxLDAsMCwwLDAsMSwxLDEsMSwwLDEsMSwwLDEsMSwwLDEsMSwwLDAsMCwwLDAsMSwxLDEsMCwxLDAsMCwwLDAsMCwxLDAsMCwxLDAsMSwwLDAsMCwxLDEsMSwxLDAsMSwxLDAsMCwwLDAsMSwxLDAsMCwwLDEsMCwxLDAsMCwwLDEsMCwwLDEsMSwwLDEsMSwwLDAsMCwwLDEsMCwwLDEsMCwwLDAsMCwxLDEsMSwwLDAsMSwwLDEsMCwwLDAsMCwwLDEsMCwxLDEsMSwxLDAsMCwxLDAsMSwwLDEsMCwxLDEsMSwxLDAsMSwxLDAsMSwwLDAsMSwwLDAsMCwwLDAsMSwxLDAsMSwwLDEsMSwwLDAsMCwxLDAsMSwxLDAsMCwxLDAsMCwwLDAsMSwwLDEsMSwwLDEsMSwwLDAsMCwwLDAsMSwwLDAsMCwxLDEsMCwxLDAsMCwwLDEsMCwxLDAsMCwwLDAsMCwwLDAsMSwwLDAsMCwwLDAsMSwxLDAsMSwxLDAsMCwxLDAsMCwwLDEsMCwxLDEsMCwxLDEsMCwxLDAsMCwwLDAsMSwwLDEsMSwxLDEsMCwxLDAsMSwxLDAsMCwwLDEsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwxLDAsMCwwLDAsMSwxLDAsMSwxLDAsMCwwLDAsMSwwLDAsMSwwLDAsMCwxLDAsMSwxLDAsMSwxLDEsMCwxLDAsMCwwLDEsMCwxLDAsMCwwLDAsMSwxLDAsMSwxLDAsMCwxLDEsMSwxLDEsMCwwLDEsMSwwLDEsMSwwLDAsMCwwLDAsMCwwLDAsMSwwLDAsMCwwLDAsMSwxLDEsMSwwLDAsMSwwLDAsMSwwLDAsMCwxLDAsMCwwLDEsMCwwLDAsMCwwLDAsMSwxLDAsMCwwLDEsMCwxLDEsMSwwLDEsMSwwLDAsMSwxLDEsMSwxXX0=",
+      "received_seconds": 2.072530377015937,
+      "message": {
+        "chunk": 4,
+        "energy": -28995.0,
+        "kind": "inc",
+        "state": [
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "verified_energy": -28995,
+      "validated_seconds": 2.089757589972578
+    },
+    {
+      "raw_base64": "eyJjaHVuayI6MjAsImVuZXJneSI6LTI5MDI1LjAsImtpbmQiOiJpbmMiLCJzdGF0ZSI6WzAsMSwxLDEsMCwxLDEsMSwwLDAsMCwxLDEsMCwwLDEsMSwwLDEsMCwwLDAsMSwwLDEsMSwwLDEsMCwwLDEsMSwwLDAsMSwxLDAsMCwxLDEsMSwxLDAsMCwxLDAsMSwwLDAsMCwxLDAsMSwwLDEsMSwxLDAsMCwxLDAsMSwxLDEsMSwxLDEsMSwwLDAsMSwxLDAsMSwxLDEsMSwxLDAsMCwwLDEsMCwwLDAsMCwwLDAsMCwxLDAsMCwxLDEsMCwwLDAsMSwxLDAsMCwxLDAsMSwwLDAsMSwwLDEsMSwxLDEsMCwwLDEsMSwwLDAsMSwxLDEsMSwwLDAsMSwwLDEsMCwxLDAsMCwwLDEsMCwxLDAsMSwxLDAsMCwwLDEsMCwwLDAsMCwwLDAsMCwwLDEsMCwxLDEsMSwwLDAsMCwwLDEsMSwxLDEsMCwxLDEsMCwxLDEsMCwxLDEsMCwwLDAsMCwxLDEsMSwxLDAsMSwwLDAsMCwwLDAsMSwwLDAsMSwwLDEsMCwwLDAsMSwxLDEsMSwwLDEsMSwwLDAsMCwwLDEsMSwwLDAsMSwxLDAsMSwwLDAsMCwxLDAsMCwxLDEsMCwxLDEsMCwwLDAsMCwxLDAsMCwxLDAsMCwwLDAsMSwxLDEsMCwwLDEsMCwxLDAsMCwwLDAsMCwxLDAsMSwxLDEsMSwwLDAsMSwwLDEsMCwxLDAsMSwxLDEsMSwwLDEsMSwwLDEsMCwwLDEsMCwwLDAsMCwwLDEsMSwwLDEsMCwxLDEsMCwwLDAsMSwwLDEsMSwwLDAsMSwwLDAsMCwwLDEsMCwxLDEsMCwxLDEsMCwwLDAsMCwwLDEsMCwwLDAsMSwxLDAsMSwwLDAsMCwxLDAsMSwwLDAsMCwwLDAsMCwwLDEsMCwwLDAsMCwwLDEsMSwwLDEsMSwwLDAsMSwwLDAsMCwxLDAsMSwxLDAsMSwxLDAsMSwwLDAsMCwwLDEsMCwxLDEsMSwxLDAsMSwwLDEsMSwwLDAsMCwxLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMSwwLDAsMCwwLDEsMSwwLDEsMSwwLDAsMCwwLDEsMCwwLDEsMCwwLDAsMSwwLDEsMSwwLDEsMSwxLDAsMSwwLDAsMCwxLDAsMSwwLDAsMCwwLDEsMSwwLDEsMSwwLDAsMSwxLDEsMSwxLDAsMCwxLDEsMCwxLDEsMCwwLDAsMCwwLDAsMCwwLDEsMCwwLDAsMCwwLDEsMSwxLDEsMCwwLDEsMCwwLDEsMCwwLDAsMSwwLDAsMCwxLDAsMSwwLDAsMCwxLDEsMSwwLDAsMCwxLDAsMSwxLDEsMCwxLDEsMCwwLDEsMSwxLDEsMV19",
+      "received_seconds": 8.980872398009524,
+      "message": {
+        "chunk": 20,
+        "energy": -29025.0,
+        "kind": "inc",
+        "state": [
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "verified_energy": -29025,
+      "validated_seconds": 8.996553840988781
+    }
+  ],
+  "errors": [],
+  "fallback_energy": -741,
+  "ready": 1,
+  "configs": 1,
+  "observations": [
+    {
+      "seconds": 0.032554442004766315,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.11958151496946812,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.17027607600903139,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.22080212098080665,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.2713899089721963,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.321902728988789,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.3727653899695724,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.4303869340219535,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.48834235401591286,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.5389180940110236,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.5897449809708633,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.6443860729923472,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.6950597789837047,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.7455489980056882,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.7962027519824915,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.8603895980049856,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.9109199160011485,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.9616035909857601,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.0124979569809511,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.063118105987087,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.1136882950086147,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.1643544170074165,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.2148874760023318,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.2684009780059569,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.3190414209966548,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.3695131730055436,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.420077134971507,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.4707382129854523,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.5243477170006372,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.58771881100256,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.63880854396848,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.689484137983527,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.74437388201477,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.7950640150229447,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.845893707999494,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.8965447599766776,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.947313762968406,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.9980732530239038,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.052388019976206,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.139927925018128,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.196386748983059,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.247004265023861,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.2977832119795494,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.3484065330121666,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.3990440979832783,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.449750060972292,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.5005244949716143,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.55140970897628,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.6022651820094325,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.6564247490023263,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.7072478749905713,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.7581469959695823,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.8087463669944555,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.8643523050122894,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.9150474229827523,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 2.965877733018715,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.016664189985022,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.0673869799938984,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.1179928630008362,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.1688322760164738,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.219416513980832,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.2724116509780288,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.3233124850085005,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.3738894080161117,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.4283610429847613,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.4790313839912415,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.530701801995747,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.581349214015063,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.6319760470069014,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.6828453720081598,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.736386778007727,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.7870178389712237,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.8376750699826516,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.8882224319968373,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.9389347229734994,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 3.9923951600212604,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.043118657020386,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.093900564999785,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.144499599991832,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.195182940980885,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.248399614007212,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.299037999007851,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.3523768649902195,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.403033816022798,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.453862212016247,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.504659809987061,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.560393560968805,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.611006106017157,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.66160084400326,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.712401347991545,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.763181185990106,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.813875507970806,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.864627207978629,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.9153310430119745,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 4.968418325996026,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.019126554019749,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.069663900998421,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.120410787989385,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.176477211003657,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.227230606018566,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.277802874974441,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.328483660006896,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.379161250020843,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.429905947006773,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.4805525679839775,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.531084872025531,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.581700442999136,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.636406002973672,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.687013619986828,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.737527247983962,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.788052978983615,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.838670985016506,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.889258844021242,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.93975566001609,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 5.990274306968786,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.0443726779776625,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.094990884012077,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.145668888988439,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.19624154997291,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.2467663799761795,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.297327027015854,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.352485237992369,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.4030664340243675,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.453548100020271,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.504243308969308,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.554914761974942,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.6054251180030406,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.655944622005336,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.70658470102353,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.757220175990369,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.812339437019546,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.862820382986683,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.913428405998275,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 6.964147518971004,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.01474795298418,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.065290134982206,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.11596099101007,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.166643185017165,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.220324943016749,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.270892623986583,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.321391483012121,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.371897516015451,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.422635630995501,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.473235577985179,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.528370355023071,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.579078467970248,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.629597741004545,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.680190148996189,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.730877270980272,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.781397191982251,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.831874770985451,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.882400230970234,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.932923212007154,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 7.988388390978798,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.038916532008443,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.08951237599831,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.140225519018713,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.190809249004815,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.241442403988913,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.292028435971588,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.342742700013332,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.393374627979938,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.448373009974603,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.498920295969583,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.549534240970388,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.600045018014498,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.65075460798107,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.701313377008773,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.7517969670007,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.802325183001813,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.852952156972606,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.908357964013703,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 8.958844123990275,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.046700891980436,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.09726656897692,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.14793097297661,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.198662514972966,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.249201766971964,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.299841009022202,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.356403841986321,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.406987697992008,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.457593515980989,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.508117171993945,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.558837017975748,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.609355369990226,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.659886700974312,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.710572807001881,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.761199560016394,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.811830096004996,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.86242590501206,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.916349446983077,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 9.966820403991733,
+      "tasks": [
+        {
+          "tid": 3114339,
+          "name": "mqlib_difficult",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    }
+  ],
+  "parent_affinity": [
+    0
+  ],
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/target/release/examples/mqlib_difficulty",
+    "v2_default",
+    "/tmp/mq-difficulty-bz9hqpya/model",
+    "61103",
+    "search"
+  ],
+  "setup_seconds": 0.025314192986115813,
+  "pid": 3114339,
+  "launch_seconds": 0.03250973700778559,
+  "last_chunk": 20,
+  "previous_energy": -29025,
+  "cutoff_seconds": 10.00049330398906,
+  "kill_seconds": 10.000494075007737,
+  "reap_seconds": 10.003935660002753,
+  "exit_code": -9,
+  "partial_base64": "",
+  "total_seconds": 10.00461752701085,
+  "stdout_bytes": 6150,
+  "status": "VALID"
+}

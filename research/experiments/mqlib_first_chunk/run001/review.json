@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "reviewer": "/root/comparison_explorer",
+  "scope": "Independent read-only raw artifact review; no optimizer replication",
+  "audit_sha256": "e5c07d674f66a27c6076f9a0ee5af4ec92588711ed57d1b23c26606afe4bb6ae",
+  "cells": 12,
+  "verified_witnesses": 45,
+  "late_witnesses": 0,
+  "C1": true,
+  "C2": true,
+  "CONTROL": true,
+  "elapsed_seconds": 123.30687583301915,
+  "limitations": [
+    "Exposed q12/q18 only",
+    "Delivery of completed output, not time inside solve()",
+    "No competitive quality or speed inference"
+  ],
+  "findings": []
+}
