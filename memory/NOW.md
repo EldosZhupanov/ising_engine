@@ -12,41 +12,26 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-FIRST-CHUNK-001 instrument reviewed; run next, 2026-09-28
+## Current — MQ-FIRST-CHUNK-001 closed; output design next, 2026-09-28
 
-[Complete retained result](../research/experiments/mqlib_coarse_quality/closure/RESULT.md):
-20/20 admission and 960/960 main cells valid. Independent raw audits and read-only
-reviews PASS; 12,500 verified main witnesses, two late and excluded. The one
-registered main used 1,933.361 s; combined with admission 1,976.072 s of the
-3,000 s cap. Preregistration `4d0b3f4`, instrument `6d0f5a5`, admission `0750a1a`.
+[Retained result](../research/experiments/mqlib_first_chunk/RESULT.md):12/12 valid
+cells,45 independently verified witnesses,0 late, elapsed123.307 s<180 s. The
+protocol `922a3a0`, instrument `7ef649a`, raw data `0a496f1` and independent
+pre/post reviews passed. Ultimate first verified output on exposed dense q18
+arrived at2.962–3.061 s for seeds61101–61103; on exposed sparse q12 at
+0.531–0.587 s. q18 `v2_default` delivered by0.487 s. C1, C2 and CONTROL held.
+This supports a *delivery-cadence explanation* of q18's earlier two-second
+fallbacks, not a measurement of time inside `solve()`, a density law, competitive
+speed, selector benefit or production claim. The fixed Rust worker emits its
+first `inc` only after a complete `UltimateSolver::solve()` return. The prior
+MQ-QUALITY-002 H2 result remains NOT ESTABLISHED. No production/Cargo change.
 
-H1 supported on qualification data (21/24 informative instances), H2 **not
-established** (zero material unique wins for any arm). Largest best-to-second-best
-normalized gap was 0.000678 < 0.001. Ultimate had 60 fallback-only cells, all
-on six dense 512-variable cases; other arms had none. One exposed synthetic
-family; no holdout, selector benefit, optimizer replication, TTS, superiority,
-S3/X3, or short-time speed claim. The old 250 ms admission FAIL stays closed.
-
-Read-only follow-up across all 60 dense-512 Ultimate records: all were VALID,
-ready by 0.077527 s (median 0.054363 s), then killed at deadline without an
-`inc`; setup median 0.013787 s. The frozen Rust worker emits its first `inc`
-only after `UltimateSolver::solve()` returns (`research/examples/mqlib_difficulty.rs`,
-lines 108–143). Thus input preparation/readiness is not the observed bottleneck;
-the whole-solve-before-first-output contract censors these runs. Exact internal
-chunk duration remains unmeasured; do not assert a kernel-speed root cause.
-
-[Prospective first-output diagnostic](../research/experiments/mqlib_first_chunk/protocol.md)
-fixes exposed q12/q18, seed labels 61101–61103, Ultimate and v2 default, 10 s per
-cell, 12 cells and a 180 s total cap. It is informed by the previous result;
-no new observations, kernel-speed or superiority claim.
-
-Isolated one-shot coordinator and independent raw-energy auditor implemented.
-Eight fabricated and 25 inherited Python tests PASS; independent instrument
-review PASS. Production, Cargo and frozen MQ-QUALITY-002 unchanged.
-
-**Next task:** commit the instrument, run one bounded 12-cell diagnostic, then
-independently audit/review raw evidence. If any cell is invalid, retain failure
-and stop without retry.
+**Next task:** read-only interface/call-site map for an additive, budget-aware
+Ultimate output path that preserves `UltimateSolver::solve()`, server behavior
+and the scalar/MSC boundary. Compare callback/checkpoint versus shorter chunks
+on correctness and architecture before choosing one. Any new candidate and
+matched-cost quality-at-budget experiment require separate preregistration and
+independent data. Do not relabel these exposed inputs as holdout.
 
 ## Previous — MQ-DIFFICULTY-001 closed; main not admitted, 2026-09-28
 
