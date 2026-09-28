@@ -12,26 +12,28 @@ immutable: false
 This file is the sole repository authority for what is in flight. Always verify
 its claims against `git status --short` and the current branch before acting.
 
-## Current — MQ-QUALITY-002 admission reviewed PASS; main next, 2026-09-28
+## Current — MQ-QUALITY-002 closed; diagnostic next, 2026-09-28
 
-[Prospective continuation](../research/experiments/mqlib_coarse_quality/protocol.md)
-retains the same untested2s H1/H2,24qualification inputs, four configurations and
-explicitly transfers unused main seeds61101..61110. Admission is revised after
-MQ-DIFFICULTY-001 failed; it is not an uninformed new primary experiment.
-No short-budget ranking, holdout, learned-selector, S3/X3 or superiority claim.
-Independent preregistration and instrument reviews PASS.
+[Complete retained result](../research/experiments/mqlib_coarse_quality/closure/RESULT.md):
+20/20 admission and 960/960 main cells valid. Independent raw audits and read-only
+reviews PASS; 12,500 verified main witnesses, two late and excluded. The one
+registered main used 1,933.361 s; combined with admission 1,976.072 s of the
+3,000 s cap. Preregistration `4d0b3f4`, instrument `6d0f5a5`, admission `0750a1a`.
 
-New isolated Python coordinator/auditor implemented; unchanged native workers and
-production sources.12new and25inherited Python tests PASS; syntax, documentation,
-diff and independent instrument review PASS. Admission20/20VALID,20eligible witnesses,0late; raw audit PASS. Maximum
-kill overshoot2.102ms. Main has not run.
+H1 supported on qualification data (21/24 informative instances), H2 **not
+established** (zero material unique wins for any arm). Largest best-to-second-best
+normalized gap was 0.000678 < 0.001. Ultimate had 60 fallback-only cells, all
+on six dense 512-variable cases; other arms had none. One exposed synthetic
+family; no holdout, selector benefit, optimizer replication, TTS, superiority,
+S3/X3, or short-time speed claim. The old 250 ms admission FAIL stays closed.
 
-Independent admission artifact review PASS.
-
-**Next task:** one960-cell main at2s
-using committed instrument `6d0f5a5`. Admission elapsed42.710s; cumulative cap3000s.
-Eligibility requires receipt AND validation strictly<2s; kill request<=2.1s.
-Preserve all outcomes, no retries. No production/Cargo changes or speed claims.
+**Next task:** perform read-only diagnosis of the 60 Ultimate fallback traces
+and frozen worker path: distinguish readiness/model construction from chunk
+completion and output cadence. State hypotheses and evidence; do not modify
+frozen sources, rerun this version or promote a comparison claim. If new
+measurements become necessary, preregister a separate diagnostic. Production
+solver and Cargo remain unchanged. Hosted CI billing is the last verified
+external blocker; local checks do not assert hosted green.
 
 ## Previous — MQ-DIFFICULTY-001 closed; main not admitted, 2026-09-28
 
