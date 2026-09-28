@@ -830,3 +830,29 @@ already regrades recorded test output. The strongest simple baseline is reading
 the official verdict; any future verifier must catch an additional material
 failure at acceptable cost. This intake neither runs a new agent nor searches
 for a favorable false-success example.
+
+### Frozen-selection result and prospective transport amendment
+
+At the pinned registry revision, both selected `metadata.yaml` files have
+`assets` pointing to public S3 paths, **not an `assets.repo`**. Their SHA-256
+digests are `2917707ed49e50c15af7e676aad60051dfa274c2882f2a43db645a01c11ace00`
+for GPT-5.2 Codex and
+`bac88a3b1c50cbf8784fe98070fa77e0dd8f2b2809e0b9bee9fb1ed8779cf868`
+for Claude 4.5 Haiku. The latter has `assets.logs: null`; both list S3
+trajectory prefixes. The original six-case selection cannot proceed under its
+repo-only rule: **NOT QUALIFIED by this instrument**, with zero instance-level
+outcomes inspected. This is a protocol/transport mismatch, not evidence that
+SWE-bench lacks artifacts or that the product hypothesis is false. No substitute
+submissions or instances are inserted into that frozen sample.
+
+**New prospective question (S3 transport only):** for the same two frozen
+entries, can anonymous public S3 object listings provide trajectory IDs, then
+join each to available official result/test artifacts? Query the exact S3
+prefixes from the pinned metadata without credentials. Rank unique trajectory
+instance IDs by binary SHA-256 of UTF-8 ID and take three per entry. If listing
+is unavailable, record failure and stop; do not pick visible successes. For
+each selected case, inspect C/P/O/I/L as defined above, marking the null
+`assets.logs` condition explicitly. Use 4/6 as a source-feasibility threshold
+only if all four C/P/O/I fields are genuinely joined; absent C means UNKNOWN,
+not a false-success case. This amendment changes the transport/ID source, not
+the original result, and is committed before S3 listing or case inspection.
