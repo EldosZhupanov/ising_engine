@@ -1,0 +1,1274 @@
+{
+  "cell": {
+    "instance": "q07",
+    "arm": "mqlib_merz",
+    "seed": 61105,
+    "mode": "search",
+    "budget": 2.0,
+    "block": "main"
+  },
+  "events": [
+    {
+      "raw_base64": "eyJraW5kIjoicmVhZHkiLCJhZmZpbml0eSI6IjAifQ==",
+      "received_seconds": 0.04504881100729108,
+      "message": {
+        "kind": "ready",
+        "affinity": "0"
+      },
+      "validated_seconds": 0.04519175298628397
+    },
+    {
+      "raw_base64": "eyJraW5kIjoiaW5jIiwib2JqZWN0aXZlIjo4NjM0LCJzdGF0ZSI6WzEsMSwwLDAsMCwxLDAsMCwxLDAsMCwxLDAsMSwwLDAsMSwxLDEsMSwwLDAsMCwxLDEsMSwxLDAsMSwxLDEsMSwxLDEsMSwwLDEsMSwwLDEsMCwwLDEsMSwwLDAsMSwxLDAsMSwwLDAsMCwwLDEsMSwxLDAsMSwwLDAsMCwwLDAsMSwxLDAsMSwwLDAsMSwxLDAsMCwxLDEsMCwwLDAsMCwwLDEsMSwxLDEsMCwxLDAsMCwwLDAsMCwxLDEsMCwxLDEsMSwxLDEsMSwwLDAsMSwxLDEsMCwxLDEsMCwwLDEsMSwwLDAsMSwwLDEsMSwxLDEsMCwwLDAsMSwxLDEsMSwwLDEsMCwxLDEsMCwxLDAsMCwxLDAsMCwxLDAsMSwwLDEsMSwxLDAsMSwxLDEsMSwwLDAsMCwxLDEsMCwxLDEsMSwwLDAsMCwwLDAsMSwwLDEsMCwxLDAsMCwwLDEsMSwwLDEsMSwwLDEsMSwwLDEsMSwwLDEsMSwwLDEsMCwwLDAsMCwwLDEsMSwwLDEsMSwxLDAsMSwwLDEsMSwxLDAsMCwwLDEsMCwwLDEsMCwxLDAsMSwwLDAsMCwxLDEsMSwwLDAsMSwwLDAsMCwwLDAsMCwwLDEsMCwxLDEsMSwxLDEsMCwxLDAsMCwwLDEsMSwxLDEsMCwwLDEsMSwxLDBdfQ==",
+      "received_seconds": 0.045636177994310856,
+      "message": {
+        "kind": "inc",
+        "objective": 8634,
+        "state": [
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      "verified_energy": -9172,
+      "validated_seconds": 0.04712383699370548
+    },
+    {
+      "raw_base64": "eyJraW5kIjoiaW5jIiwib2JqZWN0aXZlIjoxMDM4Niwic3RhdGUiOlsxLDEsMSwxLDEsMCwwLDAsMCwxLDEsMSwxLDEsMSwwLDAsMSwxLDEsMCwwLDEsMSwwLDEsMSwwLDEsMCwwLDEsMSwwLDEsMCwxLDAsMSwxLDEsMSwxLDAsMCwwLDAsMSwxLDEsMSwwLDEsMCwxLDEsMCwxLDEsMSwxLDEsMSwwLDEsMSwwLDEsMCwxLDEsMSwxLDEsMCwwLDEsMSwwLDEsMSwwLDAsMCwxLDEsMSwxLDEsMSwxLDEsMSwwLDEsMSwwLDAsMCwwLDEsMCwxLDEsMSwxLDEsMSwwLDAsMSwwLDEsMCwxLDAsMSwxLDEsMCwxLDAsMSwxLDEsMSwwLDEsMCwxLDEsMCwxLDEsMCwxLDEsMSwwLDAsMSwwLDAsMCwwLDAsMSwxLDAsMSwxLDEsMCwxLDAsMCwwLDEsMCwwLDAsMSwxLDEsMCwxLDEsMSwwLDEsMCwwLDAsMSwxLDAsMCwxLDAsMSwwLDAsMCwwLDEsMSwwLDAsMSwxLDEsMSwxLDAsMSwwLDEsMSwwLDEsMCwwLDEsMCwwLDEsMCwxLDAsMCwxLDEsMCwwLDEsMCwxLDAsMCwwLDAsMSwwLDAsMCwwLDAsMSwwLDAsMCwxLDAsMSwxLDAsMCwxLDEsMCwxLDEsMSwwLDEsMSwwLDEsMSwwLDAsMCwxLDAsMSwwXX0=",
+      "received_seconds": 0.047666299011325464,
+      "message": {
+        "kind": "inc",
+        "objective": 10386,
+        "state": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      "verified_energy": -10924,
+      "validated_seconds": 0.04951291100587696
+    },
+    {
+      "raw_base64": "eyJraW5kIjoiaW5jIiwib2JqZWN0aXZlIjoxMDQ2Miwic3RhdGUiOlsxLDEsMSwxLDEsMCwwLDAsMCwwLDEsMSwxLDEsMSwwLDAsMSwxLDEsMSwwLDEsMSwwLDEsMSwwLDAsMCwwLDEsMSwwLDEsMCwxLDEsMSwxLDAsMSwxLDEsMCwwLDEsMSwxLDEsMSwwLDEsMCwxLDEsMCwxLDEsMSwxLDEsMSwwLDEsMSwxLDEsMCwxLDEsMCwxLDEsMCwwLDEsMSwwLDEsMSwwLDAsMCwxLDAsMSwxLDEsMSwxLDEsMSwxLDEsMSwwLDAsMSwwLDEsMCwwLDEsMSwwLDEsMSwxLDAsMCwwLDEsMCwxLDAsMSwxLDEsMCwxLDAsMCwxLDEsMSwwLDAsMCwwLDEsMCwxLDEsMCwxLDEsMSwwLDAsMSwwLDEsMCwwLDAsMSwxLDAsMSwxLDEsMCwxLDAsMCwwLDEsMCwxLDAsMCwxLDEsMCwxLDEsMSwwLDEsMCwwLDAsMSwxLDAsMCwxLDAsMSwwLDAsMCwxLDEsMCwwLDAsMSwxLDEsMCwxLDAsMCwxLDEsMSwxLDEsMCwwLDEsMCwwLDEsMCwwLDAsMCwxLDEsMCwwLDAsMCwxLDAsMCwwLDAsMCwwLDAsMCwwLDAsMSwwLDAsMCwwLDAsMSwxLDAsMCwxLDEsMSwxLDEsMSwwLDEsMSwwLDEsMSwxLDAsMCwxLDAsMSwwXX0=",
+      "received_seconds": 0.1981448819860816,
+      "message": {
+        "kind": "inc",
+        "objective": 10462,
+        "state": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      "verified_energy": -11000,
+      "validated_seconds": 0.19988726498559117
+    }
+  ],
+  "errors": [],
+  "fallback_energy": -538,
+  "ready": 1,
+  "configs": 0,
+  "observations": [
+    {
+      "seconds": 0.03657335200114176,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.10435777800739743,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.1550415600067936,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.2500486650096718,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.3044103420106694,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.35511996399145573,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.4056828629982192,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.45637919000000693,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.507044567988487,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.5577068139973562,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.6082623029942624,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.6644540719862562,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.7151743040012661,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.7657375219860114,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.8162366389879026,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.8668893929861952,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.9174525770067703,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 0.9680473300104495,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.018664170987904,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.0691963309946004,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.1197503870062064,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.1702622929878999,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.224410689988872,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.2750683180056512,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.3255914660112467,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.3761120789858978,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.4267262390058022,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.4773741829849314,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.5324213650019374,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.5831266840104945,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.6338867020094767,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.6845177199866157,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.735093416995369,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.7856459000031464,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.8362183260032907,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.8868081500113476,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.9404206239851192,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    },
+    {
+      "seconds": 1.9910558889969252,
+      "tasks": [
+        {
+          "tid": 2574366,
+          "name": "worker",
+          "state": "R (running)",
+          "affinity": "0"
+        }
+      ]
+    }
+  ],
+  "parent_affinity": [
+    0
+  ],
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "/home/eldos/ising_engine/.cache/mqlib-difficulty/worker",
+    "mqlib_merz",
+    "/tmp/mq-difficulty-8ngj95qt/model",
+    "61105",
+    "search"
+  ],
+  "setup_seconds": 0.02511305100051686,
+  "pid": 2574366,
+  "launch_seconds": 0.03651788699789904,
+  "previous_energy": -11000,
+  "cutoff_seconds": 2.001804035011446,
+  "kill_seconds": 2.0018061290029436,
+  "reap_seconds": 2.0032836589962244,
+  "exit_code": -9,
+  "partial_base64": "",
+  "total_seconds": 2.0035976560029667,
+  "stdout_bytes": 1696,
+  "status": "VALID"
+}

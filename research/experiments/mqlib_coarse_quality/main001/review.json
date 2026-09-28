@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "reviewer": "/root/mqlib_explorer",
+  "scope": "Independent read-only artifact review; no optimizer replication",
+  "audit_sha256": "7456fa6457604eecc3cb8dfab7c069075c68f7f71472ebdb445e92de70aa6529",
+  "cells": 960,
+  "verified_witnesses": 12500,
+  "late_witnesses": 2,
+  "artifact_hashes_recomputed": 2884,
+  "result": {
+    "H1": "SUPPORTED_ON_QUALIFICATION",
+    "informative_instances": 21,
+    "H2": "NOT_ESTABLISHED",
+    "unique_wins": {
+      "ultimate": 0,
+      "v2_default": 0,
+      "mqlib_merz": 0,
+      "mqlib_mst2": 0
+    }
+  },
+  "limitations": [
+    "One exposed synthetic qualification family; no holdout",
+    "No selector benefit or optimizer replication",
+    "Ultimate 60 fallback-only dense512 cells; large H1 spread can reflect weak arm"
+  ],
+  "findings": []
+}

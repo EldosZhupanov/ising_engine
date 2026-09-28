@@ -1,0 +1,3202 @@
+{
+  "status": "COMPLETE",
+  "instances": [
+    {
+      "instance": "q00",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -3742,
+            -3742,
+            -3710,
+            -3742,
+            -3742,
+            -3742,
+            -3742,
+            -3742,
+            -3742,
+            -3742
+          ],
+          "mean": -3738.8,
+          "median": -3742.0,
+          "std": 9.6,
+          "min": -3742,
+          "max": -3710
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -3542,
+            -3546,
+            -3562,
+            -3520,
+            -3546,
+            -3554,
+            -3526,
+            -3564,
+            -3528,
+            -3540
+          ],
+          "mean": -3542.8,
+          "median": -3544.0,
+          "std": 14.119490075778232,
+          "min": -3564,
+          "max": -3520
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -3670,
+            -3672,
+            -3680,
+            -3674,
+            -3676,
+            -3662,
+            -3668,
+            -3638,
+            -3676,
+            -3646
+          ],
+          "mean": -3666.2,
+          "median": -3671.0,
+          "std": 13.098091464026352,
+          "min": -3680,
+          "max": -3638
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -3742,
+            -3742,
+            -3742,
+            -3742,
+            -3742,
+            -3742,
+            -3742,
+            -3742,
+            -3742,
+            -3742
+          ],
+          "mean": -3742,
+          "median": -3742.0,
+          "std": 0.0,
+          "min": -3742,
+          "max": -3742
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.004308449837334037
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0015958849907676074
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 9,
+          "losses": 1,
+          "mean_normalized_improvement": -7.03420381605557e-05
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0027125648465664296
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0043787918754945926
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0016662270289281632
+        }
+      },
+      "spread": 0.004378791875494588,
+      "top_two_spread": 7.03420381605517e-05
+    },
+    {
+      "instance": "q01",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -3769,
+            -3765,
+            -3761,
+            -3765,
+            -3765,
+            -3765,
+            -3769,
+            -3769,
+            -3759,
+            -3765
+          ],
+          "mean": -3765.2,
+          "median": -3765.0,
+          "std": 3.1559467676119,
+          "min": -3769,
+          "max": -3759
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -3673,
+            -3661,
+            -3673,
+            -3661,
+            -3675,
+            -3661,
+            -3661,
+            -3661,
+            -3661,
+            -3663
+          ],
+          "mean": -3665,
+          "median": -3661.0,
+          "std": 5.727128425310541,
+          "min": -3675,
+          "max": -3661
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -3727,
+            -3695,
+            -3703,
+            -3717,
+            -3739,
+            -3715,
+            -3673,
+            -3691,
+            -3691,
+            -3761
+          ],
+          "mean": -3711.2,
+          "median": -3709.0,
+          "std": 24.810481655945335,
+          "min": -3761,
+          "max": -3673
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -3769,
+            -3769,
+            -3769,
+            -3769,
+            -3769,
+            -3769,
+            -3769,
+            -3769,
+            -3769,
+            -3769
+          ],
+          "mean": -3769,
+          "median": -3769.0,
+          "std": 0.0,
+          "min": -3769,
+          "max": -3769
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0022027787548364406
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0011871262750615546
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 3,
+          "losses": 7,
+          "mean_normalized_improvement": -8.353851565247977e-05
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0010156524797748858
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0022863172704889203
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0012706647907140343
+        }
+      },
+      "spread": 0.0022863172704889203,
+      "top_two_spread": 8.353851565248378e-05
+    },
+    {
+      "instance": "q02",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -3843,
+            -3843,
+            -3843,
+            -3843,
+            -3843,
+            -3841,
+            -3841,
+            -3841,
+            -3843,
+            -3843
+          ],
+          "mean": -3842.4,
+          "median": -3843.0,
+          "std": 0.916515138991168,
+          "min": -3843,
+          "max": -3841
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -3641,
+            -3697,
+            -3697,
+            -3655,
+            -3625,
+            -3701,
+            -3675,
+            -3703,
+            -3731,
+            -3611
+          ],
+          "mean": -3673.6,
+          "median": -3686.0,
+          "std": 37.00864763808588,
+          "min": -3731,
+          "max": -3611
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -3811,
+            -3801,
+            -3789,
+            -3799,
+            -3809,
+            -3791,
+            -3785,
+            -3801,
+            -3789,
+            -3765
+          ],
+          "mean": -3794,
+          "median": -3795.0,
+          "std": 12.720062892926277,
+          "min": -3811,
+          "max": -3765
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -3843,
+            -3843,
+            -3843,
+            -3843,
+            -3843,
+            -3843,
+            -3843,
+            -3843,
+            -3843,
+            -3843
+          ],
+          "mean": -3843,
+          "median": -3843.0,
+          "std": 0.0,
+          "min": -3843,
+          "max": -3843
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.003593936297053313
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.001030488843467893
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 7,
+          "losses": 3,
+          "mean_normalized_improvement": -1.2774655084312723e-05
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.00256344745358542
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0036067109521376256
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0010432634985522058
+        }
+      },
+      "spread": 0.0036067109521376274,
+      "top_two_spread": 1.2774655084310787e-05
+    },
+    {
+      "instance": "q03",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -3789,
+            -3789,
+            -3789,
+            -3793,
+            -3793,
+            -3789,
+            -3789,
+            -3789,
+            -3789,
+            -3789
+          ],
+          "mean": -3789.8,
+          "median": -3789.0,
+          "std": 1.6,
+          "min": -3793,
+          "max": -3789
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -3735,
+            -3751,
+            -3725,
+            -3723,
+            -3737,
+            -3771,
+            -3753,
+            -3787,
+            -3725,
+            -3727
+          ],
+          "mean": -3743.4,
+          "median": -3736.0,
+          "std": 20.703622871372055,
+          "min": -3787,
+          "max": -3723
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -3731,
+            -3727,
+            -3745,
+            -3771,
+            -3753,
+            -3741,
+            -3751,
+            -3753,
+            -3765,
+            -3763
+          ],
+          "mean": -3750,
+          "median": -3752.0,
+          "std": 13.601470508735444,
+          "min": -3771,
+          "max": -3727
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -3793,
+            -3793,
+            -3793,
+            -3793,
+            -3793,
+            -3793,
+            -3793,
+            -3793,
+            -3793,
+            -3793
+          ],
+          "mean": -3793,
+          "median": -3793.0,
+          "std": 0.0,
+          "min": -3793,
+          "max": -3793
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.001025097207493814
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0008792859667727111
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 2,
+          "losses": 8,
+          "mean_normalized_improvement": -7.069635913750442e-05
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 5,
+          "ties": 0,
+          "losses": 5,
+          "mean_normalized_improvement": -0.00014581124072110286
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0010957935666313185
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0009499823259102156
+        }
+      },
+      "spread": 0.0010957935666313164,
+      "top_two_spread": 7.06963591375004e-05
+    },
+    {
+      "instance": "q04",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -3738,
+            -3738,
+            -3732,
+            -3726,
+            -3732,
+            -3718,
+            -3738,
+            -3732,
+            -3732,
+            -3738
+          ],
+          "mean": -3732.4,
+          "median": -3732.0,
+          "std": 6.118823416311342,
+          "min": -3738,
+          "max": -3718
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -3738,
+            -3732,
+            -3732,
+            -3732,
+            -3732,
+            -3722,
+            -3732,
+            -3732,
+            -3732,
+            -3738
+          ],
+          "mean": -3732.2,
+          "median": -3732.0,
+          "std": 4.142463035441596,
+          "min": -3738,
+          "max": -3722
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -3668,
+            -3698,
+            -3652,
+            -3688,
+            -3680,
+            -3704,
+            -3680,
+            -3652,
+            -3676,
+            -3672
+          ],
+          "mean": -3677,
+          "median": -3678.0,
+          "std": 16.327890249508663,
+          "min": -3704,
+          "max": -3652
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -3738,
+            -3738,
+            -3738,
+            -3738,
+            -3738,
+            -3738,
+            -3738,
+            -3738,
+            -3738,
+            -3738
+          ],
+          "mean": -3738,
+          "median": -3738.0,
+          "std": 0.0,
+          "min": -3738,
+          "max": -3738
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 2,
+          "ties": 6,
+          "losses": 2,
+          "mean_normalized_improvement": 4.443259575224385e-06
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0012307829023371546
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 4,
+          "losses": 6,
+          "mean_normalized_improvement": -0.00012441126810628275
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0012263396427619302
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 2,
+          "losses": 8,
+          "mean_normalized_improvement": -0.00012885452768150716
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0013551941704434372
+        }
+      },
+      "spread": 0.0013551941704434372,
+      "top_two_spread": 0.00012441126810628075
+    },
+    {
+      "instance": "q05",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -3763,
+            -3771,
+            -3771,
+            -3761,
+            -3771,
+            -3771,
+            -3771,
+            -3765,
+            -3771,
+            -3771
+          ],
+          "mean": -3768.6,
+          "median": -3771.0,
+          "std": 3.7735924528226414,
+          "min": -3771,
+          "max": -3761
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -3677,
+            -3695,
+            -3683,
+            -3695,
+            -3675,
+            -3685,
+            -3669,
+            -3685,
+            -3697,
+            -3731
+          ],
+          "mean": -3689.2,
+          "median": -3685.0,
+          "std": 16.454786537661313,
+          "min": -3731,
+          "max": -3669
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -3735,
+            -3707,
+            -3745,
+            -3703,
+            -3735,
+            -3701,
+            -3713,
+            -3757,
+            -3711,
+            -3737
+          ],
+          "mean": -3724.4,
+          "median": -3724.0,
+          "std": 18.677258899528056,
+          "min": -3757,
+          "max": -3701
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -3771,
+            -3771,
+            -3771,
+            -3771,
+            -3771,
+            -3771,
+            -3771,
+            -3771,
+            -3771,
+            -3771
+          ],
+          "mean": -3771,
+          "median": -3771.0,
+          "std": 0.0,
+          "min": -3771,
+          "max": -3771
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0017328677433435182
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0009646442601484069
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 7,
+          "losses": 3,
+          "mean_normalized_improvement": -5.2378873854212135e-05
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0007682234831951114
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.00178524661719773
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.001017023134002619
+        }
+      },
+      "spread": 0.0017852466171977342,
+      "top_two_spread": 5.237887385421412e-05
+    },
+    {
+      "instance": "q06",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -10792,
+            -10792,
+            -10788,
+            -10788,
+            -10792,
+            -10780,
+            -10782,
+            -10788,
+            -10788,
+            -10756
+          ],
+          "mean": -10784.6,
+          "median": -10788.0,
+          "std": 10.278132126023678,
+          "min": -10792,
+          "max": -10756
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -10642,
+            -10642,
+            -10642,
+            -10642,
+            -10642,
+            -10642,
+            -10642,
+            -10642,
+            -10642,
+            -10668
+          ],
+          "mean": -10644.6,
+          "median": -10642.0,
+          "std": 7.8,
+          "min": -10668,
+          "max": -10642
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -10758,
+            -10742,
+            -10694,
+            -10798,
+            -10798,
+            -10756,
+            -10716,
+            -10722,
+            -10768,
+            -10792
+          ],
+          "mean": -10754.4,
+          "median": -10757.0,
+          "std": 34.26718546948378,
+          "min": -10798,
+          "max": -10694
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -10798,
+            -10798,
+            -10798,
+            -10798,
+            -10798,
+            -10798,
+            -10798,
+            -10798,
+            -10798,
+            -10798
+          ],
+          "mean": -10798,
+          "median": -10798.0,
+          "std": 0.0,
+          "min": -10798,
+          "max": -10798
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0004399472063352398
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 7,
+          "ties": 0,
+          "losses": 3,
+          "mean_normalized_improvement": 9.490289736660172e-05
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -4.210923260637295e-05
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.000345044308968638
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.00048205643894161273
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 2,
+          "losses": 8,
+          "mean_normalized_improvement": -0.00013701212997297468
+        }
+      },
+      "spread": 0.0004820564389416116,
+      "top_two_spread": 4.2109232606371806e-05
+    },
+    {
+      "instance": "q07",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -11060,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086
+          ],
+          "mean": -11083.4,
+          "median": -11086.0,
+          "std": 7.8,
+          "min": -11086,
+          "max": -11060
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086
+          ],
+          "mean": -11086,
+          "median": -11086.0,
+          "std": 0.0,
+          "min": -11086,
+          "max": -11086
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -11060,
+            -11042,
+            -11086,
+            -11086,
+            -11000,
+            -11066,
+            -11086,
+            -11052,
+            -11050,
+            -11036
+          ],
+          "mean": -11056.4,
+          "median": -11056.0,
+          "std": 25.687350972803717,
+          "min": -11086,
+          "max": -11000
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086,
+            -11086
+          ],
+          "mean": -11086,
+          "median": -11086.0,
+          "std": 0.0,
+          "min": -11086,
+          "max": -11086
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 0,
+          "ties": 9,
+          "losses": 1,
+          "mean_normalized_improvement": -8.203445447087777e-06
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 6,
+          "ties": 4,
+          "losses": 0,
+          "mean_normalized_improvement": 8.518962579668077e-05
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 9,
+          "losses": 1,
+          "mean_normalized_improvement": -8.203445447087777e-06
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 7,
+          "ties": 3,
+          "losses": 0,
+          "mean_normalized_improvement": 9.339307124376854e-05
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 10,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 3,
+          "losses": 7,
+          "mean_normalized_improvement": -9.339307124376854e-05
+        }
+      },
+      "spread": 9.339307124376968e-05,
+      "top_two_spread": 0.0
+    },
+    {
+      "instance": "q08",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -10656,
+            -10646,
+            -10656,
+            -10650,
+            -10650,
+            -10656,
+            -10656,
+            -10656,
+            -10656,
+            -10656
+          ],
+          "mean": -10653.8,
+          "median": -10656.0,
+          "std": 3.5156791662493894,
+          "min": -10656,
+          "max": -10646
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -10268,
+            -10434,
+            -10250,
+            -10242,
+            -10432,
+            -10292,
+            -10290,
+            -10284,
+            -10290,
+            -10452
+          ],
+          "mean": -10323.4,
+          "median": -10290.0,
+          "std": 77.72798723754526,
+          "min": -10452,
+          "max": -10242
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -10644,
+            -10566,
+            -10544,
+            -10602,
+            -10610,
+            -10650,
+            -10644,
+            -10622,
+            -10588,
+            -10588
+          ],
+          "mean": -10605.8,
+          "median": -10606.0,
+          "std": 33.47177915797127,
+          "min": -10650,
+          "max": -10544
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -10656,
+            -10656,
+            -10656,
+            -10656,
+            -10656,
+            -10656,
+            -10656,
+            -10656,
+            -10656,
+            -10656
+          ],
+          "mean": -10656,
+          "median": -10656.0,
+          "std": 0.0,
+          "min": -10656,
+          "max": -10656
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.001044987601842012
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0001518141794443601
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 7,
+          "losses": 3,
+          "mean_normalized_improvement": -6.958149891199839e-06
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0008931734223976518
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.001051945751733212
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.00015877232933555994
+        }
+      },
+      "spread": 0.001051945751733213,
+      "top_two_spread": 6.9581498912021395e-06
+    },
+    {
+      "instance": "q09",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -10913,
+            -10913,
+            -10891,
+            -10913,
+            -10913,
+            -10913,
+            -10913,
+            -10907,
+            -10913,
+            -10913
+          ],
+          "mean": -10910.2,
+          "median": -10913.0,
+          "std": 6.6452990903344595,
+          "min": -10913,
+          "max": -10891
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -10753,
+            -10741,
+            -10709,
+            -10741,
+            -10695,
+            -10753,
+            -10693,
+            -10783,
+            -10783,
+            -10687
+          ],
+          "mean": -10733.8,
+          "median": -10741.0,
+          "std": 34.14322773259728,
+          "min": -10783,
+          "max": -10687
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -10923,
+            -10853,
+            -10879,
+            -10891,
+            -10879,
+            -10855,
+            -10891,
+            -10883,
+            -10913,
+            -10913
+          ],
+          "mean": -10888,
+          "median": -10887.0,
+          "std": 22.347259339793773,
+          "min": -10923,
+          "max": -10853
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -10923,
+            -10923,
+            -10923,
+            -10923,
+            -10923,
+            -10923,
+            -10923,
+            -10923,
+            -10923,
+            -10923
+          ],
+          "mean": -10923,
+          "median": -10923.0,
+          "std": 0.0,
+          "min": -10923,
+          "max": -10923
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0005596801827527127
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 7,
+          "ties": 2,
+          "losses": 1,
+          "mean_normalized_improvement": 7.0435941366838e-05
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -4.061171394123993e-05
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0004892442413858747
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0006002918966939526
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 1,
+          "losses": 9,
+          "mean_normalized_improvement": -0.00011104765530807793
+        }
+      },
+      "spread": 0.000600291896693955,
+      "top_two_spread": 4.061171394123762e-05
+    },
+    {
+      "instance": "q10",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -10968,
+            -10968,
+            -10968,
+            -10968,
+            -10968,
+            -10968,
+            -10968,
+            -10968,
+            -10968,
+            -10968
+          ],
+          "mean": -10968,
+          "median": -10968.0,
+          "std": 0.0,
+          "min": -10968,
+          "max": -10968
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -10036,
+            -10036,
+            -10002,
+            -9970,
+            -10062,
+            -9952,
+            -10190,
+            -10080,
+            -9970,
+            -10052
+          ],
+          "mean": -10035,
+          "median": -10036.0,
+          "std": 65.95301357784949,
+          "min": -10190,
+          "max": -9952
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -10922,
+            -10958,
+            -10944,
+            -10968,
+            -10946,
+            -10968,
+            -10968,
+            -10950,
+            -10968,
+            -10968
+          ],
+          "mean": -10956,
+          "median": -10963.0,
+          "std": 14.696938456699069,
+          "min": -10968,
+          "max": -10922
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -10968,
+            -10968,
+            -10968,
+            -10968,
+            -10968,
+            -10968,
+            -10968,
+            -10968,
+            -10968,
+            -10968
+          ],
+          "mean": -10968,
+          "median": -10968.0,
+          "std": 0.0,
+          "min": -10968,
+          "max": -10968
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0029505894854020137
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 5,
+          "ties": 5,
+          "losses": 0,
+          "mean_normalized_improvement": 3.794970399230886e-05
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 10,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.002912639781409705
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0029505894854020137
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 5,
+          "losses": 5,
+          "mean_normalized_improvement": -3.794970399230886e-05
+        }
+      },
+      "spread": 0.0029505894854020137,
+      "top_two_spread": 0.0
+    },
+    {
+      "instance": "q11",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -10967,
+            -10947,
+            -10967,
+            -10967,
+            -10965,
+            -10967,
+            -10965,
+            -10967,
+            -10967,
+            -10953
+          ],
+          "mean": -10963.2,
+          "median": -10967.0,
+          "std": 6.779380502671317,
+          "min": -10967,
+          "max": -10947
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -10537,
+            -10441,
+            -10433,
+            -10455,
+            -10441,
+            -10545,
+            -10573,
+            -10441,
+            -10441,
+            -10441
+          ],
+          "mean": -10474.8,
+          "median": -10441.0,
+          "std": 51.275335201244665,
+          "min": -10573,
+          "max": -10433
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -10903,
+            -10887,
+            -10965,
+            -10907,
+            -10953,
+            -10873,
+            -10959,
+            -10873,
+            -10881,
+            -10967
+          ],
+          "mean": -10916.8,
+          "median": -10905.0,
+          "std": 37.71949098277971,
+          "min": -10967,
+          "max": -10873
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -10967,
+            -10967,
+            -10967,
+            -10967,
+            -10967,
+            -10967,
+            -10967,
+            -10967,
+            -10967,
+            -10967
+          ],
+          "mean": -10967,
+          "median": -10967.0,
+          "std": 0.0,
+          "min": -10967,
+          "max": -10967
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0015351538925769462
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 9,
+          "ties": 0,
+          "losses": 1,
+          "mean_normalized_improvement": 0.00014584590625628646
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 6,
+          "losses": 4,
+          "mean_normalized_improvement": -1.1944276805471735e-05
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.00138930798632066
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.001547098169382418
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 1,
+          "losses": 9,
+          "mean_normalized_improvement": -0.0001577901830617582
+        }
+      },
+      "spread": 0.0015470981693824202,
+      "top_two_spread": 1.1944276805469448e-05
+    },
+    {
+      "instance": "q12",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -10818,
+            -10838,
+            -10838,
+            -10792,
+            -10820,
+            -10804,
+            -10804,
+            -10838,
+            -10840,
+            -10796
+          ],
+          "mean": -10818.8,
+          "median": -10819.0,
+          "std": 17.98221343439122,
+          "min": -10840,
+          "max": -10792
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -10376,
+            -10324,
+            -10304,
+            -10312,
+            -10334,
+            -10312,
+            -10382,
+            -10328,
+            -10460,
+            -10330
+          ],
+          "mean": -10346.2,
+          "median": -10329.0,
+          "std": 45.24997237568218,
+          "min": -10460,
+          "max": -10304
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -10476,
+            -10302,
+            -10438,
+            -10464,
+            -10346,
+            -10520,
+            -10476,
+            -10378,
+            -10500,
+            -10354
+          ],
+          "mean": -10425.4,
+          "median": -10451.0,
+          "std": 70.82400722918747,
+          "min": -10520,
+          "max": -10302
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -10840,
+            -10840,
+            -10840,
+            -10796,
+            -10700,
+            -10700,
+            -10768,
+            -10714,
+            -10700,
+            -10796
+          ],
+          "mean": -10769.4,
+          "median": -10782.0,
+          "std": 58.213744081617016,
+          "min": -10840,
+          "max": -10700
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.002787937421836287
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.00232072488732627
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 5,
+          "ties": 1,
+          "losses": 4,
+          "mean_normalized_improvement": 0.00029141791925245994
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 1,
+          "ties": 0,
+          "losses": 9,
+          "mean_normalized_improvement": -0.00046721253451001676
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.002496519502583827
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.00202930696807381
+        }
+      },
+      "spread": 0.0027879374218362785,
+      "top_two_spread": 0.0002914179192524578
+    },
+    {
+      "instance": "q13",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -10986,
+            -11010,
+            -11052,
+            -11006,
+            -10996,
+            -10990,
+            -11004,
+            -11018,
+            -11026,
+            -11054
+          ],
+          "mean": -11014.2,
+          "median": -11008.0,
+          "std": 22.511330480449175,
+          "min": -11054,
+          "max": -10986
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -10270,
+            -10468,
+            -10278,
+            -10358,
+            -10260,
+            -10272,
+            -10218,
+            -10390,
+            -10218,
+            -10262
+          ],
+          "mean": -10299.4,
+          "median": -10271.0,
+          "std": 76.38350607297363,
+          "min": -10468,
+          "max": -10218
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -10700,
+            -10744,
+            -10646,
+            -10574,
+            -10698,
+            -10624,
+            -10674,
+            -10718,
+            -10622,
+            -10744
+          ],
+          "mean": -10674.4,
+          "median": -10686.0,
+          "std": 53.827873820168676,
+          "min": -10744,
+          "max": -10574
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -11052,
+            -11054,
+            -11054,
+            -11054,
+            -11054,
+            -10932,
+            -10770,
+            -11054,
+            -11054,
+            -11054
+          ],
+          "mean": -11013.2,
+          "median": -11054.0,
+          "std": 88.82432099374586,
+          "min": -11054,
+          "max": -10770
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.004188052215894443
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.001990906747287258
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 2,
+          "ties": 1,
+          "losses": 7,
+          "mean_normalized_improvement": 5.859054582952495e-06
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0021971454686071853
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.004182193161311491
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.001985047692704305
+        }
+      },
+      "spread": 0.004188052215894449,
+      "top_two_spread": 5.859054582952495e-06
+    },
+    {
+      "instance": "q14",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -10879,
+            -10901,
+            -10879,
+            -10923,
+            -10883,
+            -10917,
+            -10883,
+            -10915,
+            -10929,
+            -10913
+          ],
+          "mean": -10902.2,
+          "median": -10907.0,
+          "std": 18.616122045152153,
+          "min": -10929,
+          "max": -10879
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -10271,
+            -10293,
+            -10389,
+            -10319,
+            -10353,
+            -10399,
+            -10289,
+            -10289,
+            -10309,
+            -10377
+          ],
+          "mean": -10328.8,
+          "median": -10314.0,
+          "std": 44.429269631629104,
+          "min": -10399,
+          "max": -10271
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -10603,
+            -10727,
+            -10501,
+            -10555,
+            -10449,
+            -10519,
+            -10609,
+            -10565,
+            -10719,
+            -10525
+          ],
+          "mean": -10577.2,
+          "median": -10560.0,
+          "std": 85.56845213044349,
+          "min": -10727,
+          "max": -10449
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -10941,
+            -10849,
+            -10941,
+            -10941,
+            -10941,
+            -10941,
+            -10941,
+            -10941,
+            -10941,
+            -10849
+          ],
+          "mean": -10922.6,
+          "median": -10941.0,
+          "std": 36.8,
+          "min": -10941,
+          "max": -10849
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0033535301548682918
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.001900762644457961
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 2,
+          "ties": 0,
+          "losses": 8,
+          "mean_normalized_improvement": -0.00011930940906751508
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0014527675104103307
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0034728395639358066
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.002020072053525476
+        }
+      },
+      "spread": 0.003472839563935813,
+      "top_two_spread": 0.00011930940906751296
+    },
+    {
+      "instance": "q15",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -10758,
+            -10728,
+            -10740,
+            -10794,
+            -10792,
+            -10758,
+            -10796,
+            -10750,
+            -10712,
+            -10800
+          ],
+          "mean": -10762.8,
+          "median": -10758.0,
+          "std": 29.721372781215877,
+          "min": -10800,
+          "max": -10712
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -10284,
+            -10354,
+            -10248,
+            -10302,
+            -10418,
+            -10292,
+            -10230,
+            -10272,
+            -10310,
+            -10296
+          ],
+          "mean": -10300.6,
+          "median": -10294.0,
+          "std": 50.66004342674807,
+          "min": -10418,
+          "max": -10230
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -10536,
+            -10440,
+            -10464,
+            -10384,
+            -10372,
+            -10340,
+            -10554,
+            -10408,
+            -10660,
+            -10496
+          ],
+          "mean": -10465.4,
+          "median": -10452.0,
+          "std": 93.08941937728477,
+          "min": -10660,
+          "max": -10340
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -10822,
+            -10786,
+            -10764,
+            -10764,
+            -10822,
+            -10772,
+            -10696,
+            -10788,
+            -10822,
+            -10750
+          ],
+          "mean": -10778.6,
+          "median": -10779.0,
+          "std": 37.28860415730254,
+          "min": -10822,
+          "max": -10696
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0027002710787063003
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0017374742942606093
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 3,
+          "ties": 0,
+          "losses": 7,
+          "mean_normalized_improvement": -9.230697326603103e-05
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 1,
+          "ties": 0,
+          "losses": 9,
+          "mean_normalized_improvement": -0.0009627967844456908
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0027925780519723314
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0018297812675266403
+        }
+      },
+      "spread": 0.0027925780519723314,
+      "top_two_spread": 9.23069732660374e-05
+    },
+    {
+      "instance": "q16",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -10862,
+            -10938,
+            -10818,
+            -10898,
+            -10836,
+            -10838,
+            -10846,
+            -10856,
+            -10852,
+            -10938
+          ],
+          "mean": -10868.2,
+          "median": -10854.0,
+          "std": 40.054462922376075,
+          "min": -10938,
+          "max": -10818
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -10222,
+            -10284,
+            -10318,
+            -10250,
+            -10254,
+            -10200,
+            -10358,
+            -10372,
+            -10178,
+            -10204
+          ],
+          "mean": -10264,
+          "median": -10252.0,
+          "std": 64.00624969485402,
+          "min": -10372,
+          "max": -10178
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -10754,
+            -10646,
+            -10564,
+            -10542,
+            -10610,
+            -10648,
+            -10546,
+            -10580,
+            -10484,
+            -10524
+          ],
+          "mean": -10589.8,
+          "median": -10572.0,
+          "std": 73.75879608561951,
+          "min": -10754,
+          "max": -10484
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -10900,
+            -10914,
+            -10900,
+            -10990,
+            -10920,
+            -10986,
+            -10914,
+            -10914,
+            -10914,
+            -10986
+          ],
+          "mean": -10933.8,
+          "median": -10914.0,
+          "std": 35.569087702666764,
+          "min": -10990,
+          "max": -10900
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0035001737921445952
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0016127911018421967
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 1,
+          "ties": 0,
+          "losses": 9,
+          "mean_normalized_improvement": -0.0003800254895145406
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0018873826903023983
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0038801992816591352
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.001992816591356737
+        }
+      },
+      "spread": 0.0038801992816591313,
+      "top_two_spread": 0.0003800254895145322
+    },
+    {
+      "instance": "q17",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -10814,
+            -10848,
+            -10856,
+            -10820,
+            -10862,
+            -10834,
+            -10836,
+            -10848,
+            -10868,
+            -10824
+          ],
+          "mean": -10841,
+          "median": -10842.0,
+          "std": 17.395401691251628,
+          "min": -10868,
+          "max": -10814
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -10282,
+            -10340,
+            -10242,
+            -10340,
+            -10350,
+            -10318,
+            -10320,
+            -10302,
+            -10348,
+            -10332
+          ],
+          "mean": -10317.4,
+          "median": -10326.0,
+          "std": 32.274448097527554,
+          "min": -10350,
+          "max": -10242
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -10508,
+            -10416,
+            -10460,
+            -10482,
+            -10646,
+            -10464,
+            -10582,
+            -10466,
+            -10628,
+            -10444
+          ],
+          "mean": -10509.6,
+          "median": -10474.0,
+          "std": 76.24591792351903,
+          "min": -10646,
+          "max": -10416
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -10874,
+            -10810,
+            -10862,
+            -10832,
+            -10874,
+            -10832,
+            -10874,
+            -10832,
+            -10832,
+            -10874
+          ],
+          "mean": -10849.6,
+          "median": -10847.0,
+          "std": 23.113632341109867,
+          "min": -10874,
+          "max": -10810
+        }
+      },
+      "fallback_only": {
+        "ultimate": 0,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.003078985745871948
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 10,
+          "ties": 0,
+          "losses": 0,
+          "mean_normalized_improvement": 0.0019487698170014582
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 4,
+          "ties": 0,
+          "losses": 6,
+          "mean_normalized_improvement": -5.0571576421884556e-05
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0011302159288704896
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.003129557322293833
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.001999341393423343
+        }
+      },
+      "spread": 0.003129557322293837,
+      "top_two_spread": 5.05715764218867e-05
+    },
+    {
+      "instance": "q18",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -741,
+            -741,
+            -741,
+            -741,
+            -741,
+            -741,
+            -741,
+            -741,
+            -741,
+            -741
+          ],
+          "mean": -741,
+          "median": -741.0,
+          "std": 0.0,
+          "min": -741,
+          "max": -741
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -28807,
+            -28791,
+            -28995,
+            -28931,
+            -29113,
+            -28791,
+            -28929,
+            -28791,
+            -28767,
+            -29073
+          ],
+          "mean": -28898.8,
+          "median": -28868.0,
+          "std": 121.69289215069219,
+          "min": -29113,
+          "max": -28767
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -30165,
+            -29875,
+            -30355,
+            -29991,
+            -29971,
+            -29881,
+            -30329,
+            -30323,
+            -30185,
+            -30107
+          ],
+          "mean": -30118.2,
+          "median": -30136.0,
+          "std": 173.92228149377527,
+          "min": -30355,
+          "max": -29875
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -30915,
+            -30763,
+            -30915,
+            -30915,
+            -30915,
+            -30915,
+            -30763,
+            -30915,
+            -30763,
+            -30839
+          ],
+          "mean": -30861.8,
+          "median": -30915.0,
+          "std": 68.4,
+          "min": -30915,
+          "max": -30763
+        }
+      },
+      "fallback_only": {
+        "ultimate": 10,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.022716696785852586
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.02370046469601136
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.024300374338453595
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0009837679101587712
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0015836775526010068
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0005999096424422357
+        }
+      },
+      "spread": 0.024300374338453595,
+      "top_two_spread": 0.0005999096424422345
+    },
+    {
+      "instance": "q19",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            -2143,
+            -2143,
+            -2143,
+            -2143,
+            -2143,
+            -2143,
+            -2143,
+            -2143,
+            -2143,
+            -2143
+          ],
+          "mean": -2143,
+          "median": -2143.0,
+          "std": 0.0,
+          "min": -2143,
+          "max": -2143
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -27937,
+            -28123,
+            -28405,
+            -28063,
+            -28299,
+            -28431,
+            -28307,
+            -28251,
+            -28263,
+            -28123
+          ],
+          "mean": -28220.2,
+          "median": -28257.0,
+          "std": 147.9599945931332,
+          "min": -28431,
+          "max": -27937
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -30181,
+            -30135,
+            -30207,
+            -30303,
+            -30549,
+            -30305,
+            -29945,
+            -30399,
+            -30101,
+            -29957
+          ],
+          "mean": -30208.2,
+          "median": -30194.0,
+          "std": 179.1294503983083,
+          "min": -30549,
+          "max": -29945
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -30515,
+            -30851,
+            -30523,
+            -30951,
+            -30859,
+            -30951,
+            -30859,
+            -30929,
+            -30951,
+            -30859
+          ],
+          "mean": -30824.8,
+          "median": -30859.0,
+          "std": 158.0796002019236,
+          "min": -30951,
+          "max": -30515
+        }
+      },
+      "fallback_only": {
+        "ultimate": 10,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.02103556424602637
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.022639214243767705
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.02313660387586394
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.001603649997741338
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.00210103962983757
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0004973896320962319
+        }
+      },
+      "spread": 0.02313660387586394,
+      "top_two_spread": 0.0004973896320962307
+    },
+    {
+      "instance": "q20",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            1769,
+            1769,
+            1769,
+            1769,
+            1769,
+            1769,
+            1769,
+            1769,
+            1769,
+            1769
+          ],
+          "mean": 1769,
+          "median": 1769.0,
+          "std": 0.0,
+          "min": 1769,
+          "max": 1769
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -29411,
+            -29219,
+            -29371,
+            -29341,
+            -29087,
+            -29373,
+            -29409,
+            -29469,
+            -29469,
+            -29457
+          ],
+          "mean": -29360.6,
+          "median": -29391.0,
+          "std": 115.42547379153356,
+          "min": -29469,
+          "max": -29087
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -30065,
+            -30243,
+            -30289,
+            -30021,
+            -30391,
+            -30399,
+            -30197,
+            -30107,
+            -29835,
+            -30253
+          ],
+          "mean": -30180,
+          "median": -30220.0,
+          "std": 166.37608001152088,
+          "min": -30399,
+          "max": -29835
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -30989,
+            -30887,
+            -30989,
+            -30799,
+            -30887,
+            -30989,
+            -30887,
+            -30989,
+            -30989,
+            -30989
+          ],
+          "mean": -30939.4,
+          "median": -30989.0,
+          "std": 65.35319426011249,
+          "min": -30989,
+          "max": -30799
+        }
+      },
+      "fallback_only": {
+        "ultimate": 10,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.02509124205259153
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.025751699101120698
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.026363794637675554
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0006604570485291652
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.00127255258508402
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0006120955365548548
+        }
+      },
+      "spread": 0.026363794637675554,
+      "top_two_spread": 0.000612095536554856
+    },
+    {
+      "instance": "q21",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            72,
+            72,
+            72,
+            72,
+            72,
+            72,
+            72,
+            72,
+            72,
+            72
+          ],
+          "mean": 72,
+          "median": 72.0,
+          "std": 0.0,
+          "min": 72,
+          "max": 72
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -28858,
+            -28536,
+            -28836,
+            -29214,
+            -28840,
+            -29516,
+            -28678,
+            -28944,
+            -28794,
+            -28828
+          ],
+          "mean": -28904.4,
+          "median": -28838.0,
+          "std": 262.19351631953066,
+          "min": -29516,
+          "max": -28536
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -30350,
+            -30376,
+            -30562,
+            -30236,
+            -30408,
+            -30450,
+            -30392,
+            -30206,
+            -30662,
+            -30224
+          ],
+          "mean": -30386.6,
+          "median": -30384.0,
+          "std": 139.39311317278197,
+          "min": -30662,
+          "max": -30206
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -31254,
+            -31254,
+            -31254,
+            -31254,
+            -31254,
+            -31254,
+            -31254,
+            -31084,
+            -30922,
+            -31084
+          ],
+          "mean": -31186.8,
+          "median": -31254.0,
+          "std": 110.84475630357983,
+          "min": -31254,
+          "max": -30922
+        }
+      },
+      "fallback_only": {
+        "ultimate": 10,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.02326846049330768
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.024458688131771416
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.02510126008987335
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0011902276384637375
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.001832799596565669
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0006425719581019314
+        }
+      },
+      "spread": 0.02510126008987335,
+      "top_two_spread": 0.000642571958101932
+    },
+    {
+      "instance": "q22",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            2213,
+            2213,
+            2213,
+            2213,
+            2213,
+            2213,
+            2213,
+            2213,
+            2213,
+            2213
+          ],
+          "mean": 2213,
+          "median": 2213.0,
+          "std": 0.0,
+          "min": 2213,
+          "max": 2213
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -29915,
+            -29623,
+            -29749,
+            -29741,
+            -29671,
+            -29809,
+            -30137,
+            -29923,
+            -29753,
+            -29839
+          ],
+          "mean": -29816,
+          "median": -29781.0,
+          "std": 140.43717456571105,
+          "min": -30137,
+          "max": -29623
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -30387,
+            -30073,
+            -30405,
+            -30235,
+            -30265,
+            -30233,
+            -30621,
+            -30199,
+            -30555,
+            -30471
+          ],
+          "mean": -30344.4,
+          "median": -30326.0,
+          "std": 163.6631907302311,
+          "min": -30621,
+          "max": -30073
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -31025,
+            -30955,
+            -31025,
+            -30955,
+            -30955,
+            -30955,
+            -30955,
+            -31025,
+            -31025,
+            -30917
+          ],
+          "mean": -30979.2,
+          "median": -30955.0,
+          "std": 38.971271470148366,
+          "min": -31025,
+          "max": -30917
+        }
+      },
+      "fallback_only": {
+        "ultimate": 10,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.02573131268337045
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.02615581627767227
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.026665799021167336
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0004245035943018185
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0009344863377968875
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0005099827434950689
+        }
+      },
+      "spread": 0.026665799021167336,
+      "top_two_spread": 0.0005099827434950683
+    },
+    {
+      "instance": "q23",
+      "energies": {
+        "ultimate": {
+          "n": 10,
+          "values": [
+            425,
+            425,
+            425,
+            425,
+            425,
+            425,
+            425,
+            425,
+            425,
+            425
+          ],
+          "mean": 425,
+          "median": 425.0,
+          "std": 0.0,
+          "min": 425,
+          "max": 425
+        },
+        "v2_default": {
+          "n": 10,
+          "values": [
+            -29159,
+            -28857,
+            -28673,
+            -28665,
+            -28735,
+            -28669,
+            -29019,
+            -28731,
+            -28931,
+            -28651
+          ],
+          "mean": -28809,
+          "median": -28733.0,
+          "std": 167.07603059685133,
+          "min": -29159,
+          "max": -28651
+        },
+        "mqlib_merz": {
+          "n": 10,
+          "values": [
+            -30237,
+            -30255,
+            -30043,
+            -30001,
+            -29935,
+            -30117,
+            -30207,
+            -30495,
+            -30029,
+            -30211
+          ],
+          "mean": -30153,
+          "median": -30162.0,
+          "std": 154.95289606845043,
+          "min": -30495,
+          "max": -29935
+        },
+        "mqlib_mst2": {
+          "n": 10,
+          "values": [
+            -30995,
+            -30995,
+            -30995,
+            -30995,
+            -30995,
+            -30995,
+            -30995,
+            -30995,
+            -30995,
+            -30995
+          ],
+          "mean": -30995,
+          "median": -30995.0,
+          "std": 0.0,
+          "min": -30995,
+          "max": -30995
+        }
+      },
+      "fallback_only": {
+        "ultimate": 10,
+        "v2_default": 0,
+        "mqlib_merz": 0,
+        "mqlib_mst2": 0
+      },
+      "paired": {
+        "ultimate_vs_v2_default": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.023530642798499653
+        },
+        "ultimate_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.024612437418503195
+        },
+        "ultimate_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.025290168869428035
+        },
+        "v2_default_vs_mqlib_merz": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0010817946200035416
+        },
+        "v2_default_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0017595260709283795
+        },
+        "mqlib_merz_vs_mqlib_mst2": {
+          "wins": 0,
+          "ties": 0,
+          "losses": 10,
+          "mean_normalized_improvement": -0.0006777314509248378
+        }
+      },
+      "spread": 0.025290168869428035,
+      "top_two_spread": 0.0006777314509248378
+    }
+  ],
+  "informative_instances": 21,
+  "unique_wins": {
+    "ultimate": 0,
+    "v2_default": 0,
+    "mqlib_merz": 0,
+    "mqlib_mst2": 0
+  },
+  "H1": "SUPPORTED_ON_QUALIFICATION",
+  "H2": "NOT_ESTABLISHED",
+  "descriptive_instance_bootstrap": {
+    "ultimate_vs_v2_default": {
+      "mean": -0.004265635026134509,
+      "descriptive_95": [
+        -0.00880415884486433,
+        3.596299939678401e-05
+      ]
+    },
+    "ultimate_vs_mqlib_merz": {
+      "mean": -0.005347189120162187,
+      "descriptive_95": [
+        -0.009779989140767796,
+        -0.0010785652888942883
+      ]
+    },
+    "ultimate_vs_mqlib_mst2": {
+      "mean": -0.006321954409815962,
+      "descriptive_95": [
+        -0.010636055593142676,
+        -0.002142884354211621
+      ]
+    },
+    "v2_default_vs_mqlib_merz": {
+      "mean": -0.0010815540940276778,
+      "descriptive_95": [
+        -0.0014446332565656648,
+        -0.0007178340290530118
+      ]
+    },
+    "v2_default_vs_mqlib_mst2": {
+      "mean": -0.0020563193836814525,
+      "descriptive_95": [
+        -0.0025538453154240496,
+        -0.0015662004842670314
+      ]
+    },
+    "mqlib_merz_vs_mqlib_mst2": {
+      "mean": -0.0009747652896537749,
+      "descriptive_95": [
+        -0.0012594872149592445,
+        -0.000690328428772816
+      ]
+    }
+  }
+}
