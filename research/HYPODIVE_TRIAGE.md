@@ -901,3 +901,112 @@ Unresolved case-level reuse terms block product-dataset assumptions. Next gate:
 cost and permission-check a routine clean rerun for the two small joined cases
 before proposing or testing a new verifier. Buyer demand and any improvement
 over the ordinary reproduction workflow remain **UNKNOWN**.
+
+### Public-evidence discovery after REPRO-Bench — 2026-09-29
+
+**Mode A; decision NARROW.** The owner has no interview pool and asked us to
+look beyond abandoned repositories or inherited solver categories. The claim
+tested was whether public data alone identifies a credible first world-level
+result or product gap. This is a direction decision, not a new record, product,
+speedup, or assertion that nobody else works on the problem. No external code
+was executed or large dataset downloaded; the Ising Engine pause continues.
+The REPRO-Bench rerun gate is [closed](experiments/repro_bench_intake/COST.md):
+neither small case currently justifies routine execution.
+
+**Product kill-test.** Public issue evidence identifies pain, not willingness
+to adopt or pay. [Nextflow #7662](https://github.com/nextflow-io/nextflow/issues/7662)
+reports an operational setting change invalidating all 25 tasks in a paired
+run; [#7663](https://github.com/nextflow-io/nextflow/issues/7663) reports
+resource settings entering a task hash. The strongest simple competitor is
+Nextflow's native [cache/resume and hash diagnostics](https://www.nextflow.io/docs/latest/cache-and-resume.html),
+plus an upstream fix. A standalone cache/provenance product is **UNSUPPORTED**:
+incidence, correction status, incremental value and buyer evidence are absent.
+Generic optimization-model verification and workflow caching have direct prior
+art. A later public-only test would need frozen reproducible failures and show
+new diagnoses beyond native tooling; it would still not prove demand.
+
+**Mathematical route.** [HorizonMath](https://github.com/ewang26/HorizonMath/tree/4ef0b61a8a6d4c5ded661fab7c2e896af84abe6e)
+publishes 113 problem statements and construction validators. It is a map of
+checkable questions, not a repository to fork. We read its JSON statements
+and selected validator source, but did not run it. No root LICENSE was visible
+at this revision: do not copy its code or assume reuse rights. Its `(7,5)`
+difference-triangle-set challenge asks for seven increasing six-mark rows with
+105 distinct positive within-row differences and maximum mark at most 111.
+The independent [paper first published in 2025 (2026 volume)](https://doi.org/10.1002/jcd.22009)
+reports a scope-112 bound in Table 1, its construction in Appendix A, and a
+specialized CPU/FPGA search.
+That method is a strong baseline; the problem is not unoccupied and our current
+QUBO engine has no established advantage. The benchmark validator casts entries
+with `int(x)`, which can coerce nonintegers, so a future witness requires our
+own strict-integer verifier. A valid 111 witness would improve that published
+upper bound; failure to find one would not prove 112 optimal. Any newer record
+must be checked before making a priority claim.
+
+The **first admission gate passed** without running external software. We
+transcribed the paper's seven rows from its open [arXiv Appendix A](https://arxiv.org/html/2502.19517),
+prepended the omitted zero column, and checked strict Python integer types,
+shape, increasing order and all pairwise differences using a standalone
+checker written for this review. The witness is:
+
+```python
+rows = [
+    [0, 11, 58, 75, 98, 112],
+    [0, 12, 32, 50, 103, 111],
+    [0, 22, 41, 89, 104, 110],
+    [0, 28, 52, 83, 108, 109],
+    [0, 13, 62, 72, 105, 107],
+    [0, 9, 16, 60, 102, 106],
+    [0, 27, 30, 66, 95, 100],
+]
+```
+
+Reproduce with Python 3 by running the `rows` assignment and then:
+
+```python
+assert len(rows) == 7
+assert all(len(r) == 6 and all(type(x) is int for x in r)
+           and r[0] == 0 and all(a < b for a, b in zip(r, r[1:]))
+           for r in rows)
+diffs = [r[j] - r[i] for r in rows for i in range(6)
+         for j in range(i + 1, 6)]
+assert len(diffs) == len(set(diffs)) == 105
+assert min(diffs) > 0 and max(map(max, rows)) == 112
+```
+
+There are exactly `7*binom(6,2)=105` distinct positive differences, with scope
+112. The checker computed `len(diffs)==len(set(diffs))==105`, and all rows
+passed strict shape/type/order checks. This **REPRODUCES** the published
+construction, not its search process or priority. The elementary lower bound
+from distinct positive differences is scope at least 105, leaving a seven-unit
+gap to the witness; it does not imply 111 is feasible. The next cheap gate is a
+specialist constraint baseline and a fresh record check under a small fixed CPU
+budget. Stop if a newer bound supersedes 112 or that baseline dominates without
+new structural insight. Only a separate preregistration may authorize an
+extended search for 111. A successful certificate would be a narrow
+combinatorial result, not proof of a universal solver or commercial product.
+
+**Cross-domain speedup kill-test.** To test a different tempting claim, we
+recomputed a perfect-hindsight selector on the public [Open Energy Benchmark
+results](https://github.com/open-energy-transition/solver-benchmark/tree/6eb71f7c1dcd297ea43d57f0ccf1a0b32cc7ac13/results).
+The 2025-release CSV (`benchmark_results.csv`, SHA-256
+`828b7619f45252367d8eae706f886cc8ca593380ed845ab853b6a7b949674b4b`)
+has 2,790 rows. HiGHS and SCIP have 213 paired instances, with equal run ID,
+host, VM, timeout and benchmark version in every pair. Define reported success
+as `Status=ok` and `Termination Condition=optimal`, and PAR10 as runtime on
+success or `10*Timeout` otherwise. On the 116 cases solved by either solver,
+best fixed HiGHS totals 673,966.73 seconds; the impossible perfect-hindsight
+HiGHS/SCIP selector totals 500,054.88 seconds: **1.348x**. Across all 213,
+the ratio is **1.004x** because 97 failed under both. This rejects a 4–5x
+*selection-only* opportunity on this corpus/configuration, not a new algorithm,
+another domain, or all solver configurations. We did not independently check
+objectives; Gurobi is a further strong baseline. Reproduce by reading the pinned
+CSV, filtering `Solver Release Year=2025.0` and solvers `{highs,scip}`, grouping
+on `(Benchmark,Size)`, checking metadata equality, then summing PAR10 and its
+per-pair minimum. This opened-data falsifier was exploratory, not a registered
+performance experiment.
+
+Top risks: stale best-known mathematical bound; a validator with incomplete
+input checks; public issues or benchmark selection mistaken for demand or
+generality. **Next action:** record recheck and small specialist-baseline design,
+without solver changes or multi-day search. Stop product work from public
+complaints alone.

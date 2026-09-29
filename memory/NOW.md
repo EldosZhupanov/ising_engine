@@ -21,24 +21,35 @@ without a later explicit resume. This decision preserves the code, frozen
 protocols, results, and the technical resume point below; it does not convert
 inconclusive findings into failures or revoke historical evidence.
 
-The active non-solver task is the bounded [Hypodive new-product triage](../research/HYPODIVE_TRIAGE.md),
-now with an independent mathematical-discovery track requested by the owner.
-It rejects generic agent memory and generic agent observability as distinct
-entry points on present evidence. Independent checking of computational claims
-made by agents is a **product hypothesis only**: direct competitors exist, no
-buyer interviews or matched product test have been performed, and no novelty or
-revenue claim is earned. The next gate is a prospective failure-case corpus and
-matched comparison to ordinary CI/eval/provenance tools, followed by external
-buyer discovery. Do not start a new implementation solely from this desk review.
+**Latest discovery decision, 2026-09-29:** stop using abandoned-repository
+search as the default route to a breakthrough. With no interview pool, public
+issues can qualify a problem but cannot establish product demand. The
+[falsification triage](../research/HYPODIVE_TRIAGE.md#public-evidence-discovery-after-repro-bench--2026-09-29)
+found no qualified new product. On one matched public energy-planning corpus,
+even perfect hindsight between HiGHS and SCIP offers 1.348x PAR10 over the
+best fixed solver on the 116 union-solved cases, not the hoped-for 4–5x from
+selection alone; this says nothing about new algorithms. The best next
+public-only scientific gate began with a **strict certificate admission check**
+for the published scope-112 `(7,5)` difference-triangle-set construction; it
+**passed** (105 distinct positive differences and scope 112). A scope-111 result
+is only a hypothesis; no search has been run. **Next:** recheck the current
+record and design one small specialist-baseline test. No Ising Engine
+development or long-running experiment is authorized by this triage; decide
+whether a separately preregistered mathematics effort is worthwhile only after
+that baseline.
+
+Earlier [Hypodive new-product triage](../research/HYPODIVE_TRIAGE.md)
+rejected generic agent memory and observability as distinct entry points.
+Independent checking of computational claims made by agents remains a
+**product hypothesis only**: direct competitors exist, no buyer interviews or
+matched product test have been performed, and no novelty or revenue claim is
+earned. Do not start an implementation from this desk review.
 The [dual-track update](../research/HYPODIVE_TRIAGE.md#dual-track-discovery-update--2026-09-28)
 found direct prior art for false-success detectors and for recycling numerical
 information across sparse linear solves. No new product, mathematical method or
-4–5x speedup is established. The next product gate is qualification of public
-agent runs for joinable final claims, artifacts and independent outcomes; the
-next mathematics gate is a real sequence workload and a measured end-to-end
-cost breakdown against strong existing preconditioners. Reject either direction
-early if a simple oracle rule or the non-acceleratable cost floor defeats it.
-Neither gate resumes Ising Engine development.
+4–5x speedup is established. The proposed public-agent-artifact gate was later
+tested below and did not qualify a source. The sparse-linear-solve proposal
+remains untested and deferred under the current focus.
 
 The subsequent [problem-first cross-domain screen](../research/PROBLEM_FIRST_DISCOVERY_20260928.md)
 compared nine jobs by their desired outcome rather than their inherited tools.
@@ -46,11 +57,10 @@ It found direct prior art for scan-to-G-code, notebook-state enforcement, test
 selection and figure reconstruction. Three **NARROW/UNKNOWN** qualification
 tracks remain: independent checking of computational claims in one domain,
 physical validity of scan-to-print, and target-specific scientific computation.
-None is a validated product or a measured 4–5x method. **Immediate non-solver
-task:** qualify a small public set of scientific claims for joinable paper,
-code/data, executable incumbent and independent outcome; stop if access or
-oracle coverage fails. Public-source intake found SocSci-Repro-Bench and
-REPRO-Bench as candidate materials, while AutoMat's dataset is gated. A fixed
+None is a validated product or a measured 4–5x method. The subsequent intake
+examined public scientific claims for joinable paper, code/data, incumbent and
+independent outcome. Public-source intake found SocSci-Repro-Bench
+and REPRO-Bench as candidate materials, while AutoMat's dataset is gated. A fixed
 five-paper field sample of SocSci's published gold JSON found no final-agent-
 claim or trace field; individual original-data packages and actual agent runs
 remain unchecked. Do not build
@@ -80,8 +90,8 @@ rerun now** for either under-cap case. ID 51 needs R, but its Dataverse custom
 terms remain unreadable; ID 109's original rerun needs licensed Stata, while
 the source dataset's metadata says CC0. Both claims already have independent
 published reports. Time estimates are planning estimates, not benchmarks; no
-third-party code ran. **Next non-solver decision:** retire this particular
-REPRO-Bench rerun/verifier comparison unless a concrete question not answered
+third-party code ran. Retire this particular REPRO-Bench rerun/verifier
+comparison unless a concrete question not answered
 by those reports and lawful data access are established. Search for a different
 claim-checking workflow only after an external user supplies a costly unmet
 verification need; otherwise stop this product direction. No benchmark-error,
