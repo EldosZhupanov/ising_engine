@@ -74,12 +74,19 @@ then found **4/5 source-level claim/report joins**, but only **2/5** have
 claim-specific data below the registered 20 MB/file intake cap. This qualifies
 the public source as an index, not a cheap matched verifier experiment:
 there was no third-party execution, no independent numeric recomputation here,
-and reuse rights remain unresolved. **Next non-solver action:** cost and
-permission-check an ordinary clean rerun for the two under-cap cases (51, 109)
-before freezing any verifier comparison. If the simple rerun/report checklist
-already answers the question at lower total cost, stop this product direction.
-No benchmark-error, customer-demand or product claim is earned. The Ising
-Engine pause remains in force.
+and reuse rights remain unresolved. The subsequent [read-only cost and rights
+gate](../research/experiments/repro_bench_intake/COST.md) recommends **no new
+rerun now** for either under-cap case. ID 51 needs R, but its Dataverse custom
+terms remain unreadable; ID 109's original rerun needs licensed Stata, while
+the source dataset's metadata says CC0. Both claims already have independent
+published reports. Time estimates are planning estimates, not benchmarks; no
+third-party code ran. **Next non-solver decision:** retire this particular
+REPRO-Bench rerun/verifier comparison unless a concrete question not answered
+by those reports and lawful data access are established. Search for a different
+claim-checking workflow only after an external user supplies a costly unmet
+verification need; otherwise stop this product direction. No benchmark-error,
+customer-demand or product claim is earned. The Ising Engine pause remains in
+force.
 
 ## Paused technical resume point — MQ-FIRST-CHUNK-001 closed; output design next
 
