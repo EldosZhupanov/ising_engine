@@ -1053,3 +1053,29 @@ matched baseline result. Stop here rather than spend days on an arbitrary
 record hunt. Reopen only for a concrete reduction/proof idea or a reproducible
 advantage on smaller, previously unseen DTS cases; freeze the experiment before
 executing either baseline. No Ising Engine source or dependency changed.
+
+### Public construction-problem screen — 2026-09-29
+
+**Mode A; decision: no new record hunt qualifies.** The question was whether a
+different finite construction problem offers a cheaply checkable certificate
+*and* a concrete structural advantage before committing search time. A short
+positive witness is an admission criterion, not evidence that we can find one.
+The falsifier for any proposed method is a matched specialist baseline or an
+exact small-case counterexample. We did not run search software or reuse these
+public cases as unseen benchmark data.
+
+| Candidate | Public evidence and cheapest verifier | Structural test / strongest competitor | Decision |
+|---|---|---|---|
+| Costas array of order 32 | A length-32 permutation; check that, for each horizontal distance, all vertical differences are distinct. The [2026 Costas study](https://arxiv.org/abs/2602.03407) reports complete enumeration only through order 29 and uses Russo's symmetry-reduced, bitmask, forward-checking search. | Algebraic constructions and specialist backtracking already exist. We found no reduction that avoids the known order-32 bottleneck. | **NOT QUALIFIED** for a laptop record hunt; current record still needs a fresh check before any priority claim. |
+| Covering design `C(16,8,5)` | The indexed [La Jolla bounds](https://ljcr.dmgordon.org/cover/show_lb.php) and a [July 2026 independent replay](https://www.theoremdb.org/records/R116/) report `104 ≤ C ≤ 115`. A proposed 114-block certificate is checked against all `binom(16,5)=4368` five-subsets. | The replay reports that each of the 115 incumbent blocks has a uniquely covered requirement, so simple deletion cannot improve it. A bounded 2-for-1 or 3-for-2 exact exchange is an inexpensive *diagnostic*, but it is ordinary set-cover local search, not a new method; [published construction work](https://arxiv.org/abs/math/9502238) and the live [Covering Repository](https://www.coveringrepository.com/default.aspx) are the comparators. | **NARROW** to certificate/data intake only. The primary 115-block page returned a fetch error in this session, so we did not independently replay the block claim or verify that 115 is still the live upper bound. |
+| Packing 12 unit squares | The author reports a rational lower-bound certificate at `15680/3951≈3.9686`, with upper construction 4 and [exact verifier/Lean artifacts](https://evand.github.io/square-packing/s12/). | The author already uses LP, column generation, exact angle/centre checking and a separate numeric packing search. Closing the remaining gap calls for geometry case analysis; we have neither that insight nor an independent replay. | **NOT QUALIFIED** for an inexpensive construction attempt; the new claim is author-reported and not peer-reviewed there. |
+
+The broader recipe “LLM proposes design-search heuristics; a checker filters
+solutions” also has direct [2025 research prior art](https://arxiv.org/abs/2505.23881)
+on multiple design families. No novelty follows from adding an AI loop to these
+tasks. The covering case is the cheapest **data-admission** candidate, not a
+qualified breakthrough direction. If its primary certificate becomes
+accessible, a separate read-only intake may verify the 115 blocks and their
+private requirements. An exchange computation would need a frozen question,
+specialist comparison and independent checker; a failed 2-for-1 exchange would
+only rule out that neighborhood, not 114 blocks. Until then, stop this screen.

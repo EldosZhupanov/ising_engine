@@ -38,10 +38,16 @@ found the authors' MIT-licensed specialist C search, designed a direct exact
 constraint control, and marked a direct scope-111 laptop hunt **NOT QUALIFIED**:
 the published searches cost days of FPGA time and we have no domain-specific
 reduction or measured advantage. This is not proof that 111 is impossible.
-**Next:** leave Ising Engine paused and screen other publicly verifiable
-construction problems for an inexpensive structural idea before any new search
-protocol. Do not install a heavy dependency or launch a record campaign from
-this intake.
+The [construction-problem screen](../research/HYPODIVE_TRIAGE.md#public-construction-problem-screen--2026-09-29)
+then compared Costas order 32, the `C(16,8,5)` covering, and 12-square packing.
+All have checkable claims, but none yielded a qualified structural method or
+record-hunt case. `C(16,8,5)` is the narrowest certificate-intake candidate:
+the indexed interval is 104–115 and an independent July replay reports all 115
+incumbent blocks essential, but the primary block list was inaccessible in this
+session and its current bound was not independently rechecked. **Next:** leave
+Ising Engine paused. Resume only a bounded read-only primary-certificate intake
+if that covering list becomes accessible; do not install dependencies, launch a
+search, or turn this public-data screen into a novelty/product claim.
 
 Earlier [Hypodive new-product triage](../research/HYPODIVE_TRIAGE.md)
 rejected generic agent memory and observability as distinct entry points.
