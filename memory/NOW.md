@@ -21,6 +21,12 @@ without a later explicit resume. This decision preserves the code, frozen
 protocols, results, and the technical resume point below; it does not convert
 inconclusive findings into failures or revoke historical evidence.
 
+**Latest bounded intake, 2026-09-29:** the [odd-covering read-only plan](../research/experiments/odd_covering/PLAN.md)
+finds no qualified bound-raising campaign. The Lean certificate's CRT capacity
+test stalls at 10,395; the same theorem only gives the trivial restatement
+`lcm > 10,394`. Newer author/repository claims reach much farther, but were
+not independently replayed here. No search/build ran; Ising Engine stays paused.
+
 **Latest discovery decision, 2026-09-29:** stop using abandoned-repository
 search as the default route to a breakthrough. With no interview pool, public
 issues can qualify a problem but cannot establish product demand. The
