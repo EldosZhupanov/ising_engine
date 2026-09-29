@@ -1010,3 +1010,46 @@ input checks; public issues or benchmark selection mistaken for demand or
 generality. **Next action:** record recheck and small specialist-baseline design,
 without solver changes or multi-day search. Stop product work from public
 complaints alone.
+
+### DTS `(7,5)` record and baseline admission — 2026-09-29
+
+**Decision: NOT QUALIFIED for a direct scope-111 laptop hunt.** This is a
+resource/evidence decision, not a proof that 111 is impossible. A targeted
+recheck found the scope-112 bound in the original
+[journal table](https://doi.org/10.1002/jcd.22009) and on the current
+[HorizonMath problem page](https://ewang26.github.io/HorizonMath/). Exact-term
+searches did not locate a later primary scope-111 certificate. Search coverage
+is incomplete, so the world-record status remains **UNKNOWN**; any claim of
+priority requires a fresh literature/database check.
+
+The strongest specialist comparator is the authors'
+[MIT-licensed CPU/FPGA search](https://github.com/applecoffeecake/dts-search-hdl/tree/2ccff8e767c3fe6390fd3af056dfda11847011fc),
+not a generic QUBO annealer. The pinned `dts-search.c` SHA-256 is
+`d7d5481b4410dbcbfdda3d21697662c0c7782ce96888e0e9e1a141ed70adecf6`.
+Its checked-in C defaults are `(n,k,M)=(14,4,146)`, and its random seed is
+`time(NULL)^getpid()`; a `(7,5)` comparison must record an explicit adaptation
+and fixed seed, not silently relabel an unmodified binary. The paper reports
+roughly 4–5 days per successful improved construction on its FPGA setup and a
+separate failed 70-day CPU search for `(14,4)` scope 140. Neither number is a
+runtime estimate for `(7,5)` scope 111. A one-minute **timeout** on that target
+would be uninformative; a verified scope-111 witness at any time would be
+decisive. No source was compiled or executed in this admission.
+
+A second baseline is a direct integer constraint model: 35 nonzero mark
+variables `a[i,j]` in `[1,111]`, seven fixed zeroes, row-order constraints,
+105 difference expressions `d[i,p,q]=a[i,q]-a[i,p]` in `[1,111]`, and one
+`AllDifferent` over those 105 expressions. Row permutation and reflection
+symmetries may be removed only with a proof that the restrictions preserve
+every solution orbit. [OR-Tools CP-SAT](https://developers.google.com/optimization/cp/cp_solver)
+supports integer constraint models, but it is not installed locally; adding it
+would be a new dependency. This is a model design, not a measured baseline.
+
+The cheapest meaningful future calibration would first reproduce published
+smaller cases, then test the `(7,5)` *known feasible* scope 112 with a fixed
+one-core budget and the strict independent verifier. A timeout at 111 would
+not establish optimality or quantify a new method's promise. The current
+project has neither a domain-specific structural hypothesis nor an eligible
+matched baseline result. Stop here rather than spend days on an arbitrary
+record hunt. Reopen only for a concrete reduction/proof idea or a reproducible
+advantage on smaller, previously unseen DTS cases; freeze the experiment before
+executing either baseline. No Ising Engine source or dependency changed.

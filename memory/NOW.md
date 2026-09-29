@@ -32,11 +32,16 @@ selection alone; this says nothing about new algorithms. The best next
 public-only scientific gate began with a **strict certificate admission check**
 for the published scope-112 `(7,5)` difference-triangle-set construction; it
 **passed** (105 distinct positive differences and scope 112). A scope-111 result
-is only a hypothesis; no search has been run. **Next:** recheck the current
-record and design one small specialist-baseline test. No Ising Engine
-development or long-running experiment is authorized by this triage; decide
-whether a separately preregistered mathematics effort is worthwhile only after
-that baseline.
+is only a hypothesis; no search has been run. The subsequent
+[record/baseline admission](../research/HYPODIVE_TRIAGE.md#dts-75-record-and-baseline-admission--2026-09-29)
+found the authors' MIT-licensed specialist C search, designed a direct exact
+constraint control, and marked a direct scope-111 laptop hunt **NOT QUALIFIED**:
+the published searches cost days of FPGA time and we have no domain-specific
+reduction or measured advantage. This is not proof that 111 is impossible.
+**Next:** leave Ising Engine paused and screen other publicly verifiable
+construction problems for an inexpensive structural idea before any new search
+protocol. Do not install a heavy dependency or launch a record campaign from
+this intake.
 
 Earlier [Hypodive new-product triage](../research/HYPODIVE_TRIAGE.md)
 rejected generic agent memory and observability as distinct entry points.
