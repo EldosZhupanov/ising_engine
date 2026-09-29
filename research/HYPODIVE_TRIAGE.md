@@ -887,3 +887,17 @@ impact remain unproven. A deterministic provenance check catches the sampled
 issue, so this is **NARROW** research-data hygiene, not an AI-verifier product
 advantage. SWE-bench remains unqualified for the original false-final-claim
 corpus. Resume scientific-claim source qualification elsewhere.
+
+### REPRO-Bench five-case source gate — 2026-09-29
+
+The [preregistered, outcome-blind sample](experiments/repro_bench_intake/PROTOCOL.md)
+of IDs 55, 51, 39, 49, 109 produced [4/5 source-level joins](experiments/repro_bench_intake/RESULT.md)
+between a numerical paper claim, analysis code/data paths, and an independent
+report. This is **NARROW**, not a verifier result. The exact claim-specific
+datasets for IDs 55 and 39 are 2.8 GB and 10.8 GB, respectively, so only
+2/5 joined cases fit the registered per-file intake ceiling. The code was not
+executed; the source's public reports are already a strong competing oracle.
+Unresolved case-level reuse terms block product-dataset assumptions. Next gate:
+cost and permission-check a routine clean rerun for the two small joined cases
+before proposing or testing a new verifier. Buyer demand and any improvement
+over the ordinary reproduction workflow remain **UNKNOWN**.

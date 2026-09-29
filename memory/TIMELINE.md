@@ -42,6 +42,7 @@ Commit ancestry establishes ordering; calendar dates are descriptive.
 | 2026-09-29 | frozen SWE-bench public-artifact intake | Six selected cases failed the false-final-claim source gate (0/6 explicit final claims); a separate 3/3 patch-lineage discrepancy needs provenance checking, with no benchmark-error claim | [Intake result](../research/experiments/swebench_artifact_intake/RESULT.md) |
 | 2026-09-29 | post-hoc SWE-bench trajectory lineage check | Codex and GPT-5.2-high trajectory listings match by key/ETag/size for 500 objects; three frozen trajectories match bytewise and align with the high entry's patches. No score verdict or product claim follows. | [Addendum](../research/experiments/swebench_artifact_intake/LINEAGE_ADDENDUM.md) |
 | 2026-09-29 | REPRO-Bench source-intake protocol frozen | Five outcome-blind IDs and a cheap independent-report stop rule fixed before case inspection | [Protocol](../research/experiments/repro_bench_intake/PROTOCOL.md) |
+| 2026-09-29 | REPRO-Bench source-intake result | 4/5 source-level numerical claim/report joins; only 2/5 exact datasets below 20 MB/file; no execution or verifier advantage | [Result](../research/experiments/repro_bench_intake/RESULT.md) |
 
 2026-09-27 ER-001: protocol/instrument96b0c23, raw a91481c;120 valid cells,
 1,344 checked incumbents, independent executable auditPASS. H1/H3 pass, H2 fails:

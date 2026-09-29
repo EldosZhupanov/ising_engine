@@ -69,10 +69,15 @@ GPT-5.2-high entries, plus byte-identical trajectories and patch alignment on
 the three frozen tasks. A simple deterministic provenance check detects the
 sampled association. Intent, full-directory SHA identity, and leaderboard
 impact are unproven. Retire this SWE-bench source for false-final-claim
-research. **Next non-solver action:** qualify a small, preselected set of
-public computational-paper claim packages (starting with REPRO-Bench) for
-inputs, executable incumbent, independent numerical outcome and reuse terms;
-compare to ordinary clean rerun/checklist before proposing a new method.
+research. The [frozen REPRO-Bench five-case intake](../research/experiments/repro_bench_intake/RESULT.md)
+then found **4/5 source-level claim/report joins**, but only **2/5** have
+claim-specific data below the registered 20 MB/file intake cap. This qualifies
+the public source as an index, not a cheap matched verifier experiment:
+there was no third-party execution, no independent numeric recomputation here,
+and reuse rights remain unresolved. **Next non-solver action:** cost and
+permission-check an ordinary clean rerun for the two under-cap cases (51, 109)
+before freezing any verifier comparison. If the simple rerun/report checklist
+already answers the question at lower total cost, stop this product direction.
 No benchmark-error, customer-demand or product claim is earned. The Ising
 Engine pause remains in force.
 
